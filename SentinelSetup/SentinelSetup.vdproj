@@ -43,6 +43,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -59,6 +67,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -144,14 +160,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sentinel"
-        "ProductCode" = "8:{46B08199-B41A-438C-99B3-691FEDF29FA2}"
-        "PackageCode" = "8:{9ABC7807-F564-4405-83EB-BE904DA39F1D}"
+        "ProductCode" = "8:{269DCD11-2D14-44DD-B95F-1EFE572E07E4}"
+        "PackageCode" = "8:{EA2E6E34-EF83-4E10-AB70-FC3158C3757F}"
         "UpgradeCode" = "8:{18BF61FD-DAE4-4C17-A210-633386311C13}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.8.0"
         "Manufacturer" = "8:Ray Hayes"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -160,7 +176,7 @@
         "ARPCONTACT" = "8:Ray Hayes"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:log4net Log File Viewer"
-        "ARPURLINFOABOUT" = "8:http://rayhayes.is-a-geek.com"
+        "ARPURLINFOABOUT" = "8:http://sentinel.codeplex.com"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -693,7 +709,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_30CFDD89BDE642B1A9FC555BDB6D6C68"
             {
-            "SourcePath" = "8:..\\Sentinel\\obj\\Release\\Sentinel.exe"
+            "SourcePath" = "8:..\\Sentinel\\obj\\Debug\\Sentinel.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_552C0353CC7648AFA4751F95D7D77C3A"
