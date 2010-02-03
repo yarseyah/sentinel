@@ -1,0 +1,114 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Converters="clr-namespace:Sentinel.Converters"
+        x:Class="Sentinel.Controls.MainWindow"
+        Title="Sentinel"
+        Height="560"
+        Width="1017"
+        mc:Ignorable="d"
+        Padding="5"
+        OverridesDefaultStyle="False"
+        Loaded="OnLoaded"
+        ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+            <Setter Property="RenderOptions.BitmapScalingMode"
+                    Value="NearestNeighbor" />
+        </Style>
+        <Converters:StatusColourConverter x:Key="status2Colour"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="0">
+            <Menu Width="Auto">
+                <MenuItem Header="_File">
+                    <MenuItem Header="New..."
+                              Command="{Binding Add}">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Add.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Load..."
+                              IsEnabled="False">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Open.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save As..."
+                              IsEnabled="False">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Save.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit"
+                              Command="{Binding Exit}" />
+                </MenuItem>
+            </Menu>
+            <ToolBarTray x:Name="mainToolbarTray">
+                <ToolBar>
+                    <Button Command="{Binding Add}">
+                        <Image Source="/Resources/Add.png" />
+                    </Button>
+                </ToolBar>
+                <ToolBar>
+                    <CheckBox ToolTip="Show the Preferences dialog"
+                              IsChecked="{Binding Preferences.Show}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Settings.png"
+                                   VerticalAlignment="Center" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Padding="5,0,5,0">Preferences</TextBlock>
+                        </StackPanel>
+                    </CheckBox>
+                </ToolBar>
+            </ToolBarTray>
+        </StackPanel>
+
+        <TabControl x:Name="tabControl"
+                    ItemsSource="{Binding ViewManager.Viewers}"
+                    Grid.Row="1">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel MinWidth="120"
+                               HorizontalAlignment="Stretch">
+                        <DockPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Close" />
+                            </ContextMenu>
+                        </DockPanel.ContextMenu>
+                        <Ellipse Fill="{Binding State, Converter={StaticResource status2Colour}}"
+                                 Width="10"
+                                 Height="10"
+                                 x:Name="status"
+                                 VerticalAlignment="Center"
+                                 DockPanel.Dock="Left" />
+                        <TextBlock VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="{Binding Name}" />
+                    </DockPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding Presenter}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</Window>

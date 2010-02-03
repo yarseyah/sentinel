@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel", "Sentinel\Sentinel.csproj", "{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SentinelSetup", "SentinelSetup\SentinelSetup.vdproj", "{B5D7C170-88EA-4204-B9B0-84EBBEACA536}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D7C170-88EA-4204-B9B0-84EBBEACA536}.Debug|Any CPU.ActiveCfg = Debug
+		{B5D7C170-88EA-4204-B9B0-84EBBEACA536}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

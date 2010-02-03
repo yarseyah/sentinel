@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="Sentinel.Controls.HighlightersControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:Sentinel.Controls"
+             xmlns:Converters="clr-namespace:Sentinel.Converters">
+
+    <UserControl.Resources>
+        <Converters:ColourConverter x:Key="ColorConverter" />
+    </UserControl.Resources>
+    
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Left"
+                    VerticalAlignment="Center">
+            <StackPanel>
+                <Button Content="{StaticResource UpArrow}"
+                        Command="{Binding Highlighters.OrderEarlier}"
+                        Margin="5" />
+                <Button Content="{StaticResource DownArrow}"
+                        Command="{Binding Highlighters.OrderLater}"
+                        Margin="5" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Right"
+                    Width="80">
+            <Button Content="_Add"
+                    Command="{Binding Highlighters.Add}"
+                    Margin="5,0,5,5" />
+            <Button Content="_Edit"
+                    Command="{Binding Highlighters.Edit}"
+                    Margin="5,0,5,5" />
+            <Button Content="_Remove"
+                    Command="{Binding Highlighters.Remove}"
+                    Margin="5,0,5,5" />
+        </StackPanel>
+        <ListView Margin="5,0,5,0"
+                  ItemsSource="{Binding Highlighters.Highlighters}"
+                  SelectedIndex="{Binding Highlighters.SelectedIndex}"
+                  SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <Controls:FixedWidthColumn FixedWidth="28">
+                        <Controls:FixedWidthColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="True"
+                                          IsEnabled="False"
+                                          ToolTipService.ShowOnDisabled="True"
+                                          ToolTip="Is the highlighter enabled?" />
+                            </DataTemplate>
+                        </Controls:FixedWidthColumn.HeaderTemplate>
+                        <Controls:FixedWidthColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Enabled}"
+                                          Margin="2,3,0,3" />
+                            </DataTemplate>
+                        </Controls:FixedWidthColumn.CellTemplate>
+                    </Controls:FixedWidthColumn>
+                    <GridViewColumn Header="Name"
+                                    DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Type"
+                                    DisplayMemberBinding="{Binding HighlighterType}" />
+                    <GridViewColumn Header="Mode"
+                                    DisplayMemberBinding="{Binding Mode}" />
+                    <GridViewColumn Header="Pattern"
+                                    DisplayMemberBinding="{Binding Pattern}" />
+                    <Controls:FixedWidthColumn Header="Example"
+                                               FixedWidth="100">
+                        <Controls:FixedWidthColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="example"
+                                           Text="Example text...."
+                                           Foreground="{Binding Style.Foreground, Converter={StaticResource ColorConverter}, ConverterParameter=WindowText}"
+                                           Background="{Binding Style.Background, Converter={StaticResource ColorConverter}, ConverterParameter=Window}"
+                                           VerticalAlignment="Stretch"
+                                           HorizontalAlignment="Stretch" />
+                            </DataTemplate>
+                        </Controls:FixedWidthColumn.CellTemplate>
+                    </Controls:FixedWidthColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>

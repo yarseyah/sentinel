@@ -1,0 +1,244 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:Sentinel.Controls"
+             xmlns:Converters="clr-namespace:Sentinel.Converters"
+             x:Class="Sentinel.Controls.LogDetailsControl"
+             x:Name="UserControl"
+             MinHeight="100"
+             MinWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="RenderOptions.BitmapScalingMode"
+                    Value="NearestNeighbor" />
+        </Style>
+
+        <Style TargetType="{x:Type Image}"
+               x:Key="toolbarCheckboxImageStyle">
+            <Setter Property="RenderOptions.BitmapScalingMode"
+                    Value="NearestNeighbor" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type CheckBox}}}"
+                             Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.50" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Converters:TypeToImageConverter x:Key="TypeToImageConverter"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ToolBarTray Grid.Row="0"
+                     Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     x:Name="toolBarPanel1">
+            <ToolBar>
+                <CheckBox x:Name="playPauseButton"
+                          ToolTip="Start/Stop listening for new log messages (NOT CURRENTLY IMPLEMENTED)"
+                          ToolTipService.ShowOnDisabled="True"
+                          IsEnabled="False"
+                          Command="{Binding Pause}">
+                    <Image Source="/Resources/Play.png"
+                           Style="{StaticResource toolbarCheckboxImageStyle}" />
+                </CheckBox>
+                <CheckBox ToolTip="Scroll to show newly added entries"
+                          IsChecked="{Binding Details.ScrollToNewest}">
+                    <Image Source="/Resources/ScrollDown.png"
+                           Width="16"
+                           Height="16" />
+                </CheckBox>
+                <Button ToolTip="Save the current logger to a text file"
+                        Command="{Binding Save}">
+                    <Image Source="/Resources/Save.png"
+                           Width="16"
+                           Height="16" />
+                </Button>
+                <CheckBox ToolTip="Toggle layout between horizontal and vertical."
+                          IsChecked="{Binding Preferences.UseStackedLayout}">
+                    <Image Source="/Resources/Layout.png"
+                           Width="16"
+                           Height="16" />
+                </CheckBox>
+                <Button x:Name="clearButton"
+                        Command="{Binding Clear}"
+                        ToolTip="Clear log history">
+                    <Image Source="/Resources/Clear.png" />
+                </Button>
+            </ToolBar>
+            <Controls:DataBoundToolbar x:Name="HighlightToolbar"
+                                       Header="Highlight"
+                                       ItemsSource="{Binding Highlight.Highlighters}"
+                                       Width="Auto"
+                                       HorizontalContentAlignment="Center">
+                <Controls:DataBoundToolbar.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox x:Name="highlightCheckbox"
+                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
+                                  IsChecked="{Binding Enabled}"
+                                  Height="22"
+                                  ToolTipService.ShowOnDisabled="True">
+                            <Image Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                   Style="{StaticResource toolbarCheckboxImageStyle}"
+                                   Width="16"
+                                   Height="16" />
+                            <CheckBox.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" />
+                                        <TextBlock Text=" filter" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Highlight entries based upon a " />
+                                        <TextBlock Text="{Binding Field}" />
+                                        <TextBlock Text=" of " />
+                                        <TextBlock Text="{Binding Pattern}" />
+                                        <TextBlock Text="." />
+                                    </StackPanel>
+                                </StackPanel>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                         Value="{x:Null}">
+                                <Setter TargetName="highlightCheckbox"
+                                        Property="Content"
+                                        Value="{Binding Name}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </Controls:DataBoundToolbar.ItemTemplate>
+            </Controls:DataBoundToolbar>
+            <Controls:DataBoundToolbar x:Name="FilterToolbar"
+                                       Header="Filter"
+                                       ItemsSource="{Binding Filters.Filters}"
+                                       Width="Auto"
+                                       HorizontalContentAlignment="Stretch">
+                <Controls:DataBoundToolbar.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox x:Name="checkbox"
+                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
+                                  IsChecked="{Binding Enabled}"
+                                  Height="22"
+                                  ToolTipService.ShowOnDisabled="True">
+                            <Image Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                   Style="{StaticResource toolbarCheckboxImageStyle}"
+                                   Width="16"
+                                   Height="16" />
+                            <CheckBox.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" />
+                                        <TextBlock Text=" filter" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Show/hide entries based upon " />
+                                        <TextBlock Text="{Binding Description}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                         Value="{x:Null}">
+                                <Setter TargetName="checkbox"
+                                        Property="Content"
+                                        Value="{Binding Name}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </Controls:DataBoundToolbar.ItemTemplate>
+            </Controls:DataBoundToolbar>
+            <ToolBar Header="Search : "
+                     Width="Auto"
+                     VerticalContentAlignment="Center">
+                <TextBox Width="100"
+                         Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content=" in "
+                       VerticalAlignment="Center"
+                       Margin="5,0"
+                       HorizontalAlignment="Center" />
+                <ComboBox SelectedIndex="1"
+                          IsEditable="False"
+                          IsEnabled="False"
+                          Width="75">
+                    <ComboBox.Items>
+                        <ComboBoxItem Content="Type"/>
+                        <ComboBoxItem Content="System" />
+                        <ComboBoxItem Content="Description" />
+                    </ComboBox.Items>
+                </ComboBox>                
+            </ToolBar>
+        </ToolBarTray>
+
+        <DockPanel Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <DockPanel x:Name="first"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="1"
+                           Grid.RowSpan="3">
+                    <Label DockPanel.Dock="Top"
+                           Background="CornflowerBlue"
+                           Content="Log messages"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           FontSize="9" />
+                    <Controls:LogMessagesControl x:Name="LogMessages" />
+                </DockPanel>
+                <GridSplitter x:Name="splitter"
+                              ResizeBehavior="PreviousAndNext"
+                              Width="5"
+                              Grid.Row="0"
+                              Grid.Column="1"
+                              Grid.RowSpan="3"
+                              Grid.ColumnSpan="1" />
+                <DockPanel x:Name="second"
+                           Grid.Column="2"
+                           Grid.ColumnSpan="1"
+                           Grid.RowSpan="3"
+                           Grid.Row="0">
+                    <Label DockPanel.Dock="Top"
+                           Background="CornflowerBlue"
+                           Content="Message Activity"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           FontSize="9" />
+                    <Controls:LogActivityControl />
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Margin="0,2,0,0">
+            <TextBlock Margin="0,0,5,0"><Run Text="Showing" /></TextBlock>
+            <TextBlock Text="{Binding Details.FilteredCount}" />
+            <TextBlock Margin="5,0,5,0"><Run Text="of" /></TextBlock>
+            <TextBlock Text="{Binding Details.UnfilteredCount}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

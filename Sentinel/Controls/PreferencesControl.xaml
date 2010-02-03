@@ -1,0 +1,132 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Controls="clr-namespace:Sentinel.Controls"
+             mc:Ignorable="d"
+             x:Class="Sentinel.Controls.PreferencesControl"
+             x:Name="UserControl"
+             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+
+    <Grid x:Name="LayoutRoot">
+        <TabControl>
+            <TabItem Header="General">
+                <DockPanel Margin="5">
+                    <StackPanel DockPanel.Dock="Top">
+                        <GroupBox Header="Column options">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Text="Issue Types column :" />
+                                <ComboBox Grid.Row="0"
+                                          Grid.Column="2"
+                                          SelectedIndex="{Binding Preferences.SelectedTypeOption}"
+                                          Width="Auto"
+                                          HorizontalAlignment="Left"
+                                          Margin="0,5,0,5"
+                                          ItemsSource="{Binding Preferences.TypeOptions}"
+                                          MinWidth="100" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Text="Date Formatting :" />
+                                <ComboBox Grid.Row="1"
+                                          Grid.Column="2"
+                                          SelectedIndex="{Binding Preferences.SelectedDateOption}"
+                                          HorizontalAlignment="Left"
+                                          Margin="0,5,0,5"
+                                          ItemsSource="{Binding Preferences.DateFormatOptions}"
+                                          MinWidth="100" />
+                                <StackPanel Orientation="Vertical"
+                                            Grid.Row="2"
+                                            Margin="0,5,0,5"
+                                            Grid.ColumnSpan="3">
+                                    <CheckBox IsChecked="{Binding Preferences.ShowThreadColumn}"
+                                              HorizontalAlignment="Left"
+                                              MinWidth="100"
+                                              Margin="0,0,0,5"
+                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifer (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
+                                              Content="Show the Thread column" />
+                                    <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
+                                              HorizontalAlignment="Left"
+                                              ToolTip="Enables/disables live resorting of sortable columns"
+                                              Content="Enable live column resorting mode" />
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="Row options">
+                            <CheckBox Margin="5"
+                                      Content="Use tighter row seperation on Vista / Windows7"
+                                      ToolTip="Vista and Windows 7 put spacing around each row that takes up a fair amount of space, enabling this option tries to reduce the space to something like that used by Windows XP" 
+                                      IsChecked="{Binding Preferences.UseTighterRows}"/>
+                        </GroupBox>
+                        <GroupBox Header="Layout">
+                            <CheckBox Margin="5"
+                                      Content="Use Stacked Layout"
+                                      ToolTip="Orientate the two windows as stacked rather than side-by-side."
+                                      IsChecked="{Binding Preferences.UseStackedLayout}" />
+                        </GroupBox>
+                    </StackPanel>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Classifications">
+                <GroupBox Header="Message Classifications"
+                          Margin="5">
+                    <Controls:ClassificationsControl />
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Images">
+                <GroupBox Header="Type Images">
+                    <Controls:ImageTypesControl />
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Highlighters">
+                <GroupBox Header="Record Highlighting"
+                          Margin="5">
+                    <DockPanel>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                            <Run Text="Highlighters make it possible to change the appearance of the rows within" />
+                            <Run Text="the table views so that certain conditions are made to stand out from others." />
+                            <Run Text="An example would be marking Error messages in a red background." />
+                            </TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow"
+                                       Margin="0,5,0,5"
+                                       Text="The highlighters are evaluated in the order shown below and the first enabled match wins." />
+                        </StackPanel>
+                        <Controls:HighlightersControl />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Filters">
+                <GroupBox Header="Available Filters"
+                          Margin="5">
+                    <DockPanel>
+                        <TextBlock Margin="5"
+                                   DockPanel.Dock="Top"
+                                   TextWrapping="WrapWithOverflow">
+                            <Run Text="The list below indicates the available filters that may be applied" />
+                            <Run Text="to the presented list of entries, they do not prevent the messages" />
+                            <Run Text="from being recorded, just optionally displayed or not." />
+                        </TextBlock>
+                        <Controls:FiltersControl Height="Auto"
+                                                 VerticalAlignment="Stretch" />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
