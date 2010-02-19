@@ -32,12 +32,14 @@ namespace Sentinel.Logger
 
         private string name;
 
+        private readonly static DateTime log4jDateBase = new DateTime(1970, 1, 1);
+
         public Log(string name)
         {
             Name = name;
 
-            Entries = new List<LogEntry>();
-            NewEntries = new List<LogEntry>();
+            Entries = new List<ILogEntry>();
+            NewEntries = new List<ILogEntry>();
 
             // Observe the NewEntries to maintain a full history.
             PropertyChanged += OnPropertyChanged;
@@ -47,7 +49,7 @@ namespace Sentinel.Logger
 
         #region ILogger Members
 
-        public IEnumerable<LogEntry> Entries { get; private set; }
+        public IEnumerable<ILogEntry> Entries { get; private set; }
 
         public string Name
         {
@@ -66,88 +68,32 @@ namespace Sentinel.Logger
             }
         }
 
-        public IEnumerable<LogEntry> NewEntries { get; private set; }
+        public IEnumerable<ILogEntry> NewEntries { get; private set; }
 
         public void AddBatch(Queue<string> pendingQueue)
         {
-            List<LogEntry> newList = new List<LogEntry>();
+            List<ILogEntry> newList = new List<ILogEntry>();
 
             while (pendingQueue.Count > 0)
             {
                 string queuedMessage = pendingQueue.Dequeue();
 
-                XNamespace log4Net = "unique";
-                string message = string.Format(
-                    @"<entry xmlns:log4net=""{0}"">{1}</entry>",
-                    log4Net,
-                    queuedMessage);
-
-                XElement element = XElement.Parse(message);
-                XElement record = element.Element(log4Net + "event");
-
-                // Establish whether a sub-system seems to be defined.
-                string description = record.Element(log4Net + "message").Value;
-
-                string classification = String.Empty;
-                string system = record.Attribute("logger").Value;
-                string type = record.Attribute("level").Value;
-                string host = "???";
-
-                foreach (XElement propertyElement in record.Element(log4Net + "properties").Elements())
+                ILogEntry newEntry = null;
+                // Need to identify the message.
+                if ( queuedMessage.StartsWith("<log4j"))
                 {
-                    if (propertyElement.Name == log4Net + "data" && propertyElement.Attribute("name") != null)
-                    {
-                        host = propertyElement.Attribute("value").Value;
-                    }
+                    newEntry = AddLog4jMessage(queuedMessage);
+                }
+                else if ( queuedMessage.StartsWith("<log4net"))
+                {
+                    newEntry = AddLog4NetMessage(queuedMessage);
+                }
+                else
+                {
+                    throw new NotSupportedException("Don't know what format this message is in!\r\n" + queuedMessage);
                 }
 
-                if (classifier != null)
-                {
-                    foreach (IClassifier c in classifier.Items)
-                    {
-                        if (c.Enabled)
-                        {
-                            if (c is IDescriptionClassifier)
-                            {
-                                DescriptionClassifierRecord classifierRecord =
-                                    (c as IDescriptionClassifier).Classify(description);
-
-                                if (classifierRecord != null)
-                                {
-                                    system = classifierRecord.System;
-                                    description = classifierRecord.Description;
-                                    classification = c.Name;
-                                    break;
-                                }
-                            }
-                            else if (c is IDescriptionTypeClassifier)
-                            {
-                                DescriptionTypeClassifierRecord classifierRecord =
-                                    (c as IDescriptionTypeClassifier).Classify(description);
-
-                                if (classifierRecord != null)
-                                {
-                                    type = classifierRecord.Type;
-                                    description = classifierRecord.Description;
-                                    classification = c.Name;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                newList.Add(
-                    new LogEntry
-                        {
-                            DateTime = DateTime.Parse(record.Attribute("timestamp").Value),
-                            System = system,
-                            Classification = classification,
-                            Thread = record.Attribute("thread").Value,
-                            Description = description,
-                            Type = type,
-                            Host = host
-                        });
+                newList.Add(newEntry);
             }
 
             lock (NewEntries) NewEntries = newList;
@@ -165,7 +111,7 @@ namespace Sentinel.Logger
 
             lock (NewEntries)
             {
-                ((List<LogEntry>) NewEntries).Clear();
+                ((List<ILogEntry>) NewEntries).Clear();
             }
 
             GC.Collect();
@@ -181,12 +127,139 @@ namespace Sentinel.Logger
                 {
                     lock (Entries)
                     {
-                        ((List<LogEntry>) Entries).AddRange(NewEntries);
+                        ((List<ILogEntry>) Entries).AddRange(NewEntries);
                     }
 
                     OnPropertyChanged("Entries");
                 }
             }
         }
+
+        private ILogEntry AddLog4jMessage(string m)
+        {
+            XNamespace log4j = "unique";
+            string message = string.Format(
+                @"<entry xmlns:log4j=""{0}"">{1}</entry>",
+                log4j,
+                m);
+
+            XElement element = XElement.Parse(message);
+            XElement record = element.Element(log4j + "event");
+
+            // Establish whether a sub-system seems to be defined.
+            string description = record.Element(log4j + "message").Value;
+
+            string classification = String.Empty;
+            string system = record.Attribute("logger").Value;
+            string type = record.Attribute("level").Value;
+            string host = "???";
+
+            foreach (XElement propertyElement in record.Element(log4j + "properties").Elements())
+            {
+                if (propertyElement.Name == log4j + "data"
+                    && propertyElement.Attribute("name") != null
+                    && propertyElement.Attribute("name").Value == "log4jmachinename")
+                {
+                    host = propertyElement.Attribute("value").Value;
+                }
+            }
+
+            description = ClassifyMessage(description, ref system, ref classification, ref type);
+
+            DateTime date = log4jDateBase + TimeSpan.FromMilliseconds(Double.Parse(record.Attribute("timestamp").Value));
+
+            return new LogEntry
+            {
+                DateTime = date,
+                System = system,
+                Classification = classification,
+                Thread = record.Attribute("thread").Value,
+                Description = description,
+                Type = type,
+                Host = host
+            };
+        }
+
+        private ILogEntry AddLog4NetMessage(string m)
+        {
+            XNamespace log4Net = "unique";
+            string message = string.Format(
+                @"<entry xmlns:log4net=""{0}"">{1}</entry>",
+                log4Net,
+                m);
+
+            XElement element = XElement.Parse(message);
+            XElement record = element.Element(log4Net + "event");
+
+            // Establish whether a sub-system seems to be defined.
+            string description = record.Element(log4Net + "message").Value;
+
+            string classification = String.Empty;
+            string system = record.Attribute("logger").Value;
+            string type = record.Attribute("level").Value;
+            string host = "???";
+
+            foreach (XElement propertyElement in record.Element(log4Net + "properties").Elements())
+            {
+                if (propertyElement.Name == log4Net + "data" && propertyElement.Attribute("name") != null)
+                {
+                    host = propertyElement.Attribute("value").Value;
+                }
+            }
+
+            description = ClassifyMessage(description, ref system, ref classification, ref type);
+
+            return new LogEntry
+            {
+                DateTime = DateTime.Parse(record.Attribute("timestamp").Value),
+                System = system,
+                Classification = classification,
+                Thread = record.Attribute("thread").Value,
+                Description = description,
+                Type = type,
+                Host = host
+            };
+        }
+
+        private string ClassifyMessage(string description, ref string system, ref string classification, ref string type)
+        {
+            if (classifier != null)
+            {
+                foreach (IClassifier c in classifier.Items)
+                {
+                    if (c.Enabled)
+                    {
+                        if (c is IDescriptionClassifier)
+                        {
+                            DescriptionClassifierRecord classifierRecord =
+                                (c as IDescriptionClassifier).Classify(description);
+
+                            if (classifierRecord != null)
+                            {
+                                system = classifierRecord.System;
+                                description = classifierRecord.Description;
+                                classification = c.Name;
+                                break;
+                            }
+                        }
+                        else if (c is IDescriptionTypeClassifier)
+                        {
+                            DescriptionTypeClassifierRecord classifierRecord =
+                                (c as IDescriptionTypeClassifier).Classify(description);
+
+                            if (classifierRecord != null)
+                            {
+                                type = classifierRecord.Type;
+                                description = classifierRecord.Description;
+                                classification = c.Name;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return description;
+        }
+
     }
 }

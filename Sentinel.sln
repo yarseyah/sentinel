@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel", "Sentinel\Sentin
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SentinelSetup", "SentinelSetup\SentinelSetup.vdproj", "{B5D7C170-88EA-4204-B9B0-84EBBEACA536}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogTester", "NLogTester\NLogTester.csproj", "{93081C58-433D-40D1-B0AD-524AA098D3B2}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -21,6 +23,10 @@ Global
 		{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5D7C170-88EA-4204-B9B0-84EBBEACA536}.Debug|Any CPU.ActiveCfg = Debug
 		{B5D7C170-88EA-4204-B9B0-84EBBEACA536}.Release|Any CPU.ActiveCfg = Release
+		{93081C58-433D-40D1-B0AD-524AA098D3B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93081C58-433D-40D1-B0AD-524AA098D3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93081C58-433D-40D1-B0AD-524AA098D3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93081C58-433D-40D1-B0AD-524AA098D3B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

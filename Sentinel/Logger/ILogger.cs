@@ -23,7 +23,7 @@ namespace Sentinel.Logger
         /// <summary>
         /// Gets the entries for the logger.
         /// </summary>
-        IEnumerable<LogEntry> Entries { get; }
+        IEnumerable<ILogEntry> Entries { get; }
 
         /// <summary>
         /// Gets the name of the logger.
@@ -33,7 +33,7 @@ namespace Sentinel.Logger
         /// <summary>
         /// Gets the newly added entries for the logger.
         /// </summary>
-        IEnumerable<LogEntry> NewEntries { get; }
+        IEnumerable<ILogEntry> NewEntries { get; }
 
         /// <summary>
         /// Add a batch of new messages to the logger.
