@@ -37,7 +37,9 @@ namespace Sentinel.Converters
                     dateTime = (DateTime) value;
                 }
 
-                TimeSpan elapsed = DateTime.Now - dateTime;
+                // adjust the timezone information in the dateTime
+                DateTime adjusted = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+                TimeSpan elapsed = DateTimeOffset.UtcNow - adjusted;
                 return string.Format(
                     "{0:D2}:{1:D2}:{2:D2},{3:D3}",
                     elapsed.Hours,
