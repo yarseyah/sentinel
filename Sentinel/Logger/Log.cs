@@ -104,14 +104,14 @@ namespace Sentinel.Logger
         {
             lock (Entries)
             {
-                ((List<LogEntry>) Entries).Clear();
+                ((IList<ILogEntry>) Entries).Clear();
             }
 
             OnPropertyChanged("Entries");
 
             lock (NewEntries)
             {
-                ((List<ILogEntry>) NewEntries).Clear();
+                ((IList<ILogEntry>) NewEntries).Clear();
             }
 
             GC.Collect();
