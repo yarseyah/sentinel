@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8D37D08D-5F3E-47FF-B9A7-871E736E1A80}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sentinel.Providers</RootNamespace>
+    <AssemblyName>Sentinel.Providers</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition, Version=2010.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\MEF\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomMessageDecoderPage.xaml.cs">
+      <DependentUpon>CustomMessageDecoderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FileMonitoringProvider.cs" />
+    <Compile Include="FileMonitoringProviderSettings.cs" />
+    <Compile Include="FileMonitorProviderPage.xaml.cs">
+      <DependentUpon>FileMonitorProviderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IFileMonitoringProviderSettings.cs" />
+    <Compile Include="Log4NetProvider.cs" />
+    <Compile Include="MessageFormatPage.xaml.cs">
+      <DependentUpon>MessageFormatPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewProviderWizard.cs" />
+    <Compile Include="NLogViewerProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProviderInfo.cs" />
+    <Compile Include="ProviderManager.cs" />
+    <Compile Include="ProviderRegistrationRecord.cs" />
+    <Compile Include="ProviderSettings.cs" />
+    <Compile Include="SelectProviderPage.xaml.cs">
+      <DependentUpon>SelectProviderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NetworkConfigurationPage.xaml.cs">
+      <DependentUpon>NetworkConfigurationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NetworkBatchingProvider.cs" />
+    <Compile Include="NetworkSettings.cs" />
+    <Compile Include="UdpNetworkConfigurationPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
+      <Project>{98EE053E-9457-4EEA-9C88-129D53304549}</Project>
+      <Name>Sentinel.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Logs.Interfaces\Sentinel.Logs.Interfaces.csproj">
+      <Project>{5331A25E-7944-4A60-ADC3-71F1BBC5D88F}</Project>
+      <Name>Sentinel.Logs.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Providers.Interfaces\Sentinel.Providers.Interfaces.csproj">
+      <Project>{94B2806B-B157-4BAD-92B7-59118283E79D}</Project>
+      <Name>Sentinel.Providers.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Services\Sentinel.Services.csproj">
+      <Project>{4E75A33A-41BE-4B82-8FF9-65E1260B04B5}</Project>
+      <Name>Sentinel.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Support.Converters\Sentinel.Support.Converters.csproj">
+      <Project>{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}</Project>
+      <Name>Sentinel.Support.Converters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Support.Mvvm\Sentinel.Support.Mvvm.csproj">
+      <Project>{9D39C747-ABC7-48B1-B7A2-581195BD4BE7}</Project>
+      <Name>Sentinel.Support.Mvvm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
+      <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>
+      <Name>WpfExtras</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CustomMessageDecoderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FileMonitorProviderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MessageFormatPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectProviderPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NetworkConfigurationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(SolutionDir)Bin" mkdir "$(SolutionDir)Bin"
+echo Copy Target $(TargetPath)
+xcopy "$(TargetPath)" "$(SolutionDir)Bin" /q /y
+echo Copy Debug Database
+xcopy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Bin" /q /y
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Converters="clr-namespace:Sentinel.Converters"
         x:Class="Sentinel.Controls.MainWindow"
         Title="Sentinel"
         Height="560"
@@ -22,7 +21,6 @@
             <Setter Property="RenderOptions.BitmapScalingMode"
                     Value="NearestNeighbor" />
         </Style>
-        <Converters:StatusColourConverter x:Key="status2Colour"/>
     </Window.Resources>
 
     <Grid>
@@ -80,8 +78,8 @@
         </StackPanel>
 
         <TabControl x:Name="tabControl"
-                    ItemsSource="{Binding ViewManager.Viewers}"
                     Grid.Row="1">
+            <!--
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <DockPanel MinWidth="120"
@@ -91,12 +89,6 @@
                                 <MenuItem Header="Close" />
                             </ContextMenu>
                         </DockPanel.ContextMenu>
-                        <Ellipse Fill="{Binding State, Converter={StaticResource status2Colour}}"
-                                 Width="10"
-                                 Height="10"
-                                 x:Name="status"
-                                 VerticalAlignment="Center"
-                                 DockPanel.Dock="Left" />
                         <TextBlock VerticalAlignment="Center"
                                    HorizontalAlignment="Center"
                                    TextAlignment="Center"
@@ -104,11 +96,14 @@
                     </DockPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
+            -->
+            <!--
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <ContentControl Content="{Binding Presenter}" />
                 </DataTemplate>
             </TabControl.ContentTemplate>
+            -->
         </TabControl>
     </Grid>
 </Window>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Sentinel.Logs.Gui.AddNewLoggerWelcomePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <TextBlock TextWrapping="WrapWithOverflow"
+                   Margin="10">
+            <Run>Sentinel works with the concept of Logs, Providers and Displayers.</Run><LineBreak />
+            <LineBreak />
+            <Run FontWeight="Bold">Logs</Run><Run xml:space="preserve"> are predominantly non-visual elements but they are essential for the way Sentinel operates.  They are both the destination for </Run><Run FontWeight="Bold">Providers</Run><Run xml:space="preserve"> and the source for </Run><Run FontWeight="Bold">Displayers</Run><Run>.</Run>
+            <LineBreak />
+            <LineBreak />
+            <Run xml:space="preserve">Sentinel supports multiple providers for an individual log and multiple views upon an individual log.</Run>
+            <LineBreak />
+            <LineBreak />
+            <Run xml:space="preserve">This wizard allows you define a new log and its associated providers and views.</Run>
+            <LineBreak />
+            <LineBreak />
+        </TextBlock>
+    </Grid>
+</UserControl>

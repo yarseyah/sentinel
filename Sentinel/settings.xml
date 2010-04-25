@@ -1,73 +1,60 @@
-﻿<Services count="4">
-  <Service key="Sentinel.Preferences.IUserPreferences" instanceType="Sentinel.Preferences.UserPreferences">
-    <UserPreferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <SelectedTypeOption>1</SelectedTypeOption>
-      <SelectedDateOption>3</SelectedDateOption>
-      <Show>false</Show>
-      <ShowThreadColumn>false</ShowThreadColumn>
-      <UseLazyRebuild>false</UseLazyRebuild>
-      <UseTighterRows>false</UseTighterRows>
-      <UseStackedLayout>false</UseStackedLayout>
-    </UserPreferences>
-  </Service>
-  <Service key="Sentinel.Highlighting.IHighlightingService" instanceType="Sentinel.Highlighting.HighlightingService">
-    <HighlightingService xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <DisplayName>HighlightingService</DisplayName>
-      <Highlighters>
-        <Highlighter Name="Fatal" Enabled="true">
-          <Field>Type</Field>
-          <Pattern>FATAL</Pattern>
-          <Style Fg="#FFFFFF00" Bg="#FF000000" />
-          <Mode>Exact</Mode>
-        </Highlighter>
-        <Highlighter Name="Error" Enabled="true">
-          <Field>Type</Field>
-          <Pattern>ERROR</Pattern>
-          <Style Fg="#FF000000" Bg="#FFFF0000" />
-          <Mode>Exact</Mode>
-        </Highlighter>
-        <Highlighter Name="Warning" Enabled="true">
-          <Field>Type</Field>
-          <Pattern>WARN</Pattern>
-          <Style Fg="#FF000000" Bg="#FFFFFF00" />
-          <Mode>Exact</Mode>
-        </Highlighter>
-        <Highlighter Name="Info" Enabled="true">
-          <Field>Type</Field>
-          <Pattern>INFO</Pattern>
-          <Style Fg="#FFFFFFFF" Bg="#FF0000FF" />
-          <Mode>Exact</Mode>
-        </Highlighter>
-        <Highlighter Name="Debug" Enabled="true">
-          <Field>Type</Field>
-          <Pattern>DEBUG</Pattern>
-          <Style Fg="#FFFFFFFF" Bg="#FF008000" />
-          <Mode>Exact</Mode>
-        </Highlighter>
-      </Highlighters>
-    </HighlightingService>
-  </Service>
-  <Service key="Sentinel.Filters.IFilteringService" instanceType="Sentinel.Filters.FilteringService">
-    <FilteringService xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <DisplayName>FilteringService</DisplayName>
-      <Filters>
-        <Filter Enabled="true" Name="Fatal" Pattern="FATAL" Field="Type" Mode="Exact" />
-        <Filter Enabled="true" Name="Error" Pattern="ERROR" Field="Type" Mode="Exact" />
-        <Filter Enabled="true" Name="Warning" Pattern="WARN" Field="Type" Mode="Exact" />
-        <Filter Enabled="true" Name="Info" Pattern="INFO" Field="Type" Mode="Exact" />
-        <Filter Enabled="true" Name="Debug" Pattern="DEBUG" Field="Type" Mode="Exact" />
-        <Filter Enabled="true" Name="Timing" Pattern="Timing" Field="Type" Mode="Exact" />
-      </Filters>
-    </FilteringService>
-  </Service>
-  <Service key="Sentinel.Highlighting.IQuickHighlighter" instanceType="Sentinel.Highlighting.QuickHighlighter">
-    <QuickHighlighter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <Highlighter Name="Quick Highlight" Enabled="true">
-        <Field>System</Field>
-        <Pattern>Test</Pattern>
-        <Style Fg="#FF800080" Bg="#FF98FB98" />
-        <Mode>Substring</Mode>
-      </Highlighter>
-    </QuickHighlighter>
-  </Service>
+﻿<Services count="3">
+    <Service key="Sentinel.Interfaces.IUserPreferences" instanceType="Sentinel.Preferences.UserPreferences">
+        <UserPreferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <SelectedDateOption>1</SelectedDateOption>
+            <SelectedTypeOption>1</SelectedTypeOption>
+            <Show>false</Show>
+            <ShowThreadColumn>false</ShowThreadColumn>
+            <UseLazyRebuild>false</UseLazyRebuild>
+            <UseStackedLayout>false</UseStackedLayout>
+            <UseTighterRows>false</UseTighterRows>
+        </UserPreferences>
+    </Service>
+    <Service key="Sentinel.Highlighters.Interfaces.IHighlightingService" instanceType="Sentinel.Highlighters.HighlightingService">
+        <HighlightingService>
+            <int>5</int>
+            <Highlighter Enabled="true" Name="Debug">
+                <Field>Type</Field>
+                <Mode>Exact</Mode>
+                <Pattern>DEBUG</Pattern>
+                <Style Fg="#FFA9A9A9" Bg="(null)" />
+            </Highlighter>
+            <Highlighter Enabled="true" Name="Warning">
+                <Field>Type</Field>
+                <Mode>Exact</Mode>
+                <Pattern>WARN</Pattern>
+                <Style Fg="#FF000000" Bg="#FFFFFF00" />
+            </Highlighter>
+            <Highlighter Enabled="true" Name="Info">
+                <Field>Type</Field>
+                <Mode>Exact</Mode>
+                <Pattern>INFO</Pattern>
+                <Style Fg="#FF1E90FF" Bg="(null)" />
+            </Highlighter>
+            <Highlighter Enabled="true" Name="Error">
+                <Field>Type</Field>
+                <Mode>Exact</Mode>
+                <Pattern>ERROR</Pattern>
+                <Style Fg="#FFFF0000" Bg="(null)" />
+            </Highlighter>
+            <Highlighter Enabled="true" Name="Fatal">
+                <Field>Type</Field>
+                <Mode>Exact</Mode>
+                <Pattern>FATAL</Pattern>
+                <Style Fg="#FFFFFF00" Bg="#FF000000" />
+            </Highlighter>
+        </HighlightingService>
+    </Service>
+    <Service key="Sentinel.Highlighters.Interfaces.IQuickHighlighter" instanceType="Sentinel.Highlighters.QuickHighlighter">
+        <QuickHighlighter>
+            <int>2</int>
+            <string/>
+            <Highlighter Enabled="false" Name="Quick Highlight">
+                <Field>System</Field>
+                <Mode>Substring</Mode>
+                <Pattern />
+                <Style Fg="#FF800080" Bg="#FF98FB98" />
+            </Highlighter>
+        </QuickHighlighter>
+    </Service>
 </Services>

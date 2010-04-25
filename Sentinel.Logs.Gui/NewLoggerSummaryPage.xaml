@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="Sentinel.Logs.Gui.NewLoggerSummaryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"
+                              SharedSizeGroup="Label" />
+            <ColumnDefinition Width="*"
+                              SharedSizeGroup="Content" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Margin="3"
+                   Grid.ColumnSpan="2">
+            The following selections were made for the new log:
+        </TextBlock>
+        <GroupBox Header="Identifier"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  Grid.IsSharedSizeScope="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Label" />
+                    <ColumnDefinition SharedSizeGroup="Content" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Margin="3"
+                           Text="Logger Name :" />
+                <TextBlock Grid.Column="1"
+                           Margin="3"
+                           FontWeight="Bold"
+                           Text="{Binding Settings.LogName}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Providers"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Grid.IsSharedSizeScope="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Label" />
+                    <ColumnDefinition SharedSizeGroup="Content" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="3"
+                           FontWeight="Bold"
+                           TextWrapping="WrapWithOverflow"
+                           Text="{Binding Settings.ProviderSummary}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Views"
+                  Grid.Row="3"
+                  Grid.ColumnSpan="2"
+                  Grid.IsSharedSizeScope="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Label" />
+                    <ColumnDefinition SharedSizeGroup="Content" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="3"
+                           Text="{Binding Settings.SingleView}" />
+                <TextBlock Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="3"
+                           Text="{Binding Settings.MultipleView}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Margin="3"
+                           Text="Primary View : " />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="3"
+                           FontWeight="Bold"
+                           Text="{Binding Settings.PrimaryView}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Margin="3"
+                           Text="Secondary View : " />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Margin="3"
+                           FontWeight="Bold"
+                           Text="{Binding Settings.SecondaryView}" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

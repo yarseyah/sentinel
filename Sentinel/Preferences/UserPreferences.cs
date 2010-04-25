@@ -11,17 +11,14 @@
 
 using System;
 using System.Collections.Generic;
-using Sentinel.Support;
+using Sentinel.Interfaces;
+using Sentinel.Support.Mvvm;
+using Sentinel.Support.Wpf;
 
 #endregion
 
 namespace Sentinel.Preferences
 {
-
-    #region Using directives
-
-    #endregion
-
     /// <summary>
     /// An implementation of the IUserPreferences which holds all of the user
     /// selections in a view-model based structure, allowing simple binding to 

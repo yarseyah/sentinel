@@ -1,0 +1,83 @@
+﻿<Window x:Class="Sentinel.Filters.Gui.AddEditFilterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add / Edit Filter"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="SingleBorderWindow"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Height="Auto"
+               Margin="5">
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Bottom"
+                    Height="36"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+            <Button Content="_OK"
+                    Command="{Binding Accept}"
+                    Width="80"
+                    Margin="0,5"
+                    IsDefault="True" />
+            <Button Content="_Cancel"
+                    Command="{Binding Reject}"
+                    Width="80"
+                    Margin="5,5,0,5"
+                    IsCancel="True" />
+        </StackPanel>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Filter name : "
+                   Margin="5" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     VerticalContentAlignment="Center" />
+
+            <Label Content="Field to match against : "
+                   Grid.Row="1"
+                   Margin="5" />
+            <ComboBox Grid.Column="1"
+                      Grid.Row="1"
+                      SelectedIndex="{Binding FieldIndex}"
+                      ItemsSource="{Binding Fields}"
+                      Margin="5"
+                      VerticalContentAlignment="Center" />
+
+            <Label Content="Match method : "
+                   Margin="5"
+                   Grid.Row="2" />
+            <ComboBox Grid.Column="1"
+                      Grid.Row="2"
+                      SelectedIndex="{Binding FilterMethod}"
+                      ItemsSource="{Binding FilterMethods}"
+                      Margin="5"
+                      VerticalContentAlignment="Center" />
+
+            <Label Content="Match string :"
+                   Margin="5"
+                   Grid.Row="3" />
+            <TextBox x:Name="matchText"
+                     Margin="5"
+                     MinWidth="205"
+                     Grid.Row="3"
+                     Grid.Column="1"
+                     Text="{Binding Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center" />
+        </Grid>
+    </DockPanel>
+</Window>

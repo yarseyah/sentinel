@@ -3,10 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Controls="clr-namespace:Sentinel.Controls"
+             xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Controls;assembly=Sentinel.Classification"
+             xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui;assembly=Sentinel.Highlighters.Gui"
+             xmlns:Filters="clr-namespace:Sentinel.Filters.Gui;assembly=Sentinel.Filters.Gui"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
-             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+             Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
     <Grid x:Name="LayoutRoot">
         <TabControl>
@@ -84,7 +87,7 @@
             <TabItem Header="Classifications">
                 <GroupBox Header="Message Classifications"
                           Margin="5">
-                    <Controls:ClassificationsControl />
+                    <ClassificationControls:ClassificationsControl />
                 </GroupBox>
             </TabItem>
             <TabItem Header="Images">
@@ -107,7 +110,7 @@
                                        Margin="0,5,0,5"
                                        Text="The highlighters are evaluated in the order shown below and the first enabled match wins." />
                         </StackPanel>
-                        <Controls:HighlightersControl />
+                        <Highlighters:HighlightersControl />
                     </DockPanel>
                 </GroupBox>
             </TabItem>
@@ -122,7 +125,7 @@
                             <Run Text="to the presented list of entries, they do not prevent the messages" />
                             <Run Text="from being recorded, just optionally displayed or not." />
                         </TextBlock>
-                        <Controls:FiltersControl Height="Auto"
+                        <Filters:FiltersControl Height="Auto"
                                                  VerticalAlignment="Stretch" />
                     </DockPanel>
                 </GroupBox>

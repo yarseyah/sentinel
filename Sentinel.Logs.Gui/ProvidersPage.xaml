@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="Sentinel.Logs.Gui.ProvidersPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="500">
+	<UserControl.Resources>
+        <Style x:Key="listviewError"
+               TargetType="{x:Type ListView}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={RelativeSource Self},
+                                            Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+	<Grid Margin="4"
+          Loaded="PageLoaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ListView Grid.Column="0"
+                  Grid.Row="1"
+                  Grid.RowSpan="2"
+                  Style="{StaticResource listviewError}"
+                  ItemsSource="{Binding Providers, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedIndex="{Binding SelectedProviderIndex, Mode=OneWayToSource}"
+                  SelectionMode="Single">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridView.Columns>
+                        <GridViewColumn Header="Name"
+                                        DisplayMemberBinding="{Binding Path=Settings.Name}" 
+                                        Width="50"/>
+                        <GridViewColumn Header="Type"
+                                        DisplayMemberBinding="{Binding Path=Info.Name}" 
+                                        Width="120"/>
+                        <GridViewColumn Header="Configuration"
+                                        DisplayMemberBinding="{Binding Path=Settings.Summary}" 
+                                        Width="220"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+
+        </ListView>
+
+        <StackPanel Margin="5,0,0,0"
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="1">
+            <Button Content="_Add"
+                    Command="{Binding Add}"
+                    Width="75" />
+            <Button Content="_Remove"
+                    Command="{Binding Remove}"
+                    Margin="0,3"
+                    Width="75" />
+        </StackPanel>
+    </Grid>
+</UserControl>

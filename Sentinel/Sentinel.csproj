@@ -26,17 +26,18 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\Sentinel.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,6 +45,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition, Version=2010.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\MEF\System.ComponentModel.Composition.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -77,54 +82,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\AddEditFilterWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\AddEditHighlighterWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\AddImageWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\AddNewUdpListenerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\AddLog4NetUdpListenerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ClassificationsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\FiltersControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\HighlightersControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\ImageTypesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -132,18 +89,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\LogActivityControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\LogDetailsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\LogMessagesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -175,145 +120,27 @@
       <DependentUpon>MainApplication.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Support\DelegateCommand.cs" />
-    <Compile Include="Logger\Log.cs" />
     <Compile Include="Controls\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classifying\DescriptionClassifier.cs" />
-    <Compile Include="Classifying\DescriptionClassifierRecord.cs" />
-    <Compile Include="Classifying\DescriptionTypeClassifier.cs" />
-    <Compile Include="Classifying\DescriptionTypeClassifierRecord.cs" />
-    <Compile Include="Controls\AddEditFilterWindow.xaml.cs">
-      <DependentUpon>AddEditFilterWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddEditHighlighterWindow.xaml.cs">
-      <DependentUpon>AddEditHighlighterWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddImageWindow.xaml.cs">
-      <DependentUpon>AddImageWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddNewUdpListenerWindow.xaml.cs">
-      <DependentUpon>AddNewUdpListenerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddLog4NetUdpListenerControl.xaml.cs">
-      <DependentUpon>AddLog4NetUdpListenerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\HighlightersControl.xaml.cs">
-      <DependentUpon>HighlightersControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\AddEditFilter.cs" />
-    <Compile Include="Filters\AddFilter.cs" />
-    <Compile Include="Filters\EditFilter.cs" />
-    <Compile Include="Filters\IAddFilterService.cs" />
-    <Compile Include="Filters\IEditFilterService.cs" />
-    <Compile Include="Filters\IRemoveFilterService.cs" />
-    <Compile Include="Filters\RemoveFilter.cs" />
-    <Compile Include="Highlighting\HighlighterConverter.cs" />
-    <Compile Include="Highlighting\HighlighterData.cs" />
-    <Compile Include="Highlighting\IQuickHighlighter.cs" />
-    <Compile Include="Highlighting\QuickHighlighter.cs" />
-    <Compile Include="Images\IEditImageMapping.cs" />
-    <Compile Include="Images\IRemoveImageMapping.cs" />
-    <Compile Include="Logger\ILogManager.cs" />
     <Compile Include="Logger\ILogViewerDetails.cs" />
     <Compile Include="Logger\IUdpLogViewer.cs" />
-    <Compile Include="Logger\LogEntryField.cs" />
     <Compile Include="Logger\LogEntryFieldHelper.cs" />
-    <Compile Include="Networking\IConnectionsManager.cs" />
-    <Compile Include="Networking\INetworkListener.cs" />
-    <Compile Include="Networking\IUdpListenerDetails.cs" />
-    <Compile Include="Converters\BoolToDisableConverter.cs" />
-    <Compile Include="Converters\VisibilityToHiddenConverter.cs" />
-    <Compile Include="Highlighting\AddEditHighlighter.cs" />
-    <Compile Include="Highlighting\AddNewHighlighterService.cs" />
-    <Compile Include="Highlighting\EditHighlighterService.cs" />
-    <Compile Include="Highlighting\IAddHighlighterService.cs" />
-    <Compile Include="Highlighting\IEditHighlighterService.cs" />
-    <Compile Include="Highlighting\IRemoveHighlighterService.cs" />
-    <Compile Include="Support\CaseInsensitiveComparer.cs" />
-    <Compile Include="Support\EnumerableExtensions.cs" />
-    <Compile Include="Support\MatchMode.cs" />
-    <Compile Include="Support\MatchModeConverter.cs" />
-    <Compile Include="Highlighting\RemoveHighlighterService.cs" />
-    <Compile Include="Highlighting\Highlighter.cs" />
-    <Compile Include="Classifying\IAddClassifier.cs" />
-    <Compile Include="Classifying\IClassifierService.cs" />
-    <Compile Include="Classifying\IDescriptionClassifier.cs" />
-    <Compile Include="Classifying\IDescriptionTypeClassifier.cs" />
-    <Compile Include="Classifying\IEditClassifier.cs" />
-    <Compile Include="Classifying\IIncomingClassifier.cs" />
-    <Compile Include="Classifying\IncomingClassifier.cs" />
-    <Compile Include="Classifying\IRemoveClassifier.cs" />
-    <Compile Include="Classifying\IVisualClassifier.cs" />
-    <Compile Include="Classifying\TypeImageClassifier.cs" />
-    <Compile Include="Controls\DataBoundToolbar.cs" />
-    <Compile Include="Controls\FiltersControl.xaml.cs">
-      <DependentUpon>FiltersControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Highlighting\HighlightingSelector.cs" />
     <Compile Include="Controls\ImageTypesControl.xaml.cs">
       <DependentUpon>ImageTypesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ImageView.cs" />
-    <Compile Include="Converters\ColourConverter.cs" />
-    <Compile Include="Filters\FilteringService.cs" />
-    <Compile Include="Filters\Filter.cs" />
-    <Compile Include="Logger\ILogEntry.cs" />
-    <Compile Include="Highlighting\HighlightingService.cs" />
-    <Compile Include="Filters\IFilteringService.cs" />
-    <Compile Include="Highlighting\IHighlightingService.cs" />
-    <Compile Include="Images\AddEditTypeImageViewModel.cs" />
-    <Compile Include="Images\AddTypeImageService.cs" />
-    <Compile Include="Images\IAddTypeImageService.cs" />
-    <Compile Include="Logger\ILogViewer.cs" />
-    <Compile Include="Logger\ILogViewerWithState.cs" />
-    <Compile Include="Images\ITypeImageService.cs" />
-    <Compile Include="Converters\TypeToImageConverter.cs" />
-    <Compile Include="Networking\ConnectionsManager.cs" />
-    <Compile Include="Preferences\IUserPreferences.cs" />
     <Compile Include="Preferences\UserPreferences.cs" />
-    <Compile Include="Services\IViewManager.cs" />
-    <Compile Include="Logger\LogViewer.cs" />
-    <Compile Include="Logger\LogViewerState.cs" />
-    <Compile Include="Images\TypeToImageService.cs" />
     <Compile Include="Controls\PreferencesWindow.xaml.cs">
       <DependentUpon>PreferencesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\ViewManager.cs" />
-    <Compile Include="Converters\StatusColourConverter.cs" />
-    <Compile Include="Support\CollectionChangeHelper.cs" />
-    <Compile Include="Logger\ILogger.cs" />
-    <Compile Include="Support\LinqHelpers.cs" />
-    <Compile Include="Controls\ClassificationsControl.xaml.cs">
-      <DependentUpon>ClassificationsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LogActivityControl.xaml.cs">
       <DependentUpon>LogActivityControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LogMessagesControl.xaml.cs">
-      <DependentUpon>LogMessagesControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\BooleanToWidthConverter.cs" />
-    <Compile Include="Converters\TimeSinceDateTimeConverter.cs" />
-    <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Support\GridViewSort.cs" />
-    <Compile Include="Logger\LogManager.cs" />
-    <Compile Include="ViewModels\ActivityMonitoringViewModel.cs" />
-    <Compile Include="ViewModels\Activity.cs" />
-    <Compile Include="Classifying\VisualClassifier.cs" />
-    <Compile Include="Highlighting\HighlighterStyle.cs" />
-    <Compile Include="Classifying\ClassifiersViewModel.cs" />
-    <Compile Include="ViewModels\DetailsViewModel.cs" />
-    <Compile Include="Controls\FixedWidthColumn.xaml.cs" />
-    <Compile Include="Converters\IsTimingMessageValueConverter.cs" />
-    <Compile Include="Controls\LogDetailsControl.xaml.cs">
-      <DependentUpon>LogDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Logger\LogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -331,11 +158,6 @@
     <Compile Include="Controls\PreferencesControl.xaml.cs">
       <DependentUpon>PreferencesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classifying\IClassifier.cs" />
-    <Compile Include="Support\ThemeInfo.cs" />
-    <Compile Include="Networking\UdpListener.cs" />
-    <Compile Include="Support\ViewModelBase.cs" />
-    <Compile Include="Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Logger\LogWriter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -398,14 +220,103 @@
     <Resource Include="Resources\Layout.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Trace.png" />
     <Content Include="Settings.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sentinel.Classification.Interfaces\Sentinel.Classification.Interfaces.csproj">
+      <Project>{9FC94C95-0CC8-4F9F-9EE3-9E529EA7C45F}</Project>
+      <Name>Sentinel.Classification.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Classification\Sentinel.Classification.csproj">
+      <Project>{7532B9C7-1DD5-4A60-BA3A-2759B652EA25}</Project>
+      <Name>Sentinel.Classification</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Filters.Gui\Sentinel.Filters.Gui.csproj">
+      <Project>{9775523D-5805-48C2-A80B-9C7D0695F02E}</Project>
+      <Name>Sentinel.Filters.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Filters.Interfaces\Sentinel.Filters.Interfaces.csproj">
+      <Project>{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}</Project>
+      <Name>Sentinel.Filters.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Highlighters.Gui\Sentinel.Highlighters.Gui.csproj">
+      <Project>{E7037DF3-2307-4042-8A1C-364C98A46984}</Project>
+      <Name>Sentinel.Highlighters.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Highlighters.Interfaces\Sentinel.Highlighters.Interfaces.csproj">
+      <Project>{89F6C4D5-0035-4AB0-AD6B-7BC4C836CDF1}</Project>
+      <Name>Sentinel.Highlighters.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Highlighters\Sentinel.Highlighters.csproj">
+      <Project>{042394DC-B672-4BA7-8553-72F65379BA76}</Project>
+      <Name>Sentinel.Highlighters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Images.Interfaces\Sentinel.Images.Interfaces.csproj">
+      <Project>{CBEC1207-47EC-4B45-9A88-0B680B3A6F38}</Project>
+      <Name>Sentinel.Images.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
+      <Project>{98EE053E-9457-4EEA-9C88-129D53304549}</Project>
+      <Name>Sentinel.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Logs.Gui\Sentinel.Logs.Gui.csproj">
+      <Project>{3D2F920A-F8B0-4A57-A34F-3D22471F70B4}</Project>
+      <Name>Sentinel.Logs.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Logs.Interfaces\Sentinel.Logs.Interfaces.csproj">
+      <Project>{5331A25E-7944-4A60-ADC3-71F1BBC5D88F}</Project>
+      <Name>Sentinel.Logs.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Providers.Interfaces\Sentinel.Providers.Interfaces.csproj">
+      <Project>{94B2806B-B157-4BAD-92B7-59118283E79D}</Project>
+      <Name>Sentinel.Providers.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Providers\Sentinel.Providers.csproj">
+      <Project>{8D37D08D-5F3E-47FF-B9A7-871E736E1A80}</Project>
+      <Name>Sentinel.Providers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Services\Sentinel.Services.csproj">
+      <Project>{4E75A33A-41BE-4B82-8FF9-65E1260B04B5}</Project>
+      <Name>Sentinel.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Support.Converters\Sentinel.Support.Converters.csproj">
+      <Project>{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}</Project>
+      <Name>Sentinel.Support.Converters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Support.Mvvm\Sentinel.Support.Mvvm.csproj">
+      <Project>{9D39C747-ABC7-48B1-B7A2-581195BD4BE7}</Project>
+      <Name>Sentinel.Support.Mvvm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Support.Wpf\Sentinel.Support.Wpf.csproj">
+      <Project>{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}</Project>
+      <Name>Sentinel.Support.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Views.Interfaces\Sentinel.Views.Interfaces.csproj">
+      <Project>{4FB349D6-44EA-465D-9EAC-AE762BD85BA6}</Project>
+      <Name>Sentinel.Views.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classifying\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Filters\" />
+    <Folder Include="Highlighting\" />
+    <Folder Include="Images\" />
+    <Folder Include="Networking\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />
+  <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

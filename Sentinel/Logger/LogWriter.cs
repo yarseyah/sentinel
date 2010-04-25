@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Sentinel.Interfaces;
 
 #endregion
 
@@ -25,7 +26,7 @@ namespace Sentinel.Logger
     public class LogWriter
     {
         /// <summary>
-        /// Add the current fields to a default text file.
+        /// Register the current fields to a default text file.
         /// </summary>
         /// <param name="entries">Entries to write to text file.</param>
         public void Write(IEnumerable<LogEntry> entries)

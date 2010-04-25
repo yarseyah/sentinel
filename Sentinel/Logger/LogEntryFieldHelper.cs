@@ -7,6 +7,8 @@
 //
 #endregion
 
+using Sentinel.Interfaces;
+
 namespace Sentinel.Logger
 {
     public static class LogEntryFieldHelper

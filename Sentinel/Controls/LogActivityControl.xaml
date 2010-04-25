@@ -3,9 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:Converters="clr-namespace:Sentinel.Converters"
-             xmlns:Controls="clr-namespace:Sentinel.Controls"
              xmlns:Support="clr-namespace:Sentinel.Support"
+             xmlns:Converters1="clr-namespace:Sentinel.Support.Converters;assembly=Sentinel.Support.Converters"
              x:Class="Sentinel.Controls.LogActivityControl"
              x:Name="UserControl"
              d:DesignWidth="376.654"
@@ -33,7 +32,7 @@
             </Style.Triggers>
         </Style>
 
-        <Converters:TimeSinceDateTimeConverter x:Key="TimeSinceDateTimeConverter" />
+        <Converters1:TimeSinceDateTimeConverter x:Key="TimeSinceDateTimeConverter" />
 
     </UserControl.Resources>
 

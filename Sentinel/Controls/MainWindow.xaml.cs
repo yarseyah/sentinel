@@ -14,62 +14,31 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Sentinel.Preferences;
+using Sentinel.Interfaces;
+using Sentinel.Logs.Gui;
+using Sentinel.Logs.Interfaces;
+using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
-using Sentinel.Support;
+using Sentinel.Support.Mvvm;
+using Sentinel.Views.Interfaces;
 
 #endregion
 
 namespace Sentinel.Controls
 {
-
-    #region Using directives
-
-    #endregion
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
         private PreferencesWindow preferencesWindow;
+        private static ServiceLocator services;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            Add = new DelegateCommand(AddNewListener);
-
-            // Append version number to caption (to save effort of producing an about screen)
-            Title = string.Format(
-                "{0} ({1})",
-                Title,
-                Assembly.GetExecutingAssembly().GetName().Version);
-
-            Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
-            ViewManager = ServiceLocator.Instance.Get<IViewManager>();
-
-            // Maintaining column widths is proving difficult in Xaml alone, so 
-            // add an observer here and deal with it in code.
-            if (Preferences != null && Preferences is INotifyPropertyChanged)
-            {
-                (Preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
-            }
-
-            DataContext = this;
-
-            Exit = new DelegateCommand(e => Close());
-
-            // When a new item is added, select the newest one.
-            ViewManager.Viewers.CollectionChanged +=
-                (s, e) =>
-                    {
-                        if (e.Action == NotifyCollectionChangedAction.Add)
-                        {
-                            tabControl.SelectedIndex = tabControl.Items.Count - 1;
-                        }
-                    };
         }
 
         public ICommand Add { get; private set; }
@@ -87,27 +56,79 @@ namespace Sentinel.Controls
         /// <param name="obj">Object to add as a new listener.</param>
         private void AddNewListener(object obj)
         {
-            AddNewUdpListenerWindow newWindow = new AddNewUdpListenerWindow();
-            newWindow.Owner = this;
-            bool? dialogResult = newWindow.ShowDialog();
-            if (dialogResult == true)
-            {
-                Trace.WriteLine(
-                    string.Format(
-                        "New listener requested - Name {0}, Port {1}{2}",
-                        newWindow.LogViewerName,
-                        newWindow.Port,
-                        newWindow.Enabled ? "- Enabled from start" : string.Empty));
+            NewLoggerWizard wizard = new NewLoggerWizard();
 
-                ViewManager.Create(
-                    newWindow.LogViewerName,
-                    newWindow.Port,
-                    newWindow.Enabled);
+            if (!wizard.Display(this)) return;
+
+            NewLoggerSettings settings = wizard.Settings;
+
+            // Create the logger.
+            ILogManager logManager = services.Get<ILogManager>();
+            ILogger log = logManager.Add(settings.LogName);
+
+            // Create the frame view
+            Debug.Assert(ViewManager != null,
+                         "A ViewManager should be registed with sevice locator for the IViewManager interface");
+            IWindowFrame frame = services.Get<IWindowFrame>();
+            frame.Log = log;
+            frame.SetViews(settings.Views);
+            ViewManager.Viewers.Add(frame);
+
+            // Create the providers.
+            IProviderManager providerManager = services.Get<IProviderManager>();
+            foreach (PendingProviderRecord providerRecord in settings.Providers)
+            {
+                ILogProvider provider = providerManager.Create(providerRecord.Info.Identifier,
+                                                               providerRecord.Settings);
+                provider.Logger = log;
+                provider.Start();
             }
+
+            // Add to the tab control.
+            TabItem tab = new TabItem
+                              {
+                                  Header = log.Name,
+                                  Content = frame
+                              };
+            tabControl.Items.Add(tab);
+            tabControl.SelectedItem = tab;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            Add = new DelegateCommand(AddNewListener);
+
+            // Append version number to caption (to save effort of producing an about screen)
+            Title = string.Format(
+                "{0} ({1})",
+                Title,
+                Assembly.GetExecutingAssembly().GetName().Version);
+
+            services = ServiceLocator.Instance;
+            Preferences = services.Get<IUserPreferences>();
+            ViewManager = services.Get<IViewManager>();
+
+            // Maintaining column widths is proving difficult in Xaml alone, so 
+            // add an observer here and deal with it in code.
+            if (Preferences != null && Preferences is INotifyPropertyChanged)
+            {
+                (Preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
+            }
+
+            DataContext = this;
+
+            Exit = new DelegateCommand(ee => Close());
+
+            // When a new item is added, select the newest one.
+            ViewManager.Viewers.CollectionChanged +=
+                (s, ee) =>
+                    {
+                        if (ee.Action == NotifyCollectionChangedAction.Add)
+                        {
+                            tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                        }
+                    };
+
             Add.Execute(null);
         }
 

@@ -10,7 +10,7 @@
 #region Using directives
 
 using System.Windows.Controls;
-using Sentinel.Images;
+using Sentinel.Images.Interfaces;
 using Sentinel.Services;
 
 #endregion

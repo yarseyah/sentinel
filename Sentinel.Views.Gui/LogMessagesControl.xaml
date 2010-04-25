@@ -1,0 +1,82 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Controls="clr-namespace:Sentinel.Support.Wpf;assembly=Sentinel.Support.Wpf"
+             xmlns:Converters="clr-namespace:Sentinel.Support.Converters;assembly=Sentinel.Support.Converters"
+             mc:Ignorable="d"
+             x:Class="Sentinel.Views.Gui.LogMessagesControl"
+             x:Name="UserControl"
+             d:DesignWidth="276.307"
+             d:DesignHeight="34.038">
+
+    <UserControl.Resources>
+		<Converters:TypeToImageConverter x:Key="typeToImageConverter" />
+        <Converters:BooleanToWidthConverter x:Key="BooleanToWidthConverter" />
+	</UserControl.Resources>
+
+	<Grid x:Name="LayoutRoot">
+        <ListView x:Name="messages"
+                  Grid.Column="0"
+                  ItemsSource="{Binding Messages}">
+            <ListView.View>
+                <GridView>
+                    <Controls:FixedWidthColumn Header="Type">
+                        <Controls:FixedWidthColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image x:Name="icon"
+                                           Width="16"
+                                           Height="16"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Source="{Binding Type, Converter={StaticResource typeToImageConverter}}"
+                                           Visibility="Collapsed" />
+                                    <TextBlock x:Name="text"
+                                               Text="{Binding Type}"
+                                               Visibility="Collapsed" />
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                                 Value="1">
+                                        <Setter TargetName="icon"
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                                 Value="2">
+                                        <Setter TargetName="text"
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                                 Value="3">
+                                        <Setter TargetName="icon"
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                        <Setter TargetName="text"
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                        <Setter TargetName="text"
+                                                Property="Margin"
+                                                Value="5,0,0,0" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Controls:FixedWidthColumn.CellTemplate>
+                    </Controls:FixedWidthColumn>
+                    <GridViewColumn Header="Date/Time"
+                                    DisplayMemberBinding="{Binding DateTime, StringFormat=r}" />
+                    <Controls:FixedWidthColumn Header="Thread"
+                                               FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=50}"
+                                               DisplayMemberBinding="{Binding Thread}" />
+                    <GridViewColumn Header="System"
+                                    DisplayMemberBinding="{Binding System}" />
+                    <GridViewColumn Header="Description"
+                                    DisplayMemberBinding="{Binding Description}" />
+                </GridView>
+            </ListView.View>
+		</ListView>
+	</Grid>
+</UserControl>

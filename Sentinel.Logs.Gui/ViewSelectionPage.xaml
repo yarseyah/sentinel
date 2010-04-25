@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="Sentinel.Logs.Gui.ViewSelectionPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="500">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="106" />
+            <ColumnDefinition Width="388*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="View Type : "
+                   Margin="12,6"
+                   VerticalAlignment="Top"
+                   Grid.Row="0" />
+
+        <StackPanel Grid.Column="1" Margin="0,3,3,15">
+            <RadioButton Content="Single traditional text based log"
+                         Margin="0,3"
+                         IsChecked="{Binding SingleView}" />
+            <RadioButton Content="Split-screen log with two seperately selectable visualisations"
+                         Margin="0,3"
+                         IsEnabled="{Binding MultipleViewsSupported}"
+                         IsChecked="{Binding MultipleView}" />
+        </StackPanel>
+
+        <GroupBox Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  IsEnabled="{Binding MultipleView}">
+            <GroupBox.Header>Split Screen Views</GroupBox.Header>
+            <Grid Margin="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Primary View : "
+                           Margin="3"
+                           VerticalAlignment="Center"
+                           Grid.Row="0" />
+                <ComboBox Margin="3"
+                          Grid.Row="0"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          DisplayMemberPath="Name"
+                          SelectedIndex="{Binding PrimaryIndex}"
+                          ItemsSource="{Binding RegisteredViews}" />
+                <TextBlock Text="Secondary View : "
+                           Margin="3"
+                           Grid.Row="1" />
+                <ComboBox Margin="3"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          DisplayMemberPath="Name"
+                          SelectedIndex="{Binding SecondaryIndex}"
+                          ItemsSource="{Binding RegisteredViews}" />
+                <TextBlock Text="Orientation : "
+                           Margin="3"
+                           VerticalAlignment="Top"
+                           Grid.Row="2" />
+
+                <StackPanel Grid.Row="2"
+                            Grid.Column="1">
+                    <RadioButton Content="Horizontal"
+                                 IsChecked="{Binding Horizontal}"
+                                 Margin="3" />
+                    <RadioButton Content="Vertical"
+                                 IsChecked="{Binding Vertical}"
+                                 Margin="3" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

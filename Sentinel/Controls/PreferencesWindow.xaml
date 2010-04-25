@@ -8,6 +8,7 @@
         ResizeMode="CanResizeWithGrip"
         ShowInTaskbar="False"
         Closed="Window_Closed"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner">
     <Controls:PreferencesControl HorizontalAlignment="Stretch"

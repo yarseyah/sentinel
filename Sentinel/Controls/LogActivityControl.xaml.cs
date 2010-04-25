@@ -9,7 +9,7 @@
 
 #region Using directives
 
-using Sentinel.Highlighting;
+using Sentinel.Highlighters.Interfaces;
 using Sentinel.Services;
 
 #endregion

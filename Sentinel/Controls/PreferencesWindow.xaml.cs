@@ -11,7 +11,7 @@
 
 using System;
 using System.Windows;
-using Sentinel.Preferences;
+using Sentinel.Interfaces;
 using Sentinel.Services;
 
 #endregion
