@@ -80,9 +80,17 @@ namespace Sentinel.Views.Gui
             autoscrollButton.IsChecked = autoscroll;
             autoscrollButton.ImageIdentifier = "ScrollDown";
 
+            var clearButton = new LogViewerToolbarButton(
+                "Clear",
+                "Clear the log messages from the display",
+                false,
+                new DelegateCommand(e => clearPending = true));
+            clearButton.ImageIdentifier = "Clear";
+
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
-                                  autoscrollButton
+                                  autoscrollButton,
+                                  clearButton
                               };
 
             ToolbarItems = toolbar;
@@ -196,8 +204,6 @@ namespace Sentinel.Views.Gui
 
             if (clearPending || rebuildList)
             {
-                rebuildList = clearPending = false;
-
                 // If rebuilding the list, any additions to the pendingAdditions
                 // made since the "rebuildList" variable was set to true will
                 // not be needed, throw them away to avoid duplication.
@@ -210,14 +216,20 @@ namespace Sentinel.Views.Gui
                 {
                     Messages.Clear();
 
-                    lock (Logger.Entries)
+                    if (rebuildList)
                     {
-                        foreach (LogEntry entry in Logger.Entries)
+                        lock (Logger.Entries)
                         {
-                            AddIfPassesFilters(entry);
+                            foreach (LogEntry entry in Logger.Entries)
+                            {
+                                AddIfPassesFilters(entry);
+                            }
                         }
                     }
                 }
+
+                rebuildList = clearPending = false;
+
             }
             else if (pendingAdditions.Count > 0)
             {

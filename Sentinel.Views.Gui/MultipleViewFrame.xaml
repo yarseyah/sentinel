@@ -64,11 +64,6 @@
                            Width="16"
                            Height="16" />
                 </CheckBox>
-                <Button x:Name="clearButton"
-                        Command="{Binding Clear}"
-                        ToolTip="Clear log history">
-                    <Image Source="/Resources/Clear.png" />
-                </Button>
             </ToolBar>
             <Wpf:DataBoundToolbar x:Name="PrimaryToolbar"
                                   ItemsSource="{Binding PrimaryView.ToolbarItems}"
@@ -100,7 +95,7 @@
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
             <Wpf:DataBoundToolbar x:Name="SecondaryToolbar"
-                                  ItemsSource="{Binding PrimaryView.ToolbarItems}"
+                                  ItemsSource="{Binding SecondaryView.ToolbarItems}"
                                   Width="Auto"
                                   Header="Secondary"
                                   HorizontalContentAlignment="Center">
