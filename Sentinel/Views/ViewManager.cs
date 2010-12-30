@@ -16,29 +16,24 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using Sentinel.Logs.Interfaces;
+using Sentinel.Views.Gui;
+using Sentinel.Views.Heartbeat;
 using Sentinel.Views.Interfaces;
 
 #endregion
 
 namespace Sentinel.Views
 {
-    [Export(typeof(IViewManager))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class ViewManager : IViewManager
     {
         private Dictionary<IViewInformation, Type> registeredTypes = new Dictionary<IViewInformation, Type>();
 
-        private List<IWindowFrame> instances = new List<IWindowFrame>();
-
-        [ImportMany(typeof(ILogViewer))]
-        private IEnumerable<Lazy<ILogViewer, IViewInformation>> viewers { get; set; }
-
-        [Import(typeof(ILogManager))]
-        private ILogManager logManager;
-
         public ViewManager()
         {
             Viewers = new ObservableCollection<IWindowFrame>();
+
+            Register(LogMessages.Info, typeof(LogMessages));
+            Register(MessageHeatbeat.Info, typeof(MessageHeatbeat));
         }
 
         #region IViewManager Members
@@ -69,61 +64,29 @@ namespace Sentinel.Views
 
         public IEnumerable<IViewInformation> GetRegistered()
         {
-            // Combine the explicit and automatically registered views.
-            List<IViewInformation> manuallyRegistered = new List<IViewInformation>(registeredTypes.Keys);
-            List<IViewInformation> automaticallyRegistered = new List<IViewInformation>(viewers.Select(v => v.Metadata));
-
-            return manuallyRegistered.Concat(automaticallyRegistered);
+            return registeredTypes.Keys;
         }
 
         public IViewInformation Get(string identifier)
         {
-            List<IViewInformation> manuallyRegistered = new List<IViewInformation>(registeredTypes.Keys);
-            List<IViewInformation> automaticallyRegistered = new List<IViewInformation>(viewers.Select(v => v.Metadata));
-
-            return manuallyRegistered.Concat(automaticallyRegistered).FirstOrDefault(v => v.Identifier == identifier);
+            return registeredTypes.Keys.FirstOrDefault(v => v.Identifier == identifier);
         }
 
         public ILogViewer GetInstance(string identifier)
         {
-            List<IViewInformation> manuallyRegistered = new List<IViewInformation>(registeredTypes.Keys);
-            List<IViewInformation> automaticallyRegistered = new List<IViewInformation>(viewers.Select(v => v.Metadata));
+            var registered = registeredTypes.Keys;
+
+            Debug.Assert(
+                registered.Concat(registered).Any(i => i.Identifier == identifier),
+                "Identifier must be registered in the collection of views, either explicity or by auto discovery");
             
-            // See if in automatically registered list
-            if ( automaticallyRegistered.Any(i => i.Identifier == identifier))
-            {
-                // Need to handle this type of registration
-                foreach (Lazy<ILogViewer, IViewInformation> lazyViewer in viewers)
-                {
-                    if ( lazyViewer.Metadata.Identifier == identifier )
-                    {
-                        // Ideally, we should be able to ask MEF for a new dynamic creation of the 
-                        // item, but we will always get the same one.  So try and establish the
-                        // concrete type and create one of them.
-
-                        Type t = lazyViewer.Value.GetType();
-                        return (ILogViewer) Activator.CreateInstance(t);
-
-                        // return lazyViewer.Value;
-                    }
-                }
-
-                throw new NotSupportedException(
-                    "Precheck stated that there was a registered viewer, but subsequent walking "
-                    + "of the collection didn't find one - has the colleciton been modified?");
-            }
-
-            if (manuallyRegistered.Any(i => i.Identifier == identifier))
+            if (registered.Any(i => i.Identifier == identifier))
             {
                 Type t = registeredTypes.First(v => v.Key.Identifier == identifier).Value;
 
                 // Create an instance of the type (must have a default constructor).
                 return (ILogViewer) Activator.CreateInstance(t);
             }
-
-            Debug.Assert(
-                manuallyRegistered.Concat(automaticallyRegistered).Any(i => i.Identifier == identifier),
-                "Identifier must be registered in the collection of views, either explicity or by auto discovery");
 
             return null;
         }

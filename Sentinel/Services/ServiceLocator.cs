@@ -26,6 +26,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.ComponentModel.Composition.Diagnostics;
 using Microsoft.ComponentModel.Composition.DynamicInstantiation;
+using Sentinel.Views;
+using Sentinel.Views.Interfaces;
 
 #endregion
 
@@ -48,8 +50,10 @@ namespace Sentinel.Services
             dynamicProvider.SourceProvider = compositionContainer;
 
             compositionContainer.ComposeParts(this);
-
             var ci = new CompositionInfo(cat, compositionContainer);
+
+            // Manually register some 'services' that are not discovered
+            Register<IViewManager>(new ViewManager());
 
             StringBuilder sb = new StringBuilder();
             using ( StringWriter sw = new StringWriter(sb) )
