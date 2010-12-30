@@ -21,6 +21,7 @@ using System.Runtime.Serialization;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Interfaces;
 
 #endregion
@@ -194,10 +195,21 @@ namespace Sentinel.Services
 
                         xmlWriter.WriteEndElement();
                     }
+                    else if (IsProtobufSerializable(valuePair.Value))
+                    {
+                        // TODO: protobuf saving required
+                        Trace.WriteLine("Todo - protobuf saving");
+                    }
                 }
 
                 xmlWriter.WriteEndElement();
             }
+        }
+
+        private static bool IsProtobufSerializable(object value)
+        {
+            if (value == null) throw new ArgumentNullException("value");
+            return Attribute.IsDefined(value.GetType(), typeof(ProtoContractAttribute));
         }
 
         private static bool IsSerializable(object obj)

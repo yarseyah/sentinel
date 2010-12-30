@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -56,6 +57,9 @@ namespace Sentinel.Filters
             collectionHelper.ManagerName = "FilteringService";
             collectionHelper.NameLookup += e => e.Name;
             Filters.CollectionChanged += collectionHelper.AttachDetach;
+
+            internalFilters = new List<IFilter>();
+            Filters = new ObservableCollection<IFilter>(internalFilters);
         }
 
         public override string DisplayName
@@ -92,6 +96,9 @@ namespace Sentinel.Filters
                 }
             }
         }
+
+        [ProtoMember(1)]
+        private readonly List<IFilter> internalFilters;
 
         #region IFilteringService Members
         public ObservableCollection<IFilter> Filters { get; set; }
