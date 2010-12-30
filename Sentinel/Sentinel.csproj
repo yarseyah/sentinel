@@ -125,9 +125,18 @@
       <DependentUpon>ClassificationsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classification\DescriptionClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IAddClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IClassifierService.cs" />
+    <Compile Include="Classification\Interfaces\IEditClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IIncomingClassifier.cs" />
     <Compile Include="Classification\IncomingClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IRemoveClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IVisualClassifier.cs" />
     <Compile Include="Classification\TypeImageClassifier.cs" />
     <Compile Include="Classification\VisualClassifier.cs" />
+    <Compile Include="Logs\Log.cs" />
+    <Compile Include="Logs\LogManager.cs" />
     <Compile Include="MainApplication.xaml.cs">
       <DependentUpon>MainApplication.xaml</DependentUpon>
       <SubType>Code</SubType>
