@@ -44,6 +44,12 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.ComponentModel.Composition.Diagnostics">
+      <HintPath>..\ThirdParty\MEF\Microsoft.ComponentModel.Composition.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ComponentModel.Composition.DynamicInstantiation">
+      <HintPath>..\ThirdParty\MEF\Microsoft.ComponentModel.Composition.DynamicInstantiation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition, Version=2010.2.11.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -110,6 +116,24 @@
       <DependentUpon>SelectProviderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Providers\UdpNetworkConfigurationPage.cs" />
+    <Compile Include="Services\ServiceLocator.cs" />
+    <Compile Include="Support\Converters\BooleanInvertingValueConverter.cs" />
+    <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
+    <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
+    <Compile Include="Support\Converters\ColourConverter.cs" />
+    <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
+    <Compile Include="Support\Converters\IsTimingMessageValueConverter.cs" />
+    <Compile Include="Support\Converters\MatchModeConverter.cs" />
+    <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
+    <Compile Include="Support\Converters\TypeToImageConverter.cs" />
+    <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
+    <Compile Include="Support\Converters\VisibilityToHiddenConverter.cs" />
+    <Compile Include="Support\Mvvm\DelegateCommand.cs" />
+    <Compile Include="Support\Mvvm\ViewModelBase.cs" />
+    <Compile Include="Support\Wpf\DataBoundToolbar.cs" />
+    <Compile Include="Support\Wpf\FixedWidthColumn.xaml.cs" />
+    <Compile Include="Support\Wpf\ObservableDictionary.cs" />
+    <Compile Include="Support\Wpf\ThemeInfo.cs" />
     <Compile Include="Views\Gui\LogMessages.cs" />
     <Compile Include="Views\Gui\LogMessagesControl.xaml.cs">
       <DependentUpon>LogMessagesControl.xaml</DependentUpon>
@@ -440,22 +464,6 @@
       <Project>{94B2806B-B157-4BAD-92B7-59118283E79D}</Project>
       <Name>Sentinel.Providers.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Services\Sentinel.Services.csproj">
-      <Project>{4E75A33A-41BE-4B82-8FF9-65E1260B04B5}</Project>
-      <Name>Sentinel.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Support.Converters\Sentinel.Support.Converters.csproj">
-      <Project>{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}</Project>
-      <Name>Sentinel.Support.Converters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Support.Mvvm\Sentinel.Support.Mvvm.csproj">
-      <Project>{9D39C747-ABC7-48B1-B7A2-581195BD4BE7}</Project>
-      <Name>Sentinel.Support.Mvvm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Support.Wpf\Sentinel.Support.Wpf.csproj">
-      <Project>{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}</Project>
-      <Name>Sentinel.Support.Wpf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Views.Interfaces\Sentinel.Views.Interfaces.csproj">
       <Project>{4FB349D6-44EA-465D-9EAC-AE762BD85BA6}</Project>
       <Name>Sentinel.Views.Interfaces</Name>
@@ -468,7 +476,6 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Networking\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->

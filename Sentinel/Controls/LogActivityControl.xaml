@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:Support="clr-namespace:Sentinel.Support"
-             xmlns:Converters1="clr-namespace:Sentinel.Support.Converters;assembly=Sentinel.Support.Converters"
+             xmlns:Converters1="clr-namespace:Sentinel.Support.Converters"
              x:Class="Sentinel.Controls.LogActivityControl"
              x:Name="UserControl"
              d:DesignWidth="376.654"

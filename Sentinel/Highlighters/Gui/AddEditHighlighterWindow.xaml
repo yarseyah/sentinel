@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Sentinel.Highlighters.Gui.AddEditHighlighterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Converters="clr-namespace:Sentinel.Support.Converters;assembly=Sentinel.Support.Converters"
+        xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
         Title="Add / Edit Highlighter"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"

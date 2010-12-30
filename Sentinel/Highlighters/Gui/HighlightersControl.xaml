@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="Sentinel.Highlighters.Gui.HighlightersControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Converters="clr-namespace:Sentinel.Support.Converters;assembly=Sentinel.Support.Converters"
-             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf;assembly=Sentinel.Support.Wpf">
+             xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf">
 
     <UserControl.Resources>
         <Converters:ColourConverter x:Key="ColorConverter" />

@@ -42,10 +42,7 @@ namespace Sentinel.Services
 
         private ServiceLocator()
         {
-            var cat = new AggregateCatalog(
-                new AssemblyCatalog(Assembly.GetAssembly(GetType())),
-                new DirectoryCatalog(".", "Sentinel.exe"),
-                new DirectoryCatalog(".", "Sentinel.*.dll"));
+            var cat = new AssemblyCatalog(Assembly.GetAssembly(GetType()));
             var dynamicProvider = new DynamicInstantiationExportProvider();
             compositionContainer = new CompositionContainer(cat, dynamicProvider);
             dynamicProvider.SourceProvider = compositionContainer;
