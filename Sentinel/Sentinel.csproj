@@ -248,10 +248,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sentinel.Classification.Interfaces\Sentinel.Classification.Interfaces.csproj">
-      <Project>{9FC94C95-0CC8-4F9F-9EE3-9E529EA7C45F}</Project>
-      <Name>Sentinel.Classification.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Filters.Gui\Sentinel.Filters.Gui.csproj">
       <Project>{9775523D-5805-48C2-A80B-9C7D0695F02E}</Project>
       <Name>Sentinel.Filters.Gui</Name>
