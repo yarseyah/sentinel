@@ -88,6 +88,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
+    <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
+    <Compile Include="Filters\Interfaces\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\IFilteringService.cs" />
+    <Compile Include="Filters\Interfaces\IRemoveFilterService.cs" />
+    <Compile Include="Highlighters\Interfaces\IAddHighlighterService.cs" />
+    <Compile Include="Highlighters\Interfaces\IEditHighlighterService.cs" />
+    <Compile Include="Highlighters\Interfaces\IHighlighter.cs" />
+    <Compile Include="Highlighters\Interfaces\IHighlightingService.cs" />
+    <Compile Include="Highlighters\Interfaces\IQuickHighlighter.cs" />
+    <Compile Include="Highlighters\Interfaces\IRemoveHighlighterService.cs" />
+    <Compile Include="Images\Interfaces\IAddTypeImage.cs" />
+    <Compile Include="Images\Interfaces\IEditTypeImage.cs" />
+    <Compile Include="Images\Interfaces\IRemoveTypeImage.cs" />
+    <Compile Include="Images\Interfaces\ITypeImageService.cs" />
+    <Compile Include="Interfaces\CaseInsensitiveComparer.cs" />
+    <Compile Include="Interfaces\CollectionChangeHelper.cs" />
+    <Compile Include="Interfaces\EnumerableExtensions.cs" />
+    <Compile Include="Interfaces\IHighlighterStyle.cs" />
+    <Compile Include="Interfaces\IUserPreferences.cs" />
+    <Compile Include="Interfaces\LinqHelpers.cs" />
+    <Compile Include="Interfaces\LogEntry.cs" />
+    <Compile Include="Interfaces\LogEntryField.cs" />
+    <Compile Include="Interfaces\LogEntryFieldHelper.cs" />
+    <Compile Include="Interfaces\MatchMode.cs" />
+    <Compile Include="Logs\Interfaces\ILogger.cs" />
+    <Compile Include="Logs\Interfaces\ILogManager.cs" />
     <Compile Include="Providers\CustomMessageDecoderPage.xaml.cs">
       <DependentUpon>CustomMessageDecoderPage.xaml</DependentUpon>
     </Compile>
@@ -97,6 +124,15 @@
       <DependentUpon>FileMonitorProviderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Providers\IFileMonitoringProviderSettings.cs" />
+    <Compile Include="Providers\Interfaces\ILogProvider.cs" />
+    <Compile Include="Providers\Interfaces\INetworkProvider.cs" />
+    <Compile Include="Providers\Interfaces\INetworkProviderSettings.cs" />
+    <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
+    <Compile Include="Providers\Interfaces\IProviderInfo.cs" />
+    <Compile Include="Providers\Interfaces\IProviderManager.cs" />
+    <Compile Include="Providers\Interfaces\IProviderRegistrationRecord.cs" />
+    <Compile Include="Providers\Interfaces\IProviderSettings.cs" />
+    <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />
     <Compile Include="Providers\Log4NetProvider.cs" />
     <Compile Include="Providers\MessageFormatPage.xaml.cs">
       <DependentUpon>MessageFormatPage.xaml</DependentUpon>
@@ -147,6 +183,11 @@
       <DependentUpon>HeartbeatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Heartbeat\MessageHeatbeat.cs" />
+    <Compile Include="Views\Interfaces\ILogViewer.cs" />
+    <Compile Include="Views\Interfaces\ILogViewerToolbarButton.cs" />
+    <Compile Include="Views\Interfaces\IViewInformation.cs" />
+    <Compile Include="Views\Interfaces\IViewManager.cs" />
+    <Compile Include="Views\Interfaces\IWindowFrame.cs" />
     <Compile Include="Views\ViewManager.cs" />
     <Page Include="Classification\Controls\ClassificationsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -440,34 +481,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sentinel.Filters.Interfaces\Sentinel.Filters.Interfaces.csproj">
-      <Project>{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}</Project>
-      <Name>Sentinel.Filters.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Highlighters.Interfaces\Sentinel.Highlighters.Interfaces.csproj">
-      <Project>{89F6C4D5-0035-4AB0-AD6B-7BC4C836CDF1}</Project>
-      <Name>Sentinel.Highlighters.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Images.Interfaces\Sentinel.Images.Interfaces.csproj">
-      <Project>{CBEC1207-47EC-4B45-9A88-0B680B3A6F38}</Project>
-      <Name>Sentinel.Images.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
-      <Project>{98EE053E-9457-4EEA-9C88-129D53304549}</Project>
-      <Name>Sentinel.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Logs.Interfaces\Sentinel.Logs.Interfaces.csproj">
-      <Project>{5331A25E-7944-4A60-ADC3-71F1BBC5D88F}</Project>
-      <Name>Sentinel.Logs.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Providers.Interfaces\Sentinel.Providers.Interfaces.csproj">
-      <Project>{94B2806B-B157-4BAD-92B7-59118283E79D}</Project>
-      <Name>Sentinel.Providers.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Views.Interfaces\Sentinel.Views.Interfaces.csproj">
-      <Project>{4FB349D6-44EA-465D-9EAC-AE762BD85BA6}</Project>
-      <Name>Sentinel.Views.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
       <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>
       <Name>WpfExtras</Name>
