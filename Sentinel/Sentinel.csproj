@@ -82,6 +82,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Classification\Controls\ClassificationsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ImageTypesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -116,6 +120,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Classification\Classifiers.cs" />
+    <Compile Include="Classification\Controls\ClassificationsControl.xaml.cs">
+      <DependentUpon>ClassificationsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classification\DescriptionClassifier.cs" />
+    <Compile Include="Classification\IncomingClassifier.cs" />
+    <Compile Include="Classification\TypeImageClassifier.cs" />
+    <Compile Include="Classification\VisualClassifier.cs" />
     <Compile Include="MainApplication.xaml.cs">
       <DependentUpon>MainApplication.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -231,10 +243,6 @@
       <Project>{9FC94C95-0CC8-4F9F-9EE3-9E529EA7C45F}</Project>
       <Name>Sentinel.Classification.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Classification\Sentinel.Classification.csproj">
-      <Project>{7532B9C7-1DD5-4A60-BA3A-2759B652EA25}</Project>
-      <Name>Sentinel.Classification</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Filters.Gui\Sentinel.Filters.Gui.csproj">
       <Project>{9775523D-5805-48C2-A80B-9C7D0695F02E}</Project>
       <Name>Sentinel.Filters.Gui</Name>
@@ -301,7 +309,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classifying\" />
     <Folder Include="Converters\" />
     <Folder Include="Filters\" />
     <Folder Include="Highlighting\" />
