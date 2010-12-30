@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Controls="clr-namespace:Sentinel.Controls"
-             xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui;assembly=Sentinel.Highlighters.Gui"
+             xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui"
              xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Controls"
              xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
              mc:Ignorable="d"

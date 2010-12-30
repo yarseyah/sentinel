@@ -147,6 +147,23 @@
       <DependentUpon>FiltersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Filters\Gui\RemoveFilter.cs" />
+    <Compile Include="Highlighters\Gui\AddEditHighlighter.cs" />
+    <Compile Include="Highlighters\Gui\AddEditHighlighterWindow.xaml.cs">
+      <DependentUpon>AddEditHighlighterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Highlighters\Gui\AddNewHighlighterService.cs" />
+    <Compile Include="Highlighters\Gui\EditHighlighterService.cs" />
+    <Compile Include="Highlighters\Gui\HighlightersControl.xaml.cs">
+      <DependentUpon>HighlightersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Highlighters\Gui\RemoveHighlighterService.cs" />
+    <Compile Include="Highlighters\Highlighter.cs" />
+    <Compile Include="Highlighters\HighlighterConverter.cs" />
+    <Compile Include="Highlighters\HighlighterData.cs" />
+    <Compile Include="Highlighters\HighlighterStyle.cs" />
+    <Compile Include="Highlighters\HighlightingSelector.cs" />
+    <Compile Include="Highlighters\HighlightingService.cs" />
+    <Compile Include="Highlighters\QuickHighlighter.cs" />
     <Compile Include="Images\AddEditTypeImageViewModel.cs" />
     <Compile Include="Images\AddTypeImageService.cs" />
     <Compile Include="Images\Controls\AddImageWindow.xaml.cs">
@@ -170,6 +187,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Filters\Gui\FiltersControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Highlighters\Gui\AddEditHighlighterWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Highlighters\Gui\HighlightersControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -284,17 +309,9 @@
       <Project>{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}</Project>
       <Name>Sentinel.Filters.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Highlighters.Gui\Sentinel.Highlighters.Gui.csproj">
-      <Project>{E7037DF3-2307-4042-8A1C-364C98A46984}</Project>
-      <Name>Sentinel.Highlighters.Gui</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Highlighters.Interfaces\Sentinel.Highlighters.Interfaces.csproj">
       <Project>{89F6C4D5-0035-4AB0-AD6B-7BC4C836CDF1}</Project>
       <Name>Sentinel.Highlighters.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Highlighters\Sentinel.Highlighters.csproj">
-      <Project>{042394DC-B672-4BA7-8553-72F65379BA76}</Project>
-      <Name>Sentinel.Highlighters</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sentinel.Images.Interfaces\Sentinel.Images.Interfaces.csproj">
       <Project>{CBEC1207-47EC-4B45-9A88-0B680B3A6F38}</Project>
@@ -343,7 +360,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
-    <Folder Include="Highlighting\" />
     <Folder Include="Networking\" />
     <Folder Include="Services\" />
   </ItemGroup>

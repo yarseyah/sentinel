@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Services", "Sentin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Support.Converters", "Sentinel.Support.Converters\Sentinel.Support.Converters.csproj", "{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Highlighters", "Sentinel.Highlighters\Sentinel.Highlighters.csproj", "{042394DC-B672-4BA7-8553-72F65379BA76}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Support.Wpf", "Sentinel.Support.Wpf\Sentinel.Support.Wpf.csproj", "{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Images.Interfaces", "Sentinel.Images.Interfaces\Sentinel.Images.Interfaces.csproj", "{CBEC1207-47EC-4B45-9A88-0B680B3A6F38}"
@@ -26,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Logs.Interfaces", "Sentinel.Logs.Interfaces\Sentinel.Logs.Interfaces.csproj", "{5331A25E-7944-4A60-ADC3-71F1BBC5D88F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Providers.Interfaces", "Sentinel.Providers.Interfaces\Sentinel.Providers.Interfaces.csproj", "{94B2806B-B157-4BAD-92B7-59118283E79D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Highlighters.Gui", "Sentinel.Highlighters.Gui\Sentinel.Highlighters.Gui.csproj", "{E7037DF3-2307-4042-8A1C-364C98A46984}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Filters.Interfaces", "Sentinel.Filters.Interfaces\Sentinel.Filters.Interfaces.csproj", "{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}"
 EndProject
@@ -119,16 +115,6 @@ Global
 		{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4AB4A2B9-5688-43B9-A6AA-9115D5E31D0C}.Release|x86.ActiveCfg = Release|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{042394DC-B672-4BA7-8553-72F65379BA76}.Release|x86.ActiveCfg = Release|Any CPU
 		{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CECF7D70-693E-491B-93CC-EB44AFA5E7B4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -189,16 +175,6 @@ Global
 		{94B2806B-B157-4BAD-92B7-59118283E79D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{94B2806B-B157-4BAD-92B7-59118283E79D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{94B2806B-B157-4BAD-92B7-59118283E79D}.Release|x86.ActiveCfg = Release|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E7037DF3-2307-4042-8A1C-364C98A46984}.Release|x86.ActiveCfg = Release|Any CPU
 		{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

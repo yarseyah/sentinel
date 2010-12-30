@@ -101,10 +101,6 @@
       <Project>{89F6C4D5-0035-4AB0-AD6B-7BC4C836CDF1}</Project>
       <Name>Sentinel.Highlighters.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Highlighters\Sentinel.Highlighters.csproj">
-      <Project>{042394DC-B672-4BA7-8553-72F65379BA76}</Project>
-      <Name>Sentinel.Highlighters</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
       <Project>{98EE053E-9457-4EEA-9C88-129D53304549}</Project>
       <Name>Sentinel.Interfaces</Name>
