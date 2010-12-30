@@ -9,10 +9,8 @@
 
 #region Using directives
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
@@ -30,7 +28,7 @@ namespace Sentinel.Classification
     /// as a ServiceLocator provided resource, so there is only one collection
     /// across the whole of the system.
     /// </summary>
-    [Export(typeof(IClassifierService))]
+    //[Export(typeof(IClassifierService))]
     public class Classifiers : ViewModelBase, IClassifierService
     {
         private readonly IList<IClassifier> items = new List<IClassifier>();

@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using Sentinel.Classification.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Logs.Interfaces;
@@ -23,8 +22,6 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Logs
 {
-    [Export(typeof(ILogger))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class Log : ViewModelBase, ILogger
     {
         private IClassifierService classifier;

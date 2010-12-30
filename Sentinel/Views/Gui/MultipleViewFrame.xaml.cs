@@ -14,7 +14,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,8 +32,6 @@ namespace Sentinel.Views.Gui
     /// <summary>
     /// Interaction logic for MultipleViewFrame.xaml
     /// </summary>
-    [Export(typeof(IWindowFrame))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class MultipleViewFrame : INotifyPropertyChanged, IWindowFrame
     {
         private readonly IUserPreferences preferences = ServiceLocator.Instance.Get<IUserPreferences>();

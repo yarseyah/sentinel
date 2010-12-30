@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.ComponentModel.Composition;
 using System.Windows;
 using Sentinel.Filters.Interfaces;
 using Sentinel.Services;

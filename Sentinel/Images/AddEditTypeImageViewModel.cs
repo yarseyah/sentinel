@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -26,7 +25,6 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Images
 {
-    [Export]
     public class AddEditTypeImageViewModel
         : ViewModelBase, IDataErrorInfo
     {
@@ -43,7 +41,6 @@ namespace Sentinel.Images
                     {ImageError.NoError, null}
                 };
 
-        [Import(typeof(ITypeImageService))]
         private ITypeImageService ImageService { get; set; }
 
         private readonly Dictionary<TypeError, string> typeErrorMessages =

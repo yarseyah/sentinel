@@ -29,12 +29,12 @@ namespace Sentinel.Support.Wpf
 
         public ObservableDictionary()
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection<TKey>();
+            keyedEntryCollection = new KeyedDictionaryEntryCollection();
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection<TKey>();
+            keyedEntryCollection = new KeyedDictionaryEntryCollection();
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
                 DoAddEntry((TKey) entry.Key, (TValue) entry.Value);
@@ -42,12 +42,12 @@ namespace Sentinel.Support.Wpf
 
         public ObservableDictionary(IEqualityComparer<TKey> comparer)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection<TKey>(comparer);
+            keyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection<TKey>(comparer);
+            keyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
                 DoAddEntry((TKey) entry.Key, (TValue) entry.Value);
@@ -163,7 +163,7 @@ namespace Sentinel.Support.Wpf
 
         public IEnumerator GetEnumerator()
         {
-            return new Enumerator<TKey, TValue>(this, false);
+            return new Enumerator(this, false);
         }
 
         public bool Remove(TKey key)
@@ -441,7 +441,7 @@ namespace Sentinel.Support.Wpf
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
         {
-            return new Enumerator<TKey, TValue>(this, true);
+            return new Enumerator(this, true);
         }
 
         bool IDictionary.IsFixedSize
@@ -594,7 +594,7 @@ namespace Sentinel.Support.Wpf
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
-            return new Enumerator<TKey, TValue>(this, false);
+            return new Enumerator(this, false);
         }
 
         #endregion IEnumerable<KeyValuePair<TKey, TValue>>
@@ -683,7 +683,7 @@ namespace Sentinel.Support.Wpf
 
         #region KeyedDictionaryEntryCollection<TKey>
 
-        protected class KeyedDictionaryEntryCollection<TKey> : KeyedCollection<TKey, DictionaryEntry>
+        protected class KeyedDictionaryEntryCollection : KeyedCollection<TKey, DictionaryEntry>
         {
             #region constructors
 
@@ -725,8 +725,7 @@ namespace Sentinel.Support.Wpf
         #region Enumerator
 
         [Serializable, StructLayout(LayoutKind.Sequential)]
-        public struct Enumerator<TKey, TValue>
-            : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
+        public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {
             #region constructors
 
@@ -884,7 +883,7 @@ namespace Sentinel.Support.Wpf
         private int countCache;
         private Dictionary<TKey, TValue> dictionaryCache = new Dictionary<TKey, TValue>();
         private int dictionaryCacheVersion;
-        protected KeyedDictionaryEntryCollection<TKey> keyedEntryCollection;
+        protected KeyedDictionaryEntryCollection keyedEntryCollection;
 
         [NonSerialized]
         private SerializationInfo siInfo;

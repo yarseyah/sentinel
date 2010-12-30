@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Windows;
 using Sentinel.Providers.Interfaces;
 using WpfExtras;
 
 namespace Sentinel.Providers
 {
-    [Export(typeof(INewProviderWizard))]
+    //[Export(typeof(INewProviderWizard))]
     public class NewProviderWizard : INewProviderWizard
     {
         public bool Display(Window parent)

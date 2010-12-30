@@ -9,12 +9,10 @@
 
 #region Using directives
 
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using Sentinel.Highlighters.Gui;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Services;
@@ -24,7 +22,7 @@ using Sentinel.Support.Converters;
 
 namespace Sentinel.Highlighters.Gui
 {
-    [Export(typeof(IAddHighlighterService))]
+    //[Export(typeof(IAddHighlighterService))]
     public class AddNewHighlighterService : IAddHighlighterService
     {
         #region IAddHighlighterService Members

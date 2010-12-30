@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,10 +17,10 @@ using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
-    [Export(typeof(ILogProvider))]
-    [ExportMetadata("Name", NAME)]
-    [ExportMetadata("Description", DESCRIPTION)]
-    [ExportMetadata("Identifier", ID)]
+    //[Export(typeof(ILogProvider))]
+    //[ExportMetadata("Name", NAME)]
+    //[ExportMetadata("Description", DESCRIPTION)]
+    //[ExportMetadata("Identifier", ID)]
     public class FileMonitoringProvider : ILogProvider
     {
         public const string ID = "1a2f8249-b390-4baa-ba5e-3d67804ba1ed";

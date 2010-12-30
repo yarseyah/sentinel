@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.ComponentModel.Composition;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
@@ -21,8 +20,6 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Highlighters
 {
-    [Export(typeof(IHighlighterStyle))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class HighlighterStyle 
         : ViewModelBase
         , IXmlSerializable

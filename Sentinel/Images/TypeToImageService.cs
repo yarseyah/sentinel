@@ -9,12 +9,9 @@
 
 #region Using directives
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using Sentinel.Images.Interfaces;
 using Sentinel.Support.Mvvm;
@@ -23,20 +20,16 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Images
 {
-    [Export(typeof(ITypeImageService))]
     public class TypeToImageService
         : ViewModelBase
         , ITypeImageService
     {
         private int selectedIndex;
 
-        [Import(typeof(IAddTypeImage))]
         private IAddTypeImage AddImage { get; set; }
 
-        [Import(typeof(IEditTypeImage))]
         private IEditTypeImage EditImage { get; set; }
 
-        [Import(typeof(IRemoveTypeImage))]
         private IRemoveTypeImage RemoveImage { get; set; }
 
         public TypeToImageService()
@@ -54,6 +47,10 @@ namespace Sentinel.Images
             Add = new DelegateCommand(AddMapping);
             Edit = new DelegateCommand(EditMapping, e => selectedIndex != -1);
             Remove = new DelegateCommand(RemoveMapping, e => selectedIndex != -1);
+
+            AddImage = new AddTypeImageService();
+            EditImage = new EditTypeImageMapping();
+            RemoveImage = new RemoveTypeImageMapping();
         }
 
         #region ITypeImageService Members

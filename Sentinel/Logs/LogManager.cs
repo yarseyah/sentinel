@@ -12,9 +12,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Linq;
 using Sentinel.Logs.Interfaces;
 using Sentinel.Support.Mvvm;
 
@@ -22,8 +20,6 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Logs
 {
-    [Export(typeof(ILogManager))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class LogManager : ViewModelBase, ILogManager
     {
         private readonly Dictionary<string, ILogger> loggers = new Dictionary<string, ILogger>();

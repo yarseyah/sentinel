@@ -9,15 +9,12 @@
 
 #region Using directives
 
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Filters.Gui;
 using Sentinel.Filters.Interfaces;
 using Sentinel.Interfaces;
@@ -27,11 +24,10 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Filters
 {
-    [Serializable]
+    [ProtoContract]
     public class FilteringService
         : ViewModelBase
         , IFilteringService
-        , IXmlSerializable
         , IDefaultInitialisation
     {
         private readonly CollectionChangeHelper<IFilter> collectionHelper =
@@ -74,16 +70,12 @@ namespace Sentinel.Filters
             }
         }
 
-        [XmlIgnore]
         public ICommand Add { get; private set; }
 
-        [XmlIgnore]
         public ICommand Edit { get; private set; }
 
-        [XmlIgnore]
         public ICommand Remove { get; private set; }
 
-        [XmlIgnore]
         public int SelectedIndex
         {
             get
@@ -102,9 +94,6 @@ namespace Sentinel.Filters
         }
 
         #region IFilteringService Members
-
-        [XmlArray]
-        [XmlArrayItem("Filter", typeof(Filter))]
         public ObservableCollection<IFilter> Filters { get; set; }
 
         public bool IsFiltered(LogEntry entry)
@@ -149,68 +138,6 @@ namespace Sentinel.Filters
             removeFilterService.Remove(filter);
         }
 
-        #region Implementation of IXmlSerializable
-
-        /// <summary>
-        /// This method is reserved and should not be used. When implementing the IXmlSerializable 
-        /// interface, you should return null (Nothing in Visual Basic) from this method, and 
-        /// instead, if specifying a custom schema is required, apply the 
-        /// <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation 
-        /// of the object that is produced by the 
-        /// <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> 
-        /// method and consumed by the 
-        /// <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
-        /// </returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Generates an object from its XML representation.
-        /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the 
-        /// object is deserialized.</param>
-        public void ReadXml(XmlReader reader)
-        {
-            reader.ReadStartElement("FilteringService");
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(int));
-            int count = (int)xmlSerializer.Deserialize(reader);
-            for (int i = 0; i < count; i++)
-            {
-                xmlSerializer = new XmlSerializer(typeof(Filter));
-                IFilter filter = (IFilter)xmlSerializer.Deserialize(reader);
-                Filters.Add(filter);
-            }
-
-            reader.ReadEndElement();
-        }
-
-        /// <summary>
-        /// Converts an object into its XML representation.
-        /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which 
-        /// the object is serialized.</param>
-        public void WriteXml(XmlWriter writer)
-        {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(int));
-            xmlSerializer.Serialize(writer, Filters.Count, ns);
-            foreach (IFilter filter in Filters)
-            {
-                xmlSerializer = new XmlSerializer(typeof(Filter));
-                xmlSerializer.Serialize(writer, filter, ns);
-            }
-        }
-
-        #endregion
-
         public void Initialise()
         {
             // Add the defaulted filters
@@ -221,10 +148,5 @@ namespace Sentinel.Filters
             Filters.Add(new Filter("Error", LogEntryField.Type, "ERROR"));
             Filters.Add(new Filter("Fatal", LogEntryField.Type, "FATAL"));
         }
-    }
-
-    public interface IDefaultInitialisation
-    {
-        void Initialise();
     }
 }

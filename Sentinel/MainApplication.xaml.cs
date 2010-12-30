@@ -16,12 +16,19 @@ using Sentinel.Filters;
 using Sentinel.Filters.Interfaces;
 using Sentinel.Highlighters;
 using Sentinel.Highlighters.Interfaces;
+using Sentinel.Images;
+using Sentinel.Images.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Logger;
+using Sentinel.Logs;
+using Sentinel.Logs.Interfaces;
 using Sentinel.Preferences;
 using Sentinel.Properties;
+using Sentinel.Providers;
+using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
 using Sentinel.Views;
+using Sentinel.Views.Gui;
 using Sentinel.Views.Interfaces;
 
 #endregion
@@ -46,14 +53,21 @@ namespace Sentinel
             locator.Load("settings.xml");
 
             locator.Register(typeof(IUserPreferences), typeof(UserPreferences), false);
+            locator.Register(typeof(IHighlighterStyle), typeof(HighlighterStyle), false);
+            locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);
             locator.Register(typeof(IHighlightingService), typeof(HighlightingService), false);
             locator.Register(typeof(IQuickHighlighter), typeof(QuickHighlighter), false);
+            locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);
             locator.Register(typeof(IFilteringService), typeof(FilteringService), false);
+            locator.Register<IProviderManager>(new ProviderManager());
+            locator.Register<IWindowFrame>(new MultipleViewFrame());
+
+            locator.Register<INewProviderWizard>(new NewProviderWizard());
 
             // Do this last so that other services have registered, e.g. the 
-            // TypeImageService is called by some classifiers!
+            // TypeImageService is called by some classifiers!);););
             if (!locator.IsRegistered<IClassifierService>())
             {
                 locator.Register<IClassifierService>(new Classifiers());

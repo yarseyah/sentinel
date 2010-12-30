@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.ComponentModel.Composition;
 using System.Windows;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Services;
@@ -18,7 +17,7 @@ using Sentinel.Services;
 
 namespace Sentinel.Highlighters.Gui
 {
-    [Export(typeof(IRemoveHighlighterService))]
+    //[Export(typeof(IRemoveHighlighterService))]
     public class RemoveHighlighterService : IRemoveHighlighterService
     {
         #region IRemoveHighlighterService Members

@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using Sentinel.Highlighters.Gui;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Services;
@@ -135,8 +136,7 @@ namespace Sentinel.Highlighters
 
         private void AddHighlighter(object obj)
         {
-            IAddHighlighterService addHighlighterService =
-                ServiceLocator.Instance.Get<IAddHighlighterService>();
+            IAddHighlighterService addHighlighterService = new AddNewHighlighterService();
             if (addHighlighterService != null)
             {
                 addHighlighterService.Add();
@@ -160,9 +160,7 @@ namespace Sentinel.Highlighters
 
         private void EditHighligter(object obj)
         {
-            IEditHighlighterService editService =
-                ServiceLocator.Instance.Get<IEditHighlighterService>();
-
+            IEditHighlighterService editService = new EditHighlighterService();
             if (editService != null)
             {
                 IHighlighter highlighter = Highlighters.ElementAt(SelectedIndex);
@@ -228,9 +226,7 @@ namespace Sentinel.Highlighters
 
         private void RemoveHighlighter(object obj)
         {
-            IRemoveHighlighterService service =
-                ServiceLocator.Instance.Get<IRemoveHighlighterService>();
-
+            IRemoveHighlighterService service = new RemoveHighlighterService();
             if (service != null)
             {
                 IHighlighter highlighter = Highlighters.ElementAt(SelectedIndex);

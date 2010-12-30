@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -18,10 +17,10 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Views.Heartbeat
 {
-    [Export(typeof(ILogViewer))]
-    [ExportMetadata("Identifier", "f1da010a-bd8f-4957-a16d-2f3ada1e40f6")]
-    [ExportMetadata("Name", "Message Heartbeat")]
-    [ExportMetadata("Description", "Displays a heartbeat graph based upon the incoming message type.")]
+    //[Export(typeof(ILogViewer))]
+    //[ExportMetadata("Identifier", "f1da010a-bd8f-4957-a16d-2f3ada1e40f6")]
+    //[ExportMetadata("Name", "Message Heartbeat")]
+    //[ExportMetadata("Description", "Displays a heartbeat graph based upon the incoming message type.")]
     public class MessageHeatbeat
         : ViewModelBase
           , ILogViewer

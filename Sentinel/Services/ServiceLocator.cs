@@ -12,54 +12,29 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.ComponentModel.Composition.Diagnostics;
-using Microsoft.ComponentModel.Composition.DynamicInstantiation;
-using Sentinel.Filters;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Views;
-using Sentinel.Views.Interfaces;
+using Sentinel.Interfaces;
 
 #endregion
 
 namespace Sentinel.Services
 {
-    [Export]
     public class ServiceLocator
     {
         private static readonly ServiceLocator instance = new ServiceLocator();
-
-        private readonly CompositionContainer compositionContainer;
 
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         private ServiceLocator()
         {
-            var cat = new AssemblyCatalog(Assembly.GetAssembly(GetType()));
-            var dynamicProvider = new DynamicInstantiationExportProvider();
-            compositionContainer = new CompositionContainer(cat, dynamicProvider);
-            dynamicProvider.SourceProvider = compositionContainer;
-
-            compositionContainer.ComposeParts(this);
-            var ci = new CompositionInfo(cat, compositionContainer);
-
-            StringBuilder sb = new StringBuilder();
-            using ( StringWriter sw = new StringWriter(sb) )
-            {
-                CompositionInfoTextFormatter.Write(ci, sw);
-            }
-            Trace.WriteLine(sb.ToString());
         }
 
         public static ServiceLocator Instance { get { return instance; } }
@@ -83,23 +58,6 @@ namespace Sentinel.Services
             if (services.ContainsKey(typeof(T)))
             {
                 return (T) services[typeof(T)];
-            }
-
-            try
-            {
-                Lazy<T> mefInstance = compositionContainer.GetExport<T>();
-                if (mefInstance != null)
-                {
-                    return mefInstance.Value;
-                }
-            }
-            catch (CompositionException mefException)
-            {
-                Trace.WriteLine(mefException.Message);
-            }
-            catch (ImportCardinalityMismatchException mefException)
-            {
-                Trace.WriteLine(mefException.Message);
             }
 
             if (ReportErrors)
@@ -179,24 +137,10 @@ namespace Sentinel.Services
 
         private Type LookupRuntimeType(string typeName)
         {
+            if (String.IsNullOrWhiteSpace(typeName)) throw new ArgumentNullException("typeName");
+
             Type t = Type.GetType(typeName);
-            if ( t != null )
-            {
-                return t;
-            }
-
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            foreach (Assembly assembly in assemblies)
-            {
-                t = assembly.GetType(typeName);
-                if ( t != null )
-                {
-                    return t;
-                }
-            }
-
-            throw new NotSupportedException("The type can not be found in any loaded assemblies: " + typeName);
+            return t;
         }
 
         [SuppressMessage(

@@ -10,7 +10,6 @@
 #region Using directives
 
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Windows;
 using Sentinel.Images.Controls;
 using Sentinel.Images.Interfaces;
@@ -20,15 +19,10 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Images
 {
-    [PartCreationPolicy(CreationPolicy.NonShared)]
-    [Export(typeof(IAddTypeImage))]
     public class AddTypeImageService
         : ViewModelBase
         , IAddTypeImage
     {
-        [Import(typeof(ITypeImageService))]
-        private ITypeImageService imageService { get; set; }
-
         private AddImageWindow addImageWindow;
 
         #region IAddTypeImage Members
@@ -46,6 +40,8 @@ namespace Sentinel.Images
             else
             {
                 addImageWindow = new AddImageWindow {DataContext = this, Owner = Application.Current.MainWindow};
+
+                ITypeImageService imageService = Services.ServiceLocator.Instance.Get<ITypeImageService>();
 
                 AddEditTypeImageViewModel data = new AddEditTypeImageViewModel(addImageWindow, imageService);
 

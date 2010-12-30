@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
@@ -20,10 +19,10 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Views.Gui
 {
-    [Export(typeof(ILogViewer))]
-    [ExportMetadata("Identifier", ID)]
-    [ExportMetadata("Name", NAME)]
-    [ExportMetadata("Description", DESCRIPTION)]
+    //[Export(typeof(ILogViewer))]
+    //[ExportMetadata("Identifier", ID)]
+    //[ExportMetadata("Name", NAME)]
+    //[ExportMetadata("Description", DESCRIPTION)]
     public class LogMessages
         : ViewModelBase
           , ILogViewer

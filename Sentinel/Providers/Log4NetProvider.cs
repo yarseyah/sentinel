@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Xml.Linq;
 using Sentinel.Interfaces;
 using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
-    [Export(typeof(ILogProvider))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class Log4NetProvider : NetworkBatchingProvider
     {
         public static readonly Guid Id = new Guid("7b5700a4-ad84-430d-b495-8bb9bf257e90");

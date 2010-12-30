@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;

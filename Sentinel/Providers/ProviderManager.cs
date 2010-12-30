@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
-    [Export(typeof(IProviderManager))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class ProviderManager : IProviderManager
     {
         private readonly IList<IProviderRegistrationRecord> providers;

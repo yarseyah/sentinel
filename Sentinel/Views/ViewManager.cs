@@ -12,10 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
-using Sentinel.Logs.Interfaces;
 using Sentinel.Views.Gui;
 using Sentinel.Views.Heartbeat;
 using Sentinel.Views.Interfaces;
