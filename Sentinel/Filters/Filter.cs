@@ -13,6 +13,7 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Filters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Support.Mvvm;
@@ -21,7 +22,7 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Filters
 {
-    [Serializable]
+    [ProtoContract]
     public class Filter : ViewModelBase, IFilter
     {
         /// <summary>
@@ -67,28 +68,7 @@ namespace Sentinel.Filters
             Field = field;
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the filter is enabled.
-        /// </summary>
-        [XmlAttribute("Enabled")]
-        public bool Enabled
-        {
-            get
-            {
-                return enabled;
-            }
-
-            set
-            {
-                if (value != enabled)
-                {
-                    enabled = value;
-                    OnPropertyChanged("Enabled");
-                }
-            }
-        }
-
-        [XmlAttribute("Name")]
+        [ProtoMember(1)]
         public string Name
         {
             get
@@ -106,7 +86,29 @@ namespace Sentinel.Filters
             }
         }
 
-        [XmlAttribute]
+        /// <summary>
+        /// Gets or sets a value indicating whether the filter is enabled.
+        /// </summary>
+        [ProtoMember(2)]
+        public bool Enabled
+        {
+            get
+            {
+                return enabled;
+            }
+
+            set
+            {
+                if (value != enabled)
+                {
+                    enabled = value;
+                    OnPropertyChanged("Enabled");
+                }
+            }
+        }
+
+
+        [ProtoMember(3)]
         public string Pattern
         {
             get
@@ -124,7 +126,7 @@ namespace Sentinel.Filters
             }
         }
 
-        [XmlAttribute]
+        [ProtoMember(4)]
         public LogEntryField Field
         {
             get
@@ -142,7 +144,7 @@ namespace Sentinel.Filters
             }
         }
 
-        [XmlAttribute]
+        [ProtoMember(5)]
         public MatchMode Mode
         {
             get

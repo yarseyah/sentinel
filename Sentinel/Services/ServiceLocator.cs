@@ -198,7 +198,16 @@ namespace Sentinel.Services
                     else if (IsProtobufSerializable(valuePair.Value))
                     {
                         // TODO: protobuf saving required
-                        Trace.WriteLine("Todo - protobuf saving");
+                        try
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            Serializer.Serialize(ms, valuePair.Value);
+                            Trace.WriteLine("Todo - protobuf saving");
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.WriteLine("Exception caught in proto-saving");
+                        }
                     }
                 }
 
