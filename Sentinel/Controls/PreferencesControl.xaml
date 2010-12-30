@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Controls="clr-namespace:Sentinel.Controls"
              xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui;assembly=Sentinel.Highlighters.Gui"
-             xmlns:Filters="clr-namespace:Sentinel.Filters.Gui;assembly=Sentinel.Filters.Gui"
              xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Controls"
+             xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
@@ -126,7 +126,7 @@
                             <Run Text="from being recorded, just optionally displayed or not." />
                         </TextBlock>
                         <Filters:FiltersControl Height="Auto"
-                                                 VerticalAlignment="Stretch" />
+                                                VerticalAlignment="Stretch" />
                     </DockPanel>
                 </GroupBox>
             </TabItem>

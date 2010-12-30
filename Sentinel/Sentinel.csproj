@@ -135,6 +135,26 @@
     <Compile Include="Classification\Interfaces\IVisualClassifier.cs" />
     <Compile Include="Classification\TypeImageClassifier.cs" />
     <Compile Include="Classification\VisualClassifier.cs" />
+    <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilteringService.cs" />
+    <Compile Include="Filters\Gui\AddEditFilter.cs" />
+    <Compile Include="Filters\Gui\AddEditFilterWindow.xaml.cs">
+      <DependentUpon>AddEditFilterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\Gui\AddFilter.cs" />
+    <Compile Include="Filters\Gui\EditFilter.cs" />
+    <Compile Include="Filters\Gui\FiltersControl.xaml.cs">
+      <DependentUpon>FiltersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\Gui\RemoveFilter.cs" />
+    <Compile Include="Images\AddEditTypeImageViewModel.cs" />
+    <Compile Include="Images\AddTypeImageService.cs" />
+    <Compile Include="Images\Controls\AddImageWindow.xaml.cs">
+      <DependentUpon>AddImageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Images\EditTypeImageMapping.cs" />
+    <Compile Include="Images\RemoveTypeImageMapping.cs" />
+    <Compile Include="Images\TypeToImageService.cs" />
     <Compile Include="Logs\Log.cs" />
     <Compile Include="Logs\LogManager.cs" />
     <Compile Include="MainApplication.xaml.cs">
@@ -145,6 +165,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Filters\Gui\AddEditFilterWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Filters\Gui\FiltersControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Images\Controls\AddImageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logger\ILogViewerDetails.cs" />
@@ -248,10 +280,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sentinel.Filters.Gui\Sentinel.Filters.Gui.csproj">
-      <Project>{9775523D-5805-48C2-A80B-9C7D0695F02E}</Project>
-      <Name>Sentinel.Filters.Gui</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Filters.Interfaces\Sentinel.Filters.Interfaces.csproj">
       <Project>{2E11945C-1D47-4FD5-BF8B-454B9D4FA5BC}</Project>
       <Name>Sentinel.Filters.Interfaces</Name>
@@ -315,9 +343,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
-    <Folder Include="Filters\" />
     <Folder Include="Highlighting\" />
-    <Folder Include="Images\" />
     <Folder Include="Networking\" />
     <Folder Include="Services\" />
   </ItemGroup>
