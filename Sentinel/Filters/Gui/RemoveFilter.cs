@@ -18,12 +18,10 @@ using Sentinel.Services;
 
 namespace Sentinel.Filters.Gui
 {
-
     #region Using directives
 
     #endregion
 
-    [Export(typeof(IRemoveFilterService))]
     public class RemoveFilter : IRemoveFilterService
     {
         #region IRemoveFilterService Members

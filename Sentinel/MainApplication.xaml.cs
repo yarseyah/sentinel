@@ -21,6 +21,7 @@ using Sentinel.Logger;
 using Sentinel.Preferences;
 using Sentinel.Properties;
 using Sentinel.Services;
+using Sentinel.Views;
 using Sentinel.Views.Interfaces;
 
 #endregion
@@ -43,10 +44,13 @@ namespace Sentinel
             locator.ReportErrors = true;
 
             locator.Load("settings.xml");
+
             locator.Register(typeof(IUserPreferences), typeof(UserPreferences), false);
             locator.Register(typeof(IHighlightingService), typeof(HighlightingService), false);
             locator.Register(typeof(IQuickHighlighter), typeof(QuickHighlighter), false);
             locator.Register<LogWriter>(new LogWriter());
+            locator.Register(typeof(IViewManager), typeof(ViewManager), false);
+            locator.Register(typeof(IFilteringService), typeof(FilteringService), false);
 
             // Do this last so that other services have registered, e.g. the 
             // TypeImageService is called by some classifiers!

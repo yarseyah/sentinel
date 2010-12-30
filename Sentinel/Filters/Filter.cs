@@ -24,7 +24,10 @@ namespace Sentinel.Filters
     [Serializable]
     public class Filter : ViewModelBase, IFilter
     {
-        private bool enabled = true;
+        /// <summary>
+        /// Is the filter enabled?  If so, it will remove anything matching from the output.
+        /// </summary>
+        private bool enabled;
 
         private string name;
 

@@ -26,6 +26,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.ComponentModel.Composition.Diagnostics;
 using Microsoft.ComponentModel.Composition.DynamicInstantiation;
+using Sentinel.Filters;
+using Sentinel.Filters.Interfaces;
 using Sentinel.Views;
 using Sentinel.Views.Interfaces;
 
@@ -52,9 +54,6 @@ namespace Sentinel.Services
             compositionContainer.ComposeParts(this);
             var ci = new CompositionInfo(cat, compositionContainer);
 
-            // Manually register some 'services' that are not discovered
-            Register<IViewManager>(new ViewManager());
-
             StringBuilder sb = new StringBuilder();
             using ( StringWriter sw = new StringWriter(sb) )
             {
@@ -63,13 +62,7 @@ namespace Sentinel.Services
             Trace.WriteLine(sb.ToString());
         }
 
-        public static ServiceLocator Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static ServiceLocator Instance { get { return instance; } }
 
         public ReadOnlyCollection<object> RegisteredServices
         {
@@ -218,6 +211,10 @@ namespace Sentinel.Services
             if (!services.Keys.Contains(keyType) || replace)
             {
                 services[keyType] = Activator.CreateInstance(instanceType);
+                if (services[keyType] is IDefaultInitialisation)
+                {
+                    ((IDefaultInitialisation) services[keyType]).Initialise();
+                }
             }
         }
 

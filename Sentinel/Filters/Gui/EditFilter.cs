@@ -21,7 +21,6 @@ using Sentinel.Support.Converters;
 
 namespace Sentinel.Filters.Gui
 {
-    [Export(typeof(IEditFilterService))]
     public class EditFilter : IEditFilterService
     {
         #region IEditFilterService Members
