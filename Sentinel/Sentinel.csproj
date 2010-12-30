@@ -82,6 +82,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\Gui\LogMessages.cs" />
+    <Compile Include="Views\Gui\LogMessagesControl.xaml.cs">
+      <DependentUpon>LogMessagesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Gui\LogViewerToolbarButton.cs" />
+    <Compile Include="Views\Gui\MultipleViewFrame.xaml.cs">
+      <DependentUpon>MultipleViewFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Gui\ViewInformation.cs" />
+    <Compile Include="Views\Heartbeat\HeartbeatControl.xaml.cs">
+      <DependentUpon>HeartbeatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Heartbeat\MessageHeatbeat.cs" />
+    <Compile Include="Views\ViewManager.cs" />
     <Page Include="Classification\Controls\ClassificationsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -172,6 +186,23 @@
     <Compile Include="Images\EditTypeImageMapping.cs" />
     <Compile Include="Images\RemoveTypeImageMapping.cs" />
     <Compile Include="Images\TypeToImageService.cs" />
+    <Compile Include="Logs\Gui\AddNewLoggerWelcomePage.xaml.cs">
+      <DependentUpon>AddNewLoggerWelcomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\Gui\NewLoggerSettings.cs" />
+    <Compile Include="Logs\Gui\NewLoggerSummaryPage.xaml.cs">
+      <DependentUpon>NewLoggerSummaryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\Gui\NewLoggerWizard.cs" />
+    <Compile Include="Logs\Gui\ProvidersPage.xaml.cs">
+      <DependentUpon>ProvidersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\Gui\SetLoggerNamePage.xaml.cs">
+      <DependentUpon>SetLoggerNamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\Gui\ViewSelectionPage.xaml.cs">
+      <DependentUpon>ViewSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Logs\Log.cs" />
     <Compile Include="Logs\LogManager.cs" />
     <Compile Include="MainApplication.xaml.cs">
@@ -199,6 +230,38 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Images\Controls\AddImageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Logs\Gui\AddNewLoggerWelcomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Logs\Gui\ViewSelectionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Logs\Gui\NewLoggerSummaryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Logs\Gui\ProvidersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Logs\Gui\SetLoggerNamePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Gui\LogMessagesControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Gui\MultipleViewFrame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Heartbeat\HeartbeatControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -321,10 +384,6 @@
       <Project>{98EE053E-9457-4EEA-9C88-129D53304549}</Project>
       <Name>Sentinel.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sentinel.Logs.Gui\Sentinel.Logs.Gui.csproj">
-      <Project>{3D2F920A-F8B0-4A57-A34F-3D22471F70B4}</Project>
-      <Name>Sentinel.Logs.Gui</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Logs.Interfaces\Sentinel.Logs.Interfaces.csproj">
       <Project>{5331A25E-7944-4A60-ADC3-71F1BBC5D88F}</Project>
       <Name>Sentinel.Logs.Interfaces</Name>
@@ -356,6 +415,10 @@
     <ProjectReference Include="..\Sentinel.Views.Interfaces\Sentinel.Views.Interfaces.csproj">
       <Project>{4FB349D6-44EA-465D-9EAC-AE762BD85BA6}</Project>
       <Name>Sentinel.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
+      <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>
+      <Name>WpfExtras</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
