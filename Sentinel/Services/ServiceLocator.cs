@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
@@ -145,7 +144,7 @@ namespace Sentinel.Services
             }
         }
 
-        private Type LookupRuntimeType(string typeName)
+        private static Type LookupRuntimeType(string typeName)
         {
             if (String.IsNullOrWhiteSpace(typeName)) throw new ArgumentNullException("typeName");
 
@@ -174,65 +173,34 @@ namespace Sentinel.Services
             }
         }
 
-        public void Save(string fileName)
+        public void Save()
         {
-            XmlWriterSettings writerSettings = new XmlWriterSettings
-                                                   {
-                                                       OmitXmlDeclaration = true,
-                                                       Indent = true,
-                                                       IndentChars = "    "
-                                                   };
-
-            using (XmlWriter xmlWriter = XmlWriter.Create(fileName, writerSettings))
+            foreach (KeyValuePair<Type, object> valuePair in services)
             {
-                xmlWriter.WriteStartElement("Services");
+                if (!IsProtobufSerializable(valuePair.Value)) continue;
 
-                int count = services.Count(s => IsSerializable(s.Value));
-                xmlWriter.WriteAttributeString("count", count.ToString());
-
-                foreach (KeyValuePair<Type, object> valuePair in services)
+                try
                 {
-                    if (IsSerializable(valuePair.Value))
+                    MemoryStream ms = new MemoryStream();
+                    Serializer.Serialize(ms, valuePair.Value);
+
+                    string typeName = valuePair.Key.FullName ?? "Unknown";
+                    string saveFileName = GetShortName(typeName) ?? typeName;
+                    string fullName = Path.Combine(directoryForSaving, saveFileName);
+
+                    ms.Position = 0;
+                    var fi = new FileInfo(fullName);
+                    using (var fs = fi.Open(FileMode.Create, FileAccess.Write))
                     {
-                        xmlWriter.WriteStartElement("Service");
-
-                        xmlWriter.WriteAttributeString("key", valuePair.Key.ToString());
-                        xmlWriter.WriteAttributeString("instanceType", valuePair.Value.GetType().ToString());
-
-                        XmlSerializer serializer = new XmlSerializer(valuePair.Value.GetType());
-                        serializer.Serialize(xmlWriter, valuePair.Value);
-
-                        xmlWriter.WriteEndElement();
-                    }
-                    else if (IsProtobufSerializable(valuePair.Value))
-                    {
-                        // TODO: protobuf saving required
-                        try
-                        {
-                            MemoryStream ms = new MemoryStream();
-                            Serializer.Serialize(ms, valuePair.Value);
-
-                            string typeName = valuePair.Key.FullName ?? "Unknown";
-                            string saveFileName = GetShortName(typeName) ?? typeName;
-                            string fullName = Path.Combine(directoryForSaving, saveFileName);
-
-                            ms.Position = 0;
-                            var fi = new FileInfo(fullName);
-                            using (var fs = fi.Open(FileMode.Create, FileAccess.Write))
-                            {
-                                ms.CopyTo(fs);
-                                Trace.WriteLine(string.Format("Wrote {0} data to {1}", typeName, fullName));
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Trace.WriteLine("Exception caught in proto-saving:");
-                            Trace.WriteLine(e.Message);
-                        }
+                        ms.CopyTo(fs);
+                        Trace.WriteLine(string.Format("Wrote {0} data to {1}", typeName, fullName));
                     }
                 }
-
-                xmlWriter.WriteEndElement();
+                catch (Exception e)
+                {
+                    Trace.WriteLine("Exception caught in proto-saving:");
+                    Trace.WriteLine(e.Message);
+                }
             }
         }
 
@@ -248,10 +216,40 @@ namespace Sentinel.Services
             return Attribute.IsDefined(value.GetType(), typeof(ProtoContractAttribute));
         }
 
-        private static bool IsSerializable(object obj)
+        public void RegisterOrLoad<T>(Type interfaceType, string fileName)
         {
-            return obj is ISerializable ||
-                   Attribute.IsDefined(obj.GetType(), typeof(SerializableAttribute));
+            string fullName = Path.Combine(directoryForSaving, fileName);
+
+            FileInfo fi = new FileInfo(fullName);
+            bool found = false;
+            if (fi.Exists)
+            {
+                using (var fs = fi.OpenRead())
+                {
+                    try
+                    {
+                        services[interfaceType] = Serializer.Deserialize<T>(fs);
+                        Debug.WriteLine("Loaded {0} with settings in {1}",
+                                        services[interfaceType].GetType().FullName,
+                                        fileName);
+                        found = true;
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(string.Format("Exception when trying to deserialize from {0}", fileName));
+                        Trace.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            if (found) return;
+            if (services.Keys.Contains(interfaceType)) return;
+
+            services[interfaceType] = Activator.CreateInstance(typeof(T));
+            if (services[interfaceType] is IDefaultInitialisation)
+            {
+                ((IDefaultInitialisation)services[interfaceType]).Initialise();
+            }
         }
     }
 }

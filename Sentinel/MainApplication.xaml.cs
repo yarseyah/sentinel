@@ -50,6 +50,9 @@ namespace Sentinel
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
 
+            locator.RegisterOrLoad<FilteringService>(typeof(IFilteringService), "Filters");
+
+            // TODO: this is being phased out...
             locator.Load("settings.xml");
 
             locator.Register(typeof(IUserPreferences), typeof(UserPreferences), false);
@@ -60,7 +63,6 @@ namespace Sentinel
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);
-            locator.Register(typeof(IFilteringService), typeof(FilteringService), false);
             locator.Register<IProviderManager>(new ProviderManager());
             locator.Register<IWindowFrame>(new MultipleViewFrame());
 
@@ -83,7 +85,7 @@ namespace Sentinel
         /// <param name="e">Exit event arguments.</param>
         protected override void OnExit(ExitEventArgs e)
         {
-            ServiceLocator.Instance.Save("settings.xml");
+            ServiceLocator.Instance.Save();
             base.OnExit(e);
         }
     }

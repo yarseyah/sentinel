@@ -101,7 +101,6 @@
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
-    <Compile Include="Filters\Interfaces\IFilter.cs" />
     <Compile Include="Filters\Interfaces\IFilteringService.cs" />
     <Compile Include="Filters\Interfaces\IRemoveFilterService.cs" />
     <Compile Include="Highlighters\Interfaces\IAddHighlighterService.cs" />
