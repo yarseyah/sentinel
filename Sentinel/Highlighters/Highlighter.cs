@@ -58,18 +58,6 @@ namespace Sentinel.Highlighters
                                    };
         }
 
-        [ProtoAfterDeserialization]
-        public void PostLoad()
-        {
-            Trace.WriteLine("Post load of Highlighter");
-        }
-
-        [ProtoBeforeSerialization]
-        public void PreSave()
-        {
-            Trace.WriteLine("Pre-save of Highlighter");
-        }
-
         [ProtoMember(1)]
         public string Name
         {
@@ -190,5 +178,17 @@ namespace Sentinel.Highlighters
 
             return false;
         }
+
+        #region Protobuf attributed methods (for breakpointing)
+        [ProtoAfterDeserialization]
+        public void PostLoad()
+        {
+        }
+
+        [ProtoBeforeSerialization]
+        public void PreSave()
+        {
+        }
+        #endregion
     }
 }

@@ -241,13 +241,11 @@ namespace Sentinel.Highlighters
         [ProtoAfterDeserialization]
         public void PostLoad()
         {
-            Trace.WriteLine("Post load");
         }
 
         [ProtoBeforeSerialization]
         public void PreSave()
         {
-            Trace.WriteLine("Pre-save");
         }
 
         public void Initialise()

@@ -213,6 +213,7 @@ namespace Sentinel.Services
         {
             if (typeName.Contains("Filter")) return "Filters";
             if (typeName.Contains("HighlightingService")) return "Highlighters";
+            if (typeName.Contains("ISearchHighlighter")) return "Search";
             return null;
         }
 

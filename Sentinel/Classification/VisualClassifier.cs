@@ -8,15 +8,11 @@
 #endregion
 
 using Sentinel.Classification.Interfaces;
+using Sentinel.Highlighters;
 using Sentinel.Interfaces;
-using Sentinel.Services;
 
 namespace Sentinel.Classification
 {
-    #region Using directives
-
-    #endregion
-
     public abstract class VisualClassifier : IVisualClassifier
     {
         /// <summary>
@@ -27,7 +23,7 @@ namespace Sentinel.Classification
         {
             // Implementers of IHighlighterStyle should be set to return a new instance
             // each time, rather than the same one each time!
-            Style = ServiceLocator.Instance.Get<IHighlighterStyle>();
+            Style = new HighlighterStyle();
             Type = type;
         }
 

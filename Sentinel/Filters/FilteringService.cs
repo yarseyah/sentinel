@@ -97,13 +97,11 @@ namespace Sentinel.Filters
         [ProtoAfterDeserialization]
         public void PostLoad()
         {
-            Trace.WriteLine("Post load");
         }
 
         [ProtoBeforeSerialization]
         public void PreSave()
         {
-            Trace.WriteLine("Pre-save");
         }
 
 

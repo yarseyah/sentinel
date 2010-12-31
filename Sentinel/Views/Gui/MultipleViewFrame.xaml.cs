@@ -36,7 +36,7 @@ namespace Sentinel.Views.Gui
     {
         private readonly IUserPreferences preferences = ServiceLocator.Instance.Get<IUserPreferences>();
 
-        private readonly IQuickHighlighter searchHighlighter;
+        private readonly ISearchHighlighter searchHighlighter;
         private readonly IViewManager viewManager = ServiceLocator.Instance.Get<IViewManager>();
         private ILogger log;
         private string primaryTitle;
@@ -56,7 +56,7 @@ namespace Sentinel.Views.Gui
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService>();
             Filters = ServiceLocator.Instance.Get<IFilteringService>();
-            searchHighlighter = ServiceLocator.Instance.Get<IQuickHighlighter>();
+            searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
 
             SetupSplitter();
 

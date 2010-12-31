@@ -45,12 +45,12 @@ namespace Sentinel.Highlighters
         {
             bool oldState = ServiceLocator.Instance.ReportErrors;
             ServiceLocator.Instance.ReportErrors = false;
-            IQuickHighlighter quickHighlighter = ServiceLocator.Instance.Get<IQuickHighlighter>();
+            ISearchHighlighter searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
             ServiceLocator.Instance.ReportErrors = oldState;
 
-            if (quickHighlighter != null && quickHighlighter.Highlighter.Enabled)
+            if (searchHighlighter != null && searchHighlighter.Highlighter.Enabled)
             {
-                Highlighter highlighter = quickHighlighter.Highlighter;
+                Highlighter highlighter = searchHighlighter.Highlighter;
 
                 Style style = new Style(typeof(ListViewItem));
                 DataTrigger trigger = new DataTrigger

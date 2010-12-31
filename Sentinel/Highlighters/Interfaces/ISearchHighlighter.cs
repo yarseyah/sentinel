@@ -15,7 +15,7 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Highlighters.Interfaces
 {
-    public interface IQuickHighlighter
+    public interface ISearchHighlighter
     {
         LogEntryField Field { get; set; }
 

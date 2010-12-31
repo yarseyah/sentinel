@@ -52,15 +52,13 @@ namespace Sentinel
 
             locator.RegisterOrLoad<FilteringService>(typeof(IFilteringService), "Filters");
             locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
+            locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
 
             // TODO: this is being phased out...
             locator.Load("settings.xml");
 
             locator.Register(typeof(IUserPreferences), typeof(UserPreferences), false);
-            locator.Register(typeof(IHighlighterStyle), typeof(HighlighterStyle), false);
             locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);
-            locator.Register(typeof(IHighlightingService), typeof(HighlightingService), false);
-            locator.Register(typeof(IQuickHighlighter), typeof(QuickHighlighter), false);
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);

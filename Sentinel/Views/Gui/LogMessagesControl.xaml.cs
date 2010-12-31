@@ -37,12 +37,12 @@ namespace Sentinel.Views.Gui
                 (Highlight as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
-            IQuickHighlighter quickHighlighter = ServiceLocator.Instance.Get<IQuickHighlighter>();
-            if (quickHighlighter != null
-                && quickHighlighter.Highlighter != null 
-                && quickHighlighter.Highlighter is INotifyPropertyChanged )
+            ISearchHighlighter searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
+            if (searchHighlighter != null
+                && searchHighlighter.Highlighter != null 
+                && searchHighlighter.Highlighter is INotifyPropertyChanged )
             {
-                (quickHighlighter.Highlighter as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
+                (searchHighlighter.Highlighter as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
             messages.ItemContainerStyleSelector = new HighlightingSelector();
