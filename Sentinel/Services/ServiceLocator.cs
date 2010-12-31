@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Xml;
@@ -32,10 +31,20 @@ namespace Sentinel.Services
     {
         private static readonly ServiceLocator instance = new ServiceLocator();
 
+        private readonly string directoryForSaving;
+
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         private ServiceLocator()
         {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            directoryForSaving = Path.Combine(appData, "Sentinel");
+            // Check the folder exists, otherwise create it
+            DirectoryInfo di = new DirectoryInfo(directoryForSaving);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
         }
 
         public static ServiceLocator Instance { get { return instance; } }
@@ -202,17 +211,35 @@ namespace Sentinel.Services
                         {
                             MemoryStream ms = new MemoryStream();
                             Serializer.Serialize(ms, valuePair.Value);
-                            Trace.WriteLine("Todo - protobuf saving");
+
+                            string typeName = valuePair.Key.FullName ?? "Unknown";
+                            string saveFileName = GetShortName(typeName) ?? typeName;
+                            string fullName = Path.Combine(directoryForSaving, saveFileName);
+
+                            ms.Position = 0;
+                            var fi = new FileInfo(fullName);
+                            using (var fs = fi.Open(FileMode.Create, FileAccess.Write))
+                            {
+                                ms.CopyTo(fs);
+                                Trace.WriteLine(string.Format("Wrote {0} data to {1}", typeName, fullName));
+                            }
                         }
                         catch (Exception e)
                         {
-                            Trace.WriteLine("Exception caught in proto-saving");
+                            Trace.WriteLine("Exception caught in proto-saving:");
+                            Trace.WriteLine(e.Message);
                         }
                     }
                 }
 
                 xmlWriter.WriteEndElement();
             }
+        }
+
+        private static string GetShortName(string typeName)
+        {
+            if (typeName.Contains("Filter")) return "Filters";
+            return null;
         }
 
         private static bool IsProtobufSerializable(object value)

@@ -31,8 +31,8 @@ namespace Sentinel.Filters
         , IFilteringService
         , IDefaultInitialisation
     {
-        private readonly CollectionChangeHelper<IFilter> collectionHelper =
-            new CollectionChangeHelper<IFilter>();
+        private readonly CollectionChangeHelper<Filter> collectionHelper =
+            new CollectionChangeHelper<Filter>();
 
         private IAddFilterService addFilterService = new AddFilter();
 
@@ -50,7 +50,7 @@ namespace Sentinel.Filters
             Edit = new DelegateCommand(EditFilter, e => selectedIndex != -1);
             Remove = new DelegateCommand(RemoveFilter, e => selectedIndex != -1);
 
-            Filters = new ObservableCollection<IFilter>();
+            Filters = new ObservableCollection<Filter>();
 
             // Register self as an observer of the collection.
             collectionHelper.OnPropertyChanged += CustomFilterPropertyChanged;
@@ -94,9 +94,22 @@ namespace Sentinel.Filters
             }
         }
 
+        [ProtoAfterDeserialization]
+        public void PostLoad()
+        {
+            Trace.WriteLine("Post load");
+        }
+
+        [ProtoBeforeSerialization]
+        public void PreSave()
+        {
+            Trace.WriteLine("Pre-save");
+        }
+
+
         #region IFilteringService Members
         [ProtoMember(1)]
-        public ObservableCollection<IFilter> Filters { get; set; }
+        public ObservableCollection<Filter> Filters { get; set; }
 
         public bool IsFiltered(LogEntry entry)
         {
@@ -127,7 +140,7 @@ namespace Sentinel.Filters
 
         private void EditFilter(object obj)
         {
-            IFilter filter = Filters.ElementAt(SelectedIndex);
+            Filter filter = Filters.ElementAt(SelectedIndex);
             if (filter != null)
             {
                 editFilterService.Edit(filter);
@@ -136,7 +149,7 @@ namespace Sentinel.Filters
 
         private void RemoveFilter(object obj)
         {
-            IFilter filter = Filters.ElementAt(SelectedIndex);
+            Filter filter = Filters.ElementAt(SelectedIndex);
             removeFilterService.Remove(filter);
         }
 

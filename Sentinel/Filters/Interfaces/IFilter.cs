@@ -1,22 +1,21 @@
-﻿
-using Sentinel.Interfaces;
+﻿using Sentinel.Interfaces;
 
 namespace Sentinel.Filters.Interfaces
 {
-    public interface IFilter
-    {
-        string Name { get; set; }
+    //public interface IFilter
+    //{
+    //    string Name { get; set; }
 
-        string Pattern { get; set; }
+    //    string Pattern { get; set; }
 
-        LogEntryField Field { get; set; }
+    //    LogEntryField Field { get; set; }
 
-        MatchMode Mode { get; set; }
+    //    MatchMode Mode { get; set; }
 
-        string Description { get; }
+    //    string Description { get; }
 
-        bool IsMatch(LogEntry entry);
+    //    bool IsMatch(LogEntry entry);
 
-        bool Enabled { get; set; }
-    }
+    //    bool Enabled { get; set; }
+    //}
 }

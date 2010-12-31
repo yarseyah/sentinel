@@ -25,7 +25,7 @@ namespace Sentinel.Filters.Gui
     {
         #region IRemoveFilterService Members
 
-        public void Remove(IFilter filter)
+        public void Remove(Filter filter)
         {
             IFilteringService service = ServiceLocator.Instance.Get<IFilteringService>();
 

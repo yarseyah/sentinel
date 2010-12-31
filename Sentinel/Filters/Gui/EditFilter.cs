@@ -24,7 +24,7 @@ namespace Sentinel.Filters.Gui
     {
         #region IEditFilterService Members
 
-        public void Edit(IFilter filter)
+        public void Edit(Filter filter)
         {
             Debug.Assert(filter != null, "Filter must be supplied to allow editing.");
 

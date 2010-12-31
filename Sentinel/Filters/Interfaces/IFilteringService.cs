@@ -18,7 +18,7 @@ namespace Sentinel.Filters.Interfaces
 {
     public interface IFilteringService
     {
-        ObservableCollection<IFilter> Filters { get; set; }
+        ObservableCollection<Filter> Filters { get; set; }
 
         bool IsFiltered(LogEntry entry);
     }

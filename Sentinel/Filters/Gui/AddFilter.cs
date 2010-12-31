@@ -35,7 +35,7 @@ namespace Sentinel.Filters.Gui
                 bool? dialogResult = filterWindow.ShowDialog();
                 if (dialogResult != null && (bool)dialogResult)
                 {
-                    IFilter filter = Construct(data);
+                    Filter filter = Construct(data);
                     if (filter != null)
                     {
                         IFilteringService service = ServiceLocator.Instance.Get<IFilteringService>();
@@ -50,9 +50,9 @@ namespace Sentinel.Filters.Gui
 
         #endregion
 
-        private static IFilter Construct(AddEditFilter data)
+        private static Filter Construct(AddEditFilter data)
         {
-            IFilter filter = null;
+            Filter filter = null;
 
             if (data.FieldIndex >= 0 && data.FieldIndex < data.Fields.Count())
             {

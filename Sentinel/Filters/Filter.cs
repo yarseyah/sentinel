@@ -23,7 +23,7 @@ using Sentinel.Support.Mvvm;
 namespace Sentinel.Filters
 {
     [ProtoContract]
-    public class Filter : ViewModelBase, IFilter
+    public class Filter : ViewModelBase//, IFilter
     {
         /// <summary>
         /// Is the filter enabled?  If so, it will remove anything matching from the output.
