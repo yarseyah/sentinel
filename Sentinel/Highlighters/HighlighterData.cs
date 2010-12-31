@@ -15,31 +15,31 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Highlighters
 {
-    public class HighlighterData
-    {
-        private bool enabled = true;
+    //public class HighlighterData
+    //{
+    //    private bool enabled = true;
 
-        public bool Enabled
-        {
-            get
-            {
-                return enabled;
-            }
+    //    public bool Enabled
+    //    {
+    //        get
+    //        {
+    //            return enabled;
+    //        }
 
-            set
-            {
-                enabled = value;
-            }
-        }
+    //        set
+    //        {
+    //            enabled = value;
+    //        }
+    //    }
 
-        public LogEntryField Field { get; set; }
+    //    public LogEntryField Field { get; set; }
 
-        public MatchMode Mode { get; set; }
+    //    public MatchMode Mode { get; set; }
 
-        public string Name { get; set; }
+    //    public string Name { get; set; }
 
-        public IHighlighterStyle Style { get; set; }
+    //    public IHighlighterStyle Style { get; set; }
 
-        public string TypeMatch { get; set; }
-    }
+    //    public string TypeMatch { get; set; }
+    //}
 }

@@ -15,9 +15,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Highlighters.Gui;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
@@ -28,11 +30,11 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Highlighters
 {
-    [Serializable]
+    [ProtoContract]
     public class HighlightingService
         : ViewModelBase
         , IHighlightingService
-        , IXmlSerializable
+        , IDefaultInitialisation
     {
         private readonly CollectionChangeHelper<Highlighter> collectionHelper =
             new CollectionChangeHelper<Highlighter>();
@@ -54,7 +56,7 @@ namespace Sentinel.Highlighters
                 MoveItemDown,
                 e => selectedIndex < Highlighters.Count - 1 && selectedIndex != -1);
 
-            Highlighters = new ObservableCollection<IHighlighter>();
+            Highlighters = new ObservableCollection<Highlighter>();
 
             // Register self as an observer of the collection.
             collectionHelper.ManagerName = "Highlighers";
@@ -66,7 +68,7 @@ namespace Sentinel.Highlighters
         /// <summary>
         /// Gets or sets the display name for the view-model.
         /// </summary>
-        public override string DisplayName 
+        public override string DisplayName
         {
             get
             {
@@ -94,7 +96,8 @@ namespace Sentinel.Highlighters
         /// <summary>
         /// Gets or sets the observable collection of highlighters.
         /// </summary>
-        public ObservableCollection<IHighlighter> Highlighters { get; set; }
+        [ProtoMember(1)]
+        public ObservableCollection<Highlighter> Highlighters { get; set; }
 
         public ICommand OrderEarlier { get; private set; }
 
@@ -102,6 +105,7 @@ namespace Sentinel.Highlighters
 
         public ICommand Remove { get; private set; }
 
+        [ProtoMember(2)]
         public int SelectedIndex
         {
             get
@@ -121,15 +125,10 @@ namespace Sentinel.Highlighters
 
         public IHighlighterStyle IsHighlighted(LogEntry logEntry)
         {
-            foreach (IHighlighter highlighter in Highlighters)
-            {
-                if (highlighter.IsMatch(logEntry))
-                {
-                    return highlighter.Style;
-                }
-            }
-
-            return null;
+            return (Highlighters
+                .Where(h => h.IsMatch(logEntry))
+                .Select(h => h.Style))
+                .FirstOrDefault();
         }
 
         #endregion
@@ -163,7 +162,7 @@ namespace Sentinel.Highlighters
             IEditHighlighterService editService = new EditHighlighterService();
             if (editService != null)
             {
-                IHighlighter highlighter = Highlighters.ElementAt(SelectedIndex);
+                Highlighter highlighter = Highlighters.ElementAt(SelectedIndex);
                 if (highlighter != null)
                 {
                     editService.Edit(highlighter);
@@ -229,7 +228,7 @@ namespace Sentinel.Highlighters
             IRemoveHighlighterService service = new RemoveHighlighterService();
             if (service != null)
             {
-                IHighlighter highlighter = Highlighters.ElementAt(SelectedIndex);
+                Highlighter highlighter = Highlighters.ElementAt(SelectedIndex);
 
                 Debug.Assert(
                     highlighter != null,
@@ -239,66 +238,96 @@ namespace Sentinel.Highlighters
             }
         }
 
-        #region Implementation of IXmlSerializable
-
-        /// <summary>
-        /// This method is reserved and should not be used. When implementing the IXmlSerializable 
-        /// interface, you should return null (Nothing in Visual Basic) from this method, and 
-        /// instead, if specifying a custom schema is required, apply the 
-        /// <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation 
-        /// of the object that is produced by the 
-        /// <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> 
-        /// method and consumed by the 
-        /// <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
-        /// </returns>
-        public XmlSchema GetSchema()
+        [ProtoAfterDeserialization]
+        public void PostLoad()
         {
-            return null;
+            Trace.WriteLine("Post load");
         }
 
-        /// <summary>
-        /// Generates an object from its XML representation.
-        /// </summary>
-        /// <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the 
-        /// object is deserialized.</param>
-        public void ReadXml(XmlReader reader)
+        [ProtoBeforeSerialization]
+        public void PreSave()
         {
-            reader.ReadStartElement("HighlightingService");
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(int));
-            int count = (int) xmlSerializer.Deserialize(reader);
-            for (int i = 0; i < count; i++)
-            {
-                xmlSerializer = new XmlSerializer(typeof(Highlighter));
-                IHighlighter highlighter = (IHighlighter)xmlSerializer.Deserialize(reader);
-                Highlighters.Add(highlighter);
-            }
-
-            reader.ReadEndElement();
+            Trace.WriteLine("Pre-save");
         }
 
-        /// <summary>
-        /// Converts an object into its XML representation.
-        /// </summary>
-        /// <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which 
-        /// the object is serialized.</param>
-        public void WriteXml(XmlWriter writer)
+        public void Initialise()
         {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
+            Debug.Assert(!Highlighters.Any(), "Should not have any contents at initialisation");
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(int));
-            xmlSerializer.Serialize(writer, Highlighters.Count, ns);
-            foreach (IHighlighter highlighter in Highlighters)
-            {
-                xmlSerializer = new XmlSerializer(typeof(Highlighter));
-                xmlSerializer.Serialize(writer, highlighter, ns);
-            }
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Trace",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "TRACE",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Foreground = Colors.DarkGray
+                                                 }
+                                 });
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Debug",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "DEBUG",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Foreground = Colors.DarkGreen
+                                                 }
+                                 });
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Information",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "INFO",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Foreground = Colors.White,
+                                                     Background = Colors.Blue
+                                                 }
+                                 });
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Warning",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "WARN",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Background = Colors.Yellow
+                                                 }
+                                 });
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Error",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "ERROR",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Background = Colors.Red
+                                                 }
+                                 });
+            Highlighters.Add(new Highlighter
+                                 {
+                                     Name = "Fatal Error",
+                                     Enabled = true,
+                                     Field = LogEntryField.Type,
+                                     Mode = MatchMode.Exact,
+                                     Pattern = "FATAL",
+                                     Style = new HighlighterStyle
+                                                 {
+                                                     Background = Colors.Black,
+                                                     Foreground = Colors.Yellow
+                                                 }
+                                 });
         }
-
-        #endregion
     }
 }

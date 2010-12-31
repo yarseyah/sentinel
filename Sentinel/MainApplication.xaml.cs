@@ -51,6 +51,7 @@ namespace Sentinel
             locator.ReportErrors = true;
 
             locator.RegisterOrLoad<FilteringService>(typeof(IFilteringService), "Filters");
+            locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
 
             // TODO: this is being phased out...
             locator.Load("settings.xml");

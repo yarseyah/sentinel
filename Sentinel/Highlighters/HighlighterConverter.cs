@@ -7,29 +7,23 @@
 //
 #endregion
 
-#region Using directives
-
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Windows.Data;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-
-#endregion
-
 namespace Sentinel.Highlighters
 {
-
     #region Using directives
+
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Windows.Data;
+    using Sentinel.Interfaces;
 
     #endregion
 
     public class HighlighterConverter : IValueConverter
     {
-        private readonly IHighlighter highlighter;
+        private readonly Highlighter highlighter;
 
-        public HighlighterConverter(IHighlighter highlighter)
+        public HighlighterConverter(Highlighter highlighter)
         {
             this.highlighter = highlighter;
         }

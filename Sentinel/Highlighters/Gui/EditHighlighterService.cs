@@ -25,7 +25,7 @@ namespace Sentinel.Highlighters.Gui
     {
         #region IEditHighlighterService Members
 
-        public void Edit(IHighlighter highlighter)
+        public void Edit(Highlighter highlighter)
         {
             Debug.Assert(highlighter != null, "Highligher must be supplied for editing.");
 

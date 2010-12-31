@@ -13,6 +13,7 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Support.Mvvm;
@@ -21,12 +22,24 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Highlighters
 {
-    [Serializable]
-    public class Highlighter : ViewModelBase, IHighlighter
+    [ProtoContract(Name = "Highlighter")]
+    public class Highlighter : ViewModelBase
     {
-        private readonly HighlighterData data = new HighlighterData();
+        #region Backing stores
+        private bool enabled = true;
+
+        private LogEntryField field;
+
+        private MatchMode mode;
+
+        private string name;
+
+        private HighlighterStyle style;
+
+        private string typeMatch;
 
         private Regex regex;
+        #endregion
 
         public Highlighter()
         {
@@ -45,34 +58,61 @@ namespace Sentinel.Highlighters
                                    };
         }
 
-        [XmlAttribute]
+        [ProtoAfterDeserialization]
+        public void PostLoad()
+        {
+            Trace.WriteLine("Post load of Highlighter");
+        }
+
+        [ProtoBeforeSerialization]
+        public void PreSave()
+        {
+            Trace.WriteLine("Pre-save of Highlighter");
+        }
+
+        [ProtoMember(1)]
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                if (name == value) return;
+                name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+
+        [ProtoMember(2)]
         public bool Enabled
         {
             get
             {
-                return data.Enabled;
+                return enabled;
             }
 
             set
             {
-                if (data.Enabled != value)
-                {
-                    data.Enabled = value;
-                    OnPropertyChanged("Enabled");
-                }
+                if (enabled == value) return;
+                enabled = value;
+                OnPropertyChanged("Enabled");
             }
         }
 
+        [ProtoMember(3)]
         public LogEntryField Field
         {
             get
             {
-                return data.Field;
+                return field;
             }
 
             set
             {
-                data.Field = value;
+                field = value;
                 OnPropertyChanged("Field");
             }
         }
@@ -85,91 +125,51 @@ namespace Sentinel.Highlighters
             }
         }
 
+        [ProtoMember(4)]
         public MatchMode Mode
         {
             get
             {
-                return data.Mode;
+                return mode;
             }
 
             set
             {
-                if (data.Mode != value)
-                {
-                    data.Mode = value;
-                    OnPropertyChanged("Mode");
-                }
+                if (mode == value) return;
+                mode = value;
+                OnPropertyChanged("Mode");
             }
         }
 
-        [XmlAttribute]
-        public string Name
-        {
-            get
-            {
-                return data.Name;
-            }
-
-            set
-            {
-                if (data.Name != value)
-                {
-                    data.Name = value;
-                    OnPropertyChanged("Name");
-                }
-            }
-        }
-
+        [ProtoMember(5)]
         public string Pattern
         {
             get
             {
-                return data.TypeMatch;
+                return typeMatch;
             }
 
             set
             {
-                if (data.TypeMatch != value)
-                {
-                    data.TypeMatch = value;
-                    OnPropertyChanged("Pattern");
-                }
+                if (typeMatch == value) return;
+                typeMatch = value;
+                OnPropertyChanged("Pattern");
             }
         }
 
-        [XmlIgnore]
-        public IHighlighterStyle Style
+        [ProtoMember(6)]
+        public HighlighterStyle Style
         {
             get
             {
-                return data.Style;
+                return style;
             }
 
             set
             {
-                if (data.Style != value)
-                {
-                    data.Style = value;
-                    OnPropertyChanged("Style");
-                }
-            }
-        }
-
-        [XmlElement("Style")]
-        public HighlighterStyle ConcreteStyle
-        {
-            get
-            {
-                return (HighlighterStyle) data.Style;
-            }
-
-            set
-            {
-                if (data.Style != value)
-                {
-                    data.Style = value;
-                    OnPropertyChanged("Style");
-                }
+                if (style == value) return;
+                style = value;
+                OnPropertyChanged("Style");
             }
         }
 

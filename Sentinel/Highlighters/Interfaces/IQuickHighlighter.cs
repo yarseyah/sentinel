@@ -19,7 +19,7 @@ namespace Sentinel.Highlighters.Interfaces
     {
         LogEntryField Field { get; set; }
 
-        IHighlighter Highlighter { get; }
+        Highlighter Highlighter { get; }
 
         string Search { get; set; }
     }

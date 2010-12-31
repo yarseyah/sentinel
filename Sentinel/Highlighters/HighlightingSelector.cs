@@ -36,7 +36,7 @@ namespace Sentinel.Highlighters
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
-        private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
+        private readonly Dictionary<Highlighter, Style> styles = new Dictionary<Highlighter, Style>();
 
         /// <summary>
         /// Initializes a new instance of the HighlightingSelector class.
@@ -50,7 +50,7 @@ namespace Sentinel.Highlighters
 
             if (quickHighlighter != null && quickHighlighter.Highlighter.Enabled)
             {
-                IHighlighter highlighter = quickHighlighter.Highlighter;
+                Highlighter highlighter = quickHighlighter.Highlighter;
 
                 Style style = new Style(typeof(ListViewItem));
                 DataTrigger trigger = new DataTrigger
@@ -155,7 +155,7 @@ namespace Sentinel.Highlighters
             LogEntry entry = item as LogEntry;
             if (entry != null)
             {
-                foreach (KeyValuePair<IHighlighter, Style> pair in styles)
+                foreach (KeyValuePair<Highlighter, Style> pair in styles)
                 {
                     if (pair.Key.IsMatch(entry) && pair.Key.Enabled)
                     {

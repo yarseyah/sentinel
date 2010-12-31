@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using ProtoBuf;
 using Sentinel.Interfaces;
 using Sentinel.Support.Mvvm;
 
@@ -20,16 +21,46 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Highlighters
 {
+    [ProtoContract]
     public class HighlighterStyle 
         : ViewModelBase
-        , IXmlSerializable
         , IHighlighterStyle
     {
         private Color? background;
 
         private Color? foreground;
 
-        [XmlAttribute]
+        [ProtoMember(1)]
+        public string BackgroundAsString
+        {
+            get
+            {
+                return Background != null ? Background.Value.ToString() : string.Empty;
+            }
+            set
+            {
+                Background = !string.IsNullOrWhiteSpace(value) 
+                    ? (Color?) ColorConverter.ConvertFromString(value) 
+                    : null;
+            }
+        }
+
+        [ProtoMember(2)]
+        public string ForegroundAsString
+        {
+            get
+            {
+                return Foreground != null ? Foreground.Value.ToString() : string.Empty;
+            }
+            set
+            {
+                Foreground = !string.IsNullOrWhiteSpace(value)
+                    ? (Color?)ColorConverter.ConvertFromString(value)
+                    : null;
+            }
+        }
+
+
         public Color? Background
         {
             get
@@ -47,7 +78,6 @@ namespace Sentinel.Highlighters
             }
         }
 
-        [XmlAttribute]
         public Color? Foreground
         {
             get
@@ -64,51 +94,5 @@ namespace Sentinel.Highlighters
                 }
             }
         }
-
-        #region IXmlSerializable Members
-
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            if (reader.AttributeCount == 2)
-            {
-                string fg = reader.GetAttribute("Fg");
-                string bg = reader.GetAttribute("Bg");
-
-                if (fg == "(null)")
-                {
-                    Foreground = null;
-                }
-                else
-                {
-                    Foreground = (Color?)ColorConverter.ConvertFromString(fg);
-                }
-
-                if (bg == "(null)")
-                {
-                    Background = null;
-                }
-                else
-                {
-                    Background = (Color?)ColorConverter.ConvertFromString(bg);
-                }
-            }
-            else
-            {
-                throw new XmlSchemaException("HighlighterStyle should have exactly two attributes");
-            }
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteAttributeString("Fg", Foreground == null ? "(null)" : Foreground.Value.ToString());
-            writer.WriteAttributeString("Bg", Background == null ? "(null)" : Background.Value.ToString());
-        }
-
-        #endregion
     }
 }

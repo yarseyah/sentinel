@@ -175,7 +175,14 @@ namespace Sentinel.Services
         {
             foreach (KeyValuePair<Type, object> valuePair in services)
             {
-                if (!IsProtobufSerializable(valuePair.Value)) continue;
+                Trace.WriteLine(string.Format("{0} - {1}", valuePair.Key, valuePair.Value));
+                if (!IsProtobufSerializable(valuePair.Value))
+                {
+                    Trace.WriteLine("Doesn't support saving.");
+                    continue;
+                }
+
+                Trace.WriteLine("attempting to save.");
 
                 try
                 {
@@ -205,6 +212,7 @@ namespace Sentinel.Services
         private static string GetShortName(string typeName)
         {
             if (typeName.Contains("Filter")) return "Filters";
+            if (typeName.Contains("HighlightingService")) return "Highlighters";
             return null;
         }
 

@@ -23,7 +23,7 @@ namespace Sentinel.Highlighters.Interfaces
 
         ICommand Edit { get; }
 
-        ObservableCollection<IHighlighter> Highlighters { get; set; }
+        ObservableCollection<Highlighter> Highlighters { get; set; }
 
         ICommand OrderEarlier { get; }
 

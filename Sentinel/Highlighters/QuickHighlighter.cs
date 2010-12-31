@@ -30,7 +30,7 @@ namespace Sentinel.Highlighters
     [Serializable]
     public class QuickHighlighter : IQuickHighlighter, IXmlSerializable
     {
-        private IHighlighter highlighter;
+        private Highlighter highlighter;
 
         public QuickHighlighter()
         {
@@ -63,7 +63,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        public IHighlighter Highlighter
+        public Highlighter Highlighter
         {
             get
             {
@@ -129,7 +129,7 @@ namespace Sentinel.Highlighters
             Search = (string)xmlSerializer.Deserialize(reader);
 
             xmlSerializer = new XmlSerializer(typeof(Highlighter));
-            highlighter = (IHighlighter) xmlSerializer.Deserialize(reader);
+            highlighter = (Highlighter) xmlSerializer.Deserialize(reader);
         }
 
         /// <summary>

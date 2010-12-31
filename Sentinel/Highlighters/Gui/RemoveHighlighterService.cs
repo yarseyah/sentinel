@@ -22,7 +22,7 @@ namespace Sentinel.Highlighters.Gui
     {
         #region IRemoveHighlighterService Members
 
-        public void Remove(IHighlighter highlighter)
+        public void Remove(Highlighter highlighter)
         {
             IHighlightingService service = ServiceLocator.Instance.Get<IHighlightingService>();
 
