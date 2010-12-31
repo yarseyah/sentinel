@@ -128,9 +128,7 @@ namespace Sentinel.Services
                             }
                             else
                             {
-                                // TODO: restore exception
-                                //throw new NotSupportedException("Should be a Service node with exactly two attributes");
-                                Trace.WriteLine("Error Loading - Should be a Service node with exactly two attributes");
+                                throw new NotSupportedException("Should be a Service node with exactly two attributes");
                             }
                         }
 
