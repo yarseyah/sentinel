@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using Sentinel.Support.Mvvm;
 using Sentinel.Views.Interfaces;
 
@@ -49,6 +50,8 @@ namespace Sentinel.Views.Gui
             }
             set
             {
+                Debug.Assert(CanCheck, "Should not be able to check a non-checkable button, so why look?");
+
                 if (isChecked == value) return;
                 isChecked = value;
                 OnPropertyChanged("IsChecked");

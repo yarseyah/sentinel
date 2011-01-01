@@ -68,32 +68,68 @@
             <Wpf:DataBoundToolbar x:Name="PrimaryToolbar"
                                   ItemsSource="{Binding PrimaryView.ToolbarItems}"
                                   Width="Auto"
-                                  Header="Primary"
                                   HorizontalContentAlignment="Center">
                 <Wpf:DataBoundToolbar.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox x:Name="primaryViewCheckbox"
-                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                  IsChecked="{Binding IsChecked}"
-                                  Command="{Binding Command}"
-                                  Height="22">
-                            <CheckBox.ToolTip>
-                                <TextBlock Text="{Binding Tooltip}" />
-                            </CheckBox.ToolTip>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding ImageIdentifier, Converter={StaticResource ImageLibrary}}"
-                                       Style="{StaticResource toolbarCheckboxImageStyle}"
-                                       Width="16"
-                                       Height="16" />
-                                <TextBlock Text="{Binding Label}" 
-                                           Margin="3,0"
-                                           VerticalAlignment="Center"
-                                           Width="Auto" />
-                            </StackPanel>
-                        </CheckBox>
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Can be either a button or checkbox, define both and show/collapse on the DataTrigger -->
+                            <CheckBox x:Name="primaryViewCheckbox"
+                                      Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
+                                      IsChecked="{Binding IsChecked}"
+                                      Command="{Binding Command}"
+                                      Height="22">
+                                <CheckBox.ToolTip>
+                                    <TextBlock Text="{Binding Tooltip}" />
+                                </CheckBox.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding ImageIdentifier, Converter={StaticResource ImageLibrary}}"
+                                           Style="{StaticResource toolbarCheckboxImageStyle}"
+                                           Width="16"
+                                           Height="16" />
+                                    <TextBlock Text="{Binding Label}"
+                                               Margin="3,0"
+                                               VerticalAlignment="Center"
+                                               Width="Auto" />
+                                </StackPanel>
+                            </CheckBox>
+                            
+                            <Button x:Name="primaryViewButton"
+                                    Visibility="Collapsed"
+                                    Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}"
+                                    Command="{Binding Command}"
+                                    Height="22">
+                                <Button.ToolTip>
+                                    <TextBlock Text="{Binding Tooltip}" />
+                                </Button.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding ImageIdentifier, Converter={StaticResource ImageLibrary}}"
+                                           Width="16"
+                                           Height="16" />
+                                    <TextBlock Text="{Binding Label}"
+                                               Margin="3,0"
+                                               VerticalAlignment="Center"
+                                               Width="Auto" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding CanCheck}"
+                                         Value="false">
+                                <Setter TargetName="primaryViewButton"
+                                        Property="Visibility"
+                                        Value="Visible" />
+                                <Setter TargetName="primaryViewCheckbox"
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                        
                     </DataTemplate>
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
+            
+            <!--
             <Wpf:DataBoundToolbar x:Name="SecondaryToolbar"
                                   ItemsSource="{Binding SecondaryView.ToolbarItems}"
                                   Width="Auto"
@@ -123,6 +159,7 @@
                     </DataTemplate>
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
+            -->
 
             <Wpf:DataBoundToolbar x:Name="HighlightToolbar"
                                        Header="Highlight"
