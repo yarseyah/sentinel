@@ -21,7 +21,7 @@ namespace WpfExtras
 
         public static readonly DependencyProperty ShowNavigationTreeProperty =
             DependencyProperty.Register(
-                "ShowNavigationTree", typeof(bool), typeof(Wizard), new UIPropertyMetadata(true));
+                "ShowNavigationTree", typeof(bool), typeof(Wizard), new UIPropertyMetadata(false));
 
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register(

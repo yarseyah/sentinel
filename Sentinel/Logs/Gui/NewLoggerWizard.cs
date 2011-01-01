@@ -16,7 +16,7 @@ namespace Sentinel.Logs.Gui
             Wizard wizard = new Wizard
                                 {
                                     Owner = parent,
-                                    //ShowNavigationTree = false,
+                                    ShowNavigationTree = false,
                                     Title = "Sentinel - Add new logger",
                                     SavedData = Settings
                                 };
