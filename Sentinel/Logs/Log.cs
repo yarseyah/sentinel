@@ -24,14 +24,18 @@ namespace Sentinel.Logs
 {
     public class Log : ViewModelBase, ILogger
     {
-        private IClassifierService classifier;
+        private readonly IClassifierService classifier;
+
+        private readonly List<LogEntry> entries = new List<LogEntry>();
+
+        private readonly List<LogEntry> newEntries = new List<LogEntry>();
 
         private string name;
 
         public Log()
         {
-            Entries = new List<LogEntry>();
-            NewEntries = new List<LogEntry>();
+            Entries = entries;
+            NewEntries = newEntries;
 
             classifier = ServiceLocator.Instance.Get<IClassifierService>();
 
@@ -63,18 +67,18 @@ namespace Sentinel.Logs
 
         public void Clear()
         {
-            lock (Entries)
+            lock (entries)
             {
-                ((List<LogEntry>)Entries).Clear();
+                entries.Clear();
+            }
+
+            lock (newEntries)
+            {
+                newEntries.Clear();
             }
 
             OnPropertyChanged("Entries");
-
-            lock (NewEntries)
-            {
-                ((List<LogEntry>)NewEntries).Clear();
-            }
-
+            OnPropertyChanged("NewEntries");
             GC.Collect();
         }
 
@@ -92,9 +96,10 @@ namespace Sentinel.Logs
                 }
             }
 
-            lock (NewEntries)
+            lock (newEntries)
             {
-                NewEntries = processed;
+                newEntries.Clear();
+                newEntries.AddRange(processed);
             }
 
             OnPropertyChanged("NewEntries");
@@ -106,11 +111,11 @@ namespace Sentinel.Logs
         {
             if (e.PropertyName == "NewEntries")
             {
-                lock (NewEntries)
+                lock (newEntries)
                 {
-                    lock (Entries)
+                    lock (entries)
                     {
-                        ((List<LogEntry>) Entries).AddRange(NewEntries);
+                        entries.AddRange(newEntries);
                     }
 
                     OnPropertyChanged("Entries");

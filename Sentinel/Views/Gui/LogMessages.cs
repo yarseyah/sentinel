@@ -168,7 +168,10 @@ namespace Sentinel.Views.Gui
             }
             else if (e.PropertyName == "FilteredCount" || e.PropertyName == "UnfilteredCount")
             {
-                Status = string.Format("{0} of {1}", FilteredCount, UnfilteredCount);
+                bool filtered = FilteredCount < UnfilteredCount;
+                Status = filtered
+                             ? string.Format("{0} of {1} Messages [Filters Applied]", FilteredCount, UnfilteredCount)
+                             : string.Format("{0} Messages", UnfilteredCount);
             }
         }
 
@@ -215,20 +218,22 @@ namespace Sentinel.Views.Gui
                 {
                     Messages.Clear();
 
-                    if (rebuildList)
+                    lock (Logger.Entries)
                     {
-                        lock (Logger.Entries)
+                        if (clearPending) Logger.Clear();
+
+                        foreach (LogEntry entry in Logger.Entries)
                         {
-                            foreach (LogEntry entry in Logger.Entries)
-                            {
-                                AddIfPassesFilters(entry);
-                            }
+                            AddIfPassesFilters(entry);
                         }
                     }
                 }
 
-                rebuildList = clearPending = false;
+                // Reset the counters.
+                FilteredCount = 0;
+                UnfilteredCount = 0;
 
+                rebuildList = clearPending = false;
             }
             else if (pendingAdditions.Count > 0)
             {
