@@ -12,6 +12,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,7 +69,7 @@ namespace Sentinel.Controls
 
             // Create the frame view
             Debug.Assert(ViewManager != null,
-                         "A ViewManager should be registed with sevice locator for the IViewManager interface");
+                         "A ViewManager should be registered with service locator for the IViewManager interface");
             IWindowFrame frame = services.Get<IWindowFrame>();
             frame.Log = log;
             frame.SetViews(settings.Views);
@@ -96,7 +97,7 @@ namespace Sentinel.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            Add = new DelegateCommand(AddNewListener);
+            Add = new DelegateCommand(AddNewListener, b => tabControl.Items.Count < 1);
 
             // Append version number to caption (to save effort of producing an about screen)
             Title = string.Format(
@@ -122,12 +123,12 @@ namespace Sentinel.Controls
             // When a new item is added, select the newest one.
             ViewManager.Viewers.CollectionChanged +=
                 (s, ee) =>
+                {
+                    if (ee.Action == NotifyCollectionChangedAction.Add)
                     {
-                        if (ee.Action == NotifyCollectionChangedAction.Add)
-                        {
-                            tabControl.SelectedIndex = tabControl.Items.Count - 1;
-                        }
-                    };
+                        tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                    }
+                };
 
             Add.Execute(null);
         }
@@ -140,7 +141,7 @@ namespace Sentinel.Controls
                 {
                     if (Preferences.Show)
                     {
-                        preferencesWindow = new PreferencesWindow {Owner = this};
+                        preferencesWindow = new PreferencesWindow { Owner = this };
                         preferencesWindow.Show();
                     }
                     else if (preferencesWindow != null)

@@ -47,12 +47,14 @@ namespace Sentinel.Logs.Gui
 
             readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
 
-
             IViewManager vm = ServiceLocator.Instance.Get<IViewManager>();
             if (vm != null)
             {
                 registeredViews = new List<IViewInformation>(vm.GetRegistered());
+                
+#if DISABLE_MULTIPLE_VIEWS
                 MultipleViewsSupported = registeredViews.Count() > 1;
+#endif
                 SecondaryIndex = registeredViews.Count() > 1 ? 1 : PrimaryIndex;
             }
 

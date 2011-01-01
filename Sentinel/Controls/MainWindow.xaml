@@ -20,6 +20,15 @@
                     Value="16" />
             <Setter Property="RenderOptions.BitmapScalingMode"
                     Value="NearestNeighbor" />
+            
+            <Style.Triggers>
+                <!-- If the parent is a button, then disable image (visually) when parent is not enabled -->
+                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type Button}}}"
+                             Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.50" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
