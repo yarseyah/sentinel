@@ -62,25 +62,6 @@ namespace Sentinel.Preferences
 
         private bool useTighterRows;
 
-        [ProtoBeforeDeserialization]
-        public void PreDeserialize()
-        {
-        }
-
-        [ProtoAfterDeserialization]
-        public void PostDeserialize()
-        {
-        }
-
-        [ProtoAfterSerialization]
-        public void PostSerialize()
-        {
-        }
-
-        public UserPreferences()
-        {
-            
-        }
         #region IUserPreferences Members
 
         /// <summary>
@@ -110,7 +91,7 @@ namespace Sentinel.Preferences
         /// </summary>
         /// <see cref="DateFormatOptions"/>
         /// <remarks>Assigned member number 1 in protobuf's serialization model</remarks>
-        [ProtoMember(1)]
+        [ProtoMember(1, IsRequired = true)]
         public int SelectedDateOption
         {
             get
@@ -130,7 +111,7 @@ namespace Sentinel.Preferences
         /// Gets or sets the selected type option, as a index of the available options.
         /// </summary>
         /// <seealso cref="TypeOptions"/>
-        [ProtoMember(2)]
+        [ProtoMember(2, IsRequired = true)]
         public int SelectedTypeOption
         {
             get
@@ -167,7 +148,7 @@ namespace Sentinel.Preferences
         /// <summary>
         /// Gets or sets a value indicating whether the thread column should be shown or not.
         /// </summary>
-        [ProtoMember(3)]
+        [ProtoMember(3, IsRequired = true)]
         public bool ShowThreadColumn
         {
             get
@@ -204,7 +185,7 @@ namespace Sentinel.Preferences
         /// selected index in a data bound ListView can't be maintained for long.
         /// Visually, this works around an issue, but at the expense performance, memory, etc.
         /// </remarks>
-        [ProtoMember(4)]
+        [ProtoMember(4, IsRequired = true)]
         public bool UseLazyRebuild
         {
             get
@@ -224,7 +205,7 @@ namespace Sentinel.Preferences
         /// Gets or sets a value indicating whether the log messages and activity windows should be
         /// displayed with on top of each other (stacked) or beside each other.
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(5, IsRequired = true)]
         public bool UseStackedLayout
         {
             get
@@ -245,7 +226,7 @@ namespace Sentinel.Preferences
         /// tighten the rows in a list view.  Windows Vista and Windows 7 both use much more padding
         /// around each row than Windows XP does.  Sometimes the XP look works better!
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(6, IsRequired = true)]
         public bool UseTighterRows
         {
             get
