@@ -485,10 +485,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Trace.png" />
-    <Content Include="Settings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">

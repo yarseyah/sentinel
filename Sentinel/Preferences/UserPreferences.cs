@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using ProtoBuf;
 using Sentinel.Interfaces;
 using Sentinel.Support.Mvvm;
 using Sentinel.Support.Wpf;
@@ -25,8 +26,10 @@ namespace Sentinel.Preferences
     /// the contents for GUIs whilst also allowing other interested parties to
     /// register to elements to be notified when they change.
     /// </summary>
-    [Serializable]
-    public class UserPreferences : ViewModelBase, IUserPreferences
+    [ProtoContract]
+    public class UserPreferences 
+        : ViewModelBase
+        , IUserPreferences
     {
         private readonly IList<string> dateFormatOptions = new List<string>
                                                                {
@@ -59,6 +62,25 @@ namespace Sentinel.Preferences
 
         private bool useTighterRows;
 
+        [ProtoBeforeDeserialization]
+        public void PreDeserialize()
+        {
+        }
+
+        [ProtoAfterDeserialization]
+        public void PostDeserialize()
+        {
+        }
+
+        [ProtoAfterSerialization]
+        public void PostSerialize()
+        {
+        }
+
+        public UserPreferences()
+        {
+            
+        }
         #region IUserPreferences Members
 
         /// <summary>
@@ -73,7 +95,7 @@ namespace Sentinel.Preferences
         }
 
         /// <summary>
-        /// Gets an enumerable list of the available date formating options.
+        /// Gets an enumerable list of the available date formatting options.
         /// </summary>
         public IEnumerable<string> DateFormatOptions
         {
@@ -87,6 +109,8 @@ namespace Sentinel.Preferences
         /// Gets or sets the selected date option, as a index of the available options.
         /// </summary>
         /// <see cref="DateFormatOptions"/>
+        /// <remarks>Assigned member number 1 in protobuf's serialization model</remarks>
+        [ProtoMember(1)]
         public int SelectedDateOption
         {
             get
@@ -96,11 +120,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (selectedDateOption != value)
-                {
-                    selectedDateOption = value;
-                    OnPropertyChanged("SelectedDateOption");
-                }
+                if (selectedDateOption == value) return;
+                selectedDateOption = value;
+                OnPropertyChanged("SelectedDateOption");
             }
         }
 
@@ -108,6 +130,7 @@ namespace Sentinel.Preferences
         /// Gets or sets the selected type option, as a index of the available options.
         /// </summary>
         /// <seealso cref="TypeOptions"/>
+        [ProtoMember(2)]
         public int SelectedTypeOption
         {
             get
@@ -117,11 +140,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != selectedTypeOption)
-                {
-                    selectedTypeOption = value;
-                    OnPropertyChanged("SelectedTypeOption");
-                }
+                if (value == selectedTypeOption) return;
+                selectedTypeOption = value;
+                OnPropertyChanged("SelectedTypeOption");
             }
         }
 
@@ -137,17 +158,16 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != show)
-                {
-                    show = value;
-                    OnPropertyChanged("Show");
-                }
+                if (value == show) return;
+                show = value;
+                OnPropertyChanged("Show");
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether the thread column should be shown or not.
         /// </summary>
+        [ProtoMember(3)]
         public bool ShowThreadColumn
         {
             get
@@ -157,11 +177,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != showThreadColumn)
-                {
-                    showThreadColumn = value;
-                    OnPropertyChanged("ShowThreadColumn");
-                }
+                if (value == showThreadColumn) return;
+                showThreadColumn = value;
+                OnPropertyChanged("ShowThreadColumn");
             }
         }
 
@@ -186,6 +204,7 @@ namespace Sentinel.Preferences
         /// selected index in a data bound ListView can't be maintained for long.
         /// Visually, this works around an issue, but at the expense performance, memory, etc.
         /// </remarks>
+        [ProtoMember(4)]
         public bool UseLazyRebuild
         {
             get
@@ -195,11 +214,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != useLazyRebuild)
-                {
-                    useLazyRebuild = value;
-                    OnPropertyChanged("UseLazyRebuild");
-                }
+                if (value == useLazyRebuild) return;
+                useLazyRebuild = value;
+                OnPropertyChanged("UseLazyRebuild");
             }
         }
 
@@ -207,6 +224,7 @@ namespace Sentinel.Preferences
         /// Gets or sets a value indicating whether the log messages and activity windows should be
         /// displayed with on top of each other (stacked) or beside each other.
         /// </summary>
+        [ProtoMember(5)]
         public bool UseStackedLayout
         {
             get
@@ -216,11 +234,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != useStackedLayout)
-                {
-                    useStackedLayout = value;
-                    OnPropertyChanged("UseStackedLayout");
-                }
+                if (value == useStackedLayout) return;
+                useStackedLayout = value;
+                OnPropertyChanged("UseStackedLayout");
             }
         }
 
@@ -229,6 +245,7 @@ namespace Sentinel.Preferences
         /// tighten the rows in a list view.  Windows Vista and Windows 7 both use much more padding
         /// around each row than Windows XP does.  Sometimes the XP look works better!
         /// </summary>
+        [ProtoMember(6)]
         public bool UseTighterRows
         {
             get
@@ -238,11 +255,9 @@ namespace Sentinel.Preferences
 
             set
             {
-                if (value != useTighterRows)
-                {
-                    useTighterRows = value;
-                    OnPropertyChanged("UseTighterRows");
-                }
+                if (value == useTighterRows) return;
+                useTighterRows = value;
+                OnPropertyChanged("UseTighterRows");
             }
         }
 

@@ -50,14 +50,12 @@ namespace Sentinel
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
 
+            locator.RegisterOrLoad<UserPreferences>(typeof(IUserPreferences), "Preferences");
             locator.RegisterOrLoad<FilteringService>(typeof(IFilteringService), "Filters");
             locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
             locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
 
-            // TODO: this is being phased out...
-            locator.Load("settings.xml");
 
-            locator.Register(typeof(IUserPreferences), typeof(UserPreferences), false);
             locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());

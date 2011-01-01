@@ -213,8 +213,16 @@ namespace Sentinel.Services
         {
             if (typeName.Contains("Filter")) return "Filters";
             if (typeName.Contains("HighlightingService")) return "Highlighters";
-            if (typeName.Contains("ISearchHighlighter")) return "Search";
-            return null;
+
+            switch (typeName)
+            {
+                case "Sentinel.Interfaces.IUserPreferences":
+                    return "Preferences";
+                case "Sentinel.Highlighters.Interfaces.ISearchHighlighter":
+                    return "Search";
+                default:
+                    return null;
+            }
         }
 
         private static bool IsProtobufSerializable(object value)
