@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -55,6 +56,11 @@ namespace Sentinel.Views.Gui
                 (Preferences as INotifyPropertyChanged).PropertyChanged
                     += PreferencesChanged;
             }
+
+            // Read defaulted values from preferences
+            UpdateStyles();
+            SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
+            SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
         }
 
         private void PreferencesChanged(object s, PropertyChangedEventArgs e)
@@ -65,74 +71,84 @@ namespace Sentinel.Views.Gui
             }
             else if (e.PropertyName == "SelectedTypeOption")
             {
-                if (messages != null)
-                {
-                    // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
-
-                    // Get the first column in logDetails and check it is a fixed-width column.
-                    GridView view = messages.View as GridView;
-                    if (view != null && view.Columns[0] is FixedWidthColumn)
-                    {
-                        FixedWidthColumn fixedColumn = (FixedWidthColumn) view.Columns[0];
-                        switch (Preferences.SelectedTypeOption)
-                        {
-                            case 0:
-                                fixedColumn.FixedWidth = 0;
-                                break;
-                            case 1:
-                                fixedColumn.FixedWidth = 30;
-                                break;
-                            case 2:
-                                fixedColumn.FixedWidth = 60;
-                                break;
-                            case 3:
-                                fixedColumn.FixedWidth = 90;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
+                SetTypeColumnPreferences(Preferences.SelectedTypeOption);
             }
             else if (e.PropertyName == "SelectedDateOption")
             {
-                if (messages != null)
+                SetDateFormat(Preferences.SelectedDateOption);
+            }
+        }
+
+        private void SetTypeColumnPreferences(int selectedTypeOption)
+        {
+            if (messages != null)
+            {
+                // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
+
+                // Get the first column in logDetails and check it is a fixed-width column.
+                GridView view = messages.View as GridView;
+                if (view != null && view.Columns[0] is FixedWidthColumn)
                 {
-                    GridView view = messages.View as GridView;
-                    if (view != null)
+                    FixedWidthColumn fixedColumn = (FixedWidthColumn)view.Columns[0];
+                    switch (selectedTypeOption)
                     {
-                        // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
-                        GridViewColumn column = view.Columns[1];
-
-                        string dateFormat = "r";
-                        switch (Preferences.SelectedDateOption)
-                        {
-                            case 0:
-                                dateFormat = "r";
-                                column.Width = 175;
-                                break;
-                            case 1:
-                                dateFormat = "dd/MM/yyyy HH:mm:ss";
-                                column.Width = 120;
-                                break;
-                            case 2:
-                                dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
-                                column.Width = 170;
-                                break;
-                            case 3:
-                                dateFormat = "HH:mm:ss";
-                                column.Width = 60;
-                                break;
-                            case 4:
-                                dateFormat = "HH:mm:ss,fff";
-                                column.Width = 80;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        column.DisplayMemberBinding = new Binding("DateTime") { StringFormat = dateFormat };
+                        case 0:
+                            fixedColumn.FixedWidth = 0;
+                            break;
+                        case 1:
+                            fixedColumn.FixedWidth = 30;
+                            break;
+                        case 2:
+                            fixedColumn.FixedWidth = 60;
+                            break;
+                        case 3:
+                            fixedColumn.FixedWidth = 90;
+                            break;
+                        default:
+                            break;
                     }
+                }
+            }
+        }
+
+        private void SetDateFormat(int selectedDateOption)
+        {
+            if (messages != null)
+            {
+                GridView view = messages.View as GridView;
+                if (view != null)
+                {
+                    // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
+                    GridViewColumn column = view.Columns[1];
+
+                    string dateFormat = "r";
+                    switch (selectedDateOption)
+                    {
+                        case 0:
+                            dateFormat = "r";
+                            column.Width = 175;
+                            break;
+                        case 1:
+                            dateFormat = "dd/MM/yyyy HH:mm:ss";
+                            column.Width = 120;
+                            break;
+                        case 2:
+                            dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
+                            column.Width = 170;
+                            break;
+                        case 3:
+                            dateFormat = "HH:mm:ss";
+                            column.Width = 60;
+                            break;
+                        case 4:
+                            dateFormat = "HH:mm:ss,fff";
+                            column.Width = 80;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    column.DisplayMemberBinding = new Binding("DateTime") { StringFormat = dateFormat };
                 }
             }
         }
