@@ -11,12 +11,14 @@
 
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Sentinel.Highlighters;
 using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Logs.Interfaces;
 using Sentinel.Services;
 using Sentinel.Support;
+using Sentinel.Support.Wpf;
 
 #endregion
 
@@ -51,13 +53,87 @@ namespace Sentinel.Views.Gui
             if (Preferences != null && Preferences is INotifyPropertyChanged)
             {
                 (Preferences as INotifyPropertyChanged).PropertyChanged
-                    += (s, e) =>
-                           {
-                               if (e.PropertyName == "UseTighterRows")
-                               {
-                                   UpdateStyles();
-                               }
-                           };
+                    += PreferencesChanged;
+            }
+        }
+
+        private void PreferencesChanged(object s, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "UseTighterRows")
+            {
+                UpdateStyles();
+            }
+            else if (e.PropertyName == "SelectedTypeOption")
+            {
+                if (messages != null)
+                {
+                    // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
+
+                    // Get the first column in logDetails and check it is a fixed-width column.
+                    GridView view = messages.View as GridView;
+                    if (view != null && view.Columns[0] is FixedWidthColumn)
+                    {
+                        FixedWidthColumn fixedColumn = (FixedWidthColumn) view.Columns[0];
+                        switch (Preferences.SelectedTypeOption)
+                        {
+                            case 0:
+                                fixedColumn.FixedWidth = 0;
+                                break;
+                            case 1:
+                                fixedColumn.FixedWidth = 30;
+                                break;
+                            case 2:
+                                fixedColumn.FixedWidth = 60;
+                                break;
+                            case 3:
+                                fixedColumn.FixedWidth = 90;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            else if (e.PropertyName == "SelectedDateOption")
+            {
+                if (messages != null)
+                {
+                    GridView view = messages.View as GridView;
+                    if (view != null)
+                    {
+                        // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
+                        GridViewColumn column = view.Columns[1];
+
+                        string dateFormat = "r";
+                        switch (Preferences.SelectedDateOption)
+                        {
+                            case 0:
+                                dateFormat = "r";
+                                column.Width = 175;
+                                break;
+                            case 1:
+                                dateFormat = "dd/MM/yyyy HH:mm:ss";
+                                column.Width = 120;
+                                break;
+                            case 2:
+                                dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
+                                column.Width = 170;
+                                break;
+                            case 3:
+                                dateFormat = "HH:mm:ss";
+                                column.Width = 60;
+                                break;
+                            case 4:
+                                dateFormat = "HH:mm:ss,fff";
+                                column.Width = 80;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        column.DisplayMemberBinding = new Binding("DateTime") { StringFormat = dateFormat };
+                    }
+                }
             }
         }
 

@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Controls="clr-namespace:Sentinel.Support.Wpf"
-             xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+             xmlns:Converters="clr-namespace:Sentinel.Support.Converters" 
+             xmlns:Windows="clr-namespace:Sentinel.Controls" 
              mc:Ignorable="d"
              x:Class="Sentinel.Views.Gui.LogMessagesControl"
              x:Name="UserControl"
@@ -38,19 +39,19 @@
                                                Visibility="Collapsed" />
                                 </StackPanel>
                                 <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}}"
                                                  Value="1">
                                         <Setter TargetName="icon"
                                                 Property="Visibility"
                                                 Value="Visible" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}}"
                                                  Value="2">
                                         <Setter TargetName="text"
                                                 Property="Visibility"
                                                 Value="Visible" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                    <DataTrigger Binding="{Binding Preferences.SelectedTypeOption, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}}"
                                                  Value="3">
                                         <Setter TargetName="icon"
                                                 Property="Visibility"
@@ -69,7 +70,7 @@
                     <GridViewColumn Header="Date/Time"
                                     DisplayMemberBinding="{Binding DateTime, StringFormat=r}" />
                     <Controls:FixedWidthColumn Header="Thread"
-                                               FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=50}"
+                                               FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=50}"
                                                DisplayMemberBinding="{Binding Thread}" />
                     <GridViewColumn Header="System"
                                     DisplayMemberBinding="{Binding System}" />

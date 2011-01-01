@@ -23,6 +23,7 @@ using Sentinel.Highlighters.Interfaces;
 using Sentinel.Interfaces;
 using Sentinel.Logs.Interfaces;
 using Sentinel.Services;
+using Sentinel.Support.Wpf;
 using Sentinel.Views.Interfaces;
 
 #endregion
@@ -203,77 +204,6 @@ namespace Sentinel.Views.Gui
 
         private void PreferencesChanged(object sender, PropertyChangedEventArgs e)
         {
-            //if (e.PropertyName == "SelectedTypeOption")
-            //{
-            //    // Get the first column in logDetails and check it is a fixed-width column.
-            //    // logDetails.
-            //    if (LogMessages.messages != null)
-            //    {
-            //        GridView view = LogMessages.messages.View as GridView;
-            //        if (view != null && view.Columns[0] is FixedWidthColumn)
-            //        {
-            //            FixedWidthColumn fixedColumn = (FixedWidthColumn) view.Columns[0];
-            //            switch (preferences.SelectedTypeOption)
-            //            {
-            //                case 0:
-            //                    fixedColumn.FixedWidth = 0;
-            //                    break;
-            //                case 1:
-            //                    fixedColumn.FixedWidth = 30;
-            //                    break;
-            //                case 2:
-            //                    fixedColumn.FixedWidth = 60;
-            //                    break;
-            //                case 3:
-            //                    fixedColumn.FixedWidth = 90;
-            //                    break;
-            //                default:
-            //                    break;
-            //            }
-            //        }
-            //    }
-            //}
-            //else if (e.PropertyName == "SelectedDateOption")
-            //{
-            //    if (LogMessages.messages != null)
-            //    {
-            //        GridView view = LogMessages.messages.View as GridView;
-            //        if (view != null)
-            //        {
-            //            GridViewColumn column = view.Columns[1];
-
-            //            string dateFormat = "r";
-            //            switch (preferences.SelectedDateOption)
-            //            {
-            //                case 0:
-            //                    dateFormat = "r";
-            //                    column.Width = 150;
-            //                    break;
-            //                case 1:
-            //                    dateFormat = "dd/MM/yyyy HH:mm:ss";
-            //                    column.Width = 120;
-            //                    break;
-            //                case 2:
-            //                    dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
-            //                    column.Width = 160;
-            //                    break;
-            //                case 3:
-            //                    dateFormat = "HH:mm:ss";
-            //                    column.Width = 60;
-            //                    break;
-            //                case 4:
-            //                    dateFormat = "HH:mm:ss,fff";
-            //                    column.Width = 80;
-            //                    break;
-            //                default:
-            //                    break;
-            //            }
-
-            //            column.DisplayMemberBinding = new Binding("DateTime") {StringFormat = dateFormat};
-            //        }
-            //    }
-            //}
-            //else 
             if (e.PropertyName == "UseStackedLayout")
             {
                 SetupSplitter();
