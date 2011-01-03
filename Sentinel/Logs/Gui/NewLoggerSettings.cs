@@ -191,59 +191,67 @@ namespace Sentinel.Logs.Gui
         public MemoryStream ProtobufPersist()
         {
 #if PROTO_SAVING_SESSIONS
-    // Testing.............................................................................
-            MemoryStream ms = new MemoryStream();
-
-            Trace.WriteLine("Settings");
-            Serializer.Serialize(ms, settings);
-            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-            Serializer.Serialize(ms, providers.Count());
-            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-
-            Trace.WriteLine("Providers");
-            foreach (var provider in Providers)
+            try
             {
+                // Testing.............................................................................
+                MemoryStream ms = new MemoryStream();
+
+                Trace.WriteLine("Settings");
+
+                Serializer.SerializeWithLengthPrefix(ms, settings, PrefixStyle.Fixed32);
+                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                Serializer.Serialize(ms, providers.Count());
+                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+
+                Trace.WriteLine("Providers");
+                foreach (var provider in Providers)
+                {
+                    try
+                    {
+                        Serializer.SerializeWithLengthPrefix(ms, provider.Info, PrefixStyle.Fixed32);
+                        Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                        //ProtoHelper.Wrap(ms, provider.Settings);
+                        //Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine("Exception caught trying to wrap {0}", provider.Info.Name);
+                        throw;
+                    }
+                }
+
+                ms.Position = 0;
+                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+
+                // Testing.............................................................................
                 try
                 {
-                    Serializer.Serialize(ms, provider.Info);
-                    Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                    InternalSettings s = Serializer.DeserializeWithLengthPrefix<InternalSettings>(ms, PrefixStyle.Fixed32);
+                    int providerCount = Serializer.Deserialize<int>(ms);
 
-                    var wrappedProviderSettings = ProtoHelper.Wrap(provider.Settings);
-                    Trace.WriteLine(
-                        string.Format("Wrapped {0} into {1} bytes", provider.Settings, wrappedProviderSettings.Length));
-                    Serializer.Serialize(ms, wrappedProviderSettings);
-                    Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                    for (int i = 0; i < providerCount; i++)
+                    {
+                        var info = Serializer.Deserialize<ProviderInfo>(ms);
+                        //object providerSettings;
+                        //ProtoHelper.Unwrap(ms, out providerSettings);
+                        //Trace.WriteLine(
+                        //    providerSettings != null && providerSettings.GetType() != null
+                        //        ? providerSettings.GetType().FullName
+                        //        : "Nothing");
+                    }
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine("Exception caught trying to wrap {0}", provider.Info.Name);
-                    throw;
+                    Trace.WriteLine(e);
                 }
-            }
-            ms.Position = 0;
-            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-
-            // Testing.............................................................................
-            try
-            {
-                InternalSettings s = Serializer.Deserialize<InternalSettings>(ms);
-                int providerCount = Serializer.Deserialize<int>(ms);
-                for (int i = 0; i < providerCount; i++)
-                {
-                    var info = Serializer.Deserialize<ProviderInfo>(ms);
-                
-                    object providerSettings;
-                    ProtoHelper.Unwrap(ms, out providerSettings);
-
-                    Trace.WriteLine(providerSettings.GetType().FullName);
-                }
+                ms.Position = 0;
+                return ms;
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e);
+                Console.WriteLine(e);
+                throw;
             }
-            ms.Position = 0;
-            return ms;
 #else
             return null;
 #endif

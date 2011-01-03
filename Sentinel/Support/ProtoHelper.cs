@@ -64,22 +64,18 @@ namespace Sentinel.Support
             return default(T);
         }
 
-        public static byte[] Wrap(object obj)
+        public static bool Wrap(MemoryStream ms, object obj)
         {
-            using (MemoryStream ms = new MemoryStream())
+            try
             {
-                try
-                {
-                    Serializer.Serialize(ms, obj.GetType().FullName);
-                    Serializer.Serialize(ms, obj);
-                    ms.Position = 0;
-                    return ms.ToArray();
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                    throw;
-                }
+                Serializer.Serialize(ms, obj.GetType().FullName);
+                Serializer.Serialize(ms, obj);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
+                throw;
             }
         }
 
