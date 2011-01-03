@@ -73,7 +73,7 @@ namespace Sentinel.Providers
             }
         }
 
-        public abstract IProviderInfo Information { get; }
+        public abstract ProviderInfo Information { get; }
 
         public void Start()
         {

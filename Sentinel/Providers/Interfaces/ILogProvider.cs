@@ -4,7 +4,7 @@ namespace Sentinel.Providers.Interfaces
 {
     public interface ILogProvider
     {
-        IProviderInfo Information { get; }
+        ProviderInfo Information { get; }
 
         ILogger Logger { get; set; }
 

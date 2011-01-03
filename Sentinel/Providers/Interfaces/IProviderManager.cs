@@ -11,7 +11,7 @@ namespace Sentinel.Providers.Interfaces
         void Remove(string name);
 
         IEnumerable<Guid> GetRegistered();
-        IProviderInfo GetInformation(Guid providerGuid);
+        ProviderInfo GetInformation(Guid providerGuid);
 
         T GetConfiguration<T>(Guid providerGuid);
 

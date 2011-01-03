@@ -6,7 +6,7 @@ namespace Sentinel.Providers.Interfaces
     {
         bool Display(Window parent);
 
-        IProviderInfo Provider { get; } 
+        ProviderInfo Provider { get; } 
         IProviderSettings Settings { get; }
     }
 }

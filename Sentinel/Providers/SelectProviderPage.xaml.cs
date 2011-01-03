@@ -24,7 +24,7 @@ namespace Sentinel.Providers
 
         private bool isValid;
 
-        private List<IProviderInfo> providers = new List<IProviderInfo>();
+        private List<ProviderInfo> providers = new List<ProviderInfo>();
 
         /// <summary>
         /// The additionalPages collection will maintain any child pages created
@@ -86,7 +86,7 @@ namespace Sentinel.Providers
             if ( additionalPages[index] == null )
             {
                 SelectedProviderDescription = providers[index].Description;
-                IProviderInfo info = providers[index];
+                ProviderInfo info = providers[index];
 
                 if (providerManager != null)
                 {

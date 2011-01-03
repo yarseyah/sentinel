@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Sentinel.Providers;
 using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
 using WpfExtras;
@@ -165,7 +166,7 @@ namespace Sentinel.Logs.Gui
             {
                 if (wizard.Display((Window) this.Parent))
                 {
-                    IProviderInfo info = wizard.Provider;
+                    ProviderInfo info = wizard.Provider;
                     IProviderSettings settings = wizard.Settings;
 
                     PendingProviderRecord rec = new PendingProviderRecord
@@ -257,7 +258,7 @@ namespace Sentinel.Logs.Gui
 
             var providersWithPorts = Providers
                 .Select(p => p.Settings)
-                .OfType<INetworkProviderSettings>();
+                .OfType<NetworkSettings>();
             var providersGroupedByPort = providersWithPorts
                 .GroupBy(p => p.Port);
 

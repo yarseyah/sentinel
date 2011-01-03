@@ -6,7 +6,7 @@ namespace Sentinel.Providers
     public class ProviderRegistrationRecord : IProviderRegistrationRecord
     {
         public Guid Identifier { get; set; }
-        public IProviderInfo Info { get; set; }
+        public ProviderInfo Info { get; set; }
         public Type Settings { get; set; }
         public Type Implementor { get; set; }
     }

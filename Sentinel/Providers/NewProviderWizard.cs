@@ -39,7 +39,7 @@ namespace Sentinel.Providers
             return dialogResult ?? false;
         }
 
-        public IProviderInfo Provider { get; private set; }
+        public ProviderInfo Provider { get; private set; }
 
         public IProviderSettings Settings { get; private set; }
     }

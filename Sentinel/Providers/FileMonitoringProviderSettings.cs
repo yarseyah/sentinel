@@ -1,11 +1,13 @@
-﻿using System;
-using Sentinel.Providers.Interfaces;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
     public class FileMonitoringProviderSettings : IFileMonitoringProviderSettings
     {
-        public FileMonitoringProviderSettings(IProviderInfo info, string providerName, string fileName, int refreshPeriod, bool loadExistingContent)
+        public FileMonitoringProviderSettings(
+            ProviderInfo info,
+            string providerName,
+            string fileName,
+            int refreshPeriod,
+            bool loadExistingContent)
         {
             Info = info;
             Name = providerName;
@@ -14,9 +16,20 @@ namespace Sentinel.Providers
             LoadExistingContent = loadExistingContent;
         }
 
-        #region Implementation of IProviderSettings
+        public string FileName { get; private set; }
+
+        /// <summary>
+        /// Reference back to the provider this setting is appropriate to.
+        /// </summary>
+        public ProviderInfo Info { get; private set; }
+
+        public bool LoadExistingContent { get; private set; }
+
+        public string MessageDecoder { get; set; }
 
         public string Name { get; private set; }
+
+        public int RefreshPeriod { get; private set; }
 
         public string Summary
         {
@@ -26,30 +39,11 @@ namespace Sentinel.Providers
             }
         }
 
-        /// <summary>
-        /// Reference back to the provider this setting is appropriate to.
-        /// </summary>
-        public IProviderInfo Info { get; private set; }
-
-        #endregion
-
-        #region Implementation of IFileMonitoringProviderSettings
-
-        public string FileName { get; private set; }
-
-        public int RefreshPeriod { get; private set; }
-
-        public bool LoadExistingContent { get; private set; }
-
-        public string MessageDecoder { get; set; }
-
         public void Update(string fileName, int refreshPeriod, bool loadExistingContent)
         {
             FileName = fileName;
             RefreshPeriod = refreshPeriod;
             LoadExistingContent = loadExistingContent;
         }
-
-        #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace Sentinel.Providers
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
-        public IProviderInfo Info { get; set; }
+        public ProviderInfo Info { get; set; }
 
         #endregion
     }

@@ -1,8 +1,9 @@
-﻿using Sentinel.Providers.Interfaces;
+﻿using ProtoBuf;
 
 namespace Sentinel.Providers
 {
-    public class NetworkSettings : ProviderSettings, INetworkProviderSettings
+    [ProtoContract]
+    public class NetworkSettings : ProviderSettings
     {
         public NetworkSettings()
         {
@@ -10,13 +11,15 @@ namespace Sentinel.Providers
             IsUdp = true;
         }
 
-        public int Port
+        [ProtoMember(1)]
+        public bool IsUdp
         {
             get;
             set;
         }
 
-        public bool IsUdp
+        [ProtoMember(2)]
+        public int Port
         {
             get;
             set;

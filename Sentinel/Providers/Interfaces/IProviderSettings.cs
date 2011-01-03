@@ -9,6 +9,6 @@
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
-        IProviderInfo Info { get; }
+        ProviderInfo Info { get; }
     }
 }

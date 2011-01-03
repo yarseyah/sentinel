@@ -10,7 +10,7 @@ namespace Sentinel.Providers
     {
         public static readonly Guid Id = new Guid("7b5700a4-ad84-430d-b495-8bb9bf257e90");
 
-        public readonly static IProviderInfo Info = new ProviderInfo(
+        public readonly static ProviderInfo Info = new ProviderInfo(
             Id, 
             "Log4Net Network Provider",
             "Handler for the remote side of log4net's UdpAppender.");
@@ -20,7 +20,7 @@ namespace Sentinel.Providers
         {
         }
 
-        public override IProviderInfo Information { get { return Info; } }
+        public override ProviderInfo Information { get { return Info; } }
 
         protected override LogEntry DecodeEntry(string logEntry)
         {

@@ -73,6 +73,12 @@ namespace Sentinel.Controls
 
             NewLoggerSettings settings = wizard.Settings;
 
+            MemoryStream ms = settings.ProtobufPersist();
+
+#if PROTO_SAVING_SESSIONS
+            string persisting = System.Text.Encoding.UTF8.GetString(ms.GetBuffer());
+#endif
+
             // Create the logger.
             ILogManager logManager = services.Get<ILogManager>();
             ILogger log = logManager.Add(settings.LogName);

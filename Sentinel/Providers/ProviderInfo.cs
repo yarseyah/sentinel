@@ -1,9 +1,10 @@
 using System;
-using Sentinel.Providers.Interfaces;
+using ProtoBuf;
 
 namespace Sentinel.Providers
 {
-    public class ProviderInfo : IProviderInfo
+    [ProtoContract]
+    public class ProviderInfo
     {
         public ProviderInfo(Guid uniqueId, string name, string description)
         {
@@ -12,12 +13,13 @@ namespace Sentinel.Providers
             Description = description;
         }
 
-        #region Implementation of IProviderInfo
-
+        [ProtoMember(1)]
         public Guid Identifier { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
 
-        #endregion
+        [ProtoMember(2)]
+        public string Name { get; private set; }
+
+        [ProtoMember(3)]
+        public string Description { get; private set; }
     }
 }

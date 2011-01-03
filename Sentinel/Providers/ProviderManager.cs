@@ -102,7 +102,7 @@ namespace Sentinel.Providers
             return providers.Select(p => p.Identifier);
         }
 
-        public IProviderInfo GetInformation(Guid providerGuid)
+        public ProviderInfo GetInformation(Guid providerGuid)
         {
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
             if (!providers.Any(p => p.Identifier == providerGuid))

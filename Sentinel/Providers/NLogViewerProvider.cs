@@ -12,7 +12,7 @@ namespace Sentinel.Providers
 
         private static readonly DateTime log4jDateBase = new DateTime(1970, 1, 1);
 
-        public readonly static IProviderInfo Info = new ProviderInfo(
+        public readonly static ProviderInfo Info = new ProviderInfo(
             Id,
             "nLog Viewer",
             "Handler for nLog's log4j networking protocol log target.");
@@ -22,7 +22,7 @@ namespace Sentinel.Providers
         {
         }
 
-        public override IProviderInfo Information { get { return Info; } }
+        public override ProviderInfo Information { get { return Info; } }
 
         protected override LogEntry DecodeEntry(string m)
         {

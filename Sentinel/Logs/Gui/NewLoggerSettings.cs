@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using ProtoBuf;
+using Sentinel.Providers;
 using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
+using Sentinel.Support;
 using Sentinel.Support.Mvvm;
 using Sentinel.Views.Interfaces;
 
@@ -12,13 +17,23 @@ namespace Sentinel.Logs.Gui
 {
     public class NewLoggerSettings : ViewModelBase
     {
-        private bool isVertical;
+        [ProtoContract]
+        public class InternalSettings
+        {
+            [ProtoMember(1)]
+            public string LogName { get; set; }
 
-        private string layout;
+            [ProtoMember(2)]
+            public string PrimaryView { get; set; }
+            
+            [ProtoMember(21)]
+            public bool IsVertical { get; set; }
 
-        private string logName;
+            [ProtoMember(22)]
+            public string Layout { get; set; }
+        }
 
-        private string primaryView;
+        private InternalSettings settings = new InternalSettings();
 
         private ObservableCollection<PendingProviderRecord> providers;
 
@@ -36,12 +51,12 @@ namespace Sentinel.Logs.Gui
         {
             get
             {
-                return isVertical;
+                return settings.IsVertical;
             }
             set
             {
-                if (value == isVertical) return;
-                isVertical = value;
+                if (value == IsVertical) return;
+                settings.IsVertical = value;
                 OnPropertyChanged("IsVertical");
             }
         }
@@ -50,12 +65,12 @@ namespace Sentinel.Logs.Gui
         {
             get
             {
-                return layout;
+                return settings.Layout;
             }
             set
             {
-                if (layout == value) return;
-                layout = value;
+                if (Layout == value) return;
+                settings.Layout = value;
                 OnPropertyChanged("Layout");
             }
         }
@@ -64,57 +79,13 @@ namespace Sentinel.Logs.Gui
         {
             get
             {
-                return logName;
+                return settings.LogName;
             }
             set
             {
-                if (logName == value) return;
-                logName = value;
+                if (LogName == value) return;
+                settings.LogName = value;
                 OnPropertyChanged("LogName");
-            }
-        }
-
-        public string PrimaryView
-        {
-            get
-            {
-                return primaryView;
-            }
-            private set
-            {
-                if (primaryView == value) return;
-                primaryView = value;
-                OnPropertyChanged("PrimaryView");
-            }
-        }
-
-        public string ProviderSummary
-        {
-            get
-            {
-                var sb = new StringBuilder();
-
-                if (Providers != null
-                    && Providers.Count > 0)
-                {
-                    for (int index = 0; index < Providers.Count; index++)
-                    {
-                        PendingProviderRecord p = Providers[index];
-                        sb.AppendFormat(
-                            "{0} - {1} - {2}",
-                            p.Settings.Name,
-                            p.Settings.Info.Name,
-                            p.Settings.Summary);
-
-                        if (index < providers.Count - 1) sb.AppendLine();
-                    }
-                }
-                else
-                {
-                    sb.Append("No providers configured.");
-                }
-
-                return sb.ToString();
             }
         }
 
@@ -130,6 +101,20 @@ namespace Sentinel.Logs.Gui
                 if (providers == value) return;
                 providers = value;
                 OnPropertyChanged("Providers");
+            }
+        }
+
+        public string PrimaryView
+        {
+            get
+            {
+                return settings.PrimaryView;
+            }
+            private set
+            {
+                if (PrimaryView == value) return;
+                settings.PrimaryView = value;
+                OnPropertyChanged("PrimaryView");
             }
         }
 
@@ -171,6 +156,97 @@ namespace Sentinel.Logs.Gui
             {
                 SecondaryView = "Not used.";
             }
+        }
+
+        public string ProviderSummary
+        {
+            get
+            {
+                var sb = new StringBuilder();
+
+                if (Providers != null
+                    && Providers.Count > 0)
+                {
+                    for (int index = 0; index < Providers.Count; index++)
+                    {
+                        PendingProviderRecord p = Providers[index];
+                        sb.AppendFormat(
+                            "{0} - {1} - {2}",
+                            p.Settings.Name,
+                            p.Settings.Info.Name,
+                            p.Settings.Summary);
+
+                        if (index < providers.Count - 1) sb.AppendLine();
+                    }
+                }
+                else
+                {
+                    sb.Append("No providers configured.");
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        public MemoryStream ProtobufPersist()
+        {
+#if PROTO_SAVING_SESSIONS
+    // Testing.............................................................................
+            MemoryStream ms = new MemoryStream();
+
+            Trace.WriteLine("Settings");
+            Serializer.Serialize(ms, settings);
+            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+            Serializer.Serialize(ms, providers.Count());
+            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+
+            Trace.WriteLine("Providers");
+            foreach (var provider in Providers)
+            {
+                try
+                {
+                    Serializer.Serialize(ms, provider.Info);
+                    Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+
+                    var wrappedProviderSettings = ProtoHelper.Wrap(provider.Settings);
+                    Trace.WriteLine(
+                        string.Format("Wrapped {0} into {1} bytes", provider.Settings, wrappedProviderSettings.Length));
+                    Serializer.Serialize(ms, wrappedProviderSettings);
+                    Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("Exception caught trying to wrap {0}", provider.Info.Name);
+                    throw;
+                }
+            }
+            ms.Position = 0;
+            Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
+
+            // Testing.............................................................................
+            try
+            {
+                InternalSettings s = Serializer.Deserialize<InternalSettings>(ms);
+                int providerCount = Serializer.Deserialize<int>(ms);
+                for (int i = 0; i < providerCount; i++)
+                {
+                    var info = Serializer.Deserialize<ProviderInfo>(ms);
+                
+                    object providerSettings;
+                    ProtoHelper.Unwrap(ms, out providerSettings);
+
+                    Trace.WriteLine(providerSettings.GetType().FullName);
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
+            }
+            ms.Position = 0;
+            return ms;
+#else
+            return null;
+#endif
         }
     }
 }

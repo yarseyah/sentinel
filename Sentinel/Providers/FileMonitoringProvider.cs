@@ -17,10 +17,6 @@ using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
-    //[Export(typeof(ILogProvider))]
-    //[ExportMetadata("Name", NAME)]
-    //[ExportMetadata("Description", DESCRIPTION)]
-    //[ExportMetadata("Identifier", ID)]
     public class FileMonitoringProvider : ILogProvider
     {
         public const string ID = "1a2f8249-b390-4baa-ba5e-3d67804ba1ed";
@@ -29,7 +25,7 @@ namespace Sentinel.Providers
 
         public static readonly Guid Id = new Guid(ID);
 
-        public static readonly IProviderInfo Info = new ProviderInfo(Id, NAME, DESCRIPTION);
+        public static readonly ProviderInfo Info = new ProviderInfo(Id, NAME, DESCRIPTION);
         private readonly bool loadExistingContent;
         private readonly Regex patternMatching;
 
@@ -75,7 +71,7 @@ namespace Sentinel.Providers
 
         #region Implementation of ILogProvider
 
-        public IProviderInfo Information
+        public ProviderInfo Information
         {
             get;
             private set;

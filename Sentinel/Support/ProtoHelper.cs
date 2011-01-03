@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using ProtoBuf;
 
 namespace Sentinel.Support
@@ -61,6 +62,41 @@ namespace Sentinel.Support
             }
 
             return default(T);
+        }
+
+        public static byte[] Wrap(object obj)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                try
+                {
+                    Serializer.Serialize(ms, obj.GetType().FullName);
+                    Serializer.Serialize(ms, obj);
+                    ms.Position = 0;
+                    return ms.ToArray();
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.Message);
+                    throw;
+                }
+            }
+        }
+
+        public static bool Unwrap(MemoryStream ms, out object deserializedObject)
+        {
+            if (ms == null) throw new ArgumentNullException("ms");
+
+            // Get the type
+            string typeName = Serializer.Deserialize<string>(ms);
+            Type type = Type.GetType(typeName);
+
+            MethodInfo mi = typeof(Serializer).GetMethod("Deserialize");
+            MethodInfo miConstructed = mi.MakeGenericMethod(type);
+            object[] args = { ms };
+            deserializedObject = miConstructed.Invoke(null, args);
+
+            return true;
         }
     }
 }
