@@ -17,8 +17,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Xml;
-using System.Xml.Serialization;
 using ProtoBuf;
 using Sentinel.Interfaces;
 
@@ -30,16 +28,16 @@ namespace Sentinel.Services
     {
         private static readonly ServiceLocator instance = new ServiceLocator();
 
-        private readonly string directoryForSaving;
-
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
+
+        public string SaveLocation { get; private set; }
 
         private ServiceLocator()
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            directoryForSaving = Path.Combine(appData, "Sentinel");
+            SaveLocation = Path.Combine(appData, "Sentinel");
             // Check the folder exists, otherwise create it
-            DirectoryInfo di = new DirectoryInfo(directoryForSaving);
+            DirectoryInfo di = new DirectoryInfo(SaveLocation);
             if (!di.Exists)
             {
                 di.Create();
@@ -91,65 +89,6 @@ namespace Sentinel.Services
             return services.Keys.Contains(typeof(T));
         }
 
-        public void Load(string fileName)
-        {
-            FileInfo fi = new FileInfo(fileName);
-
-            if (fi.Exists)
-            {
-                XmlReaderSettings readerSettings = new XmlReaderSettings {IgnoreWhitespace = true};
-
-                using (XmlReader reader = XmlReader.Create(fi.FullName, readerSettings))
-                {
-                    reader.MoveToContent();
-                    if (reader.Name == "Services" || reader.AttributeCount == 1)
-                    {
-                        reader.MoveToAttribute("count");
-                        int count = reader.ReadContentAsInt();
-                        reader.ReadStartElement();
-
-                        for (int i = 0; i < count; i++)
-                        {
-                            if (reader.Name == "Service" && reader.AttributeCount == 2)
-                            {
-                                reader.MoveToAttribute("key");
-                                string key = reader.ReadContentAsString();
-                                reader.MoveToAttribute("instanceType");
-                                string typeAsString = reader.ReadContentAsString();
-                                
-                                Type type = LookupRuntimeType(typeAsString);
-                                reader.ReadStartElement("Service");
-
-                                XmlSerializer serializer = new XmlSerializer(type);
-                                object o = serializer.Deserialize(reader);
-                                services.Add(LookupRuntimeType(key), o);
-
-                                reader.ReadEndElement();
-                            }
-                            else
-                            {
-                                throw new NotSupportedException("Should be a Service node with exactly two attributes");
-                            }
-                        }
-
-                        reader.ReadEndElement();
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("There should be exactly one attribute for Services");
-                    }
-                }
-            }
-        }
-
-        private static Type LookupRuntimeType(string typeName)
-        {
-            if (String.IsNullOrWhiteSpace(typeName)) throw new ArgumentNullException("typeName");
-
-            Type t = Type.GetType(typeName);
-            return t;
-        }
-
         [SuppressMessage(
             "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
@@ -191,7 +130,7 @@ namespace Sentinel.Services
 
                     string typeName = valuePair.Key.FullName ?? "Unknown";
                     string saveFileName = GetShortName(typeName) ?? typeName;
-                    string fullName = Path.Combine(directoryForSaving, saveFileName);
+                    string fullName = Path.Combine(SaveLocation, saveFileName);
 
                     ms.Position = 0;
                     var fi = new FileInfo(fullName);
@@ -233,7 +172,7 @@ namespace Sentinel.Services
 
         public void RegisterOrLoad<T>(Type interfaceType, string fileName)
         {
-            string fullName = Path.Combine(directoryForSaving, fileName);
+            string fullName = Path.Combine(SaveLocation, fileName);
 
             FileInfo fi = new FileInfo(fullName);
             bool found = false;
@@ -251,7 +190,7 @@ namespace Sentinel.Services
                     }
                     catch (Exception e)
                     {
-                        Trace.WriteLine(string.Format("Exception when trying to deserialize from {0}", fileName));
+                        Trace.WriteLine(string.Format("Exception when trying to de-serialize from {0}", fileName));
                         Trace.WriteLine(e.Message);
                     }
                 }

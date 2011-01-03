@@ -98,6 +98,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\WindowPlacementInfo.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Support\Converters\VisibilityToHiddenConverter.cs" />
     <Compile Include="Support\Mvvm\DelegateCommand.cs" />
     <Compile Include="Support\Mvvm\ViewModelBase.cs" />
+    <Compile Include="Support\ProtoHelper.cs" />
     <Compile Include="Support\Wpf\DataBoundToolbar.cs" />
     <Compile Include="Support\Wpf\FixedWidthColumn.xaml.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />

@@ -55,7 +55,6 @@ namespace Sentinel
             locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
             locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
 
-
             locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());

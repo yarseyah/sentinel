@@ -9,9 +9,11 @@
 
 #region Using directives
 
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -22,6 +24,7 @@ using Sentinel.Logs.Gui;
 using Sentinel.Logs.Interfaces;
 using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
+using Sentinel.Support;
 using Sentinel.Support.Mvvm;
 using Sentinel.Views.Interfaces;
 
@@ -37,9 +40,16 @@ namespace Sentinel.Controls
         private PreferencesWindow preferencesWindow;
         private static ServiceLocator services;
 
+        private readonly string persistingFilename;
+
         public MainWindow()
         {
             InitializeComponent();
+            string savingDirectory = ServiceLocator.Instance.SaveLocation;
+            persistingFilename = Path.Combine(savingDirectory, "MainWindow");
+
+            // Restore persisted window placement
+            RestoreWindowPosition();
         }
 
         public ICommand Add { get; private set; }
@@ -123,14 +133,28 @@ namespace Sentinel.Controls
             // When a new item is added, select the newest one.
             ViewManager.Viewers.CollectionChanged +=
                 (s, ee) =>
-                {
-                    if (ee.Action == NotifyCollectionChangedAction.Add)
                     {
-                        tabControl.SelectedIndex = tabControl.Items.Count - 1;
-                    }
-                };
+                        if (ee.Action == NotifyCollectionChangedAction.Add)
+                        {
+                            tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                        }
+                    };
 
             Add.Execute(null);
+        }
+
+        private void RestoreWindowPosition()
+        {
+            if (string.IsNullOrWhiteSpace(persistingFilename)) return;
+
+            var wp = ProtoHelper.Deserialize<WindowPlacementInfo>(persistingFilename);
+            if (wp == null) return;
+
+            Top = wp.Top;
+            Left = wp.Left;
+            Width = wp.Width;
+            Height = wp.Height;
+            WindowState = wp.WindowState;
         }
 
         private void PreferencesChanged(object sender, PropertyChangedEventArgs e)
@@ -151,6 +175,20 @@ namespace Sentinel.Controls
                     }
                 }
             }
+        }
+
+        private void OnClosed(object sender, CancelEventArgs e)
+        {
+            var windowInfo = new WindowPlacementInfo
+                                 {
+                                     Height = (int) Height, 
+                                     Top = (int) Top, 
+                                     Left = (int) Left,
+                                     Width = (int) Width,
+                                     WindowState = WindowState
+                                 };
+
+            ProtoHelper.Serialize(windowInfo, persistingFilename);
         }
     }
 }

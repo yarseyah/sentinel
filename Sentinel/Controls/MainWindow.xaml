@@ -10,6 +10,7 @@
         Padding="5"
         OverridesDefaultStyle="False"
         Loaded="OnLoaded"
+        Closing="OnClosed"
         ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
