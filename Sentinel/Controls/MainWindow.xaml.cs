@@ -10,6 +10,7 @@
 #region Using directives
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,10 +23,12 @@ using System.Windows.Input;
 using Sentinel.Interfaces;
 using Sentinel.Logs.Gui;
 using Sentinel.Logs.Interfaces;
+using Sentinel.Providers;
 using Sentinel.Providers.Interfaces;
 using Sentinel.Services;
 using Sentinel.Support;
 using Sentinel.Support.Mvvm;
+using Sentinel.Views.Gui;
 using Sentinel.Views.Interfaces;
 
 #endregion
@@ -146,7 +149,102 @@ namespace Sentinel.Controls
                         }
                     };
 
-            Add.Execute(null);
+            // Determine whether anything passed on the command line, limited options
+            // may be supplied and they will suppress the prompting of the new listener wizard.
+            var commandLine = Environment.GetCommandLineArgs();
+            if (commandLine.Count() == 1)
+            {
+                Add.Execute(null);
+            }
+            else
+            {
+                ProcessCommandLine(commandLine.Skip(1));
+            }
+        }
+
+        private void ProcessCommandLine(IEnumerable<string> commandLine)
+        {
+            if (commandLine == null) throw new ArgumentNullException("commandLine");
+
+            int port;
+
+            if (commandLine.Count() != 3
+                || !commandLine.ElementAt(0).IsRegexMatch("nlog|log4net")
+                || !commandLine.ElementAt(1).IsRegexMatch("udp|tcp")
+                || !Int32.TryParse(commandLine.ElementAt(2), out port))
+            {
+                // Syntax expected to be "<nlog|log4net> <udp|tcp> <portNumber>"
+                MessageBox.Show(
+                    this,
+                    "Command line arguments should be <nlog|log4net> <udp|tcp> <portNumber>",
+                    "Command Line Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            else
+            {
+                string loggerType = commandLine.ElementAt(0);
+                string protocol = commandLine.ElementAt(1);
+
+                if (loggerType == "log4net" && protocol == "tcp")
+                {
+                    MessageBox.Show(
+                        this,
+                        "Log4net does not support TCP",
+                        "Command Line Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                else
+                {
+                    Trace.WriteLine(
+                        string.Format("Requested listener {0}, {1} on port {2}", loggerType, protocol, port));
+
+                    // Create the logger.
+                    ILogManager logManager = services.Get<ILogManager>();
+                    ILogger log =
+                        logManager.Add(string.Format("{0} listening on {1} port {2}", loggerType, protocol, port));
+
+                    // Create the frame view
+                    Debug.Assert(
+                        ViewManager != null,
+                        "A ViewManager should be registered with service locator for the IViewManager interface");
+                    IWindowFrame frame = services.Get<IWindowFrame>();
+                    frame.Log = log;
+                    frame.SetViews(
+                        new List<string>
+                            {
+                                LogMessages.Info.Identifier
+                            });
+                    ViewManager.Viewers.Add(frame);
+
+                    // Create the providers.
+                    IProviderManager providerManager = services.Get<IProviderManager>();
+                    IProviderSettings providerSettings = new NetworkSettings
+                                                             {
+                                                                 IsUdp = protocol == "udp",
+                                                                 Port = port
+                                                             };
+
+                    ILogProvider provider = providerManager.Create(
+                        loggerType == "nlog"
+                            ? NLogViewerProvider.Info.Identifier
+                            : Log4NetProvider.Info.Identifier,
+                        providerSettings);
+
+                    provider.Logger = log;
+                    provider.Start();
+
+                    // Add to the tab control.
+                    TabItem tab = new TabItem
+                                      {
+                                          Header = log.Name,
+                                          Content = frame
+                                      };
+                    tabControl.Items.Add(tab);
+                    tabControl.SelectedItem = tab;
+                }
+            }
         }
 
         private void RestoreWindowPosition()
