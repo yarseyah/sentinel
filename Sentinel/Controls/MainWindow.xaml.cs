@@ -252,6 +252,8 @@ namespace Sentinel.Controls
             if (string.IsNullOrWhiteSpace(persistingFilename)) return;
 
             var wp = ProtoHelper.Deserialize<WindowPlacementInfo>(persistingFilename);
+            wp = ValidateScreenPosition(wp);
+
             if (wp == null) return;
 
             Top = wp.Top;
@@ -259,6 +261,20 @@ namespace Sentinel.Controls
             Width = wp.Width;
             Height = wp.Height;
             WindowState = wp.WindowState;
+        }
+
+        private WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
+        {
+            if (wp == null) return null;
+
+            var virtualScreen = new Rect(
+                SystemParameters.VirtualScreenLeft,
+                SystemParameters.VirtualScreenTop,
+                SystemParameters.VirtualScreenWidth,
+                SystemParameters.VirtualScreenHeight);
+
+            var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
+            return !virtualScreen.IntersectsWith(window) ? null : wp;
         }
 
         private void PreferencesChanged(object sender, PropertyChangedEventArgs e)
