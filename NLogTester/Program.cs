@@ -84,6 +84,8 @@ namespace NLogTester
                     return string.Format("[{0}] {1} - {2}", RandomSrc(), RandomReason(), i);
                 case 3:
                     return string.Format("[SimulationTime] {0} ({1})", RandomReason(), i);
+                case 4:
+                    return "UTF-8 test code: \u2019 \u263b \u2660 \u2663 \u2665 \u2666";
                 default:
                     return i.ToString();
             }

@@ -132,7 +132,13 @@ namespace Sentinel.Providers
                 while (!e.Cancel)
                 {
                     byte[] bytes = listener.Receive(ref endPoint);
+
+#if ASCII_ONLY
                     string message = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+#else
+                    var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+#endif
+
 
 #if PERFORMANCE_TESTING
                     Match m = validatingRegex.Match(message);
