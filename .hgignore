@@ -1,0 +1,11 @@
+syntax: glob
+**\bin\*
+**\obj\*
+**.suo
+*.user
+**_ReSharper*
+**\StyleCop.Cache
+StyleCop.Cache
+packages/*
+TestResults/*
+**\Bin\*
