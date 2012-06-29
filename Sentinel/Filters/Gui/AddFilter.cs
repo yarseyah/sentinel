@@ -38,7 +38,7 @@ namespace Sentinel.Filters.Gui
                     Filter filter = Construct(data);
                     if (filter != null)
                     {
-                        IFilteringService service = ServiceLocator.Instance.Get<IFilteringService>();
+                        var service = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
                         if (service != null)
                         {
                             service.Filters.Add(filter);

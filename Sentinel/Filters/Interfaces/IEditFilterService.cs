@@ -11,6 +11,6 @@ namespace Sentinel.Filters.Interfaces
 {
     public interface IEditFilterService
     {
-        void Edit(Filter filter);
+        void Edit(IFilter filter);
     }
 }

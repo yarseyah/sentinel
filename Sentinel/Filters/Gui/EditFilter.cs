@@ -24,12 +24,12 @@ namespace Sentinel.Filters.Gui
     {
         #region IEditFilterService Members
 
-        public void Edit(Filter filter)
+        public void Edit(IFilter filter)
         {
             Debug.Assert(filter != null, "Filter must be supplied to allow editing.");
 
-            AddEditFilterWindow window = new AddEditFilterWindow();
-            AddEditFilter data = new AddEditFilter(window, true);
+            var window = new AddEditFilterWindow();
+            var data = new AddEditFilter(window, true);
             window.DataContext = data;
             window.Owner = Application.Current.MainWindow;
 

@@ -8,11 +8,16 @@ namespace Sentinel.Support
 
     public static class JsonHelper
     {
+        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+                                                                      {
+                                                                          TypeNameHandling = TypeNameHandling.All
+                                                                      };
+
         public static void SerializeToFile<T>(T objectToSerialize, string filename)
         {
             try
             {
-                var objectString = JsonConvert.SerializeObject(objectToSerialize, Formatting.Indented);
+                var objectString = JsonConvert.SerializeObject(objectToSerialize, Formatting.Indented, Settings);
 
                 var fi = new FileInfo(filename);
                 using (var fs = fi.Open(FileMode.Create, FileAccess.Write))
@@ -44,7 +49,7 @@ namespace Sentinel.Support
                         using (var sr = new StreamReader(fs))
                         {
                             var asString = sr.ReadToEnd();
-                            return JsonConvert.DeserializeObject<T>(asString);
+                            return JsonConvert.DeserializeObject<T>(asString, Settings);
                         }
                     }
                 }

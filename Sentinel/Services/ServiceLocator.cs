@@ -24,6 +24,10 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Services
 {
+    using Sentinel.Filters;
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Support;
+
     public class ServiceLocator
     {
         private static readonly ServiceLocator instance = new ServiceLocator();
@@ -36,6 +40,7 @@ namespace Sentinel.Services
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             SaveLocation = Path.Combine(appData, "Sentinel");
+
             // Check the folder exists, otherwise create it
             DirectoryInfo di = new DirectoryInfo(SaveLocation);
             if (!di.Exists)
@@ -114,6 +119,14 @@ namespace Sentinel.Services
         {
             foreach (KeyValuePair<Type, object> valuePair in services)
             {
+                // TODO: hack to fake serialization
+                if (valuePair.Value is FilteringService<IFilter>)
+                {
+                    var fn = Path.Combine(SaveLocation, "Filters.json");
+                    JsonHelper.SerializeToFile(valuePair.Value, fn);
+                    continue;
+                }
+
                 Trace.WriteLine(string.Format("{0} - {1}", valuePair.Key, valuePair.Value));
                 if (!IsProtobufSerializable(valuePair.Value))
                 {
@@ -172,37 +185,48 @@ namespace Sentinel.Services
 
         public void RegisterOrLoad<T>(Type interfaceType, string fileName)
         {
-            string fullName = Path.Combine(SaveLocation, fileName);
+            var fullName = Path.Combine(SaveLocation, fileName);
 
-            FileInfo fi = new FileInfo(fullName);
-            bool found = false;
-            if (fi.Exists)
+            if (interfaceType == typeof(IFilteringService<IFilter>))
             {
-                using (var fs = fi.OpenRead())
+                var fn = Path.ChangeExtension(fullName, ".json");
+                var filterService = JsonHelper.DeserializeFromFile<FilteringService<IFilter>>(fn);
+                services[interfaceType] = filterService;
+            }
+            else
+            {
+                var fi = new FileInfo(fullName);
+                if (fi.Exists)
                 {
-                    try
                     {
-                        services[interfaceType] = Serializer.Deserialize<T>(fs);
-                        Debug.WriteLine("Loaded {0} with settings in {1}",
-                                        services[interfaceType].GetType().FullName,
-                                        fileName);
-                        found = true;
-                    }
-                    catch (Exception e)
-                    {
-                        Trace.WriteLine(string.Format("Exception when trying to de-serialize from {0}", fileName));
-                        Trace.WriteLine(e.Message);
+                        using (var fs = fi.OpenRead())
+                        {
+                            try
+                            {
+                                services[interfaceType] = Serializer.Deserialize<T>(fs);
+                                Debug.WriteLine(
+                                    "Loaded {0} with settings in {1}",
+                                    services[interfaceType].GetType().FullName,
+                                    fileName);
+                            }
+                            catch (Exception e)
+                            {
+                                Trace.WriteLine(
+                                    string.Format("Exception when trying to de-serialize from {0}", fileName));
+                                Trace.WriteLine(e.Message);
+                            }
+                        }
                     }
                 }
             }
 
-            if (found) return;
-            if (services.Keys.Contains(interfaceType)) return;
-
-            services[interfaceType] = Activator.CreateInstance(typeof(T));
-            if (services[interfaceType] is IDefaultInitialisation)
+            if (!services.Keys.Contains(interfaceType))
             {
-                ((IDefaultInitialisation)services[interfaceType]).Initialise();
+                services[interfaceType] = Activator.CreateInstance(typeof(T));
+                if (services[interfaceType] is IDefaultInitialisation)
+                {
+                    ((IDefaultInitialisation)services[interfaceType]).Initialise();
+                }
             }
         }
     }

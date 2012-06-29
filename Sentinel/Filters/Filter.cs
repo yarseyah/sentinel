@@ -7,23 +7,48 @@
 //
 #endregion
 
-#region Using directives
-
-using System;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using ProtoBuf;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-
-#endregion
-
 namespace Sentinel.Filters
 {
-    [ProtoContract]
-    public class Filter : ViewModelBase//, IFilter
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
+
+    using Newtonsoft.Json;
+
+    using ProtoBuf;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
+    public interface IFilter
+    {
+        [DataMember]
+        string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the filter is enabled.
+        /// </summary>
+        [DataMember]
+        bool Enabled { get; set; }
+
+        [DataMember]
+        string Pattern { get; set; }
+
+        [DataMember]
+        string Description { get; }
+
+        [DataMember]
+        LogEntryField Field { get; set; }
+
+        [DataMember]
+        MatchMode Mode { get; set; }
+
+        bool IsMatch(LogEntry entry);
+    }
+
+    [DataContract]
+    public class Filter : ViewModelBase, IFilter
     {
         /// <summary>
         /// Is the filter enabled?  If so, it will remove anything matching from the output.
@@ -69,6 +94,7 @@ namespace Sentinel.Filters
         }
 
         [ProtoMember(1)]
+        [DataMember]
         public string Name
         {
             get
@@ -90,6 +116,7 @@ namespace Sentinel.Filters
         /// Gets or sets a value indicating whether the filter is enabled.
         /// </summary>
         [ProtoMember(2)]
+        [DataMember]
         public bool Enabled
         {
             get
@@ -107,7 +134,7 @@ namespace Sentinel.Filters
             }
         }
 
-
+        [DataMember]
         [ProtoMember(3)]
         public string Pattern
         {
@@ -126,6 +153,7 @@ namespace Sentinel.Filters
             }
         }
 
+        // TODO: DataMember
         [ProtoMember(4)]
         public LogEntryField Field
         {
@@ -144,6 +172,7 @@ namespace Sentinel.Filters
             }
         }
 
+        // TODO: DataMember
         [ProtoMember(5)]
         public MatchMode Mode
         {

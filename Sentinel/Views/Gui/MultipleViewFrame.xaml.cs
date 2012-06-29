@@ -30,6 +30,8 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Views.Gui
 {
+    using Sentinel.Filters;
+
     /// <summary>
     /// Interaction logic for MultipleViewFrame.xaml
     /// </summary>
@@ -56,7 +58,7 @@ namespace Sentinel.Views.Gui
             }
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService>();
-            Filters = ServiceLocator.Instance.Get<IFilteringService>();
+            Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
             searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
 
             SetupSplitter();
@@ -70,7 +72,7 @@ namespace Sentinel.Views.Gui
 
         public ICommand Save { get; private set; }
 
-        public IFilteringService Filters { get; private set; }
+        public IFilteringService<IFilter> Filters { get; private set; }
 
         public IHighlightingService Highlight { get; private set; }
 

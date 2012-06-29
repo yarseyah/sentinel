@@ -26,7 +26,7 @@ namespace Sentinel.Filters.Gui
         {
             InitializeComponent();
 
-            IFilteringService service = ServiceLocator.Instance.Get<IFilteringService>();
+            var service = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
             if (service != null)
             {
                 Filters = service;
@@ -35,6 +35,6 @@ namespace Sentinel.Filters.Gui
             DataContext = this;
         }
 
-        public IFilteringService Filters { get; private set; }
+        public IFilteringService<IFilter> Filters { get; private set; }
     }
 }

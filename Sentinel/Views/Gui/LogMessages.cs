@@ -19,20 +19,21 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Views.Gui
 {
-    //[Export(typeof(ILogViewer))]
-    //[ExportMetadata("Identifier", ID)]
-    //[ExportMetadata("Name", NAME)]
-    //[ExportMetadata("Description", DESCRIPTION)]
+    using Sentinel.Filters;
+
     public class LogMessages
         : ViewModelBase
           , ILogViewer
     {
         private const string ID = "f4d8c068-bf72-4b83-9d4a-1cd8a89fea11";
+        
         private const string NAME = "Log viewer";
+        
         private const string DESCRIPTION = "Traditional row based log view with highlighting and incremental search.";
 
         public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
-        private readonly IFilteringService filteringService;
+
+        private readonly IFilteringService<IFilter> filteringService;
         private readonly Queue<LogEntry> pendingAdditions = new Queue<LogEntry>();
         private readonly LogMessagesControl presenter;
 
@@ -59,11 +60,14 @@ namespace Sentinel.Views.Gui
             dt.Tick += UpdateTick;
             dt.Start();
 
-            filteringService = ServiceLocator.Instance.Get<IFilteringService>();
-            if (filteringService != null && filteringService is INotifyPropertyChanged)
+            filteringService = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
+            if (filteringService != null)
             {
-                INotifyPropertyChanged notify = filteringService as INotifyPropertyChanged;
-                notify.PropertyChanged += (sender, e) => ApplyFiltering();
+                var notify = filteringService as INotifyPropertyChanged;
+                if (notify != null)
+                {
+                    notify.PropertyChanged += (sender, e) => ApplyFiltering();
+                }
             }
 
             InitialiseToolbar();

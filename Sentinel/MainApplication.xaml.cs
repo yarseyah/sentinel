@@ -51,7 +51,7 @@ namespace Sentinel
             locator.ReportErrors = true;
 
             locator.RegisterOrLoad<UserPreferences>(typeof(IUserPreferences), "Preferences");
-            locator.RegisterOrLoad<FilteringService>(typeof(IFilteringService), "Filters");
+            locator.RegisterOrLoad<FilteringService<IFilter>>(typeof(IFilteringService<IFilter>), "Filters");
             locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
             locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
 

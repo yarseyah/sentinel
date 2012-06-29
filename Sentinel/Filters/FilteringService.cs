@@ -7,32 +7,31 @@
 //
 #endregion
 
-#region Using directives
-
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using ProtoBuf;
-using Sentinel.Filters.Gui;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-
-#endregion
-
 namespace Sentinel.Filters
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Windows.Input;
+
+    using ProtoBuf;
+
+    using Sentinel.Filters.Gui;
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     [ProtoContract]
-    public class FilteringService
+    [DataContract]
+    public class FilteringService<T>
         : ViewModelBase
-        , IFilteringService
+        , IFilteringService<T>
         , IDefaultInitialisation
+        where T : class, IFilter
     {
-        private readonly CollectionChangeHelper<Filter> collectionHelper =
-            new CollectionChangeHelper<Filter>();
+        private readonly CollectionChangeHelper<T> collectionHelper = new CollectionChangeHelper<T>();
 
         private IAddFilterService addFilterService = new AddFilter();
 
@@ -50,7 +49,7 @@ namespace Sentinel.Filters
             Edit = new DelegateCommand(EditFilter, e => selectedIndex != -1);
             Remove = new DelegateCommand(RemoveFilter, e => selectedIndex != -1);
 
-            Filters = new ObservableCollection<Filter>();
+            Filters = new ObservableCollection<T>();
 
             // Register self as an observer of the collection.
             collectionHelper.OnPropertyChanged += CustomFilterPropertyChanged;
@@ -106,8 +105,9 @@ namespace Sentinel.Filters
 
 
         #region IFilteringService Members
+        [DataMember]
         [ProtoMember(1)]
-        public ObservableCollection<Filter> Filters { get; set; }
+        public ObservableCollection<T> Filters { get; set; }
 
         public bool IsFiltered(LogEntry entry)
         {
@@ -138,7 +138,7 @@ namespace Sentinel.Filters
 
         private void EditFilter(object obj)
         {
-            Filter filter = Filters.ElementAt(SelectedIndex);
+            var filter = Filters.ElementAt(SelectedIndex);
             if (filter != null)
             {
                 editFilterService.Edit(filter);
@@ -147,19 +147,19 @@ namespace Sentinel.Filters
 
         private void RemoveFilter(object obj)
         {
-            Filter filter = Filters.ElementAt(SelectedIndex);
+            var filter = Filters.ElementAt(SelectedIndex);
             removeFilterService.Remove(filter);
         }
 
         public void Initialise()
         {
             // Add the defaulted filters
-            Filters.Add(new Filter("Trace", LogEntryField.Type, "TRACE"));
-            Filters.Add(new Filter("Debug", LogEntryField.Type, "DEBUG"));
-            Filters.Add(new Filter("Information", LogEntryField.Type, "INFO"));
-            Filters.Add(new Filter("Warning", LogEntryField.Type, "WARN"));
-            Filters.Add(new Filter("Error", LogEntryField.Type, "ERROR"));
-            Filters.Add(new Filter("Fatal", LogEntryField.Type, "FATAL"));
+            Filters.Add(new Filter("Trace", LogEntryField.Type, "TRACE") as T);
+            Filters.Add(new Filter("Debug", LogEntryField.Type, "DEBUG") as T);
+            Filters.Add(new Filter("Information", LogEntryField.Type, "INFO") as T);
+            Filters.Add(new Filter("Warning", LogEntryField.Type, "WARN") as T);
+            Filters.Add(new Filter("Error", LogEntryField.Type, "ERROR") as T);
+            Filters.Add(new Filter("Fatal", LogEntryField.Type, "FATAL") as T);
         }
     }
 }
