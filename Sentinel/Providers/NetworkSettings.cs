@@ -1,6 +1,4 @@
-﻿using ProtoBuf;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
     public class NetworkSettings : ProviderSettings
     {

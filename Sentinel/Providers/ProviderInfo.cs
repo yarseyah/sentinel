@@ -1,8 +1,7 @@
-using System;
-using ProtoBuf;
-
 namespace Sentinel.Providers
 {
+    using System;
+
     public class ProviderInfo
     {
         public ProviderInfo(Guid uniqueId, string name, string description)

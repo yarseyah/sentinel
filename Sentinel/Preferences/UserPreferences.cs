@@ -82,7 +82,6 @@ namespace Sentinel.Preferences
         /// Gets or sets the selected date option, as a index of the available options.
         /// </summary>
         /// <see cref="DateFormatOptions"/>
-        /// <remarks>Assigned member number 1 in protobuf's serialization model</remarks>
         public int SelectedDateOption
         {
             get
