@@ -16,14 +16,11 @@ namespace Sentinel.Filters
     using System.Runtime.Serialization;
     using System.Windows.Input;
 
-    using ProtoBuf;
-
     using Sentinel.Filters.Gui;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Support.Mvvm;
 
-    [ProtoContract]
     [DataContract]
     public class FilteringService<T>
         : ViewModelBase
@@ -33,11 +30,11 @@ namespace Sentinel.Filters
     {
         private readonly CollectionChangeHelper<T> collectionHelper = new CollectionChangeHelper<T>();
 
-        private IAddFilterService addFilterService = new AddFilter();
+        private readonly IAddFilterService addFilterService = new AddFilter();
 
-        private IEditFilterService editFilterService = new EditFilter();
+        private readonly IEditFilterService editFilterService = new EditFilter();
 
-        private IRemoveFilterService removeFilterService = new RemoveFilter();
+        private readonly IRemoveFilterService removeFilterService = new RemoveFilter();
 
         private string displayName = "FilteringService";
 
@@ -93,25 +90,13 @@ namespace Sentinel.Filters
             }
         }
 
-        [ProtoAfterDeserialization]
-        public void PostLoad()
-        {
-        }
-
-        [ProtoBeforeSerialization]
-        public void PreSave()
-        {
-        }
-
-
         #region IFilteringService Members
-        [DataMember]
-        [ProtoMember(1)]
+
         public ObservableCollection<T> Filters { get; set; }
 
         public bool IsFiltered(LogEntry entry)
         {
-            return (Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)));
+            return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry));
         }
 
         #endregion
@@ -125,7 +110,7 @@ namespace Sentinel.Filters
         {
             if (sender is Filter)
             {
-                Filter filter = sender as Filter;
+                var filter = sender as Filter;
                 Trace.WriteLine(
                     string.Format(
                         "FilterServer saw some activity on {0} (IsEnabled = {1})",

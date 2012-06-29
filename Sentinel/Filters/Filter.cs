@@ -14,10 +14,6 @@ namespace Sentinel.Filters
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Newtonsoft.Json;
-
-    using ProtoBuf;
-
     using Sentinel.Interfaces;
     using Sentinel.Support.Mvvm;
 
@@ -42,22 +38,20 @@ namespace Sentinel.Filters
         public Filter()
         {
             PropertyChanged += (sender, e) =>
-                                   {
-                                       if (e.PropertyName == "Pattern" || e.PropertyName == "Mode")
-                                       {
-                                           if (Mode == MatchMode.RegularExpression)
-                                           {
-                                               regex = String.IsNullOrEmpty(Pattern) ? null : new Regex(Pattern);
-                                           }
-                                       }
+                {
+                    if (e.PropertyName == "Pattern" || e.PropertyName == "Mode")
+                    {
+                        if (Mode == MatchMode.RegularExpression)
+                        {
+                            regex = string.IsNullOrEmpty(Pattern) ? null : new Regex(Pattern);
+                        }
+                    }
 
-                                       if (e.PropertyName == "Field" ||
-                                           e.PropertyName == "Mode" ||
-                                           e.PropertyName == "Pattern")
-                                       {
-                                           OnPropertyChanged("Description");
-                                       }
-                                   };
+                    if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                    {
+                        OnPropertyChanged("Description");
+                    }
+                };
         }
 
         public Filter(string name, LogEntryField field, string pattern)
@@ -67,8 +61,6 @@ namespace Sentinel.Filters
             Field = field;
         }
 
-        [ProtoMember(1)]
-        [DataMember]
         public string Name
         {
             get
@@ -89,8 +81,6 @@ namespace Sentinel.Filters
         /// <summary>
         /// Gets or sets a value indicating whether the filter is enabled.
         /// </summary>
-        [ProtoMember(2)]
-        [DataMember]
         public bool Enabled
         {
             get
@@ -108,8 +98,6 @@ namespace Sentinel.Filters
             }
         }
 
-        [DataMember]
-        [ProtoMember(3)]
         public string Pattern
         {
             get
@@ -127,8 +115,6 @@ namespace Sentinel.Filters
             }
         }
 
-        // TODO: DataMember
-        [ProtoMember(4)]
         public LogEntryField Field
         {
             get
@@ -146,8 +132,6 @@ namespace Sentinel.Filters
             }
         }
 
-        // TODO: DataMember
-        [ProtoMember(5)]
         public MatchMode Mode
         {
             get
