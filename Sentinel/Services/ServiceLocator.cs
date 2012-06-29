@@ -196,7 +196,7 @@ namespace Sentinel.Services
             if (interfaceType == typeof(IFilteringService<IFilter>))
             {
                 var fn = Path.ChangeExtension(fullName, ".json");
-                var filterService = JsonHelper.DeserializeFromFile<FilteringService<IFilter>>(fn);
+                var filterService = JsonHelper.DeserializeFromFile<T>(fn);
                 services[interfaceType] = filterService;
             }
             else
