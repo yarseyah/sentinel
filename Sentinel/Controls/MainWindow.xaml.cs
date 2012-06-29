@@ -43,6 +43,7 @@ namespace Sentinel.Controls
     public partial class MainWindow
     {
         private PreferencesWindow preferencesWindow;
+
         private static ServiceLocator services;
 
         private readonly string persistingFilename;
@@ -65,6 +66,22 @@ namespace Sentinel.Controls
 
         public IViewManager ViewManager { get; private set; }
 
+        private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
+        {
+            if (wp != null)
+            {
+                var virtualScreen = new Rect(
+                    SystemParameters.VirtualScreenLeft,
+                    SystemParameters.VirtualScreenTop,
+                    SystemParameters.VirtualScreenWidth,
+                    SystemParameters.VirtualScreenHeight);
+                var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
+                return virtualScreen.IntersectsWith(window) ? wp : null;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// AddNewListener method provides a mechanism for the user to add additional
         /// listeners to the log-viewer.
@@ -72,46 +89,39 @@ namespace Sentinel.Controls
         /// <param name="obj">Object to add as a new listener.</param>
         private void AddNewListener(object obj)
         {
-            NewLoggerWizard wizard = new NewLoggerWizard();
+            var wizard = new NewLoggerWizard();
 
-            if (!wizard.Display(this)) return;
+            if (!wizard.Display(this))
+            {
+                return;
+            }
 
-            NewLoggerSettings settings = wizard.Settings;
-
-            MemoryStream ms = settings.ProtobufPersist();
-
-#if PROTO_SAVING_SESSIONS
-            string persisting = System.Text.Encoding.UTF8.GetString(ms.GetBuffer());
-#endif
+            var settings = wizard.Settings;
 
             // Create the logger.
-            ILogManager logManager = services.Get<ILogManager>();
+            var logManager = services.Get<ILogManager>();
             ILogger log = logManager.Add(settings.LogName);
 
             // Create the frame view
-            Debug.Assert(ViewManager != null,
-                         "A ViewManager should be registered with service locator for the IViewManager interface");
-            IWindowFrame frame = services.Get<IWindowFrame>();
+            Debug.Assert(
+                ViewManager != null,
+                "A ViewManager should be registered with service locator for the IViewManager interface");
+            var frame = services.Get<IWindowFrame>();
             frame.Log = log;
             frame.SetViews(settings.Views);
             ViewManager.Viewers.Add(frame);
 
             // Create the providers.
-            IProviderManager providerManager = services.Get<IProviderManager>();
-            foreach (PendingProviderRecord providerRecord in settings.Providers)
+            var providerManager = services.Get<IProviderManager>();
+            foreach (var providerRecord in settings.Providers)
             {
-                ILogProvider provider = providerManager.Create(providerRecord.Info.Identifier,
-                                                               providerRecord.Settings);
+                var provider = providerManager.Create(providerRecord.Info.Identifier, providerRecord.Settings);
                 provider.Logger = log;
                 provider.Start();
             }
 
             // Add to the tab control.
-            TabItem tab = new TabItem
-                              {
-                                  Header = log.Name,
-                                  Content = frame
-                              };
+            var tab = new TabItem { Header = log.Name, Content = frame };
             tabControl.Items.Add(tab);
             tabControl.SelectedItem = tab;
         }
@@ -121,10 +131,7 @@ namespace Sentinel.Controls
             Add = new DelegateCommand(AddNewListener, b => tabControl.Items.Count < 1);
 
             // Append version number to caption (to save effort of producing an about screen)
-            Title = string.Format(
-                "{0} ({1})",
-                Title,
-                Assembly.GetExecutingAssembly().GetName().Version);
+            Title = string.Format("{0} ({1})", Title, Assembly.GetExecutingAssembly().GetName().Version);
 
             services = ServiceLocator.Instance;
             Preferences = services.Get<IUserPreferences>();
@@ -132,7 +139,7 @@ namespace Sentinel.Controls
 
             // Maintaining column widths is proving difficult in Xaml alone, so 
             // add an observer here and deal with it in code.
-            if (Preferences != null && Preferences is INotifyPropertyChanged)
+            if (Preferences is INotifyPropertyChanged)
             {
                 (Preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
             }
@@ -142,14 +149,13 @@ namespace Sentinel.Controls
             Exit = new DelegateCommand(ee => Close());
 
             // When a new item is added, select the newest one.
-            ViewManager.Viewers.CollectionChanged +=
-                (s, ee) =>
+            ViewManager.Viewers.CollectionChanged += (s, ee) =>
+                {
+                    if (ee.Action == NotifyCollectionChangedAction.Add)
                     {
-                        if (ee.Action == NotifyCollectionChangedAction.Add)
-                        {
-                            tabControl.SelectedIndex = tabControl.Items.Count - 1;
-                        }
-                    };
+                        tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                    }
+                };
 
             // Determine whether anything passed on the command line, limited options
             // may be supplied and they will suppress the prompting of the new listener wizard.
@@ -166,12 +172,14 @@ namespace Sentinel.Controls
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
-            if (commandLine == null) throw new ArgumentNullException("commandLine");
+            if (commandLine == null)
+            {
+                throw new ArgumentNullException("commandLine");
+            }
 
             int port;
 
-            if (commandLine.Count() != 3
-                || !commandLine.ElementAt(0).IsRegexMatch("nlog|log4net")
+            if (commandLine.Count() != 3 || !commandLine.ElementAt(0).IsRegexMatch("nlog|log4net")
                 || !commandLine.ElementAt(1).IsRegexMatch("udp|tcp")
                 || !Int32.TryParse(commandLine.ElementAt(2), out port))
             {
@@ -185,8 +193,8 @@ namespace Sentinel.Controls
             }
             else
             {
-                string loggerType = commandLine.ElementAt(0);
-                string protocol = commandLine.ElementAt(1);
+                var loggerType = commandLine.ElementAt(0);
+                var protocol = commandLine.ElementAt(1);
 
                 if (loggerType == "log4net" && protocol == "tcp")
                 {
@@ -203,46 +211,32 @@ namespace Sentinel.Controls
                         string.Format("Requested listener {0}, {1} on port {2}", loggerType, protocol, port));
 
                     // Create the logger.
-                    ILogManager logManager = services.Get<ILogManager>();
-                    ILogger log =
-                        logManager.Add(string.Format("{0} listening on {1} port {2}", loggerType, protocol, port));
+                    var logManager = services.Get<ILogManager>();
+                    var log = logManager.Add(string.Format("{0} listening on {1} port {2}", loggerType, protocol, port));
 
                     // Create the frame view
                     Debug.Assert(
                         ViewManager != null,
                         "A ViewManager should be registered with service locator for the IViewManager interface");
-                    IWindowFrame frame = services.Get<IWindowFrame>();
+                    var frame = services.Get<IWindowFrame>();
                     frame.Log = log;
-                    frame.SetViews(
-                        new List<string>
-                            {
-                                LogMessages.Info.Identifier
-                            });
+                    frame.SetViews(new List<string> { LogMessages.Info.Identifier });
                     ViewManager.Viewers.Add(frame);
 
                     // Create the providers.
-                    IProviderManager providerManager = services.Get<IProviderManager>();
-                    IProviderSettings providerSettings = new NetworkSettings
-                                                             {
-                                                                 IsUdp = protocol == "udp",
-                                                                 Port = port
-                                                             };
+                    var providerManager = services.Get<IProviderManager>();
+                    IProviderSettings providerSettings = new NetworkSettings { IsUdp = protocol == "udp", Port = port };
 
-                    ILogProvider provider = providerManager.Create(
-                        loggerType == "nlog"
-                            ? NLogViewerProvider.Info.Identifier
-                            : Log4NetProvider.Info.Identifier,
-                        providerSettings);
+                    var provider =
+                        providerManager.Create(
+                            loggerType == "nlog" ? NLogViewerProvider.Info.Identifier : Log4NetProvider.Info.Identifier,
+                            providerSettings);
 
                     provider.Logger = log;
                     provider.Start();
 
                     // Add to the tab control.
-                    TabItem tab = new TabItem
-                                      {
-                                          Header = log.Name,
-                                          Content = frame
-                                      };
+                    var tab = new TabItem { Header = log.Name, Content = frame };
                     tabControl.Items.Add(tab);
                     tabControl.SelectedItem = tab;
                 }
@@ -271,20 +265,6 @@ namespace Sentinel.Controls
             }
         }
 
-        private WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
-        {
-            if (wp == null) return null;
-
-            var virtualScreen = new Rect(
-                SystemParameters.VirtualScreenLeft,
-                SystemParameters.VirtualScreenTop,
-                SystemParameters.VirtualScreenWidth,
-                SystemParameters.VirtualScreenHeight);
-
-            var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
-            return !virtualScreen.IntersectsWith(window) ? null : wp;
-        }
-
         private void PreferencesChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Preferences != null)
@@ -308,13 +288,13 @@ namespace Sentinel.Controls
         private void OnClosed(object sender, CancelEventArgs e)
         {
             var windowInfo = new WindowPlacementInfo
-                                 {
-                                     Height = (int) Height, 
-                                     Top = (int) Top, 
-                                     Left = (int) Left,
-                                     Width = (int) Width,
-                                     WindowState = WindowState
-                                 };
+                {
+                    Height = (int)Height,
+                    Top = (int)Top,
+                    Left = (int)Left,
+                    Width = (int)Width,
+                    WindowState = WindowState
+                };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
             JsonHelper.SerializeToFile(windowInfo, filename);

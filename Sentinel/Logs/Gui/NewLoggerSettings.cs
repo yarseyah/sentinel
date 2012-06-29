@@ -1,39 +1,18 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using ProtoBuf;
-using Sentinel.Providers;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support;
-using Sentinel.Support.Mvvm;
-using Sentinel.Views.Interfaces;
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.Linq;
+    using System.Text;
+
+    using Sentinel.Providers.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Views.Interfaces;
+
     public class NewLoggerSettings : ViewModelBase
     {
-        [ProtoContract]
-        public class InternalSettings
-        {
-            [ProtoMember(1)]
-            public string LogName { get; set; }
-
-            [ProtoMember(2)]
-            public string PrimaryView { get; set; }
-            
-            [ProtoMember(21)]
-            public bool IsVertical { get; set; }
-
-            [ProtoMember(22)]
-            public string Layout { get; set; }
-        }
-
-        private InternalSettings settings = new InternalSettings();
+        private readonly InternalSettings settings = new InternalSettings();
 
         private ObservableCollection<PendingProviderRecord> providers;
 
@@ -53,11 +32,14 @@ namespace Sentinel.Logs.Gui
             {
                 return settings.IsVertical;
             }
+
             set
             {
-                if (value == IsVertical) return;
-                settings.IsVertical = value;
-                OnPropertyChanged("IsVertical");
+                if (IsVertical != value)
+                {
+                    settings.IsVertical = value;
+                    OnPropertyChanged("IsVertical");
+                }
             }
         }
 
@@ -67,11 +49,14 @@ namespace Sentinel.Logs.Gui
             {
                 return settings.Layout;
             }
+
             set
             {
-                if (Layout == value) return;
-                settings.Layout = value;
-                OnPropertyChanged("Layout");
+                if (Layout != value)
+                {
+                    settings.Layout = value;
+                    OnPropertyChanged("Layout");
+                }
             }
         }
 
@@ -81,11 +66,14 @@ namespace Sentinel.Logs.Gui
             {
                 return settings.LogName;
             }
+
             set
             {
-                if (LogName == value) return;
-                settings.LogName = value;
-                OnPropertyChanged("LogName");
+                if (LogName != value)
+                {
+                    settings.LogName = value;
+                    OnPropertyChanged("LogName");
+                }
             }
         }
 
@@ -98,9 +86,11 @@ namespace Sentinel.Logs.Gui
 
             private set
             {
-                if (providers == value) return;
-                providers = value;
-                OnPropertyChanged("Providers");
+                if (providers != value)
+                {
+                    providers = value;
+                    OnPropertyChanged("Providers");
+                }
             }
         }
 
@@ -110,11 +100,14 @@ namespace Sentinel.Logs.Gui
             {
                 return settings.PrimaryView;
             }
+
             private set
             {
-                if (PrimaryView == value) return;
-                settings.PrimaryView = value;
-                OnPropertyChanged("PrimaryView");
+                if (PrimaryView != value)
+                {
+                    settings.PrimaryView = value;
+                    OnPropertyChanged("PrimaryView");
+                }
             }
         }
 
@@ -124,39 +117,18 @@ namespace Sentinel.Logs.Gui
             {
                 return secondaryView;
             }
+
             private set
             {
-                if (secondaryView == value) return;
-                secondaryView = value;
-                OnPropertyChanged("SecondaryView");
+                if (secondaryView != value)
+                {
+                    secondaryView = value;
+                    OnPropertyChanged("SecondaryView");
+                }
             }
         }
 
         public ObservableCollection<string> Views { get; set; }
-
-        private static string LookupViewInformation(string identifier)
-        {
-            var vm = ServiceLocator.Instance.Get<IViewManager>();
-            IViewInformation info = vm.Get(identifier);
-            return info.Name;
-        }
-
-        private void ViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Views.Count >= 1)
-            {
-                PrimaryView = LookupViewInformation(Views.ElementAt(0));
-            }
-
-            if (Views.Count >= 2)
-            {
-                SecondaryView = LookupViewInformation(Views.ElementAt(1));
-            }
-            else
-            {
-                SecondaryView = "Not used.";
-            }
-        }
 
         public string ProviderSummary
         {
@@ -164,19 +136,17 @@ namespace Sentinel.Logs.Gui
             {
                 var sb = new StringBuilder();
 
-                if (Providers != null
-                    && Providers.Count > 0)
+                if (Providers != null && Providers.Count > 0)
                 {
-                    for (int index = 0; index < Providers.Count; index++)
+                    for (var index = 0; index < Providers.Count; index++)
                     {
-                        PendingProviderRecord p = Providers[index];
-                        sb.AppendFormat(
-                            "{0} - {1} - {2}",
-                            p.Settings.Name,
-                            p.Settings.Info.Name,
-                            p.Settings.Summary);
+                        var p = Providers[index];
+                        sb.AppendFormat("{0} - {1} - {2}", p.Settings.Name, p.Settings.Info.Name, p.Settings.Summary);
 
-                        if (index < providers.Count - 1) sb.AppendLine();
+                        if (index < providers.Count - 1)
+                        {
+                            sb.AppendLine();
+                        }
                     }
                 }
                 else
@@ -188,73 +158,32 @@ namespace Sentinel.Logs.Gui
             }
         }
 
-        public MemoryStream ProtobufPersist()
+        public class InternalSettings
         {
-#if PROTO_SAVING_SESSIONS
-            try
+            public string LogName { get; set; }
+
+            public string PrimaryView { get; set; }
+
+            public bool IsVertical { get; set; }
+
+            public string Layout { get; set; }
+        }
+
+        private static string LookupViewInformation(string identifier)
+        {
+            var vm = ServiceLocator.Instance.Get<IViewManager>();
+            var info = vm.Get(identifier);
+            return info.Name;
+        }
+
+        private void ViewsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (Views.Count >= 1)
             {
-                // Testing.............................................................................
-                MemoryStream ms = new MemoryStream();
-
-                Trace.WriteLine("Settings");
-
-                Serializer.SerializeWithLengthPrefix(ms, settings, PrefixStyle.Fixed32);
-                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-                Serializer.Serialize(ms, providers.Count());
-                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-
-                Trace.WriteLine("Providers");
-                foreach (var provider in Providers)
-                {
-                    try
-                    {
-                        Serializer.SerializeWithLengthPrefix(ms, provider.Info, PrefixStyle.Fixed32);
-                        Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-                        //ProtoHelper.Wrap(ms, provider.Settings);
-                        //Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-                    }
-                    catch (Exception e)
-                    {
-                        Trace.WriteLine("Exception caught trying to wrap {0}", provider.Info.Name);
-                        throw;
-                    }
-                }
-
-                ms.Position = 0;
-                Trace.WriteLine(String.Format(" - Stream Length: {0}, Position: {1}", ms.Length, ms.Position));
-
-                // Testing.............................................................................
-                try
-                {
-                    InternalSettings s = Serializer.DeserializeWithLengthPrefix<InternalSettings>(ms, PrefixStyle.Fixed32);
-                    int providerCount = Serializer.Deserialize<int>(ms);
-
-                    for (int i = 0; i < providerCount; i++)
-                    {
-                        var info = Serializer.Deserialize<ProviderInfo>(ms);
-                        //object providerSettings;
-                        //ProtoHelper.Unwrap(ms, out providerSettings);
-                        //Trace.WriteLine(
-                        //    providerSettings != null && providerSettings.GetType() != null
-                        //        ? providerSettings.GetType().FullName
-                        //        : "Nothing");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e);
-                }
-                ms.Position = 0;
-                return ms;
+                PrimaryView = LookupViewInformation(Views.ElementAt(0));
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-#else
-            return null;
-#endif
+
+            SecondaryView = Views.Count >= 2 ? LookupViewInformation(Views.ElementAt(1)) : "Not used.";
         }
     }
 }
