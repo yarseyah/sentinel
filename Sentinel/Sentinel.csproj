@@ -171,6 +171,7 @@
       <DependentUpon>SelectProviderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Providers\UdpNetworkConfigurationPage.cs" />
+    <Compile Include="Services\DictionaryHelper.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Support\Converters\BooleanInvertingValueConverter.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />

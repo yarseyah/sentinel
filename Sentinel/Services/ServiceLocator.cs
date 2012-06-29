@@ -34,6 +34,8 @@ namespace Sentinel.Services
 
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
+        private readonly Dictionary<Type, string> fileNames = new Dictionary<Type, string>(); 
+
         public string SaveLocation { get; private set; }
 
         private ServiceLocator()
@@ -128,7 +130,8 @@ namespace Sentinel.Services
                 // TODO: hack to fake serialization
                 if (valuePair.Value is FilteringService<IFilter>)
                 {
-                    var fn = Path.Combine(SaveLocation, "Filters.json");
+                    var saveFileName = fileNames.Get(valuePair.Key) ?? valuePair.Key.Name;
+                    var fn = Path.Combine(SaveLocation, saveFileName);
                     JsonHelper.SerializeToFile(valuePair.Value, fn);
                     continue;
                 }
@@ -147,9 +150,9 @@ namespace Sentinel.Services
                     MemoryStream ms = new MemoryStream();
                     Serializer.Serialize(ms, valuePair.Value);
 
-                    string typeName = valuePair.Key.FullName ?? "Unknown";
-                    string saveFileName = GetShortName(typeName) ?? typeName;
-                    string fullName = Path.Combine(SaveLocation, saveFileName);
+                    var typeName = valuePair.Key.FullName ?? "Unknown";
+                    var saveFileName = fileNames.Get(valuePair.Key) ?? typeName;
+                    var fullName = Path.Combine(SaveLocation, saveFileName);
 
                     ms.Position = 0;
                     var fi = new FileInfo(fullName);
@@ -167,22 +170,6 @@ namespace Sentinel.Services
             }
         }
 
-        private static string GetShortName(string typeName)
-        {
-            if (typeName.Contains("Filter")) return "Filters";
-            if (typeName.Contains("HighlightingService")) return "Highlighters";
-
-            switch (typeName)
-            {
-                case "Sentinel.Interfaces.IUserPreferences":
-                    return "Preferences";
-                case "Sentinel.Highlighters.Interfaces.ISearchHighlighter":
-                    return "Search";
-                default:
-                    return null;
-            }
-        }
-
         private static bool IsProtobufSerializable(object value)
         {
             if (value == null) throw new ArgumentNullException("value");
@@ -191,12 +178,18 @@ namespace Sentinel.Services
 
         public void RegisterOrLoad<T>(Type interfaceType, string fileName)
         {
+            fileNames[interfaceType] = fileName;
+
             var fullName = Path.Combine(SaveLocation, fileName);
 
             if (interfaceType == typeof(IFilteringService<IFilter>))
             {
-                var fn = Path.ChangeExtension(fullName, ".json");
-                var filterService = JsonHelper.DeserializeFromFile<T>(fn);
+                // TODO: this is duplicating above, but adding the .json, remove when all are JSON.
+                fileName = Path.ChangeExtension(fileName, ".json");
+                fileNames[interfaceType] = fileName;
+                fullName = Path.Combine(SaveLocation, fileName);
+
+                var filterService = JsonHelper.DeserializeFromFile<T>(fullName);
                 services[interfaceType] = filterService;
             }
             else
