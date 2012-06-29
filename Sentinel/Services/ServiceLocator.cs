@@ -119,6 +119,12 @@ namespace Sentinel.Services
         {
             foreach (KeyValuePair<Type, object> valuePair in services)
             {
+                if (valuePair.Value == null)
+                {
+                    Trace.TraceError("Unexpected null");
+                    continue;
+                }
+
                 // TODO: hack to fake serialization
                 if (valuePair.Value is FilteringService<IFilter>)
                 {
@@ -220,13 +226,24 @@ namespace Sentinel.Services
                 }
             }
 
-            if (!services.Keys.Contains(interfaceType))
+            var isRegistered = services.Keys.Contains(interfaceType) &&
+                               services[interfaceType] != null;
+
+            if (isRegistered) return;
+
+            // Nothing serializeable, try to construct and then see whether it supports initialization.
+            try
             {
-                services[interfaceType] = Activator.CreateInstance(typeof(T));
-                if (services[interfaceType] is IDefaultInitialisation)
+                services[interfaceType] = Activator.CreateInstance(typeof (T));
+                var defaultInitialisation = services[interfaceType] as IDefaultInitialisation;
+                if (defaultInitialisation != null)
                 {
-                    ((IDefaultInitialisation)services[interfaceType]).Initialise();
+                    defaultInitialisation.Initialise();
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
     }
