@@ -22,10 +22,7 @@ namespace Sentinel.Filters
     using Sentinel.Support.Mvvm;
 
     [DataContract]
-    public class FilteringService<T>
-        : ViewModelBase
-        , IFilteringService<T>
-        , IDefaultInitialisation
+    public class FilteringService<T> : ViewModelBase, IFilteringService<T>, IDefaultInitialisation
         where T : class, IFilter
     {
         private readonly CollectionChangeHelper<T> collectionHelper = new CollectionChangeHelper<T>();
@@ -113,9 +110,7 @@ namespace Sentinel.Filters
                 var filter = sender as Filter;
                 Trace.WriteLine(
                     string.Format(
-                        "FilterServer saw some activity on {0} (IsEnabled = {1})",
-                        filter.Name,
-                        filter.Enabled));
+                        "FilterServer saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
             }
 
             OnPropertyChanged(string.Empty);
