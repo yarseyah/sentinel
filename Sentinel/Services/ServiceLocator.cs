@@ -1,31 +1,23 @@
 ﻿#region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using ProtoBuf;
-using Sentinel.Interfaces;
-
 #endregion
 
 namespace Sentinel.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Linq;
     using System.Runtime.Serialization;
+    using System.Windows;
 
+    using Sentinel.Interfaces;
     using Sentinel.Support;
 
     public class ServiceLocator
@@ -34,24 +26,30 @@ namespace Sentinel.Services
 
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
-        private readonly Dictionary<Type, string> fileNames = new Dictionary<Type, string>(); 
+        private readonly Dictionary<Type, string> fileNames = new Dictionary<Type, string>();
 
         public string SaveLocation { get; private set; }
 
         private ServiceLocator()
         {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             SaveLocation = Path.Combine(appData, "Sentinel");
 
             // Check the folder exists, otherwise create it
-            DirectoryInfo di = new DirectoryInfo(SaveLocation);
+            var di = new DirectoryInfo(SaveLocation);
             if (!di.Exists)
             {
                 di.Create();
             }
         }
 
-        public static ServiceLocator Instance { get { return instance; } }
+        public static ServiceLocator Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
         public ReadOnlyCollection<object> RegisteredServices
         {
@@ -63,42 +61,32 @@ namespace Sentinel.Services
 
         public bool ReportErrors { get; set; }
 
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "This approach has been chosen as the intended usage style.")]
         public T Get<T>()
         {
             if (services.ContainsKey(typeof(T)))
             {
-                return (T) services[typeof(T)];
+                return (T)services[typeof(T)];
             }
 
             if (ReportErrors)
             {
-                string errorMessage = String.Format("No registered service supporting {0}", typeof(T));
-                MessageBox.Show(
-                    errorMessage,
-                    "Service location error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                var errorMessage = string.Format("No registered service supporting {0}", typeof(T));
+                MessageBox.Show(errorMessage, "Service location error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return default(T);
         }
 
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public bool IsRegistered<T>()
         {
             return services.Keys.Contains(typeof(T));
         }
 
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public void Register<T>(object serviceInstance)
         {
@@ -110,16 +98,18 @@ namespace Sentinel.Services
             if (!services.Keys.Contains(keyType) || replace)
             {
                 services[keyType] = Activator.CreateInstance(instanceType);
-                if (services[keyType] is IDefaultInitialisation)
+
+                var defaultInitialisation = services[keyType] as IDefaultInitialisation;
+                if (defaultInitialisation != null)
                 {
-                    ((IDefaultInitialisation) services[keyType]).Initialise();
+                    defaultInitialisation.Initialise();
                 }
             }
         }
 
         public void Save()
         {
-            foreach (KeyValuePair<Type, object> valuePair in services)
+            foreach (var valuePair in services)
             {
                 if (valuePair.Value == null)
                 {
@@ -132,111 +122,39 @@ namespace Sentinel.Services
                     var saveFileName = fileNames.Get(valuePair.Key) ?? valuePair.Key.Name;
                     var fn = Path.Combine(SaveLocation, saveFileName);
                     JsonHelper.SerializeToFile(valuePair.Value, fn);
-                    continue;
-                }
-
-                Trace.WriteLine(string.Format("{0} - {1}", valuePair.Key, valuePair.Value));
-                if (!IsProtobufSerializable(valuePair.Value))
-                {
-                    Trace.WriteLine("Doesn't support saving.");
-                    continue;
-                }
-
-                Trace.WriteLine("attempting to save.");
-
-                try
-                {
-                    MemoryStream ms = new MemoryStream();
-                    Serializer.Serialize(ms, valuePair.Value);
-
-                    var typeName = valuePair.Key.FullName ?? "Unknown";
-                    var saveFileName = fileNames.Get(valuePair.Key) ?? typeName;
-                    var fullName = Path.Combine(SaveLocation, saveFileName);
-
-                    ms.Position = 0;
-                    var fi = new FileInfo(fullName);
-                    using (var fs = fi.Open(FileMode.Create, FileAccess.Write))
-                    {
-                        ms.CopyTo(fs);
-                        Trace.WriteLine(string.Format("Wrote {0} data to {1}", typeName, fullName));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine("Exception caught in proto-saving:");
-                    Trace.WriteLine(e.Message);
                 }
             }
-        }
-
-        private static bool IsProtobufSerializable(object value)
-        {
-            if (value == null) throw new ArgumentNullException("value");
-            return Attribute.IsDefined(value.GetType(), typeof(ProtoContractAttribute));
         }
 
         public void RegisterOrLoad<T>(Type interfaceType, string fileName)
         {
             fileNames[interfaceType] = fileName;
 
-            var fullName = Path.Combine(SaveLocation, fileName);
-
             var hasContract = typeof(T).HasAttribute<DataContractAttribute>();
             if (hasContract)
             {
-                // TODO: this is duplicating above, but adding the .json, remove when all are JSON.
                 fileName = Path.ChangeExtension(fileName, ".json");
                 fileNames[interfaceType] = fileName;
-                fullName = Path.Combine(SaveLocation, fileName);
-
+                var fullName = Path.Combine(SaveLocation, fileName);
                 var filterService = JsonHelper.DeserializeFromFile<T>(fullName);
                 services[interfaceType] = filterService;
             }
-            else
+
+            if (!(services.Keys.Contains(interfaceType) && services[interfaceType] != null))
             {
-                var fi = new FileInfo(fullName);
-                if (fi.Exists)
+                try
                 {
+                    services[interfaceType] = Activator.CreateInstance(typeof(T));
+                    var defaultInitialisation = services[interfaceType] as IDefaultInitialisation;
+                    if (defaultInitialisation != null)
                     {
-                        using (var fs = fi.OpenRead())
-                        {
-                            try
-                            {
-                                services[interfaceType] = Serializer.Deserialize<T>(fs);
-                                Debug.WriteLine(
-                                    "Loaded {0} with settings in {1}",
-                                    services[interfaceType].GetType().FullName,
-                                    fileName);
-                            }
-                            catch (Exception e)
-                            {
-                                Trace.WriteLine(
-                                    string.Format("Exception when trying to de-serialize from {0}", fileName));
-                                Trace.WriteLine(e.Message);
-                            }
-                        }
+                        defaultInitialisation.Initialise();
                     }
                 }
-            }
-
-            var isRegistered = services.Keys.Contains(interfaceType) &&
-                               services[interfaceType] != null;
-
-            if (isRegistered) return;
-
-            // Nothing serializeable, try to construct and then see whether it supports initialization.
-            try
-            {
-                services[interfaceType] = Activator.CreateInstance(typeof (T));
-                var defaultInitialisation = services[interfaceType] as IDefaultInitialisation;
-                if (defaultInitialisation != null)
+                catch (Exception e)
                 {
-                    defaultInitialisation.Initialise();
+                    Console.WriteLine(e);
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
             }
         }
     }

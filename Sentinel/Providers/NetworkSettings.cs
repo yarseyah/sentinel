@@ -2,7 +2,6 @@
 
 namespace Sentinel.Providers
 {
-    [ProtoContract]
     public class NetworkSettings : ProviderSettings
     {
         public NetworkSettings()
@@ -11,14 +10,12 @@ namespace Sentinel.Providers
             IsUdp = true;
         }
 
-        [ProtoMember(1)]
         public bool IsUdp
         {
             get;
             set;
         }
 
-        [ProtoMember(2)]
         public int Port
         {
             get;

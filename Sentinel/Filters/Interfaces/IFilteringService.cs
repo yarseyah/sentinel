@@ -16,8 +16,11 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Filters.Interfaces
 {
+    using System.Runtime.Serialization;
+
     public interface IFilteringService<T>
     {
+        [DataMember]
         ObservableCollection<T> Filters { get; set; }
 
         bool IsFiltered(LogEntry entry);
