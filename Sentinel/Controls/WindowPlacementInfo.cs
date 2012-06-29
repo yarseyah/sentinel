@@ -1,24 +1,24 @@
-﻿using System.Windows;
-using ProtoBuf;
-
-namespace Sentinel.Controls
+﻿namespace Sentinel.Controls
 {
-    [ProtoContract]
+    using System.Runtime.Serialization;
+    using System.Windows;
+
+    [DataContract]
     public class WindowPlacementInfo
     {
-        [ProtoMember(1)]
+        [DataMember]
         public int Top { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember]
         public int Left { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember]
         public int Width { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember]
         public int Height { get; set; }
 
-        [ProtoMember(5)]
+        [DataMember]
         public WindowState WindowState { get; set; }
     }
 }

@@ -35,6 +35,7 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Controls
 {
+    using Newtonsoft.Json;
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -249,18 +250,46 @@ namespace Sentinel.Controls
 
         private void RestoreWindowPosition()
         {
-            if (string.IsNullOrWhiteSpace(persistingFilename)) return;
+            if (string.IsNullOrWhiteSpace(persistingFilename))
+            {
+                return;
+            }
 
-            var wp = ProtoHelper.Deserialize<WindowPlacementInfo>(persistingFilename);
-            wp = ValidateScreenPosition(wp);
+            WindowPlacementInfo wp = null;
+            var fileName = Path.ChangeExtension(persistingFilename, ".json");
+            var fi = new FileInfo(fileName);
+            if (fi.Exists)
+            {
+                using (var fs = fi.OpenRead())
+                {
+                    using (var sr = new StreamReader(fs))
+                    {
+                        try
+                        {
+                            wp = JsonConvert.DeserializeObject<WindowPlacementInfo>(sr.ReadToEnd());
+                            Debug.WriteLine(
+                                "Loaded {0} with settings in {1}", wp.GetType().FullName, fileName);
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.WriteLine(
+                                string.Format("Exception when trying to de-serialize from {0}", fileName));
+                            Trace.WriteLine(e.Message);
+                        }
+                    }
+                }
+            }
 
-            if (wp == null) return;
+            if (wp != null)
+            {
+                wp = ValidateScreenPosition(wp);
 
-            Top = wp.Top;
-            Left = wp.Left;
-            Width = wp.Width;
-            Height = wp.Height;
-            WindowState = wp.WindowState;
+                Top = wp.Top;
+                Left = wp.Left;
+                Width = wp.Width;
+                Height = wp.Height;
+                WindowState = wp.WindowState;
+            }
         }
 
         private WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
@@ -308,7 +337,15 @@ namespace Sentinel.Controls
                                      WindowState = WindowState
                                  };
 
-            ProtoHelper.Serialize(windowInfo, persistingFilename);
+            var jsonFormat = Path.ChangeExtension(persistingFilename, ".json");
+            var jsonString = JsonConvert.SerializeObject(windowInfo, Formatting.Indented);
+            using (var file = File.OpenWrite(jsonFormat))
+            {
+                using (var sw = new StreamWriter(file))
+                {
+                    sw.Write(jsonString);
+                }
+            }
         }
     }
 }
