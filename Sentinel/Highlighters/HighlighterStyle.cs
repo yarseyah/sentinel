@@ -7,21 +7,15 @@
 //
 #endregion
 
-#region Using directives
-
-using System.Windows.Media;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using ProtoBuf;
-using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-
-#endregion
-
 namespace Sentinel.Highlighters
 {
-    [ProtoContract]
+    using System.Runtime.Serialization;
+    using System.Windows.Media;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
+    [DataContract]
     public class HighlighterStyle 
         : ViewModelBase
         , IHighlighterStyle
@@ -30,7 +24,7 @@ namespace Sentinel.Highlighters
 
         private Color? foreground;
 
-        [ProtoMember(1)]
+        [DataMember]
         public string BackgroundAsString
         {
             get
@@ -45,7 +39,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        [ProtoMember(2)]
+        [DataMember]
         public string ForegroundAsString
         {
             get
@@ -60,7 +54,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-
+        // TODO: can these be serialized directly with a converter?
         public Color? Background
         {
             get
@@ -78,6 +72,7 @@ namespace Sentinel.Highlighters
             }
         }
 
+        // TODO: can these be serialized directly with a converter?
         public Color? Foreground
         {
             get

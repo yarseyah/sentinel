@@ -52,7 +52,8 @@ namespace Sentinel
 
             locator.RegisterOrLoad<UserPreferences>(typeof(IUserPreferences), "Preferences");
             locator.RegisterOrLoad<FilteringService<IFilter>>(typeof(IFilteringService<IFilter>), "Filters");
-            locator.RegisterOrLoad<HighlightingService>(typeof(IHighlightingService), "Highlighters");
+            locator.RegisterOrLoad<HighlightingService<IHighlighter>>(
+                typeof(IHighlightingService<IHighlighter>), "Highlighters");
             locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
 
             locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);

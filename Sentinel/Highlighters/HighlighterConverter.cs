@@ -15,15 +15,17 @@ namespace Sentinel.Highlighters
     using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Data;
+
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     #endregion
 
     public class HighlighterConverter : IValueConverter
     {
-        private readonly Highlighter highlighter;
+        private readonly IHighlighter highlighter;
 
-        public HighlighterConverter(Highlighter highlighter)
+        public HighlighterConverter(IHighlighter highlighter)
         {
             this.highlighter = highlighter;
         }

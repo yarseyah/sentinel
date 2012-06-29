@@ -34,13 +34,15 @@ namespace Sentinel.Views.Gui
         {
             InitializeComponent();
 
-            Highlight = ServiceLocator.Instance.Get<IHighlightingService>();
-            if (Highlight != null && Highlight is INotifyPropertyChanged)
+            Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
+
+            // TODO: apparently nothing will pass this next test.... so code in braces never run... investigate
+            if (Highlight is INotifyPropertyChanged)
             {
                 (Highlight as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
-            ISearchHighlighter searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
+            var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
             if (searchHighlighter != null
                 && searchHighlighter.Highlighter != null 
                 && searchHighlighter.Highlighter is INotifyPropertyChanged )
@@ -61,6 +63,15 @@ namespace Sentinel.Views.Gui
             UpdateStyles();
             SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
             SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
+        }
+
+        private IHighlightingService<IHighlighter> Highlight { get; set; }
+
+        private IUserPreferences Preferences { get; set; }
+
+        public void ScrollToEnd()
+        {
+            ScrollingHelper.ScrollToEnd(Dispatcher, messages);
         }
 
         private void PreferencesChanged(object s, PropertyChangedEventArgs e)
@@ -84,12 +95,11 @@ namespace Sentinel.Views.Gui
             if (messages != null)
             {
                 // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
-
                 // Get the first column in logDetails and check it is a fixed-width column.
-                GridView view = messages.View as GridView;
+                var view = messages.View as GridView;
                 if (view != null && view.Columns[0] is FixedWidthColumn)
                 {
-                    FixedWidthColumn fixedColumn = (FixedWidthColumn)view.Columns[0];
+                    var fixedColumn = (FixedWidthColumn)view.Columns[0];
                     switch (selectedTypeOption)
                     {
                         case 0:
@@ -115,13 +125,13 @@ namespace Sentinel.Views.Gui
         {
             if (messages != null)
             {
-                GridView view = messages.View as GridView;
+                var view = messages.View as GridView;
                 if (view != null)
                 {
                     // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
-                    GridViewColumn column = view.Columns[1];
+                    var column = view.Columns[1];
 
-                    string dateFormat = "r";
+                    var dateFormat = "r";
                     switch (selectedDateOption)
                     {
                         case 0:
@@ -153,19 +163,10 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        private IHighlightingService Highlight { get; set; }
-
-        private IUserPreferences Preferences { get; set; }
-
         private void UpdateStyles()
         {
             messages.ItemContainerStyleSelector = null;
             messages.ItemContainerStyleSelector = new HighlightingSelector();
-        }
-
-        public void ScrollToEnd()
-        {
-            ScrollingHelper.ScrollToEnd(Dispatcher, messages);
         }
     }
 }

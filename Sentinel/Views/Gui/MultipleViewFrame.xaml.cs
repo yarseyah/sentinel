@@ -30,6 +30,8 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Views.Gui
 {
+    using System.Diagnostics;
+
     using Sentinel.Filters;
 
     /// <summary>
@@ -57,7 +59,7 @@ namespace Sentinel.Views.Gui
                 (preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
             }
 
-            Highlight = ServiceLocator.Instance.Get<IHighlightingService>();
+            Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
             Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
             searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
 
@@ -74,7 +76,7 @@ namespace Sentinel.Views.Gui
 
         public IFilteringService<IFilter> Filters { get; private set; }
 
-        public IHighlightingService Highlight { get; private set; }
+        public IHighlightingService<IHighlighter> Highlight { get; private set; }
 
         public ILogViewer PrimaryView
         {
@@ -146,6 +148,7 @@ namespace Sentinel.Views.Gui
         {
             get
             {
+                Debug.Assert(searchHighlighter != null, "Should always have a search highlighter");
                 return searchHighlighter.Search;
             }
 

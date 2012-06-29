@@ -1,43 +1,30 @@
 ﻿#region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using ProtoBuf;
-using Sentinel.Highlighters.Gui;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-
 #endregion
 
 namespace Sentinel.Highlighters
 {
-    [ProtoContract]
-    public class HighlightingService
-        : ViewModelBase
-        , IHighlightingService
-        , IDefaultInitialisation
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Windows.Input;
+    using System.Windows.Media;
+
+    using Sentinel.Highlighters.Gui;
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
+    [DataContract]
+    public class HighlightingService<T> : ViewModelBase, IHighlightingService<T>, IDefaultInitialisation
+        where T : class, IHighlighter
     {
-        private readonly CollectionChangeHelper<Highlighter> collectionHelper =
-            new CollectionChangeHelper<Highlighter>();
+        private readonly CollectionChangeHelper<T> collectionHelper = new CollectionChangeHelper<T>();
 
         private string displayName = "HighlightingService";
 
@@ -53,10 +40,9 @@ namespace Sentinel.Highlighters
             Remove = new DelegateCommand(RemoveHighlighter, e => selectedIndex != -1);
             OrderEarlier = new DelegateCommand(MoveItemUp, e => selectedIndex > 0);
             OrderLater = new DelegateCommand(
-                MoveItemDown,
-                e => selectedIndex < Highlighters.Count - 1 && selectedIndex != -1);
+                MoveItemDown, e => selectedIndex < Highlighters.Count - 1 && selectedIndex != -1);
 
-            Highlighters = new ObservableCollection<Highlighter>();
+            Highlighters = new ObservableCollection<T>();
 
             // Register self as an observer of the collection.
             collectionHelper.ManagerName = "Highlighers";
@@ -96,8 +82,8 @@ namespace Sentinel.Highlighters
         /// <summary>
         /// Gets or sets the observable collection of highlighters.
         /// </summary>
-        [ProtoMember(1)]
-        public ObservableCollection<Highlighter> Highlighters { get; set; }
+        [DataMember]
+        public ObservableCollection<T> Highlighters { get; set; }
 
         public ICommand OrderEarlier { get; private set; }
 
@@ -105,7 +91,7 @@ namespace Sentinel.Highlighters
 
         public ICommand Remove { get; private set; }
 
-        [ProtoMember(2)]
+        [DataMember]
         public int SelectedIndex
         {
             get
@@ -125,33 +111,93 @@ namespace Sentinel.Highlighters
 
         public IHighlighterStyle IsHighlighted(LogEntry logEntry)
         {
-            return (Highlighters
-                .Where(h => h.IsMatch(logEntry))
-                .Select(h => h.Style))
-                .FirstOrDefault();
+            return Highlighters.Where(h => h.IsMatch(logEntry)).Select(h => h.Style).FirstOrDefault();
         }
 
         #endregion
 
+        public void Initialise()
+        {
+            Debug.Assert(!Highlighters.Any(), "Should not have any contents at initialisation");
+
+            var trace = new Highlighter
+                {
+                    Name = "Trace",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "TRACE",
+                    Style = new HighlighterStyle { Foreground = Colors.DarkGray }
+                };
+
+            var debug = new Highlighter
+                {
+                    Name = "Debug",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "DEBUG",
+                    Style = new HighlighterStyle { Foreground = Colors.DarkGreen }
+                };
+            var info = new Highlighter
+                {
+                    Name = "Information",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "INFO",
+                    Style = new HighlighterStyle { Foreground = Colors.White, Background = Colors.Blue }
+                };
+            var warn = new Highlighter
+                {
+                    Name = "Warning",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "WARN",
+                    Style = new HighlighterStyle { Background = Colors.Yellow }
+                };
+            var error = new Highlighter
+                {
+                    Name = "Error",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "ERROR",
+                    Style = new HighlighterStyle { Background = Colors.Red }
+                };
+            var fatal = new Highlighter
+                {
+                    Name = "Fatal Error",
+                    Enabled = true,
+                    Field = LogEntryField.Type,
+                    Mode = MatchMode.Exact,
+                    Pattern = "FATAL",
+                    Style = new HighlighterStyle { Background = Colors.Black, Foreground = Colors.Yellow }
+                };
+
+            Highlighters.Add(trace as T);
+            Highlighters.Add(debug as T);
+            Highlighters.Add(info as T);
+            Highlighters.Add(warn as T);
+            Highlighters.Add(error as T);
+            Highlighters.Add(fatal as T);
+        }
+
         private void AddHighlighter(object obj)
         {
             IAddHighlighterService addHighlighterService = new AddNewHighlighterService();
-            if (addHighlighterService != null)
-            {
-                addHighlighterService.Add();
-            }
+            addHighlighterService.Add();
         }
 
         private void CustomHighlighterPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Highlighter)
+            if (sender is IHighlighter)
             {
-                Highlighter filter = sender as Highlighter;
+                var filter = sender as IHighlighter;
                 Trace.WriteLine(
                     string.Format(
-                        "FilterServer saw some activity on {0} (IsEnabled = {1})",
-                        filter.Name,
-                        filter.Enabled));
+                        "FilterServer saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
             }
 
             OnPropertyChanged(string.Empty);
@@ -160,13 +206,10 @@ namespace Sentinel.Highlighters
         private void EditHighligter(object obj)
         {
             IEditHighlighterService editService = new EditHighlighterService();
-            if (editService != null)
+            var highlighter = this.Highlighters.ElementAt(this.SelectedIndex);
+            if (highlighter != null)
             {
-                Highlighter highlighter = Highlighters.ElementAt(SelectedIndex);
-                if (highlighter != null)
-                {
-                    editService.Edit(highlighter);
-                }
+                editService.Edit(highlighter);
             }
         }
 
@@ -176,9 +219,7 @@ namespace Sentinel.Highlighters
             {
                 lock (this)
                 {
-                    Debug.Assert(
-                        selectedIndex >= 0,
-                        "SelectedIndex must be valid, not -1, for moving.");
+                    Debug.Assert(selectedIndex >= 0, "SelectedIndex must be valid, not -1, for moving.");
                     Debug.Assert(
                         selectedIndex < Highlighters.Count - 1,
                         "SelectedIndex must be a value less than the max index of the collection.");
@@ -204,12 +245,9 @@ namespace Sentinel.Highlighters
             {
                 lock (this)
                 {
+                    Debug.Assert(selectedIndex >= 0, "SelectedIndex must be valid, e.g not -1.");
                     Debug.Assert(
-                        selectedIndex >= 0,
-                        "SelectedIndex must be valid, e.g not -1.");
-                    Debug.Assert(
-                        Highlighters.Count > 1,
-                        "Can not move item unless more than one item in the collection.");
+                        Highlighters.Count > 1, "Can not move item unless more than one item in the collection.");
 
                     int oldIndex = selectedIndex;
                     SelectedIndex = -1;
@@ -226,106 +264,11 @@ namespace Sentinel.Highlighters
         private void RemoveHighlighter(object obj)
         {
             IRemoveHighlighterService service = new RemoveHighlighterService();
-            if (service != null)
-            {
-                Highlighter highlighter = Highlighters.ElementAt(SelectedIndex);
+            var highlighter = this.Highlighters.ElementAt(this.SelectedIndex);
 
-                Debug.Assert(
-                    highlighter != null,
-                    "Should not be able to run this if no highlighter is selected!");
+            Debug.Assert(highlighter != null, "Should not be able to run this if no highlighter is selected!");
 
-                service.Remove(highlighter);
-            }
-        }
-
-        [ProtoAfterDeserialization]
-        public void PostLoad()
-        {
-        }
-
-        [ProtoBeforeSerialization]
-        public void PreSave()
-        {
-        }
-
-        public void Initialise()
-        {
-            Debug.Assert(!Highlighters.Any(), "Should not have any contents at initialisation");
-
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Trace",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "TRACE",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Foreground = Colors.DarkGray
-                                                 }
-                                 });
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Debug",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "DEBUG",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Foreground = Colors.DarkGreen
-                                                 }
-                                 });
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Information",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "INFO",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Foreground = Colors.White,
-                                                     Background = Colors.Blue
-                                                 }
-                                 });
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Warning",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "WARN",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Background = Colors.Yellow
-                                                 }
-                                 });
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Error",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "ERROR",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Background = Colors.Red
-                                                 }
-                                 });
-            Highlighters.Add(new Highlighter
-                                 {
-                                     Name = "Fatal Error",
-                                     Enabled = true,
-                                     Field = LogEntryField.Type,
-                                     Mode = MatchMode.Exact,
-                                     Pattern = "FATAL",
-                                     Style = new HighlighterStyle
-                                                 {
-                                                     Background = Colors.Black,
-                                                     Foreground = Colors.Yellow
-                                                 }
-                                 });
+            service.Remove(highlighter);
         }
     }
 }

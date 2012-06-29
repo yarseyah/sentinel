@@ -24,9 +24,9 @@ namespace Sentinel.Controls
         public LogActivityControl()
         {
             InitializeComponent();
-            Highlight = ServiceLocator.Instance.Get<IHighlightingService>();
+            Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
         }
 
-        public IHighlightingService Highlight { get; private set; }
+        public IHighlightingService<IHighlighter> Highlight { get; private set; }
     }
 }

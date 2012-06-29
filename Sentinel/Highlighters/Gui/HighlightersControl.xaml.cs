@@ -25,10 +25,10 @@ namespace Sentinel.Highlighters.Gui
         public HighlightersControl()
         {
             InitializeComponent();
-            Highlighters = ServiceLocator.Instance.Get<IHighlightingService>();
+            Highlighters = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
             DataContext = this;
         }
 
-        public IHighlightingService Highlighters { get; private set; }
+        public IHighlightingService<IHighlighter> Highlighters { get; private set; }
     }
 }

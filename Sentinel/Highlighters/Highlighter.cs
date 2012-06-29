@@ -1,29 +1,22 @@
 #region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using ProtoBuf;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-
 #endregion
 
 namespace Sentinel.Highlighters
 {
-    [ProtoContract(Name = "Highlighter")]
-    public class Highlighter : ViewModelBase
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
+
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
+    [DataContract]
+    public class Highlighter : ViewModelBase, IHighlighter
     {
         #region Backing stores
         private bool enabled = true;
@@ -47,18 +40,19 @@ namespace Sentinel.Highlighters
             Enabled = false;
 
             PropertyChanged += (sender, e) =>
-                                   {
-                                       if (e.PropertyName == "Pattern" || e.PropertyName == "Mode")
-                                       {
-                                           if (Mode == MatchMode.RegularExpression)
-                                           {
-                                               regex = new Regex(Pattern);
-                                           }
-                                       }
-                                   };
+                {
+                    if (e.PropertyName != "Pattern" && e.PropertyName != "Mode")
+                    {
+                        return;
+                    }
+
+                    if (Mode == MatchMode.RegularExpression)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+                };
         }
 
-        [ProtoMember(1)]
         public string Name
         {
             get
@@ -68,13 +62,14 @@ namespace Sentinel.Highlighters
 
             set
             {
-                if (name == value) return;
-                name = value;
-                OnPropertyChanged("Name");
+                if (name != value)
+                {
+                    name = value;
+                    OnPropertyChanged("Name");
+                }
             }
         }
 
-        [ProtoMember(2)]
         public bool Enabled
         {
             get
@@ -84,13 +79,14 @@ namespace Sentinel.Highlighters
 
             set
             {
-                if (enabled == value) return;
-                enabled = value;
-                OnPropertyChanged("Enabled");
+                if (enabled != value)
+                {
+                    enabled = value;
+                    OnPropertyChanged("Enabled");
+                }
             }
         }
 
-        [ProtoMember(3)]
         public LogEntryField Field
         {
             get
@@ -113,7 +109,6 @@ namespace Sentinel.Highlighters
             }
         }
 
-        [ProtoMember(4)]
         public MatchMode Mode
         {
             get
@@ -123,13 +118,14 @@ namespace Sentinel.Highlighters
 
             set
             {
-                if (mode == value) return;
-                mode = value;
-                OnPropertyChanged("Mode");
+                if (mode != value)
+                {
+                    mode = value;
+                    OnPropertyChanged("Mode");
+                }
             }
         }
 
-        [ProtoMember(5)]
         public string Pattern
         {
             get
@@ -139,13 +135,14 @@ namespace Sentinel.Highlighters
 
             set
             {
-                if (typeMatch == value) return;
-                typeMatch = value;
-                OnPropertyChanged("Pattern");
+                if (typeMatch != value)
+                {
+                    typeMatch = value;
+                    OnPropertyChanged("Pattern");
+                }
             }
         }
 
-        [ProtoMember(6)]
         public HighlighterStyle Style
         {
             get
@@ -155,16 +152,18 @@ namespace Sentinel.Highlighters
 
             set
             {
-                if (style == value) return;
-                style = value;
-                OnPropertyChanged("Style");
+                if (style != value)
+                {
+                    style = value;
+                    OnPropertyChanged("Style");
+                }
             }
         }
 
         public bool IsMatch(LogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "logEntry can not be null.");
-            string target = Field == LogEntryField.System ? logEntry.System : logEntry.Type;
+            var target = Field == LogEntryField.System ? logEntry.System : logEntry.Type;
 
             switch (Mode)
             {
@@ -178,17 +177,5 @@ namespace Sentinel.Highlighters
 
             return false;
         }
-
-        #region Protobuf attributed methods (for breakpointing)
-        [ProtoAfterDeserialization]
-        public void PostLoad()
-        {
-        }
-
-        [ProtoBeforeSerialization]
-        public void PreSave()
-        {
-        }
-        #endregion
     }
 }

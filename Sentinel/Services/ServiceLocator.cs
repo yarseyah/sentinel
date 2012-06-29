@@ -24,8 +24,8 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Services
 {
-    using Sentinel.Filters;
-    using Sentinel.Filters.Interfaces;
+    using System.Runtime.Serialization;
+
     using Sentinel.Support;
 
     public class ServiceLocator
@@ -127,8 +127,7 @@ namespace Sentinel.Services
                     continue;
                 }
 
-                // TODO: hack to fake serialization
-                if (valuePair.Value is FilteringService<IFilter>)
+                if (valuePair.Value.HasAttribute<DataContractAttribute>())
                 {
                     var saveFileName = fileNames.Get(valuePair.Key) ?? valuePair.Key.Name;
                     var fn = Path.Combine(SaveLocation, saveFileName);
@@ -182,7 +181,8 @@ namespace Sentinel.Services
 
             var fullName = Path.Combine(SaveLocation, fileName);
 
-            if (interfaceType == typeof(IFilteringService<IFilter>))
+            var hasContract = typeof(T).HasAttribute<DataContractAttribute>();
+            if (hasContract)
             {
                 // TODO: this is duplicating above, but adding the .json, remove when all are JSON.
                 fileName = Path.ChangeExtension(fileName, ".json");

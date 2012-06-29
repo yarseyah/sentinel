@@ -1,48 +1,41 @@
 ﻿#region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Converters;
-
 #endregion
 
 namespace Sentinel.Highlighters.Gui
 {
-    //[Export(typeof(IAddHighlighterService))]
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Media;
+
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Converters;
+
     public class AddNewHighlighterService : IAddHighlighterService
     {
         #region IAddHighlighterService Members
 
         public void Add()
         {
-            AddEditHighlighterWindow window = new AddEditHighlighterWindow();
-            AddEditHighlighter data = new AddEditHighlighter(window, false);
+            var window = new AddEditHighlighterWindow();
+            var data = new AddEditHighlighter(window, false);
             window.DataContext = data;
             window.Owner = Application.Current.MainWindow;
 
-            bool? dialogResult = window.ShowDialog();
-
-            if (dialogResult != null && (bool) dialogResult)
+            var dialogResult = window.ShowDialog();
+            if (dialogResult != null && (bool)dialogResult)
             {
-                Highlighter highlighter = Construct(data);
+                var highlighter = Construct(data);
 
                 if (highlighter != null)
                 {
-                    IHighlightingService service = ServiceLocator.Instance.Get<IHighlightingService>();
+                    var service = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
                     if (service != null)
                     {
                         service.Highlighters.Add(highlighter);
@@ -71,7 +64,7 @@ namespace Sentinel.Highlighters.Gui
                 data.HighlightingMethod < data.HighlightingMethods.Count(),
                 "Method selected must be with the available set of methods.");
 
-            MatchMode mode = MatchModeConverter.ConvertFrom(data.HighlightingMethods.ElementAt(data.HighlightingMethod));
+            var mode = MatchModeConverter.ConvertFrom(data.HighlightingMethods.ElementAt(data.HighlightingMethod));
 
             Color? background = null;
             Color? foreground = null;

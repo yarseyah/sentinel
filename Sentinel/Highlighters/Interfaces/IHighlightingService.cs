@@ -17,13 +17,13 @@ using Sentinel.Interfaces;
 
 namespace Sentinel.Highlighters.Interfaces
 {
-    public interface IHighlightingService
+    public interface IHighlightingService<T> where T : IHighlighter
     {
         ICommand Add { get; }
 
         ICommand Edit { get; }
 
-        ObservableCollection<Highlighter> Highlighters { get; set; }
+        ObservableCollection<T> Highlighters { get; set; }
 
         ICommand OrderEarlier { get; }
 

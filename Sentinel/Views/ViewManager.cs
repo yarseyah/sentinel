@@ -24,7 +24,7 @@ namespace Sentinel.Views
 {
     public class ViewManager : IViewManager
     {
-        private Dictionary<IViewInformation, Type> registeredTypes = new Dictionary<IViewInformation, Type>();
+        private readonly Dictionary<IViewInformation, Type> registeredTypes = new Dictionary<IViewInformation, Type>();
 
         public ViewManager()
         {
@@ -43,14 +43,14 @@ namespace Sentinel.Views
 
         public void Register(IViewInformation info, Type viewerType)
         {
-            if ( registeredTypes.Any(t => t.Key.Identifier == info.Identifier) )
+            if (registeredTypes.Any(t => t.Key.Identifier == info.Identifier))
             {
                 throw new NotSupportedException("Already have a registered viewer with the Id of " + info.Identifier);
             }
 
             // Validate that the type supports the necessary interface: ILogViewer
-            Type intefaceType = typeof(ILogViewer);
-            if (!viewerType.GetInterfaces().Any(i => i == intefaceType))
+            var intefaceType = typeof(ILogViewer);
+            if (viewerType.GetInterfaces().All(i => i != intefaceType))
             {
                 throw new NotSupportedException("Types registered in ViewManager must support the inteface " +
                                                 intefaceType);
@@ -80,10 +80,10 @@ namespace Sentinel.Views
             
             if (registered.Any(i => i.Identifier == identifier))
             {
-                Type t = registeredTypes.First(v => v.Key.Identifier == identifier).Value;
+                var t = registeredTypes.First(v => v.Key.Identifier == identifier).Value;
 
                 // Create an instance of the type (must have a default constructor).
-                return (ILogViewer) Activator.CreateInstance(t);
+                return (ILogViewer)Activator.CreateInstance(t);
             }
 
             return null;

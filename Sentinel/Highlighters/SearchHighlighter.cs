@@ -1,35 +1,33 @@
 #region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Windows.Media;
-using ProtoBuf;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-
 #endregion
 
 namespace Sentinel.Highlighters
 {
-    [ProtoContract]
+    #region Using directives
+
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Windows.Media;
+
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+
+    #endregion
+
+    [DataContract]
     public class SearchHighlighter 
-        : IDefaultInitialisation
-        , ISearchHighlighter
+        : IDefaultInitialisation, ISearchHighlighter
     {
-        private Highlighter highlighter;
+        private IHighlighter highlighter;
 
         #region ISearchHighlighter Members
 
-        [ProtoMember(1)]
-        public Highlighter Highlighter
+        [DataMember]
+        public IHighlighter Highlighter
         {
             get
             {
@@ -43,7 +41,7 @@ namespace Sentinel.Highlighters
         }
 
 
-        [ProtoMember(2)]
+        [DataMember]
         public LogEntryField Field
         {
             get
@@ -57,11 +55,12 @@ namespace Sentinel.Highlighters
             }
         }
 
-        [ProtoMember(3)]
+        [DataMember]
         public string Search
         {
             get
             {
+                Debug.Assert(highlighter != null, "Must have a highlighter");
                 return highlighter.Pattern;
             }
 
@@ -87,7 +86,8 @@ namespace Sentinel.Highlighters
                 Field = LogEntryField.System,
                 Mode = MatchMode.Substring,
             };
-            Search = String.Empty;
+
+            Search = string.Empty;
         }
     }
 }

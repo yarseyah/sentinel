@@ -1,30 +1,24 @@
 #region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Wpf;
-
 #endregion
 
 namespace Sentinel.Highlighters
 {
-
     #region Using directives
+
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Media;
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Wpf;
 
     #endregion
 
@@ -36,24 +30,24 @@ namespace Sentinel.Highlighters
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
-        private readonly Dictionary<Highlighter, Style> styles = new Dictionary<Highlighter, Style>();
+        private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
 
         /// <summary>
         /// Initializes a new instance of the HighlightingSelector class.
         /// </summary>
         public HighlightingSelector()
         {
-            bool oldState = ServiceLocator.Instance.ReportErrors;
+            var oldState = ServiceLocator.Instance.ReportErrors;
             ServiceLocator.Instance.ReportErrors = false;
-            ISearchHighlighter searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
+            var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
             ServiceLocator.Instance.ReportErrors = oldState;
 
             if (searchHighlighter != null && searchHighlighter.Highlighter.Enabled)
             {
-                Highlighter highlighter = searchHighlighter.Highlighter;
+                var highlighter = searchHighlighter.Highlighter;
 
-                Style style = new Style(typeof(ListViewItem));
-                DataTrigger trigger = new DataTrigger
+                var style = new Style(typeof(ListViewItem));
+                var trigger = new DataTrigger
                                           {
                                               Binding = new Binding
                                                             {
@@ -70,16 +64,14 @@ namespace Sentinel.Highlighters
                     {
                         trigger.Setters.Add(
                             new Setter(
-                                Control.BackgroundProperty,
-                                new SolidColorBrush((Color) highlighter.Style.Background)));
+                                Control.BackgroundProperty, new SolidColorBrush((Color)highlighter.Style.Background)));
                     }
 
                     if (highlighter.Style.Foreground != null)
                     {
                         trigger.Setters.Add(
                             new Setter(
-                                Control.ForegroundProperty,
-                                new SolidColorBrush((Color) highlighter.Style.Foreground)));
+                                Control.ForegroundProperty, new SolidColorBrush((Color)highlighter.Style.Foreground)));
                     }
                 }
 
@@ -88,12 +80,11 @@ namespace Sentinel.Highlighters
                 styles[highlighter] = style;
             }
 
-            IHighlightingService highlightingService =
-                ServiceLocator.Instance.Get<IHighlightingService>();
+            var highlightingService = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
 
             if (highlightingService != null)
             {
-                foreach (Highlighter highlighter in highlightingService.Highlighters)
+                foreach (var highlighter in highlightingService.Highlighters)
                 {
                     if (highlighter != null)
                     {
@@ -101,19 +92,19 @@ namespace Sentinel.Highlighters
                         // change, then this collection will be rebuilt.
                         if (highlighter.Enabled)
                         {
-                            Style style = new Style(typeof(ListViewItem));
+                            var style = new Style(typeof(ListViewItem));
 
-                            DataTrigger trigger = new DataTrigger
-                                                      {
-                                                          Binding = new Binding
-                                                                        {
-                                                                            ConverterParameter = highlighter,
-                                                                            Converter =
-                                                                                new HighlighterConverter(highlighter),
-                                                                            Mode = BindingMode.OneWay
-                                                                        },
-                                                          Value = "Match"
-                                                      };
+                            var trigger = new DataTrigger
+                                {
+                                    Binding =
+                                        new Binding
+                                            {
+                                                ConverterParameter = highlighter,
+                                                Converter = new HighlighterConverter(highlighter),
+                                                Mode = BindingMode.OneWay
+                                            },
+                                    Value = "Match"
+                                };
 
                             if (highlighter.Style != null)
                             {
@@ -152,15 +143,12 @@ namespace Sentinel.Highlighters
         /// <returns>Style to use for displaying of item.</returns>
         public override Style SelectStyle(object item, DependencyObject container)
         {
-            LogEntry entry = item as LogEntry;
+            var entry = item as LogEntry;
             if (entry != null)
             {
-                foreach (KeyValuePair<Highlighter, Style> pair in styles)
+                foreach (var pair in styles.Where(pair => pair.Key.IsMatch(entry) && pair.Key.Enabled))
                 {
-                    if (pair.Key.IsMatch(entry) && pair.Key.Enabled)
-                    {
-                        return pair.Value;
-                    }
+                    return pair.Value;
                 }
             }
 
@@ -174,7 +162,7 @@ namespace Sentinel.Highlighters
         /// <param name="style">Style to adjust spacing, if necessary.</param>
         private static void SetStyleSpacing(Style style)
         {
-            IUserPreferences preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            var preferences = ServiceLocator.Instance.Get<IUserPreferences>();
 
             if (preferences != null && preferences.UseTighterRows &&
                 ThemeInfo.CurrentThemeFileName == "Aero")

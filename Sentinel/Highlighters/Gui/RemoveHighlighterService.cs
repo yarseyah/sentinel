@@ -7,43 +7,41 @@
 //
 #endregion
 
-#region Using directives
-
-using System.Windows;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Services;
-
-#endregion
 
 namespace Sentinel.Highlighters.Gui
 {
-    //[Export(typeof(IRemoveHighlighterService))]
+    using System.Windows;
+
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Services;
+
     public class RemoveHighlighterService : IRemoveHighlighterService
     {
         #region IRemoveHighlighterService Members
 
-        public void Remove(Highlighter highlighter)
+        public void Remove(IHighlighter highlighter)
         {
-            IHighlightingService service = ServiceLocator.Instance.Get<IHighlightingService>();
-
-            if (service != null)
+            var service = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
+            if (service == null)
             {
-                string prompt = string.Format(
-                    "Are you sure you want to remove the selected highlighter?\r\n\r\n" +
-                    "Highlighter Name = \"{0}\"",
-                    highlighter.Name);
+                return;
+            }
 
-                MessageBoxResult result = MessageBox.Show(
-                    prompt,
-                    "Remove Highlighter",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question,
-                    MessageBoxResult.No);
+            var prompt = string.Format(
+                "Are you sure you want to remove the selected highlighter?\r\n\r\n" +
+                "Highlighter Name = \"{0}\"",
+                highlighter.Name);
 
-                if (result == MessageBoxResult.Yes)
-                {
-                    service.Highlighters.Remove(highlighter);
-                }
+            var result = MessageBox.Show(
+                prompt,
+                "Remove Highlighter",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                service.Highlighters.Remove(highlighter);
             }
         }
 
