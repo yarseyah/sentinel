@@ -36,6 +36,7 @@ using Sentinel.Views.Interfaces;
 namespace Sentinel.Controls
 {
     using Newtonsoft.Json;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -255,30 +256,8 @@ namespace Sentinel.Controls
                 return;
             }
 
-            WindowPlacementInfo wp = null;
             var fileName = Path.ChangeExtension(persistingFilename, ".json");
-            var fi = new FileInfo(fileName);
-            if (fi.Exists)
-            {
-                using (var fs = fi.OpenRead())
-                {
-                    using (var sr = new StreamReader(fs))
-                    {
-                        try
-                        {
-                            wp = JsonConvert.DeserializeObject<WindowPlacementInfo>(sr.ReadToEnd());
-                            Debug.WriteLine(
-                                "Loaded {0} with settings in {1}", wp.GetType().FullName, fileName);
-                        }
-                        catch (Exception e)
-                        {
-                            Trace.WriteLine(
-                                string.Format("Exception when trying to de-serialize from {0}", fileName));
-                            Trace.WriteLine(e.Message);
-                        }
-                    }
-                }
-            }
+            var wp = JsonHelper.DeserializeFromFile<WindowPlacementInfo>(fileName);
 
             if (wp != null)
             {
@@ -337,15 +316,8 @@ namespace Sentinel.Controls
                                      WindowState = WindowState
                                  };
 
-            var jsonFormat = Path.ChangeExtension(persistingFilename, ".json");
-            var jsonString = JsonConvert.SerializeObject(windowInfo, Formatting.Indented);
-            using (var file = File.OpenWrite(jsonFormat))
-            {
-                using (var sw = new StreamWriter(file))
-                {
-                    sw.Write(jsonString);
-                }
-            }
+            var filename = Path.ChangeExtension(persistingFilename, ".json");
+            JsonHelper.SerializeToFile(windowInfo, filename);
         }
     }
 }

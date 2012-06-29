@@ -183,6 +183,7 @@
     <Compile Include="Support\Converters\TypeToImageConverter.cs" />
     <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Support\Converters\VisibilityToHiddenConverter.cs" />
+    <Compile Include="Support\JsonHelper.cs" />
     <Compile Include="Support\Mvvm\DelegateCommand.cs" />
     <Compile Include="Support\Mvvm\ViewModelBase.cs" />
     <Compile Include="Support\ProtoHelper.cs" />
