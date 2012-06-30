@@ -37,6 +37,9 @@ namespace Sentinel.Controls
 {
     using Newtonsoft.Json;
 
+    using Sentinel.Filters;
+    using Sentinel.Filters.Interfaces;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -65,6 +68,14 @@ namespace Sentinel.Controls
         public IUserPreferences Preferences { get; private set; }
 
         public IViewManager ViewManager { get; private set; }
+
+        public IFilteringService<IFilter> Filters
+        {
+            get
+            {
+                return ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
+            }
+        }
 
         private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
         {

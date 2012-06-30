@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
-    x:Class="Sentinel.Controls.MainWindow"
+    xmlns:Converters="clr-namespace:Sentinel.Support.Converters" x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
     Width="1017"
@@ -15,7 +15,7 @@
     Closing="OnClosed"
     ResizeMode="CanResizeWithGrip">
 
-    <Window.Resources>
+    <r:RibbonWindow.Resources>
         <Style
             TargetType="{x:Type Image}">
             <Setter
@@ -39,7 +39,9 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-    </Window.Resources>
+        <Converters:TypeToImageConverter
+            x:Key="TypeToImageConverter" />
+    </r:RibbonWindow.Resources>
 
     <DockPanel>
 
@@ -141,20 +143,93 @@
                     Header="Stuff">
                     <r:RibbonButton
                         Label="Add"
+                        SmallImageSource="../Resources/Add.png"
                         Command="{Binding Add}" />
-                    <r:RibbonCheckBox
-                        Label="Preferences"
-                        IsChecked="{Binding Preferences.Show}" />
+                    <r:RibbonToggleButton
+                        ToolTip="Show the Preferences dialog"
+                        IsChecked="{Binding Preferences.Show}"
+                        SmallImageSource="../Resources/Settings.png"
+                        Label="Preferences">
+                    </r:RibbonToggleButton>
                     <r:RibbonButton
                         Label="Exit"
+                        SmallImageSource="../Resources/Exit.png"
                         Command="{Binding Exit}" />
                 </r:RibbonGroup>
             </r:RibbonTab>
 
             <r:RibbonTab
-                Header="Filters">
+                Header="Filtering">
                 <r:RibbonGroup
-                    Header="TODO">
+                    ItemsSource="{Binding Filters.Filters}"
+                    Header="Buttons">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton
+                                IsChecked="{Binding Enabled}"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                ToolTipDescription="{Binding Description}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipFooterTitle="Using filters"
+                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
+                                ToolTipFooterImageSource="../Resources/Info.png">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
+                </r:RibbonGroup>
+                <r:RibbonGroup
+                    Header="Display Filters (ListView)">
+                    <ListView
+                        ItemsSource="{Binding Filters.Filters}" />
+
+                        <!--                        <Wpf:DataBoundToolbar.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    x:Name="checkbox"
+                                    Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
+                                    IsChecked="{Binding Enabled}"
+                                    Height="22"
+                                    ToolTipService.ShowOnDisabled="True">
+                                    <Image
+                                        Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                        Style="{StaticResource toolbarCheckboxImageStyle}"
+                                        Width="16"
+                                        Height="16" />
+                                    <CheckBox.ToolTip>
+                                        <StackPanel
+                                            Orientation="Vertical">
+                                            <StackPanel
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Text="{Binding Name}" />
+                                                <TextBlock
+                                                    Text=" filter" />
+                                            </StackPanel>
+                                            <StackPanel
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Text="Show/hide entries based upon " />
+                                                <TextBlock
+                                                    Text="{Binding Description}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                        Value="{x:Null}">
+                                        <Setter
+                                            TargetName="checkbox"
+                                            Property="Content"
+                                            Value="{Binding Name}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Wpf:DataBoundToolbar.ItemTemplate>
+                        -->
                 </r:RibbonGroup>
             </r:RibbonTab>
 
