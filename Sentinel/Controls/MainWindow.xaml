@@ -1,9 +1,9 @@
-﻿<Window
+﻿<r:RibbonWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
+    xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -42,56 +42,123 @@
     </Window.Resources>
 
     <DockPanel>
-        
-        <!--
-        <Ribbon:Ribbon
+
+        <r:Ribbon
             DockPanel.Dock="Top"
-            Title="Ribbon Control"
             ShowQuickAccessToolBarOnTop="False">
 
-            /* ==============================================
-            <Ribbon:Ribbon.QuickAccessToolBar>
-                <Ribbon:RibbonQuickAccessToolBar>
-                    <Ribbon:RibbonButton
-                        Command="{Binding}"
-                        Label="Exit" />
-                </Ribbon:RibbonQuickAccessToolBar>
-            </Ribbon:Ribbon.QuickAccessToolBar>
-            ================================================= */
+            <r:Ribbon.ApplicationMenu>
+                <r:RibbonApplicationMenu>
 
-            <Ribbon:Ribbon.ApplicationMenu>
-                <Ribbon:RibbonApplicationMenu>
-                    <Ribbon:RibbonApplicationMenuItem
-                        Header="Exit"
-                        Command="{Binding Exit}">
-                    </Ribbon:RibbonApplicationMenuItem>
-                </Ribbon:RibbonApplicationMenu>
-            </Ribbon:Ribbon.ApplicationMenu>
-            
-            <Ribbon:RibbonTab Header="Home">
-                <Ribbon:RibbonGroup
+                    <r:RibbonApplicationMenuItem
+                        Header="Desktop"
+                        ImageSource="..\Resources\Play.PNG"
+                        KeyTip="D" />
+
+                    <r:RibbonApplicationMenuItem
+                        Header="Floppy"
+                        ImageSource="..\Resources\Play.PNG"
+                        KeyTip="F">
+                        <r:RibbonApplicationMenuItem
+                            Header="Primary Floppy"
+                            ImageSource="..\Resources\Play.PNG"
+                            KeyTip="P" />
+                        <r:RibbonApplicationMenuItem
+                            Header="Secondary Floppy"
+                            ImageSource="..\Resources\Play.PNG"
+                            KeyTip="S" />
+                    </r:RibbonApplicationMenuItem>
+
+                    <r:RibbonApplicationMenuItem
+                        Header="My Pictures"
+                        ImageSource="..\Resources\Play.PNG"
+                        KeyTip="M" />
+                    <r:RibbonApplicationMenuItem
+                        Header="My Videos"
+                        ImageSource="..\Resources\Play.PNG"
+                        KeyTip="V" />
+                    <r:RibbonSeparator />
+                    <r:RibbonApplicationSplitMenuItem
+                        Header="Search Program"
+                        ImageSource="..\Resources\Play.PNG">
+                        <r:RibbonApplicationMenuItem
+                            Header="BMP Images"
+                            ImageSource="..\Resources\Play.PNG" />
+                        <r:RibbonApplicationMenuItem
+                            Header="JPEG Images"
+                            ImageSource="..\Resources\Play.PNG" />
+                        <r:RibbonApplicationMenuItem
+                            Header="GIF Images"
+                            ImageSource="..\Resources\Play.PNG" />
+                        <r:RibbonApplicationMenuItem
+                            Header="PNG Images"
+                            ImageSource="..\Resources\Play.PNG" />
+                    </r:RibbonApplicationSplitMenuItem>
+
+                    <r:RibbonApplicationMenu.FooterPaneContent>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="Auto" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Left"
+                                Grid.Column="0">
+                                <r:RibbonButton
+                                    Content="My Music"
+                                    SmallImageSource="..\Resources\Play.PNG" />
+                                <r:RibbonButton
+                                    Content="Web Folders"
+                                    SmallImageSource="..\Resources\Open.PNG" />
+                                <r:RibbonButton
+                                    Content="Settings"
+                                    SmallImageSource="..\Resources\Trace.PNG" />
+                            </StackPanel>
+                            <r:RibbonButton
+                                SmallImageSource="..\Resources\Exit.PNG"
+                                Label="Exit"
+                                HorizontalAlignment="Right"
+                                Command="{Binding Exit}"
+                                Grid.Column="2" />
+                        </Grid>
+                    </r:RibbonApplicationMenu.FooterPaneContent>
+
+                    <r:RibbonApplicationMenu.AuxiliaryPaneContent>
+                        <TextBlock
+                            Text="This is the Auxilary Pane. You can also add RibbonGallery to AuxiliaryPane." />
+                    </r:RibbonApplicationMenu.AuxiliaryPaneContent>
+                </r:RibbonApplicationMenu>
+            </r:Ribbon.ApplicationMenu>
+
+            <r:RibbonTab
+                Header="Home">
+                <r:RibbonGroup
                     Header="Stuff">
-                    <Ribbon:RibbonButton
+                    <r:RibbonButton
                         Label="Add"
                         Command="{Binding Add}" />
-                    <Ribbon:RibbonCheckBox
+                    <r:RibbonCheckBox
                         Label="Preferences"
                         IsChecked="{Binding Preferences.Show}" />
-                    <Ribbon:RibbonButton
+                    <r:RibbonButton
                         Label="Exit"
                         Command="{Binding Exit}" />
-                </Ribbon:RibbonGroup>
-            </Ribbon:RibbonTab>
+                </r:RibbonGroup>
+            </r:RibbonTab>
 
-            <Ribbon:RibbonTab
+            <r:RibbonTab
                 Header="Filters">
-                <Ribbon:RibbonGroup
+                <r:RibbonGroup
                     Header="TODO">
-                </Ribbon:RibbonGroup>
-            </Ribbon:RibbonTab>
-            
-        </Ribbon:Ribbon>
-    -->
+                </r:RibbonGroup>
+            </r:RibbonTab>
+
+        </r:Ribbon>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -196,7 +263,5 @@
             -->
             </TabControl>
         </Grid>
-
     </DockPanel>
-
-</Window>
+</r:RibbonWindow>
