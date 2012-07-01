@@ -201,11 +201,12 @@ namespace Sentinel.Images
 
                 if (fieldName == "Type")
                 {
-                    TypeError oldTypeError = typeError;
+                    var oldTypeError = typeError;
 
+                    // TODO: need to be aware of the different qualities of images, using best available
                     if (!string.IsNullOrEmpty(Type)
                         && ImageService != null
-                        && ImageService.ImageMappings.Any(kvp => kvp.Key == Type))
+                        && ImageService.Get(Type) != null)
                     {
                         typeError = TypeError.Duplicate;
                     }
@@ -234,30 +235,28 @@ namespace Sentinel.Images
 
         private void BrowseForImageFiles(object obj)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-                                                {
-                                                    Title = "Select image",
-                                                    ValidateNames = true,
-                                                    CheckFileExists = true,
-                                                    Multiselect = false,
-                                                    Filter = "Images files|*.png;*.bmp|All Files|*.*",
-                                                    InitialDirectory =
-                                                        Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
-                                                };
+            var openFileDialog = new OpenFileDialog
+                {
+                    Title = "Select image",
+                    ValidateNames = true,
+                    CheckFileExists = true,
+                    Multiselect = false,
+                    Filter = "Images files|*.png;*.bmp|All Files|*.*",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+                };
 
-            bool? dialogResult = openFileDialog.ShowDialog(window);
-
-            ImageError oldImageError = imageError;
+            var dialogResult = openFileDialog.ShowDialog(window);
+            var oldImageError = imageError;
 
             if (dialogResult == true)
             {
                 try
                 {
                     // Check file exists, it should!
-                    FileInfo fi = new FileInfo(openFileDialog.FileName);
+                    var fi = new FileInfo(openFileDialog.FileName);
                     if (fi.Exists)
                     {
-                        BitmapImage i = new BitmapImage();
+                        var i = new BitmapImage();
                         i.BeginInit();
                         i.UriSource = new Uri(openFileDialog.FileName, UriKind.RelativeOrAbsolute);
                         i.EndInit();
@@ -265,14 +264,7 @@ namespace Sentinel.Images
                         Image = i;
 
                         // Some santity checking.
-                        if (i.Width <= 128 && i.Height <= 128)
-                        {
-                            imageError = ImageError.NoError;
-                        }
-                        else
-                        {
-                            imageError = ImageError.TooLarge;
-                        }
+                        this.imageError = i.Width <= 128 && i.Height <= 128 ? ImageError.NoError : ImageError.TooLarge;
                     }
                     else
                     {
@@ -304,20 +296,13 @@ namespace Sentinel.Images
 
         private void UpdateErrorMessage(bool imageChangedMostRecently)
         {
-            string oldErrorMessage = Error;
-            string newErrorMessage;
+            var oldErrorMessage = Error;
+            var imageErrorMessage = imageErrorMessages[imageError];
+            var typeErrorMessage = typeErrorMessages[typeError];
 
-            string imageErrorMessage = imageErrorMessages[imageError];
-            string typeErrorMessage = typeErrorMessages[typeError];
-
-            if (imageChangedMostRecently)
-            {
-                newErrorMessage = imageErrorMessage ?? typeErrorMessage;
-            }
-            else
-            {
-                newErrorMessage = typeErrorMessage ?? imageErrorMessage;
-            }
+            var newErrorMessage = imageChangedMostRecently
+                                      ? (imageErrorMessage ?? typeErrorMessage)
+                                      : (typeErrorMessage ?? imageErrorMessage);
 
             if (oldErrorMessage != newErrorMessage)
             {

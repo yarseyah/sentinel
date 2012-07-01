@@ -23,12 +23,14 @@ namespace Sentinel.Images.Interfaces
 
         ICommand Edit { get; }
 
-        ObservableCollection<KeyValuePair<string, string>> ImageMappings { get; }
+        ObservableCollection<ImageTypeRecord> ImageMappings { get; }
 
         ICommand Remove { get; }
 
         int SelectedIndex { get; set; }
 
-        void Register(string type, string image);
+        void Register(string type, ImageQuality quality, string image);
+
+        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable);
     }
 }

@@ -19,9 +19,7 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Images
 {
-    public class AddTypeImageService
-        : ViewModelBase
-        , IAddTypeImage
+    public class AddTypeImageService : ViewModelBase, IAddTypeImage
     {
         private AddImageWindow addImageWindow;
 
@@ -39,20 +37,18 @@ namespace Sentinel.Images
             }
             else
             {
-                addImageWindow = new AddImageWindow {DataContext = this, Owner = Application.Current.MainWindow};
+                addImageWindow = new AddImageWindow { DataContext = this, Owner = Application.Current.MainWindow };
 
-                ITypeImageService imageService = Services.ServiceLocator.Instance.Get<ITypeImageService>();
-
-                AddEditTypeImageViewModel data = new AddEditTypeImageViewModel(addImageWindow, imageService);
-
-                bool? dialogResult = addImageWindow.ShowDialog();
+                var imageService = Services.ServiceLocator.Instance.Get<ITypeImageService>();
+                var data = new AddEditTypeImageViewModel(addImageWindow, imageService);
+                var dialogResult = addImageWindow.ShowDialog();
 
                 if (dialogResult == true)
                 {
                     if (imageService != null)
                     {
-                        imageService.ImageMappings.Add(
-                            new KeyValuePair<string, string>(data.Type, data.FileName));
+                        // TODO: need to extend to support ImageQuality (defaulting to Small)
+                        imageService.Register(data.Type, ImageQuality.Small, data.FileName);
                     }
                 }
 

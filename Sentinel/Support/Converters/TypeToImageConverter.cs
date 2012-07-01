@@ -22,6 +22,8 @@ using Sentinel.Services;
 
 namespace Sentinel.Support.Converters
 {
+    using Sentinel.Images;
+
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class TypeToImageConverter : IValueConverter
     {
@@ -29,21 +31,28 @@ namespace Sentinel.Support.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            ITypeImageService imageService = ServiceLocator.Instance.Get<ITypeImageService>();
-            if (imageService != null)
-            {
-                string imageName = imageService.ImageMappings
-                    .Where(e => e.Key == ((string) value).ToUpper())
-                    .FirstOrDefault()
-                    .Value;
+            var imageService = ServiceLocator.Instance.Get<ITypeImageService>();
+            var valueAsString = value as string;
 
-                if (!string.IsNullOrEmpty(imageName))
+            // TODO: supply this in the request as a parameter....
+            const ImageQuality Quality = ImageQuality.BestAvailable;
+
+            if (!string.IsNullOrWhiteSpace(valueAsString))
+            {
+                if (imageService != null)
                 {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.UriSource = new Uri(imageName, UriKind.Relative);
-                    image.EndInit();
-                    return image;
+                    var record = imageService.Get(valueAsString, Quality);
+
+                    if (record != null && !string.IsNullOrEmpty(record.Image))
+                    {
+                        var image = new BitmapImage();
+
+                        image.BeginInit();
+                        image.UriSource = new Uri(record.Image, UriKind.Relative);
+                        image.EndInit();
+
+                        return image;
+                    }
                 }
             }
 

@@ -110,6 +110,7 @@
     <Compile Include="Filters\Interfaces\IStandardDebuggingFilter.cs" />
     <Compile Include="Filters\StandardFilter.cs" />
     <Compile Include="Highlighters\Interfaces\IHighlighter.cs" />
+    <Compile Include="Images\Interfaces\ImageTypeRecord.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
@@ -506,10 +507,7 @@
       <Name>WpfExtras</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Networking\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>

@@ -20,29 +20,42 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Images
 {
-    public class TypeToImageService
-        : ViewModelBase
-        , ITypeImageService
+    using System.Diagnostics;
+
+    public enum ImageQuality
+    {
+        Small,
+        Large,
+        ExtraLarge,
+        BestAvailable
+    }
+
+    public class TypeToImageService : ViewModelBase, ITypeImageService
     {
         private int selectedIndex;
 
-        private IAddTypeImage AddImage { get; set; }
-
-        private IEditTypeImage EditImage { get; set; }
-
-        private IRemoveTypeImage RemoveImage { get; set; }
-
         public TypeToImageService()
         {
-            ImageMappings = new ObservableCollection<KeyValuePair<string, string>>
-                                {
-                                    new KeyValuePair<string, string>("ERROR", "/Resources/Small/Error.png"),
-                                    new KeyValuePair<string, string>("WARN", "/Resources/Small/Warning.png"),
-                                    new KeyValuePair<string, string>("INFO", "/Resources/Small/Info.png"),
-                                    new KeyValuePair<string, string>("FATAL", "/Resources/Small/Fatal.png"),
-                                    new KeyValuePair<string, string>("DEBUG", "/Resources/Small/Debug.png"),
-                                    new KeyValuePair<string, string>("TRACE", "/Resources/Small/Trace.png")
-                                };
+            //ImageMappings = new ObservableCollection<KeyValuePair<string, string>>
+            //                    {
+            //                        new KeyValuePair<string, string>("ERROR", "/Resources/Small/Error.png"),
+            //                        new KeyValuePair<string, string>("WARN", "/Resources/Small/Warning.png"),
+            //                        new KeyValuePair<string, string>("INFO", "/Resources/Small/Info.png"),
+            //                        new KeyValuePair<string, string>("FATAL", "/Resources/Small/Fatal.png"),
+            //                        new KeyValuePair<string, string>("DEBUG", "/Resources/Small/Debug.png"),
+            //                        new KeyValuePair<string, string>("TRACE", "/Resources/Small/Trace.png")
+            //                    };
+
+            ImageMappings = new ObservableCollection<ImageTypeRecord>();
+
+            // TODO: Register defaults, this should be persisting somewhere
+
+            Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
+            Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
+            Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
+            Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
+            Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
+            Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
 
             Add = new DelegateCommand(AddMapping);
             Edit = new DelegateCommand(EditMapping, e => selectedIndex != -1);
@@ -53,13 +66,11 @@ namespace Sentinel.Images
             RemoveImage = new RemoveTypeImageMapping();
         }
 
-        #region ITypeImageService Members
-
         public ICommand Add { get; private set; }
 
         public ICommand Edit { get; private set; }
 
-        public ObservableCollection<KeyValuePair<string, string>> ImageMappings { get; private set; }
+        public ObservableCollection<ImageTypeRecord> ImageMappings { get; private set; }
 
         public ICommand Remove { get; private set; }
 
@@ -81,36 +92,48 @@ namespace Sentinel.Images
             }
         }
 
-        public void Register(string type, string image)
+        private IAddTypeImage AddImage { get; set; }
+
+        private IEditTypeImage EditImage { get; set; }
+
+        private IRemoveTypeImage RemoveImage { get; set; }
+
+        public void Register(string type, ImageQuality quality, string image)
         {
-            // See if already there....
-            string typeUpper = type.ToUpper();
-            bool found = ImageMappings.Any(i => i.Key.ToUpper() == typeUpper);
+            Debug.Assert(quality != ImageQuality.BestAvailable, "Must use a specific size when registering");
 
-            KeyValuePair<string, string> record = new KeyValuePair<string, string>(typeUpper, image);
+            var typeName = type.ToUpper();
+            var imageRecord = Get(typeName, quality);
 
-            if (found)
+            var updated = false;
+            if (imageRecord != null)
             {
-                lock (ImageMappings)
+                if (imageRecord.Image != image)
                 {
-                    for (int i = 0; i < ImageMappings.Count; i++)
-                    {
-                        if (ImageMappings[i].Key == typeUpper)
-                        {
-                            ImageMappings[i] = record;
-                        }
-                    }
+                    imageRecord.Image = image;
+                    updated = true;
                 }
             }
             else
             {
-                ImageMappings.Add(record);
+                ImageMappings.Add(new ImageTypeRecord(typeName, quality, image));
+                updated = true;
             }
 
-            OnPropertyChanged("ImageMappings");
+            if (updated)
+            {
+                OnPropertyChanged("ImageMappings");
+            }
         }
 
-        #endregion
+        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable)
+        {
+            var typeName = type.ToUpper();
+            var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
+            return quality == ImageQuality.BestAvailable
+                       ? sorted.FirstOrDefault()
+                       : sorted.FirstOrDefault(r => r.Quality == quality);
+        }
 
         private void AddMapping(object obj)
         {

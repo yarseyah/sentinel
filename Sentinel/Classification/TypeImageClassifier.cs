@@ -7,13 +7,13 @@
 //
 #endregion
 
-using System;
-using Sentinel.Images.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-
 namespace Sentinel.Classification
 {
+    using Sentinel.Images;
+    using Sentinel.Images.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+
     public class TypeImageClassifier : VisualClassifier
     {
         private string image;
@@ -39,10 +39,11 @@ namespace Sentinel.Classification
                     image = value;
 
                     // Register self to ImageService
-                    ITypeImageService service = ServiceLocator.Instance.Get<ITypeImageService>();
+                    var service = ServiceLocator.Instance.Get<ITypeImageService>();
                     if (service != null)
                     {
-                        service.Register(TypeMatch, image);
+                        // TODO: what quality?  defaulting to small.
+                        service.Register(TypeMatch, ImageQuality.Small, image);
                     }
                 }
             }
@@ -52,12 +53,12 @@ namespace Sentinel.Classification
 
         public override bool IsMatch(object parameter)
         {
-            return parameter != null && ((parameter is string) && (parameter as string).Equals(TypeMatch));
+            return (parameter is string) && (parameter as string).Equals(TypeMatch);
         }
 
         public override LogEntry Classify(LogEntry entry)
         {
-            // TODO: 
+            // TODO: something?
             return entry;
         }
     }
