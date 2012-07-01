@@ -4,7 +4,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
-    xmlns:Converters="clr-namespace:Sentinel.Support.Converters" x:Class="Sentinel.Controls.MainWindow"
+    xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+    x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
     Width="1017"
@@ -54,47 +55,47 @@
 
                     <r:RibbonApplicationMenuItem
                         Header="Desktop"
-                        ImageSource="..\Resources\Play.PNG"
+                        ImageSource="/Resources/Play.PNG"
                         KeyTip="D" />
 
                     <r:RibbonApplicationMenuItem
                         Header="Floppy"
-                        ImageSource="..\Resources\Play.PNG"
+                        ImageSource="/Resources/Play.PNG"
                         KeyTip="F">
                         <r:RibbonApplicationMenuItem
                             Header="Primary Floppy"
-                            ImageSource="..\Resources\Play.PNG"
+                            ImageSource="/Resources/Play.PNG"
                             KeyTip="P" />
                         <r:RibbonApplicationMenuItem
                             Header="Secondary Floppy"
-                            ImageSource="..\Resources\Play.PNG"
+                            ImageSource="/Resources/Play.PNG"
                             KeyTip="S" />
                     </r:RibbonApplicationMenuItem>
 
                     <r:RibbonApplicationMenuItem
                         Header="My Pictures"
-                        ImageSource="..\Resources\Play.PNG"
+                        ImageSource="/Resources/Play.PNG"
                         KeyTip="M" />
                     <r:RibbonApplicationMenuItem
                         Header="My Videos"
-                        ImageSource="..\Resources\Play.PNG"
+                        ImageSource="/Resources/Play.PNG"
                         KeyTip="V" />
                     <r:RibbonSeparator />
                     <r:RibbonApplicationSplitMenuItem
                         Header="Search Program"
-                        ImageSource="..\Resources\Play.PNG">
+                        ImageSource="/Resources/Play.PNG">
                         <r:RibbonApplicationMenuItem
                             Header="BMP Images"
-                            ImageSource="..\Resources\Play.PNG" />
+                            ImageSource="/Resources/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="JPEG Images"
-                            ImageSource="..\Resources\Play.PNG" />
+                            ImageSource="/Resources/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="GIF Images"
-                            ImageSource="..\Resources\Play.PNG" />
+                            ImageSource="/Resources/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="PNG Images"
-                            ImageSource="..\Resources\Play.PNG" />
+                            ImageSource="/Resources/Play.PNG" />
                     </r:RibbonApplicationSplitMenuItem>
 
                     <r:RibbonApplicationMenu.FooterPaneContent>
@@ -113,16 +114,16 @@
                                 Grid.Column="0">
                                 <r:RibbonButton
                                     Content="My Music"
-                                    SmallImageSource="..\Resources\Play.PNG" />
+                                    SmallImageSource="/Resources/Play.PNG" />
                                 <r:RibbonButton
                                     Content="Web Folders"
-                                    SmallImageSource="..\Resources\Open.PNG" />
+                                    SmallImageSource="/Resources/Open.PNG" />
                                 <r:RibbonButton
                                     Content="Settings"
-                                    SmallImageSource="..\Resources\Trace.PNG" />
+                                    SmallImageSource="/Resources/Trace.PNG" />
                             </StackPanel>
                             <r:RibbonButton
-                                SmallImageSource="..\Resources\Exit.PNG"
+                                SmallImageSource="/Resources/Exit.PNG"
                                 Label="Exit"
                                 HorizontalAlignment="Right"
                                 Command="{Binding Exit}"
@@ -143,17 +144,17 @@
                     Header="Stuff">
                     <r:RibbonButton
                         Label="Add"
-                        SmallImageSource="../Resources/Add.png"
+                        SmallImageSource="/Resources/Add.png"
                         Command="{Binding Add}" />
                     <r:RibbonToggleButton
                         ToolTip="Show the Preferences dialog"
                         IsChecked="{Binding Preferences.Show}"
-                        SmallImageSource="../Resources/Settings.png"
+                        SmallImageSource="/Resources/Settings.png"
                         Label="Preferences">
                     </r:RibbonToggleButton>
                     <r:RibbonButton
                         Label="Exit"
-                        SmallImageSource="../Resources/Exit.png"
+                        SmallImageSource="/Resources/Exit.png"
                         Command="{Binding Exit}" />
                 </r:RibbonGroup>
             </r:RibbonTab>
@@ -162,80 +163,34 @@
                 Header="Filtering">
                 <r:RibbonGroup
                     ItemsSource="{Binding Filters.Filters}"
-                    Header="Buttons">
+                    Header="Standard Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
                                 Label="{Binding Name}"
                                 IsChecked="{Binding Enabled}"
-                                Width="90"
-                                HorizontalContentAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Bottom"
                                 SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipFooterTitle="Using filters"
                                 ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
-                                ToolTipFooterImageSource="../Resources/Info.png">
+                                ToolTipFooterImageSource="/Resources/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
                 <r:RibbonGroup
-                    Header="Display Filters (ListView)">
-                    <ListView
-                        ItemsSource="{Binding Filters.Filters}" />
-
-                        <!--                        <Wpf:DataBoundToolbar.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    x:Name="checkbox"
-                                    Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                    IsChecked="{Binding Enabled}"
-                                    Height="22"
-                                    ToolTipService.ShowOnDisabled="True">
-                                    <Image
-                                        Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
-                                        Style="{StaticResource toolbarCheckboxImageStyle}"
-                                        Width="16"
-                                        Height="16" />
-                                    <CheckBox.ToolTip>
-                                        <StackPanel
-                                            Orientation="Vertical">
-                                            <StackPanel
-                                                Orientation="Horizontal">
-                                                <TextBlock
-                                                    Text="{Binding Name}" />
-                                                <TextBlock
-                                                    Text=" filter" />
-                                            </StackPanel>
-                                            <StackPanel
-                                                Orientation="Horizontal">
-                                                <TextBlock
-                                                    Text="Show/hide entries based upon " />
-                                                <TextBlock
-                                                    Text="{Binding Description}" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </CheckBox.ToolTip>
-                                </CheckBox>
-
-                                <DataTemplate.Triggers>
-                                    <DataTrigger
-                                        Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
-                                        Value="{x:Null}">
-                                        <Setter
-                                            TargetName="checkbox"
-                                            Property="Content"
-                                            Value="{Binding Name}" />
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </Wpf:DataBoundToolbar.ItemTemplate>
-                        -->
+                    Header="Custom Filters">
+                    <r:RibbonButton
+                        Label="Add New Filter"
+                        LargeImageSource="/Resources/Add.png"
+                        IsEnabled="False" />
                 </r:RibbonGroup>
             </r:RibbonTab>
-
         </r:Ribbon>
 
         <Grid>
