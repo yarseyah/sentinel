@@ -12,7 +12,7 @@
              d:DesignHeight="34.038">
 
     <UserControl.Resources>
-		<Converters:TypeToImageConverter x:Key="typeToImageConverter" />
+		<Converters:TypeToSmallImageConverter x:Key="typeToImageConverter" />
         <Converters:BooleanToWidthConverter x:Key="BooleanToWidthConverter" />
 	</UserControl.Resources>
 

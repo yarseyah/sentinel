@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras"
+    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras" xmlns:Images="clr-namespace:Sentinel.Images"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -43,6 +43,10 @@
         </Style>
         <Converters:TypeToImageConverter
             x:Key="TypeToImageConverter" />
+        <Converters:TypeToLargeImageConverter
+            x:Key="typeToLargeImage" />
+        <Converters:TypeToMediumImageConverter
+            x:Key="typeToMediumImage" />
         <CollectionViewSource
             x:Key="standardFilters"
             Source="{Binding Filters.Filters}"
@@ -183,10 +187,10 @@
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Bottom"
                                 SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
-                                LargeImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
                                 ToolTipFooterTitle="Using filters"
                                 ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
                                 ToolTipFooterImageSource="/Resources/Small/Info.png">
@@ -209,7 +213,7 @@
                                 LargeImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
                                 ToolTipFooterTitle="Using filters"
                                 ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
                                 ToolTipFooterImageSource="/Resources/Small/Info.png">

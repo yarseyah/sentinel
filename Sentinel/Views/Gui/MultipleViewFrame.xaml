@@ -28,7 +28,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Converters:TypeToImageConverter x:Key="TypeToImageConverter"/>
+        <Converters:TypeToSmallImageConverter x:Key="typeToSmallImage"/>
         <Converters:ImageLibraryConverter x:Key="ImageLibrary" />
     </UserControl.Resources>
 
@@ -173,7 +173,8 @@
                                   IsChecked="{Binding Enabled}"
                                   Height="22"
                                   ToolTipService.ShowOnDisabled="True">
-                            <Image Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                            <Image
+                                Source="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
                                    Style="{StaticResource toolbarCheckboxImageStyle}"
                                    Width="16"
                                    Height="16" />
@@ -195,7 +196,8 @@
                         </CheckBox>
 
                         <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                            <DataTrigger
+                                Binding="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
                                          Value="{x:Null}">
                                 <Setter TargetName="highlightCheckbox"
                                         Property="Content"
@@ -217,7 +219,8 @@
                                   IsChecked="{Binding Enabled}"
                                   Height="22"
                                   ToolTipService.ShowOnDisabled="True">
-                            <Image Source="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                            <Image
+                                Source="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
                                    Style="{StaticResource toolbarCheckboxImageStyle}"
                                    Width="16"
                                    Height="16" />
@@ -236,7 +239,8 @@
                         </CheckBox>
 
                         <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                            <DataTrigger
+                                Binding="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
                                          Value="{x:Null}">
                                 <Setter TargetName="checkbox"
                                         Property="Content"

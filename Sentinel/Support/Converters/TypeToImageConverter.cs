@@ -27,6 +27,8 @@ namespace Sentinel.Support.Converters
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class TypeToImageConverter : IValueConverter
     {
+        protected ImageQuality quality = ImageQuality.BestAvailable;
+
         #region IValueConverter Members
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -34,14 +36,11 @@ namespace Sentinel.Support.Converters
             var imageService = ServiceLocator.Instance.Get<ITypeImageService>();
             var valueAsString = value as string;
 
-            // TODO: supply this in the request as a parameter....
-            const ImageQuality Quality = ImageQuality.BestAvailable;
-
             if (!string.IsNullOrWhiteSpace(valueAsString))
             {
                 if (imageService != null)
                 {
-                    var record = imageService.Get(valueAsString, Quality);
+                    var record = imageService.Get(valueAsString, quality);
 
                     if (record != null && !string.IsNullOrEmpty(record.Image))
                     {

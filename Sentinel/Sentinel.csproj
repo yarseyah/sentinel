@@ -185,6 +185,9 @@
     <Compile Include="Support\Converters\MatchModeConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
     <Compile Include="Support\Converters\TypeToImageConverter.cs" />
+    <Compile Include="Support\Converters\TypeToLargeImageConverter.cs" />
+    <Compile Include="Support\Converters\TypeToMediumImageConverter.cs" />
+    <Compile Include="Support\Converters\TypeToSmallImageConverter.cs" />
     <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Support\Converters\VisibilityToHiddenConverter.cs" />
     <Compile Include="Support\JsonHelper.cs" />
@@ -529,52 +532,10 @@
     <Resource Include="Resources\Small\Exit.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Large\Add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Clear.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Clock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Debug.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Error.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Exit.png" />
+    <Resource Include="Resources\Medium\Fatal.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Large\Fatal.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Layout.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Open.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Play.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Save.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\ScrollDown.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Trace.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Large\Warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->

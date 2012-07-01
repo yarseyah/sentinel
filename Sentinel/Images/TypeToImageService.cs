@@ -25,8 +25,8 @@ namespace Sentinel.Images
     public enum ImageQuality
     {
         Small,
+        Medium,
         Large,
-        ExtraLarge,
         BestAvailable
     }
 
@@ -36,26 +36,18 @@ namespace Sentinel.Images
 
         public TypeToImageService()
         {
-            //ImageMappings = new ObservableCollection<KeyValuePair<string, string>>
-            //                    {
-            //                        new KeyValuePair<string, string>("ERROR", "/Resources/Small/Error.png"),
-            //                        new KeyValuePair<string, string>("WARN", "/Resources/Small/Warning.png"),
-            //                        new KeyValuePair<string, string>("INFO", "/Resources/Small/Info.png"),
-            //                        new KeyValuePair<string, string>("FATAL", "/Resources/Small/Fatal.png"),
-            //                        new KeyValuePair<string, string>("DEBUG", "/Resources/Small/Debug.png"),
-            //                        new KeyValuePair<string, string>("TRACE", "/Resources/Small/Trace.png")
-            //                    };
-
             ImageMappings = new ObservableCollection<ImageTypeRecord>();
 
             // TODO: Register defaults, this should be persisting somewhere
-
             Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
             Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
             Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
-            Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
             Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
             Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
+
+            Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
+            Register("FATAL", ImageQuality.Medium, "/Resources/Medium/Fatal.png");
+            Register("FATAL", ImageQuality.Large, "/Resources/Large/Fatal.png");
 
             Add = new DelegateCommand(AddMapping);
             Edit = new DelegateCommand(EditMapping, e => selectedIndex != -1);
@@ -103,7 +95,7 @@ namespace Sentinel.Images
             Debug.Assert(quality != ImageQuality.BestAvailable, "Must use a specific size when registering");
 
             var typeName = type.ToUpper();
-            var imageRecord = Get(typeName, quality);
+            var imageRecord = Get(typeName, quality, false);
 
             var updated = false;
             if (imageRecord != null)
@@ -126,13 +118,34 @@ namespace Sentinel.Images
             }
         }
 
-        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable)
+        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true)
         {
             var typeName = type.ToUpper();
             var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
-            return quality == ImageQuality.BestAvailable
-                       ? sorted.FirstOrDefault()
-                       : sorted.FirstOrDefault(r => r.Quality == quality);
+
+            if (quality == ImageQuality.BestAvailable)
+            {
+                return sorted.FirstOrDefault();
+            }
+
+            var exactMatch = sorted.SingleOrDefault(r => r.Quality == quality);
+            if (exactMatch != null)
+            {
+                return exactMatch;
+            }
+
+            // Don't have explicit size or have not asked for best available.
+            if (acceptLower)
+            {
+                Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit quality");
+                var newQuality = quality == ImageQuality.Large ? ImageQuality.Medium : ImageQuality.Small;
+                if (newQuality != quality)
+                {
+                    return Get(type, newQuality);
+                }
+            }
+
+            return null;
         }
 
         private void AddMapping(object obj)

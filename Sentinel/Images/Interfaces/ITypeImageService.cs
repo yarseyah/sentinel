@@ -31,6 +31,6 @@ namespace Sentinel.Images.Interfaces
 
         void Register(string type, ImageQuality quality, string image);
 
-        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable);
+        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true);
     }
 }
