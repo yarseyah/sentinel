@@ -43,28 +43,7 @@
                      Grid.Column="0"
                      Grid.ColumnSpan="2"
                      x:Name="toolBarPanel1">
-            <ToolBar>
-                <CheckBox x:Name="playPauseButton"
-                          ToolTip="Start/Stop listening for new log messages (NOT CURRENTLY IMPLEMENTED)"
-                          ToolTipService.ShowOnDisabled="True"
-                          IsEnabled="False"
-                          Command="{Binding Pause}">
-                    <Image Source="/Resources/Small/Play.png"
-                           Style="{StaticResource toolbarCheckboxImageStyle}" />
-                </CheckBox>
-                <Button ToolTip="Save the current logger to a text file"
-                        Command="{Binding Save}">
-                    <Image Source="/Resources/Small/Save.png"
-                           Width="16"
-                           Height="16" />
-                </Button>
-                <CheckBox ToolTip="Toggle layout between horizontal and vertical."
-                          IsChecked="{Binding Preferences.UseStackedLayout}">
-                    <Image Source="/Resources/Small/Layout.png"
-                           Width="16"
-                           Height="16" />
-                </CheckBox>
-            </ToolBar>
+           
             <Wpf:DataBoundToolbar x:Name="PrimaryToolbar"
                                   ItemsSource="{Binding PrimaryView.ToolbarItems}"
                                   Width="Auto"
@@ -128,38 +107,6 @@
                     </DataTemplate>
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
-            
-            <!--
-            <Wpf:DataBoundToolbar x:Name="SecondaryToolbar"
-                                  ItemsSource="{Binding SecondaryView.ToolbarItems}"
-                                  Width="Auto"
-                                  Header="Secondary"
-                                  HorizontalContentAlignment="Center">
-                <Wpf:DataBoundToolbar.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox x:Name="secondaryViewCheckbox"
-                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                  IsChecked="{Binding IsChecked}"
-                                  Command="{Binding Command}"
-                                  Height="22">
-                            <CheckBox.ToolTip>
-                                <TextBlock Text="{Binding Tooltip}" />
-                            </CheckBox.ToolTip>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding ImageIdentifier, Converter={StaticResource ImageLibrary}}"
-                                       Style="{StaticResource toolbarCheckboxImageStyle}"
-                                       Width="16"
-                                       Height="16" />
-                                <TextBlock Text="{Binding Label}"
-                                           Margin="3,0"
-                                           VerticalAlignment="Center"
-                                           Width="Auto" />
-                            </StackPanel>
-                        </CheckBox>
-                    </DataTemplate>
-                </Wpf:DataBoundToolbar.ItemTemplate>
-            </Wpf:DataBoundToolbar>
-            -->
 
             <Wpf:DataBoundToolbar x:Name="HighlightToolbar"
                                        Header="Highlight"
@@ -207,49 +154,7 @@
                     </DataTemplate>
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
-            <Wpf:DataBoundToolbar x:Name="FilterToolbar"
-                                       Header="Filter"
-                                       ItemsSource="{Binding Filters.Filters}"
-                                       Width="Auto"
-                                       HorizontalContentAlignment="Stretch">
-                <Wpf:DataBoundToolbar.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox x:Name="checkbox"
-                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                  IsChecked="{Binding Enabled}"
-                                  Height="22"
-                                  ToolTipService.ShowOnDisabled="True">
-                            <Image
-                                Source="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                   Style="{StaticResource toolbarCheckboxImageStyle}"
-                                   Width="16"
-                                   Height="16" />
-                            <CheckBox.ToolTip>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text=" filter" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Show/hide entries based upon " />
-                                        <TextBlock Text="{Binding Description}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
 
-                        <DataTemplate.Triggers>
-                            <DataTrigger
-                                Binding="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                         Value="{x:Null}">
-                                <Setter TargetName="checkbox"
-                                        Property="Content"
-                                        Value="{Binding Name}" />
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
-                </Wpf:DataBoundToolbar.ItemTemplate>
-            </Wpf:DataBoundToolbar>
             <ToolBar Header="Search : "
                      Width="Auto"
                      VerticalContentAlignment="Center">

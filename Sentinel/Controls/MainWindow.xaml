@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras" xmlns:Images="clr-namespace:Sentinel.Images"
+    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -69,52 +69,17 @@
 
             <r:Ribbon.ApplicationMenu>
                 <r:RibbonApplicationMenu>
-
                     <r:RibbonApplicationMenuItem
-                        Header="Desktop"
-                        ImageSource="/Resources/Small/Play.PNG"
-                        KeyTip="D" />
-
+                        Header="About"
+                        IsEnabled="False"
+                        ImageSource="/Resources/Large/Info.PNG"
+                        KeyTip="A" />
                     <r:RibbonApplicationMenuItem
-                        Header="Floppy"
-                        ImageSource="/Resources/Small/Play.PNG"
-                        KeyTip="F">
-                        <r:RibbonApplicationMenuItem
-                            Header="Primary Floppy"
-                            ImageSource="/Resources/Small/Play.PNG"
-                            KeyTip="P" />
-                        <r:RibbonApplicationMenuItem
-                            Header="Secondary Floppy"
-                            ImageSource="/Resources/Small/Play.PNG"
-                            KeyTip="S" />
-                    </r:RibbonApplicationMenuItem>
-
-                    <r:RibbonApplicationMenuItem
-                        Header="My Pictures"
-                        ImageSource="/Resources/Small/Play.PNG"
-                        KeyTip="M" />
-                    <r:RibbonApplicationMenuItem
-                        Header="My Videos"
-                        ImageSource="/Resources/Small/Play.PNG"
-                        KeyTip="V" />
-                    <r:RibbonSeparator />
-                    <r:RibbonApplicationSplitMenuItem
-                        Header="Search Program"
-                        ImageSource="/Resources/Small/Play.PNG">
-                        <r:RibbonApplicationMenuItem
-                            Header="BMP Images"
-                            ImageSource="/Resources/Small/Play.PNG" />
-                        <r:RibbonApplicationMenuItem
-                            Header="JPEG Images"
-                            ImageSource="/Resources/Small/Play.PNG" />
-                        <r:RibbonApplicationMenuItem
-                            Header="GIF Images"
-                            ImageSource="/Resources/Small/Play.PNG" />
-                        <r:RibbonApplicationMenuItem
-                            Header="PNG Images"
-                            ImageSource="/Resources/Small/Play.PNG" />
-                    </r:RibbonApplicationSplitMenuItem>
-
+                        Header="Preferences"
+                        IsChecked="{Binding Preferences.Show}"
+                        ImageSource="/Resources/Small/Settings.PNG"
+                        KeyTip="X" />
+               
                     <r:RibbonApplicationMenu.FooterPaneContent>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -125,20 +90,6 @@
                                 <ColumnDefinition
                                     Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Left"
-                                Grid.Column="0">
-                                <r:RibbonButton
-                                    Content="My Music"
-                                    SmallImageSource="/Resources/Small/Play.PNG" />
-                                <r:RibbonButton
-                                    Content="Web Folders"
-                                    SmallImageSource="/Resources/Small/Open.PNG" />
-                                <r:RibbonButton
-                                    Content="Settings"
-                                    SmallImageSource="/Resources/Small/Trace.PNG" />
-                            </StackPanel>
                             <r:RibbonButton
                                 SmallImageSource="/Resources/Small/Exit.PNG"
                                 Label="Exit"
@@ -149,8 +100,15 @@
                     </r:RibbonApplicationMenu.FooterPaneContent>
 
                     <r:RibbonApplicationMenu.AuxiliaryPaneContent>
-                        <TextBlock
-                            Text="This is the Auxilary Pane. You can also add RibbonGallery to AuxiliaryPane." />
+                        <StackPanel>
+                            <TextBlock
+                                FontWeight="Bold"
+                                FontSize="24">Coming soon...</TextBlock>
+                            <TextBlock
+                                TextWrapping="WrapWithOverflow">
+                                Most of the general preferences and session management features are to move into here.
+                            </TextBlock>
+                        </StackPanel>
                     </r:RibbonApplicationMenu.AuxiliaryPaneContent>
                 </r:RibbonApplicationMenu>
             </r:Ribbon.ApplicationMenu>
@@ -158,7 +116,7 @@
             <r:RibbonTab
                 Header="Home">
                 <r:RibbonGroup
-                    Header="Stuff">
+                    Header="General">
                     <r:RibbonButton
                         Label="Add"
                         SmallImageSource="/Resources/Small/Add.png"
@@ -172,7 +130,36 @@
                     <r:RibbonButton
                         Label="Exit"
                         SmallImageSource="/Resources/Small/Exit.png"
-                        Command="{Binding Exit}" />
+                        LargeImageSource="/Resources/Medium/Exit.png"
+                        Command="{Binding Exit}">
+                        <r:RibbonButton.ControlSizeDefinition>
+                            <r:RibbonControlSizeDefinition />
+                        </r:RibbonButton.ControlSizeDefinition>
+                    </r:RibbonButton>
+                </r:RibbonGroup>
+
+                <!-- Standard filters -->
+                <r:RibbonGroup
+                    ItemsSource="{Binding Source={StaticResource standardFilters}}"
+                    Header="Standard Filters">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton
+                                Label="{Binding Name}"
+                                IsChecked="{Binding Enabled}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Bottom"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
+                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                ToolTipDescription="{Binding Description}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
+                                ToolTipFooterTitle="Using filters"
+                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
+                                ToolTipFooterImageSource="/Resources/Small/Info.png">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
             </r:RibbonTab>
 
@@ -233,108 +220,9 @@
             </r:RibbonTab>
         </r:Ribbon>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="Auto" />
-                <RowDefinition
-                    Height="*" />
-            </Grid.RowDefinitions>
-
-            <StackPanel
-                Orientation="Vertical"
-                Grid.Row="0">
-                <Menu
-                    Width="Auto">
-                    <MenuItem
-                        Header="_File">
-                        <MenuItem
-                            Header="New..."
-                            Command="{Binding Add}">
-                            <MenuItem.Icon>
-                                <Image
-                                    Source="/Resources/Small/Add.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem
-                            Header="Load..."
-                            IsEnabled="False">
-                            <MenuItem.Icon>
-                                <Image
-                                    Source="/Resources/Small/Open.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem
-                            Header="Save As..."
-                            IsEnabled="False">
-                            <MenuItem.Icon>
-                                <Image
-                                    Source="/Resources/Small/Save.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem
-                            Header="Exit"
-                            Command="{Binding Exit}" />
-                    </MenuItem>
-                </Menu>
-                <ToolBarTray
-                    x:Name="mainToolbarTray">
-                    <ToolBar>
-                        <Button
-                            Command="{Binding Add}">
-                            <Image
-                                Source="/Resources/Small/Add.png" />
-                        </Button>
-                    </ToolBar>
-                    <ToolBar>
-                        <CheckBox
-                            ToolTip="Show the Preferences dialog"
-                            IsChecked="{Binding Preferences.Show}">
-                            <StackPanel
-                                Orientation="Horizontal">
-                                <Image
-                                    Source="/Resources/Small/Settings.png"
-                                    VerticalAlignment="Center" />
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    Padding="5,0,5,0">Preferences</TextBlock>
-                            </StackPanel>
-                        </CheckBox>
-                    </ToolBar>
-                </ToolBarTray>
-            </StackPanel>
-
-            <TabControl
-                x:Name="tabControl"
-                Grid.Row="1">
-                <!--
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel MinWidth="120"
-                               HorizontalAlignment="Stretch">
-                        <DockPanel.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Close" />
-                            </ContextMenu>
-                        </DockPanel.ContextMenu>
-                        <TextBlock VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   TextAlignment="Center"
-                                   Text="{Binding Name}" />
-                    </DockPanel>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            -->
-                <!--
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <ContentControl Content="{Binding Presenter}" />
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-            -->
-            </TabControl>
-        </Grid>
+        <TabControl
+            x:Name="tabControl"
+            Grid.Row="1">
+        </TabControl>
     </DockPanel>
 </r:RibbonWindow>

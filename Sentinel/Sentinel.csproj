@@ -561,6 +561,12 @@
   <ItemGroup>
     <Resource Include="Resources\Large\Error.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Exit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->
   <Target Name="BeforeBuild">
