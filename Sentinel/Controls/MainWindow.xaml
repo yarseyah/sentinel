@@ -166,7 +166,10 @@
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
+                                Label="{Binding Name}"
                                 IsChecked="{Binding Enabled}"
+                                Width="90"
+                                HorizontalContentAlignment="Left"
                                 SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
