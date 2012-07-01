@@ -108,53 +108,6 @@
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
 
-            <Wpf:DataBoundToolbar x:Name="HighlightToolbar"
-                                       Header="Highlight"
-                                       ItemsSource="{Binding Highlight.Highlighters}"
-                                       Width="Auto"
-                                       HorizontalContentAlignment="Center">
-                <Wpf:DataBoundToolbar.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox x:Name="highlightCheckbox"
-                                  Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                  IsChecked="{Binding Enabled}"
-                                  Height="22"
-                                  ToolTipService.ShowOnDisabled="True">
-                            <Image
-                                Source="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                   Style="{StaticResource toolbarCheckboxImageStyle}"
-                                   Width="16"
-                                   Height="16" />
-                            <CheckBox.ToolTip>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text=" filter" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Highlight entries based upon a " />
-                                        <TextBlock Text="{Binding Field}" />
-                                        <TextBlock Text=" of " />
-                                        <TextBlock Text="{Binding Pattern}" />
-                                        <TextBlock Text="." />
-                                    </StackPanel>
-                                </StackPanel>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
-
-                        <DataTemplate.Triggers>
-                            <DataTrigger
-                                Binding="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                         Value="{x:Null}">
-                                <Setter TargetName="highlightCheckbox"
-                                        Property="Content"
-                                        Value="{Binding Name}" />
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
-                </Wpf:DataBoundToolbar.ItemTemplate>
-            </Wpf:DataBoundToolbar>
-
             <ToolBar Header="Search : "
                      Width="Auto"
                      VerticalContentAlignment="Center">

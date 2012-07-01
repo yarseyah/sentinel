@@ -57,6 +57,12 @@
             x:Key="customFilters"
             Source="{Binding Filters.Filters}"
             Filter="ExcludeStandardFilters" />
+        <CollectionViewSource
+            x:Key="standardHighlighters"
+            Source="{Binding Highlight.Highlighters}" />
+        <CollectionViewSource
+            x:Key="customHighlighters"
+            Source="{Binding Highlight.Highlighters}" />
         <WpfExtras:CollapseIfZeroConverter
             x:Key="collapseIfZero" />
     </r:RibbonWindow.Resources>
@@ -141,7 +147,7 @@
                 <!-- Standard filters -->
                 <r:RibbonGroup
                     ItemsSource="{Binding Source={StaticResource standardFilters}}"
-                    Header="Standard Filters">
+                    Header="Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
@@ -161,13 +167,10 @@
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
-            </r:RibbonTab>
-
-            <r:RibbonTab
-                Header="Filtering">
+                
                 <r:RibbonGroup
-                    ItemsSource="{Binding Source={StaticResource standardFilters}}"
-                    Header="Standard Filters">
+                    ItemsSource="{Binding Source={StaticResource standardHighlighters}}"
+                    Header="Highlighters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
@@ -179,13 +182,21 @@
                                 LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
-                                ToolTipFooterTitle="Using filters"
-                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
-                                ToolTipFooterImageSource="/Resources/Small/Info.png">
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
+                </r:RibbonGroup>
+            </r:RibbonTab>
+
+            <r:RibbonTab
+                Header="Filtering">
+                <r:RibbonGroup
+                    Header="Options">
+                    <r:RibbonButton
+                        Label="Add New Filter"
+                        LargeImageSource="/Resources/Small/Add.png"
+                        IsEnabled="False" />
                 </r:RibbonGroup>
                 <r:RibbonGroup
                     ItemsSource="{Binding Source={StaticResource customFilters}}"
@@ -198,8 +209,8 @@
                                 IsChecked="{Binding Enabled}"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Bottom"
-                                SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
-                                LargeImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
@@ -210,12 +221,36 @@
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
+            </r:RibbonTab>
+            
+            <r:RibbonTab
+                Header="Highlighting">
                 <r:RibbonGroup
                     Header="Options">
                     <r:RibbonButton
-                        Label="Add New Filter"
+                        Label="Add New Highlighter"
                         LargeImageSource="/Resources/Small/Add.png"
                         IsEnabled="False" />
+                </r:RibbonGroup>
+                <r:RibbonGroup
+                    ItemsSource="{Binding Source={StaticResource customHighlighters}}"
+                    Visibility="{Binding Source={StaticResource customHighlighters}, Path=Count, Converter={StaticResource collapseIfZero}}"
+                    Header="Custom Highlighters">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton
+                                Label="{Binding Name}"
+                                IsChecked="{Binding Enabled}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Bottom"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
+                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                ToolTipDescription="{Binding Description}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
             </r:RibbonTab>
         </r:Ribbon>

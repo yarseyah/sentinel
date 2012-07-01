@@ -41,6 +41,7 @@ namespace Sentinel.Controls
 
     using Sentinel.Filters;
     using Sentinel.Filters.Interfaces;
+    using Sentinel.Highlighters.Interfaces;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -56,7 +57,7 @@ namespace Sentinel.Controls
         public MainWindow()
         {
             InitializeComponent();
-            string savingDirectory = ServiceLocator.Instance.SaveLocation;
+            var savingDirectory = ServiceLocator.Instance.SaveLocation;
             persistingFilename = Path.Combine(savingDirectory, "MainWindow");
 
             // Restore persisted window placement
@@ -76,6 +77,14 @@ namespace Sentinel.Controls
             get
             {
                 return ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
+            }
+        }
+
+        public IHighlightingService<IHighlighter> Highlight
+        {
+            get
+            {
+                return ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
             }
         }
 
