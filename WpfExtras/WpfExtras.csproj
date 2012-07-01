@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollapseIfZeroConverter.cs" />
     <Compile Include="CollapseIfFalseConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EstablishPossibleNavigation.cs" />

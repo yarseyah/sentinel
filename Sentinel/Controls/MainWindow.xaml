@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -50,6 +51,8 @@
             x:Key="customFilters"
             Source="{Binding Filters.Filters}"
             Filter="ExcludeStandardFilters" />
+        <WpfExtras:CollapseIfZeroConverter
+            x:Key="collapseIfZero" />
     </r:RibbonWindow.Resources>
 
     <DockPanel>
@@ -193,6 +196,7 @@
                 </r:RibbonGroup>
                 <r:RibbonGroup
                     ItemsSource="{Binding Source={StaticResource customFilters}}"
+                    Visibility="{Binding Source={StaticResource customFilters}, Path=Count, Converter={StaticResource collapseIfZero}}"
                     Header="Custom Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
