@@ -1,19 +1,23 @@
 #region License
+
 //
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 //
+
 #endregion
 
 namespace Sentinel.Filters
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
+    using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Support.Mvvm;
 

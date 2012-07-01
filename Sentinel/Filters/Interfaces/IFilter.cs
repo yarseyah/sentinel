@@ -1,4 +1,4 @@
-namespace Sentinel.Filters
+namespace Sentinel.Filters.Interfaces
 {
     using System.Runtime.Serialization;
 

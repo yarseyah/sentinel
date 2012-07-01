@@ -163,6 +163,28 @@
                 Header="Filtering">
                 <r:RibbonGroup
                     ItemsSource="{Binding Filters.Filters}"
+                    Header="All Filters">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton
+                                Label="{Binding Name}"
+                                IsChecked="{Binding Enabled}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Bottom"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                LargeImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                ToolTipDescription="{Binding Description}"
+                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                ToolTipFooterTitle="Using filters"
+                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
+                                ToolTipFooterImageSource="/Resources/Info.png">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
+                </r:RibbonGroup>
+                <r:RibbonGroup
+                    ItemsSource="{Binding Filters.Filters}"
                     Header="Standard Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>

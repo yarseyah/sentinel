@@ -133,13 +133,13 @@ namespace Sentinel.Filters
 
         public void Initialise()
         {
-            // Add the defaulted filters
-            Filters.Add(new Filter("Trace", LogEntryField.Type, "TRACE") as T);
-            Filters.Add(new Filter("Debug", LogEntryField.Type, "DEBUG") as T);
-            Filters.Add(new Filter("Information", LogEntryField.Type, "INFO") as T);
-            Filters.Add(new Filter("Warning", LogEntryField.Type, "WARN") as T);
-            Filters.Add(new Filter("Error", LogEntryField.Type, "ERROR") as T);
-            Filters.Add(new Filter("Fatal", LogEntryField.Type, "FATAL") as T);
+            // Add the standard debugging filters
+            Filters.Add(new StandardFilter("Trace", LogEntryField.Type, "TRACE") as T);
+            Filters.Add(new StandardFilter("Debug", LogEntryField.Type, "DEBUG") as T);
+            Filters.Add(new StandardFilter("Information", LogEntryField.Type, "INFO") as T);
+            Filters.Add(new StandardFilter("Warning", LogEntryField.Type, "WARN") as T);
+            Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
+            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);
         }
     }
 }

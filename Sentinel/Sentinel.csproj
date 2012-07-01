@@ -106,7 +106,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\WindowPlacementInfo.cs" />
-    <Compile Include="Filters\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\IStandardDebuggingFilter.cs" />
+    <Compile Include="Filters\StandardFilter.cs" />
     <Compile Include="Highlighters\Interfaces\IHighlighter.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
