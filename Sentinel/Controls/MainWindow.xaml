@@ -42,6 +42,14 @@
         </Style>
         <Converters:TypeToImageConverter
             x:Key="TypeToImageConverter" />
+        <CollectionViewSource
+            x:Key="standardFilters"
+            Source="{Binding Filters.Filters}"
+            Filter="RetainOnlyStandardFilters" />
+        <CollectionViewSource
+            x:Key="customFilters"
+            Source="{Binding Filters.Filters}"
+            Filter="ExcludeStandardFilters" />
     </r:RibbonWindow.Resources>
 
     <DockPanel>
@@ -162,8 +170,8 @@
             <r:RibbonTab
                 Header="Filtering">
                 <r:RibbonGroup
-                    ItemsSource="{Binding Filters.Filters}"
-                    Header="All Filters">
+                    ItemsSource="{Binding Source={StaticResource standardFilters}}"
+                    Header="Standard Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
@@ -184,8 +192,8 @@
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
                 <r:RibbonGroup
-                    ItemsSource="{Binding Filters.Filters}"
-                    Header="Standard Filters">
+                    ItemsSource="{Binding Source={StaticResource customFilters}}"
+                    Header="Custom Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
                             <r:RibbonToggleButton
@@ -199,7 +207,7 @@
                                 ToolTipDescription="{Binding Description}"
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipFooterTitle="Using filters"
-                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
+                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
                                 ToolTipFooterImageSource="/Resources/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>

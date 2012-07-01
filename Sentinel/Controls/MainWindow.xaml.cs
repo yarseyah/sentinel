@@ -35,6 +35,8 @@ using Sentinel.Views.Interfaces;
 
 namespace Sentinel.Controls
 {
+    using System.Windows.Data;
+
     using Newtonsoft.Json;
 
     using Sentinel.Filters;
@@ -309,6 +311,26 @@ namespace Sentinel.Controls
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
             JsonHelper.SerializeToFile(windowInfo, filename);
+        }
+
+        private void RetainOnlyStandardFilters(object sender, FilterEventArgs e)
+        {
+            if (e == null)
+            {
+                throw new ArgumentNullException("e");
+            }
+
+            e.Accepted = e.Item is IStandardDebuggingFilter;
+        }
+
+        private void ExcludeStandardFilters(object sender, FilterEventArgs e)
+        {
+            if (e == null)
+            {
+                throw new ArgumentNullException("e");
+            }
+
+            e.Accepted = !(e.Item is IStandardDebuggingFilter);
         }
     }
 }
