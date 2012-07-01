@@ -49,18 +49,18 @@
                           ToolTipService.ShowOnDisabled="True"
                           IsEnabled="False"
                           Command="{Binding Pause}">
-                    <Image Source="/Resources/Play.png"
+                    <Image Source="/Resources/Small/Play.png"
                            Style="{StaticResource toolbarCheckboxImageStyle}" />
                 </CheckBox>
                 <Button ToolTip="Save the current logger to a text file"
                         Command="{Binding Save}">
-                    <Image Source="/Resources/Save.png"
+                    <Image Source="/Resources/Small/Save.png"
                            Width="16"
                            Height="16" />
                 </Button>
                 <CheckBox ToolTip="Toggle layout between horizontal and vertical."
                           IsChecked="{Binding Preferences.UseStackedLayout}">
-                    <Image Source="/Resources/Layout.png"
+                    <Image Source="/Resources/Small/Layout.png"
                            Width="16"
                            Height="16" />
                 </CheckBox>

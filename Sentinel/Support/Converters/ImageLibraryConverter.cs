@@ -18,7 +18,7 @@ namespace Sentinel.Support.Converters
         /// <param name = "culture">The culture to use in the converter.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.Format("/Resources/{0}.png", value);
+            return string.Format("/Resources/Small/{0}.png", value);
         }
 
         /// <summary>

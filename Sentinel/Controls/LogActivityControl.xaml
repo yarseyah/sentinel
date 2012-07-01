@@ -1,24 +1,28 @@
-﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             xmlns:Support="clr-namespace:Sentinel.Support"
-             xmlns:Converters1="clr-namespace:Sentinel.Support.Converters"
-             x:Class="Sentinel.Controls.LogActivityControl"
-             x:Name="UserControl"
-             d:DesignWidth="376.654"
-             d:DesignHeight="50">
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:Support="clr-namespace:Sentinel.Support"
+    xmlns:Converters1="clr-namespace:Sentinel.Support.Converters"
+    x:Class="Sentinel.Controls.LogActivityControl"
+    x:Name="UserControl"
+    d:DesignWidth="376.654"
+    d:DesignHeight="50">
 
     <UserControl.Resources>
-        <Style x:Key="ActivityRowStyle"
-               TargetType="{x:Type ListViewItem}">
+        <Style
+            x:Key="ActivityRowStyle"
+            TargetType="{x:Type ListViewItem}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Preferences.CurrentThemeName, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                             Value="Aero">
+                <DataTrigger
+                    Binding="{Binding Preferences.CurrentThemeName, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                    Value="Aero">
                     <!-- Get rid of the space between rows -->
-                    <Setter Property="Margin"
-                            Value="0,-1,0,-1" />
+                    <Setter
+                        Property="Margin"
+                        Value="0,-1,0,-1" />
                 </DataTrigger>
 
                 <!--<DataTrigger Binding="{Binding Highlight.Active, RelativeSource={RelativeSource AncestorType={x:Type Controls:LogActivityControl}, Mode=FindAncestor}}"
@@ -32,39 +36,50 @@
             </Style.Triggers>
         </Style>
 
-        <Converters1:TimeSinceDateTimeConverter x:Key="TimeSinceDateTimeConverter" />
+        <Converters1:TimeSinceDateTimeConverter
+            x:Key="TimeSinceDateTimeConverter" />
 
     </UserControl.Resources>
 
-    <Grid x:Name="LayoutRoot">
+    <Grid
+        x:Name="LayoutRoot">
 
-        <ListView x:Name="Updates"
-                  Support:GridViewSort.AutoSort="True"
-                  Support:GridViewSort.SortGlyphAscending="..\Resources\SortUpArrow.png"
-                  Support:GridViewSort.SortGlyphDescending="..\Resources\SortDownArrow.png"
-                  ItemContainerStyle="{StaticResource ActivityRowStyle}"
-                  ItemsSource="{Binding Activity.Details}">
+        <ListView
+            x:Name="Updates"
+            Support:GridViewSort.AutoSort="True"
+            Support:GridViewSort.SortGlyphAscending="/Resources/Glyphs/SortUpArrow.png"
+            Support:GridViewSort.SortGlyphDescending="/Resources/Glyphs/SortDownArrow.png"
+            ItemContainerStyle="{StaticResource ActivityRowStyle}"
+            ItemsSource="{Binding Activity.Details}">
             <ListView.ContextMenu>
-                <ContextMenu x:Name="activityLBContextMenu">
-                    <MenuItem Header="Clear"
-                              Command="{Binding ClearActivity}" />
+                <ContextMenu
+                    x:Name="activityLBContextMenu">
+                    <MenuItem
+                        Header="Clear"
+                        Command="{Binding ClearActivity}" />
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
-                <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="System"
-                                    DisplayMemberBinding="{Binding System}" />
-                    <GridViewColumn Header="Classification"
-                                    DisplayMemberBinding="{Binding Classification}" />
-                    <GridViewColumn Header="Since last seen"
-                                    Support:GridViewSort.PropertyName="LastActivity"
-                                    DisplayMemberBinding="{Binding LastActivity, Converter={StaticResource TimeSinceDateTimeConverter}}" />
-                    <GridViewColumn Header="Since Error"
-                                    Support:GridViewSort.PropertyName="LastError"
-                                    DisplayMemberBinding="{Binding LastError, Converter={StaticResource TimeSinceDateTimeConverter}}" />
-                    <GridViewColumn Header="Since Warning"
-                                    Support:GridViewSort.PropertyName="LastWarning"
-                                    DisplayMemberBinding="{Binding LastWarning, Converter={StaticResource TimeSinceDateTimeConverter}}" />
+                <GridView
+                    AllowsColumnReorder="False">
+                    <GridViewColumn
+                        Header="System"
+                        DisplayMemberBinding="{Binding System}" />
+                    <GridViewColumn
+                        Header="Classification"
+                        DisplayMemberBinding="{Binding Classification}" />
+                    <GridViewColumn
+                        Header="Since last seen"
+                        Support:GridViewSort.PropertyName="LastActivity"
+                        DisplayMemberBinding="{Binding LastActivity, Converter={StaticResource TimeSinceDateTimeConverter}}" />
+                    <GridViewColumn
+                        Header="Since Error"
+                        Support:GridViewSort.PropertyName="LastError"
+                        DisplayMemberBinding="{Binding LastError, Converter={StaticResource TimeSinceDateTimeConverter}}" />
+                    <GridViewColumn
+                        Header="Since Warning"
+                        Support:GridViewSort.PropertyName="LastWarning"
+                        DisplayMemberBinding="{Binding LastWarning, Converter={StaticResource TimeSinceDateTimeConverter}}" />
                 </GridView>
             </ListView.View>
         </ListView>

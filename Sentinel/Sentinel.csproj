@@ -449,56 +449,56 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Info.png" />
+    <Resource Include="Resources\Small\Info.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Warning.png" />
+    <Resource Include="Resources\Small\Warning.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Error.png" />
+    <Resource Include="Resources\Small\Error.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Debug.png" />
+    <Resource Include="Resources\Small\Debug.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Fatal.png" />
+    <Resource Include="Resources\Small\Fatal.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Settings.png" />
+    <Resource Include="Resources\Small\Settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Add.png" />
+    <Resource Include="Resources\Small\Add.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Save.png" />
+    <Resource Include="Resources\Small\Save.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Open.png" />
+    <Resource Include="Resources\Small\Open.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Sentinel.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Play.png" />
+    <Resource Include="Resources\Small\Play.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Clear.png" />
+    <Resource Include="Resources\Small\Clear.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ScrollDown.png" />
+    <Resource Include="Resources\Small\ScrollDown.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Clock.png" />
+    <Resource Include="Resources\Small\Clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SortDownArrow.png" />
-    <Resource Include="Resources\SortUpArrow.png" />
+    <Resource Include="Resources\Glyphs\SortDownArrow.png" />
+    <Resource Include="Resources\Glyphs\SortUpArrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Layout.png" />
+    <Resource Include="Resources\Small\Layout.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Trace.png" />
+    <Resource Include="Resources\Small\Trace.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
@@ -528,7 +528,55 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Exit.png" />
+    <Resource Include="Resources\Small\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Debug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Fatal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Layout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\ScrollDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Trace.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->

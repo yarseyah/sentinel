@@ -63,7 +63,7 @@ namespace Sentinel.Classification
                         RegexString = @"^\[SimulationTime\] (?<description>[^$]+)$"
                     });
             items.Add(
-                new TypeImageClassifier("Timing", "/Resources/Clock.png")
+                new TypeImageClassifier("Timing", "/Resources/Small/Clock.png")
                     {
                         Enabled = true,
                         Name = "Timing Image",

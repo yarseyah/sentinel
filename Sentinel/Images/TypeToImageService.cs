@@ -36,12 +36,12 @@ namespace Sentinel.Images
         {
             ImageMappings = new ObservableCollection<KeyValuePair<string, string>>
                                 {
-                                    new KeyValuePair<string, string>("ERROR", "/Resources/Error.png"),
-                                    new KeyValuePair<string, string>("WARN", "/Resources/Warning.png"),
-                                    new KeyValuePair<string, string>("INFO", "/Resources/Info.png"),
-                                    new KeyValuePair<string, string>("FATAL", "/Resources/Fatal.png"),
-                                    new KeyValuePair<string, string>("DEBUG", "/Resources/Debug.png"),
-                                    new KeyValuePair<string, string>("TRACE", "/Resources/Trace.png")
+                                    new KeyValuePair<string, string>("ERROR", "/Resources/Small/Error.png"),
+                                    new KeyValuePair<string, string>("WARN", "/Resources/Small/Warning.png"),
+                                    new KeyValuePair<string, string>("INFO", "/Resources/Small/Info.png"),
+                                    new KeyValuePair<string, string>("FATAL", "/Resources/Small/Fatal.png"),
+                                    new KeyValuePair<string, string>("DEBUG", "/Resources/Small/Debug.png"),
+                                    new KeyValuePair<string, string>("TRACE", "/Resources/Small/Trace.png")
                                 };
 
             Add = new DelegateCommand(AddMapping);

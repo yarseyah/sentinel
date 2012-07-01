@@ -66,47 +66,47 @@
 
                     <r:RibbonApplicationMenuItem
                         Header="Desktop"
-                        ImageSource="/Resources/Play.PNG"
+                        ImageSource="/Resources/Small/Play.PNG"
                         KeyTip="D" />
 
                     <r:RibbonApplicationMenuItem
                         Header="Floppy"
-                        ImageSource="/Resources/Play.PNG"
+                        ImageSource="/Resources/Small/Play.PNG"
                         KeyTip="F">
                         <r:RibbonApplicationMenuItem
                             Header="Primary Floppy"
-                            ImageSource="/Resources/Play.PNG"
+                            ImageSource="/Resources/Small/Play.PNG"
                             KeyTip="P" />
                         <r:RibbonApplicationMenuItem
                             Header="Secondary Floppy"
-                            ImageSource="/Resources/Play.PNG"
+                            ImageSource="/Resources/Small/Play.PNG"
                             KeyTip="S" />
                     </r:RibbonApplicationMenuItem>
 
                     <r:RibbonApplicationMenuItem
                         Header="My Pictures"
-                        ImageSource="/Resources/Play.PNG"
+                        ImageSource="/Resources/Small/Play.PNG"
                         KeyTip="M" />
                     <r:RibbonApplicationMenuItem
                         Header="My Videos"
-                        ImageSource="/Resources/Play.PNG"
+                        ImageSource="/Resources/Small/Play.PNG"
                         KeyTip="V" />
                     <r:RibbonSeparator />
                     <r:RibbonApplicationSplitMenuItem
                         Header="Search Program"
-                        ImageSource="/Resources/Play.PNG">
+                        ImageSource="/Resources/Small/Play.PNG">
                         <r:RibbonApplicationMenuItem
                             Header="BMP Images"
-                            ImageSource="/Resources/Play.PNG" />
+                            ImageSource="/Resources/Small/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="JPEG Images"
-                            ImageSource="/Resources/Play.PNG" />
+                            ImageSource="/Resources/Small/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="GIF Images"
-                            ImageSource="/Resources/Play.PNG" />
+                            ImageSource="/Resources/Small/Play.PNG" />
                         <r:RibbonApplicationMenuItem
                             Header="PNG Images"
-                            ImageSource="/Resources/Play.PNG" />
+                            ImageSource="/Resources/Small/Play.PNG" />
                     </r:RibbonApplicationSplitMenuItem>
 
                     <r:RibbonApplicationMenu.FooterPaneContent>
@@ -125,16 +125,16 @@
                                 Grid.Column="0">
                                 <r:RibbonButton
                                     Content="My Music"
-                                    SmallImageSource="/Resources/Play.PNG" />
+                                    SmallImageSource="/Resources/Small/Play.PNG" />
                                 <r:RibbonButton
                                     Content="Web Folders"
-                                    SmallImageSource="/Resources/Open.PNG" />
+                                    SmallImageSource="/Resources/Small/Open.PNG" />
                                 <r:RibbonButton
                                     Content="Settings"
-                                    SmallImageSource="/Resources/Trace.PNG" />
+                                    SmallImageSource="/Resources/Small/Trace.PNG" />
                             </StackPanel>
                             <r:RibbonButton
-                                SmallImageSource="/Resources/Exit.PNG"
+                                SmallImageSource="/Resources/Small/Exit.PNG"
                                 Label="Exit"
                                 HorizontalAlignment="Right"
                                 Command="{Binding Exit}"
@@ -155,17 +155,17 @@
                     Header="Stuff">
                     <r:RibbonButton
                         Label="Add"
-                        SmallImageSource="/Resources/Add.png"
+                        SmallImageSource="/Resources/Small/Add.png"
                         Command="{Binding Add}" />
                     <r:RibbonToggleButton
                         ToolTip="Show the Preferences dialog"
                         IsChecked="{Binding Preferences.Show}"
-                        SmallImageSource="/Resources/Settings.png"
+                        SmallImageSource="/Resources/Small/Settings.png"
                         Label="Preferences">
                     </r:RibbonToggleButton>
                     <r:RibbonButton
                         Label="Exit"
-                        SmallImageSource="/Resources/Exit.png"
+                        SmallImageSource="/Resources/Small/Exit.png"
                         Command="{Binding Exit}" />
                 </r:RibbonGroup>
             </r:RibbonTab>
@@ -189,7 +189,7 @@
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipFooterTitle="Using filters"
                                 ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
-                                ToolTipFooterImageSource="/Resources/Info.png">
+                                ToolTipFooterImageSource="/Resources/Small/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
@@ -212,7 +212,7 @@
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
                                 ToolTipFooterTitle="Using filters"
                                 ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
-                                ToolTipFooterImageSource="/Resources/Info.png">
+                                ToolTipFooterImageSource="/Resources/Small/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
@@ -221,7 +221,7 @@
                     Header="Custom Filters">
                     <r:RibbonButton
                         Label="Add New Filter"
-                        LargeImageSource="/Resources/Add.png"
+                        LargeImageSource="/Resources/Small/Add.png"
                         IsEnabled="False" />
                 </r:RibbonGroup>
             </r:RibbonTab>
@@ -247,7 +247,7 @@
                             Command="{Binding Add}">
                             <MenuItem.Icon>
                                 <Image
-                                    Source="/Resources/Add.png" />
+                                    Source="/Resources/Small/Add.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator />
@@ -256,7 +256,7 @@
                             IsEnabled="False">
                             <MenuItem.Icon>
                                 <Image
-                                    Source="/Resources/Open.png" />
+                                    Source="/Resources/Small/Open.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem
@@ -264,7 +264,7 @@
                             IsEnabled="False">
                             <MenuItem.Icon>
                                 <Image
-                                    Source="/Resources/Save.png" />
+                                    Source="/Resources/Small/Save.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator />
@@ -279,7 +279,7 @@
                         <Button
                             Command="{Binding Add}">
                             <Image
-                                Source="/Resources/Add.png" />
+                                Source="/Resources/Small/Add.png" />
                         </Button>
                     </ToolBar>
                     <ToolBar>
@@ -289,7 +289,7 @@
                             <StackPanel
                                 Orientation="Horizontal">
                                 <Image
-                                    Source="/Resources/Settings.png"
+                                    Source="/Resources/Small/Settings.png"
                                     VerticalAlignment="Center" />
                                 <TextBlock
                                     VerticalAlignment="Center"
