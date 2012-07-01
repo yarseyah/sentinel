@@ -47,6 +47,8 @@
             x:Key="typeToLargeImage" />
         <Converters:TypeToMediumImageConverter
             x:Key="typeToMediumImage" />
+        <Converters:TypeToSmallImageConverter
+            x:Key="typeToSmallImage" />
         <CollectionViewSource
             x:Key="standardFilters"
             Source="{Binding Filters.Filters}"
@@ -186,7 +188,7 @@
                                 IsChecked="{Binding Enabled}"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Bottom"
-                                SmallImageSource="{Binding Pattern, Converter={StaticResource TypeToImageConverter}}"
+                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
                                 LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
@@ -222,7 +224,7 @@
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
                 <r:RibbonGroup
-                    Header="Custom Filters">
+                    Header="Options">
                     <r:RibbonButton
                         Label="Add New Filter"
                         LargeImageSource="/Resources/Small/Add.png"

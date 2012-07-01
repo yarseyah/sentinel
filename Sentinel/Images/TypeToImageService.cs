@@ -22,14 +22,6 @@ namespace Sentinel.Images
 {
     using System.Diagnostics;
 
-    public enum ImageQuality
-    {
-        Small,
-        Medium,
-        Large,
-        BestAvailable
-    }
-
     public class TypeToImageService : ViewModelBase, ITypeImageService
     {
         private int selectedIndex;
@@ -40,11 +32,25 @@ namespace Sentinel.Images
 
             // TODO: Register defaults, this should be persisting somewhere
             Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
-            Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
-            Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
-            Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
-            Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
+            Register("ERROR", ImageQuality.Medium, "/Resources/Medium/Error.png");
+            Register("ERROR", ImageQuality.Large, "/Resources/Large/Error.png");
 
+            Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
+            Register("WARN", ImageQuality.Medium, "/Resources/Medium/Warning.png");
+            Register("WARN", ImageQuality.Large, "/Resources/Large/Warning.png");
+
+            Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
+            Register("TRACE", ImageQuality.Medium, "/Resources/Medium/Trace.png");
+            Register("TRACE", ImageQuality.Large, "/Resources/Large/Trace.png");
+
+            Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
+            Register("DEBUG", ImageQuality.Medium, "/Resources/Medium/Debug.png");
+            Register("DEBUG", ImageQuality.Large, "/Resources/Large/Debug.png");
+
+            Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
+            Register("INFO", ImageQuality.Medium, "/Resources/Medium/Info.png");
+            Register("INFO", ImageQuality.Large, "/Resources/Large/Info.png");
+            
             Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
             Register("FATAL", ImageQuality.Medium, "/Resources/Medium/Fatal.png");
             Register("FATAL", ImageQuality.Large, "/Resources/Large/Fatal.png");
