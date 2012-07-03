@@ -145,6 +145,23 @@
                 </r:RibbonGroup>
 
                 <!-- Standard filters -->
+                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource standardHighlighters}}"
+                               Header="Highlighters">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton Label="{Binding Name}"
+                                                  IsChecked="{Binding Enabled}"
+                                                  HorizontalContentAlignment="Center"
+                                                  VerticalContentAlignment="Bottom"
+                                                  SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                                  LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
+                                                  ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                                  ToolTipDescription="{Binding Description}"
+                                                  ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
+                </r:RibbonGroup>
                 <r:RibbonGroup
                     ItemsSource="{Binding Source={StaticResource standardFilters}}"
                     Header="Filters">
@@ -167,62 +184,8 @@
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
-                
-                <r:RibbonGroup
-                    ItemsSource="{Binding Source={StaticResource standardHighlighters}}"
-                    Header="Highlighters">
-                    <r:RibbonGroup.ItemTemplate>
-                        <DataTemplate>
-                            <r:RibbonToggleButton
-                                Label="{Binding Name}"
-                                IsChecked="{Binding Enabled}"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Bottom"
-                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
-                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
-                                ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
-                            </r:RibbonToggleButton>
-                        </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
             </r:RibbonTab>
-
-            <r:RibbonTab
-                Header="Filtering">
-                <r:RibbonGroup
-                    Header="Options">
-                    <r:RibbonButton
-                        Label="Add New Filter"
-                        LargeImageSource="/Resources/Small/Add.png"
-                        IsEnabled="False" />
-                </r:RibbonGroup>
-                <r:RibbonGroup
-                    ItemsSource="{Binding Source={StaticResource customFilters}}"
-                    Visibility="{Binding Source={StaticResource customFilters}, Path=Count, Converter={StaticResource collapseIfZero}}"
-                    Header="Custom Filters">
-                    <r:RibbonGroup.ItemTemplate>
-                        <DataTemplate>
-                            <r:RibbonToggleButton
-                                Label="{Binding Name}"
-                                IsChecked="{Binding Enabled}"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Bottom"
-                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
-                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
-                                ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
-                                ToolTipFooterTitle="Using filters"
-                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
-                                ToolTipFooterImageSource="/Resources/Small/Info.png">
-                            </r:RibbonToggleButton>
-                        </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
-            </r:RibbonTab>
-            
+                      
             <r:RibbonTab
                 Header="Highlighting">
                 <r:RibbonGroup
@@ -248,6 +211,34 @@
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
+                            </r:RibbonToggleButton>
+                        </DataTemplate>
+                    </r:RibbonGroup.ItemTemplate>
+                </r:RibbonGroup>
+            </r:RibbonTab>
+            <r:RibbonTab Header="Filtering">
+                <r:RibbonGroup Header="Options">
+                    <r:RibbonButton Label="Add New Filter"
+                                    LargeImageSource="/Resources/Small/Add.png"
+                                    IsEnabled="False" />
+                </r:RibbonGroup>
+                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource customFilters}}"
+                               Visibility="{Binding Source={StaticResource customFilters}, Path=Count, Converter={StaticResource collapseIfZero}}"
+                               Header="Custom Filters">
+                    <r:RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <r:RibbonToggleButton Label="{Binding Name}"
+                                                  IsChecked="{Binding Enabled}"
+                                                  HorizontalContentAlignment="Center"
+                                                  VerticalContentAlignment="Bottom"
+                                                  SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                                  LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
+                                                  ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                                  ToolTipDescription="{Binding Description}"
+                                                  ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
+                                                  ToolTipFooterTitle="Using filters"
+                                                  ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
+                                                  ToolTipFooterImageSource="/Resources/Small/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
