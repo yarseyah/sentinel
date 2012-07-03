@@ -27,7 +27,7 @@ namespace Sentinel.Highlighters
 
         private string name;
 
-        private HighlighterStyle style;
+        private IHighlighterStyle style;
 
         private string typeMatch;
 
@@ -143,7 +143,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        public HighlighterStyle Style
+        public IHighlighterStyle Style
         {
             get
             {

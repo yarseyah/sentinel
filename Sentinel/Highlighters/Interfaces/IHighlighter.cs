@@ -22,7 +22,7 @@ namespace Sentinel.Highlighters.Interfaces
         string Pattern { get; set; }
 
         [DataMember]
-        HighlighterStyle Style { get; set; }
+        IHighlighterStyle Style { get; set; }
 
         bool IsMatch(LogEntry logEntry);
     }

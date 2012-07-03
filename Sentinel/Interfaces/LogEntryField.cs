@@ -7,14 +7,14 @@
 //
 #endregion
 
-#region Using directives
-
-using System;
-
-#endregion
-
 namespace Sentinel.Interfaces
 {
+    using System;
+    using System.Runtime.Serialization;
+
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+
     /// <summary>
     /// An enumeration of the possible fields within a LogEntry so that
     /// a reference can be made to a specific property, for example,
@@ -23,6 +23,8 @@ namespace Sentinel.Interfaces
     /// or multiple overloaded methods.
     /// </summary>
     [Flags]
+    [DataContract]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum LogEntryField
     {
         /// <summary>
