@@ -119,25 +119,20 @@
                 </r:RibbonApplicationMenu>
             </r:Ribbon.ApplicationMenu>
 
-            <r:RibbonTab
-                Header="Home">
-                <r:RibbonGroup
-                    Header="General">
-                    <r:RibbonButton
-                        Label="Add"
-                        SmallImageSource="/Resources/Small/Add.png"
-                        Command="{Binding Add}" />
-                    <r:RibbonToggleButton
-                        ToolTip="Show the Preferences dialog"
-                        IsChecked="{Binding Preferences.Show}"
-                        SmallImageSource="/Resources/Small/Settings.png"
-                        Label="Preferences">
+            <r:RibbonTab Header="Home">
+                <r:RibbonGroup Header="General">
+                    <r:RibbonButton Label="Add"
+                                    SmallImageSource="/Resources/Small/Add.png"
+                                    Command="{Binding Add}" />
+                    <r:RibbonToggleButton ToolTip="Show the Preferences dialog"
+                                          IsChecked="{Binding Preferences.Show}"
+                                          SmallImageSource="/Resources/Small/Settings.png"
+                                          Label="Preferences">
                     </r:RibbonToggleButton>
-                    <r:RibbonButton
-                        Label="Exit"
-                        SmallImageSource="/Resources/Small/Exit.png"
-                        LargeImageSource="/Resources/Medium/Exit.png"
-                        Command="{Binding Exit}">
+                    <r:RibbonButton Label="Exit"
+                                    SmallImageSource="/Resources/Small/Exit.png"
+                                    LargeImageSource="/Resources/Medium/Exit.png"
+                                    Command="{Binding Exit}">
                         <r:RibbonButton.ControlSizeDefinition>
                             <r:RibbonControlSizeDefinition />
                         </r:RibbonButton.ControlSizeDefinition>
@@ -162,30 +157,52 @@
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
-                <r:RibbonGroup
-                    ItemsSource="{Binding Source={StaticResource standardFilters}}"
-                    Header="Filters">
+                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource standardFilters}}"
+                               Header="Filters">
                     <r:RibbonGroup.ItemTemplate>
                         <DataTemplate>
-                            <r:RibbonToggleButton
-                                Label="{Binding Name}"
-                                IsChecked="{Binding Enabled}"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Bottom"
-                                SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
-                                LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
-                                ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
-                                ToolTipDescription="{Binding Description}"
-                                ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
-                                ToolTipFooterTitle="Using filters"
-                                ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
-                                ToolTipFooterImageSource="/Resources/Small/Info.png">
+                            <r:RibbonToggleButton Label="{Binding Name}"
+                                                  IsChecked="{Binding Enabled}"
+                                                  HorizontalContentAlignment="Center"
+                                                  VerticalContentAlignment="Bottom"
+                                                  SmallImageSource="{Binding Pattern, Converter={StaticResource typeToSmallImage}}"
+                                                  LargeImageSource="{Binding Pattern, Converter={StaticResource typeToMediumImage}}"
+                                                  ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
+                                                  ToolTipDescription="{Binding Description}"
+                                                  ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}"
+                                                  ToolTipFooterTitle="Using filters"
+                                                  ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
+                                                  ToolTipFooterImageSource="/Resources/Small/Info.png">
                             </r:RibbonToggleButton>
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
+                <r:RibbonGroup Header="Search" IsEnabled="False">
+                    <r:RibbonTextBox Text="{Binding Search, NotifyOnTargetUpdated=True}" />
+
+                    <r:RibbonSplitButton Label="Options">
+                        <r:RibbonSplitMenuItem Header="Case-sensitive" />
+                        <r:RibbonSplitMenuItem Header="Case-insensitive" />
+                        <r:RibbonSplitMenuItem Header="Regular Expression" />
+                    </r:RibbonSplitButton>
+                    
+                    <StackPanel>
+                        <r:RibbonToggleButton Label="Highlight"
+                                              HorizontalAlignment="Left" 
+                                              SmallImageSource="/Resources/Small/Info.png"
+                                              VerticalContentAlignment="Center"/>
+                        <r:RibbonToggleButton Label="Filter"
+                                              HorizontalAlignment="Left"
+                                              SmallImageSource="/Resources/Small/Info.png"
+                                              VerticalContentAlignment="Center" />
+                        <r:RibbonToggleButton Label="Select"
+                                              HorizontalAlignment="Left"
+                                              SmallImageSource="/Resources/Small/Info.png"
+                                              VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </r:RibbonGroup>
             </r:RibbonTab>
-                      
+
             <r:RibbonTab
                 Header="Highlighting">
                 <r:RibbonGroup
@@ -243,6 +260,9 @@
                         </DataTemplate>
                     </r:RibbonGroup.ItemTemplate>
                 </r:RibbonGroup>
+            </r:RibbonTab>
+            <r:RibbonTab Header="Classify" IsEnabled="False">
+                
             </r:RibbonTab>
         </r:Ribbon>
 
