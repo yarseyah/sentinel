@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
-using log4net;
+﻿
 
 namespace Log4NetTester
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
 
-    class Program
+    using log4net;
+
+    public class Program
     {
-        private static readonly ILog log = LogManager.GetLogger("Log4NetTester");
+        private static readonly ILog Log = LogManager.GetLogger("Log4NetTester");
 
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new Random();
 
-        private static readonly List<string> reasons = new List<string>
+        private static readonly List<string> Reasons = new List<string>
                                                            {
                                                                "Starting system",
                                                                "Closing system",
@@ -20,7 +22,7 @@ namespace Log4NetTester
                                                                "Unknown issue encountered"
                                                            };
 
-        private static readonly List<string> sources = new List<string>
+        private static readonly List<string> Sources = new List<string>
                                                            {
                                                                "Foo",
                                                                "Bar",
@@ -29,40 +31,52 @@ namespace Log4NetTester
                                                            };
 
 
-        static void Main()
+        public static void Main()
         {
-            int i = 0;
+            var i = 0;
 
             int smallestSleep = 10;
             int biggestSleep = 20;
 
-            while(i<100000)
+            while (i < 100000)
             {
                 // Randomly generate a message:
-                string text = RandomMessage(i++);
+                var text = RandomMessage(i++);
 
-                // Randomly assign a message
-                LogMessage(text);
+                try
+                {
+                    // Randomly assign a message
+                    LogMessage(text);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
 
-                Thread.Sleep(random.Next(smallestSleep, biggestSleep));
+                Thread.Sleep(Random.Next(smallestSleep, biggestSleep));
             }
         }
 
         private static void LogMessage(string text)
         {
-            int randomType = random.Next(0, 5);
+            var randomType = Random.Next(0, 5);
 
-            switch(randomType)
+            switch (randomType)
             {
-                case 0: log.Error(text);
+                case 0:
+                    Log.Error(text);
                     break;
-                case 1: log.Fatal(text);
+                case 1:
+                    Log.Fatal(text);
                     break;
-                case 2: log.Info(text);
+                case 2:
+                    Log.Info(text);
                     break;
-                case 3: log.Warn(text);
+                case 3:
+                    Log.Warn(text);
                     break;
-                default: log.Debug(text);
+                default:
+                    Log.Debug(text);
                     break;
             }
         }
@@ -70,7 +84,7 @@ namespace Log4NetTester
         private static string RandomMessage(int i)
         {
 #if !TESTING_MESSAGE_THROUGHPUT
-            int randomNumber = random.Next(0, 5);
+            var randomNumber = Random.Next(0, 5);
 #else
             int randomNumber = Int32.MaxValue;
 #endif
@@ -91,12 +105,12 @@ namespace Log4NetTester
 
         private static string RandomReason()
         {
-            return reasons[random.Next(reasons.Count)];
+            return Reasons[Random.Next(Reasons.Count)];
         }
 
         private static string RandomSrc()
         {
-            return sources[random.Next(sources.Count)];
+            return Sources[Random.Next(Sources.Count)];
         }
     }
 }
