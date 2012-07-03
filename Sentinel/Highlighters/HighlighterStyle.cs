@@ -12,6 +12,8 @@ namespace Sentinel.Highlighters
     using System.Runtime.Serialization;
     using System.Windows.Media;
 
+    using Newtonsoft.Json;
+
     using Sentinel.Interfaces;
     using Sentinel.Support.Mvvm;
 
@@ -25,36 +27,7 @@ namespace Sentinel.Highlighters
         private Color? foreground;
 
         [DataMember]
-        public string BackgroundAsString
-        {
-            get
-            {
-                return Background != null ? Background.Value.ToString() : string.Empty;
-            }
-            set
-            {
-                Background = !string.IsNullOrWhiteSpace(value) 
-                    ? (Color?) ColorConverter.ConvertFromString(value) 
-                    : null;
-            }
-        }
-
-        [DataMember]
-        public string ForegroundAsString
-        {
-            get
-            {
-                return Foreground != null ? Foreground.Value.ToString() : string.Empty;
-            }
-            set
-            {
-                Foreground = !string.IsNullOrWhiteSpace(value)
-                    ? (Color?)ColorConverter.ConvertFromString(value)
-                    : null;
-            }
-        }
-
-        // TODO: can these be serialized directly with a converter?
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Color? Background
         {
             get
@@ -72,7 +45,8 @@ namespace Sentinel.Highlighters
             }
         }
 
-        // TODO: can these be serialized directly with a converter?
+        [DataMember]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Color? Foreground
         {
             get
