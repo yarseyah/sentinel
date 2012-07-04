@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:WpfExtras="clr-namespace:WpfExtras"
-        mc:Ignorable="d"
+        xmlns:WpfExtras="clr-namespace:WpfExtras" xmlns:Converters="clr-namespace:WpfExtras.Converters" mc:Ignorable="d"
         MinHeight="377"
         MinWidth="500"
         Height="377"
@@ -17,7 +16,7 @@
         ShowInTaskbar="False">
 
     <Window.Resources>
-        <WpfExtras:CollapseIfFalseConverter x:Key="CollapseIfFalse" />
+        <Converters:CollapseIfFalseConverter x:Key="CollapseIfFalse" />
         <HierarchicalDataTemplate x:Key="NavigationItemTemplate"
                                   ItemsSource="{Binding Children}">
             <TextBlock Text="{Binding Page.Title, UpdateSourceTrigger=PropertyChanged}" />

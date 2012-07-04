@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+             xmlns:conv="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
     <UserControl.Resources>
-        <Converters:VisibilityToHiddenConverter x:Key="visToHidden" />
+        <conv:VisibilityToHiddenConverter x:Key="visToHidden" />
 
         <Style x:Key="textBoxInError"
                TargetType="{x:Type TextBox}">

@@ -7,6 +7,7 @@
     using System.Linq;
 
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Log4Net;
     using Sentinel.Providers.Interfaces;
 
     public class ProviderManager : IProviderManager
@@ -42,7 +43,8 @@
                                         Info = FileMonitoringProvider.Info,
                                         Implementor = typeof(FileMonitoringProvider),
                                         Settings = typeof(FileMonitorProviderPage)
-                                    }
+                                    },
+                                UdpAppenderListener.ProviderRegistrationInformation
                             };
         }
 
@@ -53,33 +55,46 @@
 
         public ILogProvider Create(Guid providerGuid, IProviderSettings settings)
         {
-            if ( settings == null )
+            if (settings == null)
             {
                 throw new ArgumentException("Settings can not be null", "Settings");
             }
 
             // Make sure we don't have any instances of that providerGuid.
-            if ( providerInstances.Any(p => p.Key == settings.Name && p.Value.Information.Identifier == providerGuid) )
+            if (providerInstances.Any(p => p.Key == settings.Name && p.Value.Information.Identifier == providerGuid))
             {
-                throw new ArgumentException("Already an instance of that ILoggerProvider with that name specified",
-                                            "settings");
+                throw new ArgumentException(
+                    "Already an instance of that ILoggerProvider with that name specified", "settings");
             }
 
             // Make sure that the type is supported.))
-            if (!providers.Any(p => p.Identifier == providerGuid))
+            if (providers.All(p => p.Identifier != providerGuid))
             {
                 Trace.WriteLine("No provider with the identifier " + providerGuid + " is registered");
                 return null;
             }
 
             // Get an instance.
-            ILogProvider provider =
-                (ILogProvider) Activator.CreateInstance(
-                    providers.First(p => p.Identifier == providerGuid).Implementor,
-                    settings);
+            var record = providers.FirstOrDefault(p => p.Identifier == providerGuid);
 
-            providerInstances.Add(new KeyValuePair<string, ILogProvider>(settings.Name, provider));
-            return provider;
+            if (record != null)
+            {
+                Debug.Assert(record.Implementor != null, "Need to know the implementing type for the provider");
+
+                try
+                {
+                    var provider = (ILogProvider)Activator.CreateInstance(record.Implementor, settings);
+                    providerInstances.Add(new KeyValuePair<string, ILogProvider>(settings.Name, provider));
+                    return provider;
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError(e.ToString());
+                    Debugger.Break();
+                }
+            }
+
+            return null;
         }
 
         public ILogProvider Get(string name)
@@ -91,7 +106,7 @@
                 throw new ArgumentException("There is no instance with the identifier " + name, "name");
             }
 
-            return providerInstances.Where(p => p.Key == name).FirstOrDefault().Value;
+            return providerInstances.FirstOrDefault(p => p.Key == name).Value;
         }
 
         public void Remove(string name)
@@ -126,25 +141,31 @@
         /// <returns></returns>
         public T GetConfiguration<T>(Guid providerGuid)
         {
-            var matchesGuid = providers.Where(p => p.Identifier == providerGuid);
+            var matchesGuid = providers.Where(p => p.Identifier == providerGuid).Where(p => p.Settings != null);
 
             // Simple checking for duplications.  At the moment, throw an
             // exception if it happens - in the future, it might change to
             // a last-registered wins policy (or maybe first wins!)
-            int matchesType = matchesGuid.Count(p => p.Settings.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(T))));
+            var matchesType = matchesGuid.Count(p => p.Settings.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(T))));
 
-            if ( matchesType > 1 )
+            if (matchesType > 1)
             {
                 throw new NotSupportedException(
-                    string.Format("There should only be one registered {0} handler for the provider {1}", typeof(T),
-                                  providerGuid));
+                    string.Format(
+                        "There should only be one registered {0} handler for the provider {1}", typeof(T), providerGuid));
             }
 
-            var matches = matchesGuid
-                .Where(p => p.Settings.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(T))))
-                .Select(p => p.Settings);
+            var matches =
+                matchesGuid.Where(p => p.Settings.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(T)))).Select(
+                    p => p.Settings);
 
-            return matches != null && matches.Count() > 0 ? (T) Activator.CreateInstance(matches.Last()) : default(T);
+            var match = matches.LastOrDefault();
+            if (match != null)
+            {
+                return (T)Activator.CreateInstance(match);
+            }
+
+            return default(T);
         }
 
         public IEnumerable<ILogProvider> GetInstances()

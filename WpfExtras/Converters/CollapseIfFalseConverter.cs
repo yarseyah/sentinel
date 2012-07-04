@@ -1,10 +1,10 @@
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-
-namespace WpfExtras
+namespace WpfExtras.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Data;
+
     public class CollapseIfFalseConverter : IValueConverter
     {
         /// <summary>
@@ -19,12 +19,12 @@ namespace WpfExtras
         /// <param name="culture">The culture to use in the converter.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ( value is bool && targetType == typeof(Visibility) )
+            if (value is bool && targetType == typeof(Visibility))
             {
-                return ((bool) value) ? Visibility.Visible : Visibility.Collapsed;
+                return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            bool valueAsBool = bool.Parse((string)value);
+            var valueAsBool = bool.Parse((string)value);
             return valueAsBool ? Visibility.Visible : Visibility.Collapsed;
         }
 

@@ -171,7 +171,6 @@
     <Compile Include="Services\AttributeHelper.cs" />
     <Compile Include="Services\DictionaryHelper.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
-    <Compile Include="Support\Converters\BooleanInvertingValueConverter.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
     <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
     <Compile Include="Support\Converters\ColourConverter.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="Support\Converters\TypeToMediumImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToSmallImageConverter.cs" />
     <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
-    <Compile Include="Support\Converters\VisibilityToHiddenConverter.cs" />
     <Compile Include="Support\JsonHelper.cs" />
     <Compile Include="Support\Mvvm\DelegateCommand.cs" />
     <Compile Include="Support\Mvvm\ViewModelBase.cs" />
@@ -503,6 +501,10 @@
     <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
       <Project>{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}</Project>
       <Name>Sentinel.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Log4Net\Sentinel.Log4Net.csproj">
+      <Project>{54F01DDC-4CFA-46F0-9BF7-52A23F3302DA}</Project>
+      <Name>Sentinel.Log4Net</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
       <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>

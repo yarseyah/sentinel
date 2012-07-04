@@ -44,8 +44,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollapseIfZeroConverter.cs" />
-    <Compile Include="CollapseIfFalseConverter.cs" />
+    <Compile Include="Converters\BooleanInvertingValueConverter.cs" />
+    <Compile Include="Converters\CollapseIfZeroConverter.cs" />
+    <Compile Include="Converters\CollapseIfFalseConverter.cs" />
+    <Compile Include="Converters\VisibilityToHiddenConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EstablishPossibleNavigation.cs" />
     <Compile Include="IWizardPage.cs" />

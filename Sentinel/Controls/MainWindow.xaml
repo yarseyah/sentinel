@@ -6,7 +6,7 @@
     xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
     xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras"
-    x:Class="Sentinel.Controls.MainWindow"
+    xmlns:Converters1="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
     Width="1017"
@@ -63,7 +63,7 @@
         <CollectionViewSource
             x:Key="customHighlighters"
             Source="{Binding Highlight.Highlighters}" />
-        <WpfExtras:CollapseIfZeroConverter
+        <Converters1:CollapseIfZeroConverter
             x:Key="collapseIfZero" />
     </r:RibbonWindow.Resources>
 

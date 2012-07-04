@@ -13,15 +13,29 @@
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
+        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
+            new ProviderRegistrationInformation(new Log4NetUdpListenerProvider());
+
+        private readonly IUdpAppenderListenerSettings udpSettings;
+
         private CancellationTokenSource cancellationTokenSource;
 
         private Task udpListenerTask;
 
-        public UdpAppenderListener(IUdpAppenderListenerSettings setting)
+        public UdpAppenderListener(IProviderSettings settings)
         {
-            Information = new Log4NetUdpListenerProvider();
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
 
-            throw new NotImplementedException("Opps");
+            udpSettings = settings as IUdpAppenderListenerSettings;
+            if (udpSettings == null)
+            {
+                throw new ArgumentException("settings should be assignable to IUdpAppenderListenerSettings", "settings");
+            }
+
+            Information = ProviderRegistrationInformation.Info;
         }
 
         public IProviderInfo Information

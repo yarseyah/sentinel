@@ -1,17 +1,17 @@
-﻿<UserControl x:Class="Sentinel.Providers.NetworkConfigurationPage"
+﻿<UserControl x:Class="Sentinel.Log4Net.ConfigurationPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:conv="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" mc:Ignorable="d"
+             xmlns:Converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" mc:Ignorable="d"
              d:DesignHeight="226"
              d:DesignWidth="294"
              SnapsToDevicePixels="True"
              Loaded="OnLoaded">
 
     <UserControl.Resources>
-        <conv:BooleanInvertingValueConverter x:Key="InvertConverter" />
-        <conv:VisibilityToHiddenConverter x:Key="visToHiddenConverter" />
+        <Converters:BooleanInvertingValueConverter x:Key="InvertConverter" />
+        <Converters:VisibilityToHiddenConverter x:Key="visToHiddenConverter" />
     </UserControl.Resources>
     
     <Grid Margin="3">
@@ -31,7 +31,8 @@
                    Margin="3"
                    VerticalAlignment="Top" />
         <StackPanel Grid.Row="0"
-                    Grid.Column="1">
+                    Grid.Column="1"
+                    IsEnabled="False">
             <RadioButton Content="UDP"
                          Margin="3"
                          IsEnabled="{Binding SupportsUdp}"

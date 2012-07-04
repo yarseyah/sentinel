@@ -34,7 +34,6 @@
         </Style>
 
         <Converters:BoolToDisableConverter x:Key="checkboxToDisableConverter" />
-        <Converters:VisibilityToHiddenConverter x:Key="visibilityConverter" />
         <Converters:VisibilityToCollapsedConverter x:Key="collapsedVisibilityConverter" />
     </Window.Resources>
 
@@ -89,7 +88,7 @@
                       SelectedIndex="{Binding MatchField}"
                       ItemsSource="{Binding MatchFields}"
                       Margin="5"
-                      VerticalContentAlignment="Center"/>
+                      VerticalContentAlignment="Center" />
 
             <Label Content="Match method : "
                    Margin="5"
