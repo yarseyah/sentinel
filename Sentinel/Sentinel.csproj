@@ -136,7 +136,6 @@
     <Compile Include="Interfaces\LogEntryField.cs" />
     <Compile Include="Interfaces\LogEntryFieldHelper.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
-    <Compile Include="Logs\Interfaces\ILogger.cs" />
     <Compile Include="Logs\Interfaces\ILogManager.cs" />
     <Compile Include="Providers\CustomMessageDecoderPage.xaml.cs">
       <DependentUpon>CustomMessageDecoderPage.xaml</DependentUpon>
@@ -147,8 +146,6 @@
       <DependentUpon>FileMonitorProviderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Providers\IFileMonitoringProviderSettings.cs" />
-    <Compile Include="Providers\Interfaces\ILogProvider.cs" />
-    <Compile Include="Providers\Interfaces\INetworkProvider.cs" />
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
     <Compile Include="Providers\Interfaces\IProviderInfo.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
@@ -506,6 +503,10 @@
     <Resource Include="Resources\Small\Trace.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
+      <Project>{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}</Project>
+      <Name>Sentinel.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
       <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>
       <Name>WpfExtras</Name>

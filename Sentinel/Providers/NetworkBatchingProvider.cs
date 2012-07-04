@@ -73,7 +73,7 @@ namespace Sentinel.Providers
             }
         }
 
-        public abstract ProviderInfo Information { get; }
+        public abstract IProviderInfo Information { get; }
 
         public void Start()
         {
@@ -302,7 +302,7 @@ namespace Sentinel.Providers
                 {
                     if (pendingQueue.Count > 0)
                     {
-                        Queue<LogEntry> processedQueue = new Queue<LogEntry>();
+                        Queue<ILogEntry> processedQueue = new Queue<ILogEntry>();
 
                         lock (pendingQueue)
                         {

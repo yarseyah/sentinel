@@ -64,7 +64,9 @@ namespace Log4NetTester
             switch (randomType)
             {
                 case 0:
-                    Log.Error(text);
+                    var embeddedException = new NotSupportedException();
+                    var keyNotFoundException = new KeyNotFoundException("Some wrapped message", embeddedException);
+                    Log.Error(text, keyNotFoundException);
                     break;
                 case 1:
                     Log.Fatal(text);

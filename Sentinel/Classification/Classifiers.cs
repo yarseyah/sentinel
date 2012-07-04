@@ -165,7 +165,7 @@ namespace Sentinel.Classification
             }
         }
 
-        public LogEntry Classify(LogEntry entry)
+        public ILogEntry Classify(ILogEntry entry)
         {
             return Items
                 .Where(classifier => classifier.Enabled)

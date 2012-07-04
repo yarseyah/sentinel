@@ -29,7 +29,7 @@ namespace Sentinel.Providers
         private readonly bool loadExistingContent;
         private readonly Regex patternMatching;
 
-        private readonly Queue<LogEntry> pendingQueue = new Queue<LogEntry>();
+        private readonly Queue<ILogEntry> pendingQueue = new Queue<ILogEntry>();
         private readonly int refreshInterval = 250;
         private readonly List<string> usedGroupNames = new List<string>();
         private long bytesRead;
@@ -71,7 +71,7 @@ namespace Sentinel.Providers
 
         #region Implementation of ILogProvider
 
-        public ProviderInfo Information
+        public IProviderInfo Information
         {
             get;
             private set;

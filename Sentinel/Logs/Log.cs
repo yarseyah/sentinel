@@ -26,9 +26,9 @@ namespace Sentinel.Logs
     {
         private readonly IClassifierService classifier;
 
-        private readonly List<LogEntry> entries = new List<LogEntry>();
+        private readonly List<ILogEntry> entries = new List<ILogEntry>();
 
-        private readonly List<LogEntry> newEntries = new List<LogEntry>();
+        private readonly List<ILogEntry> newEntries = new List<ILogEntry>();
 
         private string name;
 
@@ -45,7 +45,7 @@ namespace Sentinel.Logs
 
         #region ILogger Members
 
-        public IEnumerable<LogEntry> Entries { get; private set; }
+        public IEnumerable<ILogEntry> Entries { get; private set; }
 
         public string Name
         {
@@ -63,7 +63,7 @@ namespace Sentinel.Logs
             }
         }
 
-        public IEnumerable<LogEntry> NewEntries { get; private set; }
+        public IEnumerable<ILogEntry> NewEntries { get; private set; }
 
         public void Clear()
         {
@@ -82,16 +82,16 @@ namespace Sentinel.Logs
             GC.Collect();
         }
 
-        public void AddBatch(Queue<LogEntry> entries)
+        public void AddBatch(Queue<ILogEntry> entries)
         {
             if (entries.Count <= 0) return;
 
-            var processed = new Queue<LogEntry>();
+            var processed = new Queue<ILogEntry>();
             while (entries.Count > 0)
             {
                 if (classifier != null)
                 {
-                    LogEntry entry = classifier.Classify(entries.Dequeue());
+                    var entry = classifier.Classify(entries.Dequeue());
                     processed.Enqueue(entry);
                 }
             }

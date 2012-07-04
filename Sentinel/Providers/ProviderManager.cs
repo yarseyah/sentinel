@@ -7,6 +7,8 @@ using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces;
+
     public class ProviderManager : IProviderManager
     {
         private readonly IList<IProviderRegistrationRecord> providers;

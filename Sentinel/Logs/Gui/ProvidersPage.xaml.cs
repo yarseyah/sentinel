@@ -15,6 +15,8 @@ using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
 
 namespace Sentinel.Logs.Gui
 {
+    using Sentinel.Interfaces;
+
     /// <summary>
     /// Interaction logic for ProvidersPage.xaml
     /// </summary>

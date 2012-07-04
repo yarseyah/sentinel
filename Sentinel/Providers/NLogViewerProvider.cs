@@ -22,7 +22,7 @@ namespace Sentinel.Providers
         {
         }
 
-        public override ProviderInfo Information { get { return Info; } }
+        public override IProviderInfo Information { get { return Info; } }
 
         protected override LogEntry DecodeEntry(string m)
         {

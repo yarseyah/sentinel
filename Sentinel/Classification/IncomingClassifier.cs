@@ -30,7 +30,7 @@ namespace Sentinel.Classification
 
         public abstract bool IsMatch(object parameter);
 
-        public LogEntry Classify(LogEntry entry)
+        public ILogEntry Classify(ILogEntry entry)
         {
             throw new NotImplementedException();
         }

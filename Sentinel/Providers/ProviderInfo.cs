@@ -2,7 +2,9 @@ namespace Sentinel.Providers
 {
     using System;
 
-    public class ProviderInfo
+    using Sentinel.Interfaces;
+
+    public class ProviderInfo : IProviderInfo
     {
         public ProviderInfo(Guid uniqueId, string name, string description)
         {

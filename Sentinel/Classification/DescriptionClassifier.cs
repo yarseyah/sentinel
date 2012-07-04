@@ -72,7 +72,7 @@ namespace Sentinel.Classification
             return regularExpression != null && regularExpression.Match((string) parameter).Success;
         }
 
-        public override LogEntry Classify(LogEntry entry)
+        public override ILogEntry Classify(ILogEntry entry)
         {
             Debug.Assert(Enabled, "Should not be attempting to classify using non-enabled classifiers.");
 
