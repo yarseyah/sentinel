@@ -34,7 +34,7 @@ namespace Sentinel.Views.Gui
         public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
 
         private readonly IFilteringService<IFilter> filteringService;
-        private readonly Queue<LogEntry> pendingAdditions = new Queue<LogEntry>();
+        private readonly Queue<ILogEntry> pendingAdditions = new Queue<ILogEntry>();
         private readonly LogMessagesControl presenter;
 
         private bool clearPending;
@@ -50,7 +50,7 @@ namespace Sentinel.Views.Gui
             ((ViewInformation) Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl { DataContext = this };
 
-            Messages = new ObservableCollection<LogEntry>();
+            Messages = new ObservableCollection<ILogEntry>();
             PropertyChanged += PropertyChangedHandler;
 
             DispatcherTimer dt = new DispatcherTimer(DispatcherPriority.Normal)
@@ -99,7 +99,7 @@ namespace Sentinel.Views.Gui
             ToolbarItems = toolbar;
         }
 
-        public ObservableCollection<LogEntry> Messages { get; private set; }
+        public ObservableCollection<ILogEntry> Messages { get; private set; }
 
         /// <summary>
         /// Gets the count of filtered entries.
@@ -247,7 +247,7 @@ namespace Sentinel.Views.Gui
                     {
                         while (pendingAdditions.Count > 0)
                         {
-                            LogEntry entry = pendingAdditions.Dequeue();
+                            var entry = pendingAdditions.Dequeue();
                             AddIfPassesFilters(entry);
                         }
                     }
@@ -267,7 +267,7 @@ namespace Sentinel.Views.Gui
         /// Append new log entry, as long as it wouldn't normally have been filtered.
         /// </summary>
         /// <param name="entry">Entry to add.</param>
-        private void AddIfPassesFilters(LogEntry entry)
+        private void AddIfPassesFilters(ILogEntry entry)
         {
             // If no filtering service, then assume it passes.
             if (filteringService == null)

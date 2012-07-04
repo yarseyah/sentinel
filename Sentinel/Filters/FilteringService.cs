@@ -91,7 +91,7 @@ namespace Sentinel.Filters
 
         public ObservableCollection<T> Filters { get; set; }
 
-        public bool IsFiltered(LogEntry entry)
+        public bool IsFiltered(ILogEntry entry)
         {
             return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry));
         }

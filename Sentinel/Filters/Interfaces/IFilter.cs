@@ -27,6 +27,6 @@ namespace Sentinel.Filters.Interfaces
         [DataMember]
         MatchMode Mode { get; set; }
 
-        bool IsMatch(LogEntry entry);
+        bool IsMatch(ILogEntry entry);
     }
 }
