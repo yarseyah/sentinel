@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace Sentinel.Providers.Interfaces
 {
-    using Sentinel.Interfaces;
+    using System;
+    using System.Collections.Generic;
+
     using Sentinel.Interfaces.Providers;
 
     public interface IProviderManager : IEnumerable<Guid>
@@ -18,7 +17,7 @@ namespace Sentinel.Providers.Interfaces
 
         IEnumerable<Guid> GetRegistered();
 
-        ProviderInfo GetInformation(Guid providerGuid);
+        IProviderInfo GetInformation(Guid providerGuid);
 
         T GetConfiguration<T>(Guid providerGuid);
 

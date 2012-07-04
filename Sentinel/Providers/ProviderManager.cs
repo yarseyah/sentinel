@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Sentinel.Providers.Interfaces;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
-    using Sentinel.Interfaces;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Providers.Interfaces;
 
     public class ProviderManager : IProviderManager
     {
@@ -105,7 +104,7 @@ namespace Sentinel.Providers
             return providers.Select(p => p.Identifier);
         }
 
-        public ProviderInfo GetInformation(Guid providerGuid)
+        public IProviderInfo GetInformation(Guid providerGuid)
         {
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
             if (!providers.Any(p => p.Identifier == providerGuid))

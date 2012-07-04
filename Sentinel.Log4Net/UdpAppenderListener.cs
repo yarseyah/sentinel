@@ -1,5 +1,6 @@
 ﻿namespace Sentinel.Log4Net
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@
         public UdpAppenderListener(IUdpAppenderListenerSettings setting)
         {
             Information = new Log4NetUdpListenerProvider();
+
+            throw new NotImplementedException("Opps");
         }
 
         public IProviderInfo Information
@@ -40,6 +43,7 @@
         }
 
         public int Port { get; private set; }
+
         public void Start()
         {
             Log.Debug("Start requested");

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services;
-using WpfExtras;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using Sentinel.Interfaces.Providers;
+    using Sentinel.Providers.Interfaces;
+    using Sentinel.Services;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for SelectProviderPage.xaml
     /// </summary>
@@ -20,11 +23,13 @@ namespace Sentinel.Providers
 
         private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
 
+        private readonly IProviderManager providerManager;
+
         private string name;
 
         private bool isValid;
 
-        private List<ProviderInfo> providers = new List<ProviderInfo>();
+        private List<IProviderInfo> providers = new List<IProviderInfo>();
 
         /// <summary>
         /// The additionalPages collection will maintain any child pages created
@@ -38,8 +43,6 @@ namespace Sentinel.Providers
         private int selectedProvider = -1;
 
         private string selectedProviderDescription;
-
-        private readonly IProviderManager providerManager;
 
         public SelectProviderPage()
         {
@@ -86,7 +89,7 @@ namespace Sentinel.Providers
             if ( additionalPages[index] == null )
             {
                 SelectedProviderDescription = providers[index].Description;
-                ProviderInfo info = providers[index];
+                var info = providers[index];
 
                 if (providerManager != null)
                 {
