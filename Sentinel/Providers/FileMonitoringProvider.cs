@@ -17,6 +17,8 @@ using Sentinel.Providers.Interfaces;
 
 namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces.Providers;
+
     public class FileMonitoringProvider : ILogProvider
     {
         public const string ID = "1a2f8249-b390-4baa-ba5e-3d67804ba1ed";

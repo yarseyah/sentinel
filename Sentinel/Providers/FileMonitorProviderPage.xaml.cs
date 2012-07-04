@@ -19,6 +19,8 @@ using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
 
 namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces.Providers;
+
     /// <summary>
     ///   Interaction logic for FileMonitorProviderPage.xaml
     /// </summary>

@@ -8,6 +8,7 @@ using Sentinel.Providers.Interfaces;
 namespace Sentinel.Providers
 {
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.Providers;
 
     public class ProviderManager : IProviderManager
     {

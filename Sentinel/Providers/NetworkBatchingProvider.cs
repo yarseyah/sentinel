@@ -1,22 +1,18 @@
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Providers.Interfaces;
-
-#endregion
 
 namespace Sentinel.Providers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Interfaces.Providers;
+
     public abstract class NetworkBatchingProvider : INetworkProvider
     {
         protected readonly int maximumAge = 5;

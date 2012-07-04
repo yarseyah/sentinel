@@ -1,4 +1,4 @@
-namespace Sentinel.Interfaces
+namespace Sentinel.Interfaces.Providers
 {
     public interface ILogProvider
     {

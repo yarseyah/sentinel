@@ -42,10 +42,11 @@
   <ItemGroup>
     <Compile Include="ILogEntry.cs" />
     <Compile Include="ILogger.cs" />
-    <Compile Include="ILogProvider.cs" />
-    <Compile Include="INetworkProvider.cs" />
-    <Compile Include="IProviderInfo.cs" />
+    <Compile Include="Providers\ILogProvider.cs" />
+    <Compile Include="Providers\INetworkProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\IProviderInfo.cs" />
+    <Compile Include="Providers\IProviderSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

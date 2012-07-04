@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Sentinel.Providers.Interfaces
 {
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.Providers;
 
     public interface IProviderManager : IEnumerable<Guid>
     {

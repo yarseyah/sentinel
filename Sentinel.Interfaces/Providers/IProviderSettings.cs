@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Providers.Interfaces
+﻿namespace Sentinel.Interfaces.Providers
 {
     public interface IProviderSettings
     {
@@ -9,6 +9,6 @@
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
-        ProviderInfo Info { get; }
+        IProviderInfo Info { get; }
     }
 }

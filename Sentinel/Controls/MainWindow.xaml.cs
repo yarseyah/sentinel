@@ -42,6 +42,7 @@ namespace Sentinel.Controls
     using Sentinel.Filters;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces.Providers;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml

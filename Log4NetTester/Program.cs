@@ -35,8 +35,8 @@ namespace Log4NetTester
         {
             var i = 0;
 
-            int smallestSleep = 10;
-            int biggestSleep = 20;
+            int smallestSleep = 100;
+            int biggestSleep = 200;
 
             while (i < 100000)
             {

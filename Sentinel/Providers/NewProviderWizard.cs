@@ -5,7 +5,8 @@ using WpfExtras;
 
 namespace Sentinel.Providers
 {
-    //[Export(typeof(INewProviderWizard))]
+    using Sentinel.Interfaces.Providers;
+
     public class NewProviderWizard : INewProviderWizard
     {
         public bool Display(Window parent)
@@ -39,7 +40,7 @@ namespace Sentinel.Providers
             return dialogResult ?? false;
         }
 
-        public ProviderInfo Provider { get; private set; }
+        public IProviderInfo Provider { get; private set; }
 
         public IProviderSettings Settings { get; private set; }
     }

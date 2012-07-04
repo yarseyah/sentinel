@@ -147,10 +147,8 @@
     </Compile>
     <Compile Include="Providers\IFileMonitoringProviderSettings.cs" />
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
-    <Compile Include="Providers\Interfaces\IProviderInfo.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
     <Compile Include="Providers\Interfaces\IProviderRegistrationRecord.cs" />
-    <Compile Include="Providers\Interfaces\IProviderSettings.cs" />
     <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />
     <Compile Include="Providers\Log4NetProvider.cs" />
     <Compile Include="Providers\MessageFormatPage.xaml.cs">

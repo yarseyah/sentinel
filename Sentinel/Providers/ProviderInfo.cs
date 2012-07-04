@@ -1,8 +1,8 @@
 namespace Sentinel.Providers
 {
     using System;
-
-    using Sentinel.Interfaces;
+    
+    using Sentinel.Interfaces.Providers;
 
     public class ProviderInfo : IProviderInfo
     {
