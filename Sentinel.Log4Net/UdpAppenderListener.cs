@@ -1,6 +1,9 @@
 ﻿namespace Sentinel.Log4Net
 {
     using System;
+    using System.Diagnostics;
+    using System.Net;
+    using System.Net.Sockets;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -99,10 +102,26 @@
         {
             Log.Debug("Worker started");
 
-            while (!cancellationTokenSource.IsCancellationRequested)
+            var endPoint = new IPEndPoint(IPAddress.Any, 9123);
+            using (var listener = new UdpClient(endPoint))
             {
-                Log.Debug("Ping...");
-                Thread.Sleep(1000);
+                while (!cancellationTokenSource.IsCancellationRequested)
+                {
+                    var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                    listener.Client.ReceiveTimeout = 1000;
+                    try
+                    {
+                        var bytes = listener.Receive(ref remoteEndPoint);
+                        var msg = string.Format("Recieved {0} bytes from {1}", bytes.Length, remoteEndPoint.Address);
+                        Log.Debug(msg);
+                        Trace.WriteLine(msg);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.DebugFormat("SocketException: {0}", e.Message);
+                        Trace.WriteLine(string.Format("SocketException: {0}", e.Message));
+                    }
+                }
             }
 
             Log.Debug("Worker completed");
