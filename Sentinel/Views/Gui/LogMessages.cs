@@ -187,7 +187,7 @@ namespace Sentinel.Views.Gui
                 {
                     lock (pendingAdditions)
                     {
-                        foreach (LogEntry entry in Logger.NewEntries)
+                        foreach (ILogEntry entry in Logger.NewEntries)
                         {
                             pendingAdditions.Enqueue(entry);
                         }
@@ -224,9 +224,12 @@ namespace Sentinel.Views.Gui
 
                     lock (Logger.Entries)
                     {
-                        if (clearPending) Logger.Clear();
+                        if (clearPending)
+                        {
+                            Logger.Clear();
+                        }
 
-                        foreach (LogEntry entry in Logger.Entries)
+                        foreach (var entry in Logger.Entries)
                         {
                             AddIfPassesFilters(entry);
                         }

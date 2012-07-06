@@ -54,6 +54,7 @@
     <Compile Include="ConfigurationPage.xaml.cs">
       <DependentUpon>ConfigurationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LogEntry.cs" />
     <Compile Include="ProviderRegistrationInformation.cs" />
     <Compile Include="UdpAppenderListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
