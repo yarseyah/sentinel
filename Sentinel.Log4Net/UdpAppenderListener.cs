@@ -3,12 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Serialization;
 
     using Common.Logging;
 
@@ -17,12 +22,14 @@
 
     public class UdpAppenderListener : INetworkProvider
     {
+        protected readonly Queue<string> PendingQueue = new Queue<string>();
+
         private const int PumpFrequency = 100;
+
+        private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
 
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new Log4NetUdpListenerProvider());
-
-        protected readonly Queue<string> PendingQueue = new Queue<string>();
 
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
@@ -33,6 +40,11 @@
         private Task udpListenerTask;
 
         private Task messagePumpTask;
+
+        static UdpAppenderListener()
+        {
+            NamespaceManager.AddNamespace("log4net", "http://logging.apache.org/log4net");
+        }
 
         public UdpAppenderListener(IProviderSettings settings)
         {
@@ -189,13 +201,66 @@
 
         private ILogEntry DeserializeMessage(string message)
         {
-            // TODO: better deserialization....
-            return new LogEntry();
+            LogEntry logEntry;
+
+            try
+            {
+                XNamespace log4Net = "unique";
+
+                var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
+                var element = XElement.Parse(payload);
+                var record = element.Element(log4Net + "event");
+
+                // Establish whether a sub-system seems to be defined.
+                var description = record.Element(log4Net + "message").Value;
+
+                var classification = string.Empty;
+                var system = record.Attribute("logger").Value;
+                var type = record.Attribute("level").Value;
+                var host = "???";
+
+                foreach (XElement propertyElement in record.Element(log4Net + "properties").Elements())
+                {
+                    if (propertyElement.Name == log4Net + "data" && propertyElement.Attribute("name") != null)
+                    {
+                        host = propertyElement.Attribute("value").Value;
+                    }
+                }
+
+                logEntry = new LogEntry
+                               {
+                                   DateTime = DateTime.Parse(record.Attribute("timestamp").Value),
+                                   System = system,
+                                   Thread = record.Attribute("thread").Value,
+                                   Description = description,
+                                   Type = type,
+                                   MetaData = new Dictionary<string, object>
+                                                  {
+                                                      {
+                                                          "Classification", classification
+                                                          },
+                                                      {
+                                                          "Host", host
+                                                          }
+                                                  }
+                               };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return logEntry;
         }
 
         private bool IsValidMessage(string message)
         {
-            return true;
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            return message.StartsWith("<log4net:event");
         }
     }
 }
