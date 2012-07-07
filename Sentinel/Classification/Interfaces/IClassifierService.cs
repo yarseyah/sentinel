@@ -20,6 +20,6 @@ namespace Sentinel.Classification.Interfaces
 
         int SelectedIndex { get; set; }
 
-        LogEntry Classify(LogEntry entry);
+        ILogEntry Classify(ILogEntry entry);
     }
 }

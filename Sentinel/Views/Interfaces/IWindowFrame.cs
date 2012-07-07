@@ -3,6 +3,8 @@ using Sentinel.Logs.Interfaces;
 
 namespace Sentinel.Views.Interfaces
 {
+    using Sentinel.Interfaces;
+
     public interface IWindowFrame
     {
         ILogger Log { get; set; }

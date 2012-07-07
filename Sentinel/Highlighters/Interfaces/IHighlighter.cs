@@ -24,6 +24,6 @@ namespace Sentinel.Highlighters.Interfaces
         [DataMember]
         IHighlighterStyle Style { get; set; }
 
-        bool IsMatch(LogEntry logEntry);
+        bool IsMatch(ILogEntry logEntry);
     }
 }

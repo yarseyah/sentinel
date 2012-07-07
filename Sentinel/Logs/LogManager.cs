@@ -20,6 +20,8 @@ using Sentinel.Support.Mvvm;
 
 namespace Sentinel.Logs
 {
+    using Sentinel.Interfaces;
+
     public class LogManager : ViewModelBase, ILogManager
     {
         private readonly Dictionary<string, ILogger> loggers = new Dictionary<string, ILogger>();

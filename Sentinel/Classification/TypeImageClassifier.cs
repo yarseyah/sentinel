@@ -56,7 +56,7 @@ namespace Sentinel.Classification
             return (parameter is string) && (parameter as string).Equals(TypeMatch);
         }
 
-        public override LogEntry Classify(LogEntry entry)
+        public override ILogEntry Classify(ILogEntry entry)
         {
             // TODO: something?
             return entry;

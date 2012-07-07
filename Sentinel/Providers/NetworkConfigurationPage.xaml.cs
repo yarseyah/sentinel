@@ -8,6 +8,8 @@ using WpfExtras;
 
 namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces.Providers;
+
     /// <summary>
     /// Interaction logic for NetworkConfigurationPage.xaml
     /// </summary>

@@ -35,8 +35,8 @@ namespace Log4NetTester
         {
             var i = 0;
 
-            int smallestSleep = 10;
-            int biggestSleep = 20;
+            int smallestSleep = 100;
+            int biggestSleep = 200;
 
             while (i < 100000)
             {
@@ -64,7 +64,9 @@ namespace Log4NetTester
             switch (randomType)
             {
                 case 0:
-                    Log.Error(text);
+                    var embeddedException = new NotSupportedException();
+                    var keyNotFoundException = new KeyNotFoundException("Some wrapped message", embeddedException);
+                    Log.Error(text, keyNotFoundException);
                     break;
                 case 1:
                     Log.Fatal(text);

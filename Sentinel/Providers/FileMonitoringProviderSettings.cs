@@ -1,9 +1,11 @@
 ﻿namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces.Providers;
+
     public class FileMonitoringProviderSettings : IFileMonitoringProviderSettings
     {
         public FileMonitoringProviderSettings(
-            ProviderInfo info,
+            IProviderInfo info,
             string providerName,
             string fileName,
             int refreshPeriod,
@@ -21,7 +23,7 @@
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
-        public ProviderInfo Info { get; private set; }
+        public IProviderInfo Info { get; private set; }
 
         public bool LoadExistingContent { get; private set; }
 

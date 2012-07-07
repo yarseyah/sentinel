@@ -5,7 +5,8 @@ using WpfExtras;
 
 namespace Sentinel.Providers
 {
-    //[Export(typeof(INewProviderWizard))]
+    using Sentinel.Interfaces.Providers;
+
     public class NewProviderWizard : INewProviderWizard
     {
         public bool Display(Window parent)
@@ -23,8 +24,8 @@ namespace Sentinel.Providers
 
             wizard.AddPage(new SelectProviderPage());
 
-            bool? dialogResult = wizard.ShowDialog();
-            if ( dialogResult == true )
+            var dialogResult = wizard.ShowDialog();
+            if (dialogResult == true)
             {
                 if (wizard.SavedData == null && !(wizard.SavedData is IProviderSettings))
                 {
@@ -32,14 +33,14 @@ namespace Sentinel.Providers
                         "The UserData was either null or the supplied object was not of the expected type: IProviderSettings");
                 }
 
-                Settings = (IProviderSettings) wizard.SavedData;
+                Settings = (IProviderSettings)wizard.SavedData;
                 Provider = Settings.Info;
             }
 
             return dialogResult ?? false;
         }
 
-        public ProviderInfo Provider { get; private set; }
+        public IProviderInfo Provider { get; private set; }
 
         public IProviderSettings Settings { get; private set; }
     }

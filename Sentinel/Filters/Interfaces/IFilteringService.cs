@@ -23,6 +23,6 @@ namespace Sentinel.Filters.Interfaces
         [DataMember]
         ObservableCollection<T> Filters { get; set; }
 
-        bool IsFiltered(LogEntry entry);
+        bool IsFiltered(ILogEntry entry);
     }
 }

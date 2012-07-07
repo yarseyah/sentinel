@@ -34,8 +34,8 @@ namespace Sentinel.Highlighters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(value is LogEntry, "Supplied value must be a LogEntry for conversion.");
-            return highlighter.IsMatch(value as LogEntry) && highlighter.Enabled
+            Debug.Assert(value is ILogEntry, "Supplied value must be a LogEntry for conversion.");
+            return highlighter.IsMatch(value as ILogEntry) && highlighter.Enabled
                        ? "Match"
                        : "Not Match";
         }

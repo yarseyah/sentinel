@@ -3,16 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-             mc:Ignorable="d"
+             xmlns:conv="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" mc:Ignorable="d"
              d:DesignHeight="226"
              d:DesignWidth="294"
              SnapsToDevicePixels="True"
              Loaded="OnLoaded">
 
     <UserControl.Resources>
-        <Converters:BooleanInvertingValueConverter x:Key="InvertConverter" />
-        <Converters:VisibilityToHiddenConverter x:Key="visToHiddenConverter" />
+        <conv:BooleanInvertingValueConverter x:Key="InvertConverter" />
+        <conv:VisibilityToHiddenConverter x:Key="visToHiddenConverter" />
     </UserControl.Resources>
     
     <Grid Margin="3">

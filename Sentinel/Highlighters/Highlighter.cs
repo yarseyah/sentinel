@@ -160,7 +160,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        public bool IsMatch(LogEntry logEntry)
+        public bool IsMatch(ILogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "logEntry can not be null.");
             var target = Field == LogEntryField.System ? logEntry.System : logEntry.Type;

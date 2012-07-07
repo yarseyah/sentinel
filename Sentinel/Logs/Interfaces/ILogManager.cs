@@ -11,10 +11,14 @@ using System.Collections.Generic;
 
 namespace Sentinel.Logs.Interfaces
 {
+    using Sentinel.Interfaces;
+
     public interface ILogManager : IEnumerable<ILogger>
     {
         ILogger Add(string logName);
+
         ILogger Get(string name);
+
         void Remove(string name);
     }
 }

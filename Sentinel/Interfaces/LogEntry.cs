@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Sentinel.Interfaces
 {
-    public class LogEntry
+    public class LogEntry : ILogEntry
     {
         /// <summary>
         /// Classification for the log entry.  Can be free-text but will typically

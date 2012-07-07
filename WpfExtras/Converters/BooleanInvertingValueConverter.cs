@@ -1,14 +1,9 @@
-﻿#region Using directives
-
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Windows.Data;
-
-#endregion
-
-namespace Sentinel.Support.Converters
+﻿namespace WpfExtras.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
     public class BooleanInvertingValueConverter : IValueConverter
     {
         #region Implementation of IValueConverter
@@ -27,7 +22,7 @@ namespace Sentinel.Support.Converters
         {
             if (value != null)
             {
-                bool original = (bool) value;
+                var original = (bool)value;
                 return !original;
             }
             return null;
@@ -45,7 +40,7 @@ namespace Sentinel.Support.Converters
         /// <param name="culture">The culture to use in the converter.</param>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool original = (bool) value;
+            var original = (bool)value;
             return !original;
         }
 

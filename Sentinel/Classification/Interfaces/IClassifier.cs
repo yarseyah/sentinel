@@ -12,6 +12,6 @@ namespace Sentinel.Classification.Interfaces
 
         bool IsMatch(object parameter);
 
-        LogEntry Classify(LogEntry entry);
+        ILogEntry Classify(ILogEntry entry);
     }
 }

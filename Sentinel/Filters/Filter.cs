@@ -11,9 +11,7 @@
 
 namespace Sentinel.Filters
 {
-    using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -47,7 +45,7 @@ namespace Sentinel.Filters
                     {
                         if (Mode == MatchMode.RegularExpression)
                         {
-                            regex = string.IsNullOrEmpty(Pattern) ? null : new Regex(Pattern);
+                            regex = string.IsNullOrWhiteSpace(Pattern) ? null : new Regex(Pattern);
                         }
                     }
 
@@ -172,7 +170,7 @@ namespace Sentinel.Filters
             }
         }
 
-        public bool IsMatch(LogEntry entry)
+        public bool IsMatch(ILogEntry entry)
         {
             Debug.Assert(entry != null, "LogEntry can not be null.");
 

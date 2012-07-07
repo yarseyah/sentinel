@@ -232,7 +232,7 @@ namespace Sentinel.Views.Heartbeat
                 {
                     lock (liveData)
                     {
-                        foreach (LogEntry entry in Logger.NewEntries)
+                        foreach (ILogEntry entry in Logger.NewEntries)
                         {
                             if (liveData.ContainsKey(entry.Type))
                             {

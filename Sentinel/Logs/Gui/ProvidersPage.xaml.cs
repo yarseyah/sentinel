@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Sentinel.Providers;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services;
-using WpfExtras;
-using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
-
+﻿
 namespace Sentinel.Logs.Gui
 {
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+
+    using Sentinel.Interfaces.Providers;
+    using Sentinel.Providers;
+    using Sentinel.Providers.Interfaces;
+    using Sentinel.Services;
+
+    using WpfExtras;
+
+    using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
+
     /// <summary>
     /// Interaction logic for ProvidersPage.xaml
     /// </summary>
@@ -166,7 +170,7 @@ namespace Sentinel.Logs.Gui
             {
                 if (wizard.Display((Window) this.Parent))
                 {
-                    ProviderInfo info = wizard.Provider;
+                    IProviderInfo info = wizard.Provider;
                     IProviderSettings settings = wizard.Settings;
 
                     PendingProviderRecord rec = new PendingProviderRecord

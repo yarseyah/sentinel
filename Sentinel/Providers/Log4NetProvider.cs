@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using Sentinel.Interfaces;
-using Sentinel.Providers.Interfaces;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Interfaces.Providers;
+
     public class Log4NetProvider : NetworkBatchingProvider
     {
         public static readonly Guid Id = new Guid("7b5700a4-ad84-430d-b495-8bb9bf257e90");
@@ -20,7 +21,7 @@ namespace Sentinel.Providers
         {
         }
 
-        public override ProviderInfo Information { get { return Info; } }
+        public override IProviderInfo Information { get { return Info; } }
 
         protected override LogEntry DecodeEntry(string logEntry)
         {

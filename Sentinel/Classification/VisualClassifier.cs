@@ -56,7 +56,7 @@ namespace Sentinel.Classification
         /// <returns>True if matched.</returns>
         public abstract bool IsMatch(object parameter);
 
-        public abstract LogEntry Classify(LogEntry entry);
+        public abstract ILogEntry Classify(ILogEntry entry);
 
         #endregion
     }

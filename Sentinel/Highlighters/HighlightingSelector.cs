@@ -143,10 +143,12 @@ namespace Sentinel.Highlighters
         /// <returns>Style to use for displaying of item.</returns>
         public override Style SelectStyle(object item, DependencyObject container)
         {
-            var entry = item as LogEntry;
+            var entry = item as ILogEntry;
             if (entry != null)
             {
-                foreach (var pair in styles.Where(pair => pair.Key.IsMatch(entry) && pair.Key.Enabled))
+                foreach (var pair in styles
+                    .Where(pair => pair.Key.Enabled)
+                    .Where(pair => pair.Key.IsMatch(entry)))
                 {
                     return pair.Value;
                 }

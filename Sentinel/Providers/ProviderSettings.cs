@@ -1,8 +1,7 @@
-﻿using System;
-using Sentinel.Providers.Interfaces;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
+    using Sentinel.Interfaces.Providers;
+
     public class ProviderSettings : IProviderSettings
     {
         #region Implementation of IProviderSettings
@@ -20,7 +19,7 @@ namespace Sentinel.Providers
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
-        public ProviderInfo Info { get; set; }
+        public IProviderInfo Info { get; set; }
 
         #endregion
     }

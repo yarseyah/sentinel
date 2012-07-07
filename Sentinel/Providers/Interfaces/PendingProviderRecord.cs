@@ -1,8 +1,11 @@
 ﻿namespace Sentinel.Providers.Interfaces
 {
+    using Sentinel.Interfaces.Providers;
+
     public class PendingProviderRecord
     {
-        public ProviderInfo Info { get; set; }
+        public IProviderInfo Info { get; set; }
+
         public IProviderSettings Settings { get; set; }
     }
 }
