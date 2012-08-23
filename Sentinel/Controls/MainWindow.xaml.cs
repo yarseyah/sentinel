@@ -37,6 +37,8 @@ namespace Sentinel.Controls
 {
     using System.Windows.Data;
 
+    using Common.Logging;
+
     using Newtonsoft.Json;
 
     using Sentinel.Filters;
@@ -49,6 +51,8 @@ namespace Sentinel.Controls
     /// </summary>
     public partial class MainWindow
     {
+        private readonly ILog log = LogManager.GetCurrentClassLogger();
+
         private PreferencesWindow preferencesWindow;
 
         private static ServiceLocator services;
@@ -200,11 +204,11 @@ namespace Sentinel.Controls
                 throw new ArgumentNullException("commandLine");
             }
 
+            string provider;
+            string protocol;
             int port;
 
-            if (commandLine.Count() != 3 || !commandLine.ElementAt(0).IsRegexMatch("nlog|log4net")
-                || !commandLine.ElementAt(1).IsRegexMatch("udp|tcp")
-                || !Int32.TryParse(commandLine.ElementAt(2), out port))
+            if (ValidateCommandLine(commandLine, out provider, out protocol, out port))
             {
                 // Syntax expected to be "<nlog|log4net> <udp|tcp> <portNumber>"
                 MessageBox.Show(
@@ -216,10 +220,7 @@ namespace Sentinel.Controls
             }
             else
             {
-                var loggerType = commandLine.ElementAt(0);
-                var protocol = commandLine.ElementAt(1);
-
-                if (loggerType == "log4net" && protocol == "tcp")
+                if (provider == "log4net" && protocol == "tcp")
                 {
                     MessageBox.Show(
                         this,
@@ -231,18 +232,18 @@ namespace Sentinel.Controls
                 else
                 {
                     Trace.WriteLine(
-                        string.Format("Requested listener {0}, {1} on port {2}", loggerType, protocol, port));
+                        string.Format("Requested listener {0}, {1} on port {2}", provider, protocol, port));
 
                     // Create the logger.
                     var logManager = services.Get<ILogManager>();
-                    var log = logManager.Add(string.Format("{0} listening on {1} port {2}", loggerType, protocol, port));
+                    var logTarget = logManager.Add(string.Format("{0} listening on {1} port {2}", provider, protocol, port));
 
                     // Create the frame view
                     Debug.Assert(
                         ViewManager != null,
                         "A ViewManager should be registered with service locator for the IViewManager interface");
                     var frame = services.Get<IWindowFrame>();
-                    frame.Log = log;
+                    frame.Log = logTarget;
                     frame.SetViews(new List<string> { LogMessages.Info.Identifier });
                     ViewManager.Viewers.Add(frame);
 
@@ -250,20 +251,84 @@ namespace Sentinel.Controls
                     var providerManager = services.Get<IProviderManager>();
                     IProviderSettings providerSettings = new NetworkSettings { IsUdp = protocol == "udp", Port = port };
 
-                    var provider =
+                    var logProvider =
                         providerManager.Create(
-                            loggerType == "nlog" ? NLogViewerProvider.Info.Identifier : Log4NetProvider.Info.Identifier,
+                            provider == "nlog" ? NLogViewerProvider.Info.Identifier : Log4NetProvider.Info.Identifier,
                             providerSettings);
 
-                    provider.Logger = log;
-                    provider.Start();
+                    logProvider.Logger = logTarget;
+                    logProvider.Start();
 
                     // Add to the tab control.
-                    var tab = new TabItem { Header = log.Name, Content = frame };
+                    var tab = new TabItem { Header = logTarget.Name, Content = frame };
                     tabControl.Items.Add(tab);
                     tabControl.SelectedItem = tab;
                 }
             }
+        }
+
+        private bool ValidateCommandLine(
+            IEnumerable<string> commandLine,
+            out string provider,
+            out string protocol,
+            out int port)
+        {
+            if (commandLine == null)
+            {
+                throw new ArgumentNullException("commandLine");
+            }
+
+            var parts = commandLine.ToList();
+            provider = string.Empty;
+            protocol = string.Empty;
+            port = -1;
+
+            // Ensure three parts
+            if (parts.Count() != 3)
+            {
+                log.ErrorFormat(
+                    "ValidateCommandLine: Not enough parameters in command line, expecting 3 but have {0}",
+                    parts.Count());
+                return false;
+            }
+
+            // Get the provider
+            const string ExpectedProviders = "nlog|log4net";
+            var providerPart = parts.ElementAt(0);
+            if (!providerPart.IsRegexMatch(ExpectedProviders))
+            {
+                log.ErrorFormat(
+                    "ValidateCommandLine: Specified provider not one of excepted values: '{0}' but have '{1}'",
+                    ExpectedProviders,
+                    providerPart);
+                return false;
+            }
+
+            provider = providerPart;
+
+            // Get the protocol
+            const string ExpectedProtocols = "udp|tcp";
+            var protocolPart = parts.ElementAt(1);
+            if (!protocolPart.IsRegexMatch(ExpectedProtocols))
+            {
+                log.ErrorFormat(
+                    "ValidateCommandLine: Specified protocol not one of excepted values: '{0}' but have '{1}'",
+                    ExpectedProtocols,
+                    providerPart);
+                return false;
+            }
+
+            protocol = protocolPart;
+
+            // Get the port
+            var portPart = parts.ElementAt(2);
+            if (!int.TryParse(portPart, out port))
+            {
+                log.ErrorFormat("ValidateCommandLine: Supplied port value did not parse as an integer: '{0}'", portPart);
+                return false;
+            }
+
+            return true;
         }
 
         private void RestoreWindowPosition()
