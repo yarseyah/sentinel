@@ -580,6 +580,9 @@
   <ItemGroup>
     <Resource Include="Resources\Small\Lightning.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\MonoLightning.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->
   <Target Name="BeforeBuild">
