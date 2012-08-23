@@ -201,6 +201,18 @@
                                               VerticalContentAlignment="Center" />
                     </StackPanel>
                 </r:RibbonGroup>
+                <r:RibbonGroup Header="Columns">
+                    <r:RibbonToggleButton Label="Exception"
+                                          IsChecked="{Binding Preferences.ShowExceptionColumn}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Bottom"
+                                          SmallImageSource="../Resources/Small/Lightning.png"
+                                          LargeImageSource="../Resources/Small/Lightning.png"
+                                          ToolTipTitle="Show Exceptions"
+                                          ToolTipDescription="{Binding Description}"
+                                          ToolTipImageSource="../Resources/Small/Lightning.png">
+                    </r:RibbonToggleButton>
+                </r:RibbonGroup>
             </r:RibbonTab>
 
             <r:RibbonTab

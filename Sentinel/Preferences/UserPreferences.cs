@@ -48,6 +48,8 @@ namespace Sentinel.Preferences
 
         private bool showThreadColumn;
 
+        private bool showExceptionColumn;
+
         private bool useLazyRebuild;
 
         private bool useStackedLayout = true;
@@ -156,6 +158,26 @@ namespace Sentinel.Preferences
                 {
                     showThreadColumn = value;
                     OnPropertyChanged("ShowThreadColumn");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the exception column should be shown or not.
+        /// </summary>
+        public bool ShowExceptionColumn
+        {
+            get
+            {
+                return showExceptionColumn;
+            }
+
+            set
+            {
+                if (showExceptionColumn != value)
+                {
+                    showExceptionColumn = value;
+                    this.OnPropertyChanged("ShowExceptionColumn");
                 }
             }
         }

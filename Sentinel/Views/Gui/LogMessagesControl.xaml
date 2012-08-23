@@ -75,7 +75,7 @@
                                                DisplayMemberBinding="{Binding Thread}" />
                     <GridViewColumn Header="System"
                                     DisplayMemberBinding="{Binding System}" />
-                    <Controls:FixedWidthColumn FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=30}">
+                    <Controls:FixedWidthColumn FixedWidth="{Binding Preferences.ShowExceptionColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=30}">
                         <Controls:FixedWidthColumn.Header>
                             <Image Width="12"
                                    Height="12"
