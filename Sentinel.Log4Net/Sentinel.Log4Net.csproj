@@ -60,6 +60,7 @@
     <Compile Include="UdpAppenderListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UdpAppenderSettings.cs" />
+    <Compile Include="XElementHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">

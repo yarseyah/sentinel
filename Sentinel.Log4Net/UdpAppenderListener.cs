@@ -19,18 +19,20 @@
 
     public class UdpAppenderListener : INetworkProvider
     {
+        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
+            new ProviderRegistrationInformation(new Log4NetUdpListenerProvider());
+
         protected readonly Queue<string> PendingQueue = new Queue<string>();
 
         private const int PumpFrequency = 100;
 
         private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
 
-        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
-            new ProviderRegistrationInformation(new Log4NetUdpListenerProvider());
-
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly IUdpAppenderListenerSettings udpSettings;
+
+        private readonly XNamespace log4Net = "unique";
 
         private CancellationTokenSource cancellationTokenSource;
 
@@ -213,56 +215,86 @@
 
         private ILogEntry DeserializeMessage(string message)
         {
-            LogEntry logEntry;
-
+            
             try
             {
-                XNamespace log4Net = "unique";
-
                 var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
                 var element = XElement.Parse(payload);
-                var record = element.Element(log4Net + "event");
+                var entryEvent = element.Element(log4Net + "event");
 
                 // Establish whether a sub-system seems to be defined.
-                var description = record.Element(log4Net + "message").Value;
-
-                var classification = string.Empty;
-                var system = record.Attribute("logger").Value;
-                var type = record.Attribute("level").Value;
-                var host = "???";
-
-                foreach (XElement propertyElement in record.Element(log4Net + "properties").Elements())
+                if (entryEvent != null)
                 {
-                    if (propertyElement.Name == log4Net + "data" && propertyElement.Attribute("name") != null)
-                    {
-                        host = propertyElement.Attribute("value").Value;
-                    }
-                }
+                    var description = entryEvent.Element(log4Net + "message").Value;
 
-                logEntry = new LogEntry
-                               {
-                                   DateTime = DateTime.Parse(record.Attribute("timestamp").Value),
-                                   System = system,
-                                   Thread = record.Attribute("thread").Value,
-                                   Description = description,
-                                   Type = type,
-                                   MetaData = new Dictionary<string, object>
-                                                  {
-                                                      {
-                                                          "Classification", classification
-                                                          },
-                                                      {
-                                                          "Host", host
-                                                          }
-                                                  }
-                               };
+                    var classification = string.Empty;
+                    var system = entryEvent.GetAttribute("logger", string.Empty);
+                    var type = entryEvent.GetAttribute("level", string.Empty);
+                    var host = string.Empty;
+
+                    foreach (var propertyElement in entryEvent.Element(log4Net + "properties").Elements())
+                    {
+                        if (propertyElement.Name == log4Net + "data")
+                        {
+                            var name = propertyElement.GetAttribute("name", string.Empty);
+                            var value = propertyElement.GetAttribute("value", string.Empty);
+
+                            switch (name)
+                            {
+                                case "HostName":
+                                    host = value;
+                                    break;
+                                default:
+                                    Log.WarnFormat("Found unknown property named '{0}' with value '{1}'", name, value);
+                                    break;
+                            }
+                        }
+                    }
+
+                    var metaData = new Dictionary<string, object>();
+                    metaData["Classification"] = classification;
+                    metaData["Host"] = host;
+
+                    AddExceptionIfFound(entryEvent, metaData);
+
+                    var logEntry = new LogEntry
+                        {
+                            DateTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now),
+                            System = system,
+                            Thread = entryEvent.GetAttribute("thread", string.Empty),
+                            Description = description,
+                            Type = type,
+                            MetaData = metaData
+                        };
+
+                    return logEntry;
+                }
             }
             catch (Exception e)
             {
-                return null;
+                Log.Error("DeserializeMessage: exception when processing incoming message", e);
             }
 
-            return logEntry;
+            return null;
+        }
+
+        private void AddExceptionIfFound(XElement entryEvent, Dictionary<string, object> metaData)
+        {
+            if (entryEvent == null)
+            {
+                throw new ArgumentNullException("entryEvent");
+            }
+
+            if (metaData == null)
+            {
+                throw new ArgumentNullException("metaData");
+            }
+
+            var exceptionElement = entryEvent.Element(log4Net + "exception");
+            if (exceptionElement != null)
+            {
+                metaData["Exception"] = exceptionElement.Value;
+            }
         }
 
         private bool IsValidMessage(string message)
