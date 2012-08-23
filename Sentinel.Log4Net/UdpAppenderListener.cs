@@ -3,17 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Linq;
-    using System.Xml.Serialization;
 
     using Common.Logging;
 
@@ -120,30 +117,45 @@
         {
             Log.Debug("SocketListener started");
 
-            var endPoint = new IPEndPoint(IPAddress.Any, 9123);
-            using (var listener = new UdpClient(endPoint))
+            while (!this.cancellationTokenSource.IsCancellationRequested)
             {
-                while (!cancellationTokenSource.IsCancellationRequested)
-                {
-                    var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                    listener.Client.ReceiveTimeout = 1000;
-                    try
-                    {
-                        var bytes = listener.Receive(ref remoteEndPoint);
-                        var msg = string.Format("Recieved {0} bytes from {1}", bytes.Length, remoteEndPoint.Address);
-                        Log.Debug(msg);
-                        Trace.WriteLine(msg);
+                var endPoint = new IPEndPoint(IPAddress.Any, 9123);
 
-                        var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-                        lock (PendingQueue)
-                        {
-                            PendingQueue.Enqueue(message);
-                        }
-                    }
-                    catch (Exception e)
+                using (var listener = new UdpClient(endPoint))
+                {
+                    while (!this.cancellationTokenSource.IsCancellationRequested)
                     {
-                        Log.DebugFormat("SocketException: {0}", e.Message);
-                        Trace.WriteLine(string.Format("SocketException: {0}", e.Message));
+                        var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                        listener.Client.ReceiveTimeout = 1000;
+                        try
+                        {
+                            var bytes = listener.Receive(ref remoteEndPoint);
+
+                            Log.Debug(string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
+
+                            var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+                            lock (this.PendingQueue)
+                            {
+                                this.PendingQueue.Enqueue(message);
+                            }
+                        }
+                        catch (SocketException socketException)
+                        {
+                            if (socketException.SocketErrorCode != SocketError.TimedOut)
+                            {
+                                Log.Debug("SocketException", socketException);
+                                Log.DebugFormat(
+                                    "SocketException.SocketErrorCode = {0}", 
+                                    socketException.SocketErrorCode);
+
+                                // Break out of the 'using socket' loop and try to establish a new socket.
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.DebugFormat("Exception: {0}", e.Message);
+                        }
                     }
                 }
             }
