@@ -195,6 +195,21 @@ namespace Sentinel.Controls
             {
                 ProcessCommandLine(commandLine.Skip(1));
             }
+
+            // Debug the available loggers.
+            var logManager = services.Get<ILogManager>();
+            foreach (var logger in logManager)
+            {
+                log.DebugFormat("Log: {0}", logger.Name);
+            }
+
+            var providerManager = services.Get<IProviderManager>();
+            foreach (var instance in providerManager.GetInstances())
+            {
+                log.DebugFormat("Provider: {0}", instance.Name);
+                log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
+                log.DebugFormat("   - logger = {0}", instance.Logger);
+            }
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
@@ -208,7 +223,7 @@ namespace Sentinel.Controls
             string protocol;
             int port;
 
-            if (ValidateCommandLine(commandLine, out provider, out protocol, out port))
+            if (!ValidateCommandLine(commandLine, out provider, out protocol, out port))
             {
                 // Syntax expected to be "<nlog|log4net> <udp|tcp> <portNumber>"
                 MessageBox.Show(
@@ -234,9 +249,11 @@ namespace Sentinel.Controls
                     Trace.WriteLine(
                         string.Format("Requested listener {0}, {1} on port {2}", provider, protocol, port));
 
+                    var name = string.Format("{0} listening on {1} port {2}", provider, protocol, port);
+                    
                     // Create the logger.
                     var logManager = services.Get<ILogManager>();
-                    var logTarget = logManager.Add(string.Format("{0} listening on {1} port {2}", provider, protocol, port));
+                    var logTarget = logManager.Add(name);
 
                     // Create the frame view
                     Debug.Assert(
@@ -249,11 +266,18 @@ namespace Sentinel.Controls
 
                     // Create the providers.
                     var providerManager = services.Get<IProviderManager>();
-                    IProviderSettings providerSettings = new NetworkSettings { IsUdp = protocol == "udp", Port = port };
+                    IProviderSettings providerSettings = new NetworkSettings
+                        {
+                            IsUdp = protocol == "udp", 
+                            Port = port, 
+                            Name = name
+                        };
 
                     var logProvider =
                         providerManager.Create(
-                            provider == "nlog" ? NLogViewerProvider.Info.Identifier : Log4NetProvider.Info.Identifier,
+                            provider == "nlog" 
+                                ? NLogViewerProvider.Info.Identifier 
+                                : Log4NetProvider.Info.Identifier,
                             providerSettings);
 
                     logProvider.Logger = logTarget;
