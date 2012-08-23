@@ -7,44 +7,36 @@
 //
 #endregion
 
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Gui;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Providers;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support;
-using Sentinel.Support.Mvvm;
-using Sentinel.Views.Gui;
-using Sentinel.Views.Interfaces;
-
-#endregion
-
 namespace Sentinel.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Input;
 
     using Common.Logging;
 
-    using Newtonsoft.Json;
-
-    using Sentinel.Filters;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Logs.Gui;
+    using Sentinel.Logs.Interfaces;
+    using Sentinel.Providers;
+    using Sentinel.Providers.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support;
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Views.Gui;
+    using Sentinel.Views.Interfaces;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml

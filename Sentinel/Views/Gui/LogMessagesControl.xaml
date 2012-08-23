@@ -14,6 +14,7 @@
     <UserControl.Resources>
 		<Converters:TypeToSmallImageConverter x:Key="typeToImageConverter" />
         <Converters:BooleanToWidthConverter x:Key="BooleanToWidthConverter" />
+        <Converters:MessageHasExceptionMetadataConverter x:Key="messageHasExceptionMetadata" />
 	</UserControl.Resources>
 
 	<Grid x:Name="LayoutRoot">
@@ -74,6 +75,29 @@
                                                DisplayMemberBinding="{Binding Thread}" />
                     <GridViewColumn Header="System"
                                     DisplayMemberBinding="{Binding System}" />
+                    <Controls:FixedWidthColumn FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=30}"
+                                               Header="x">
+                        <Controls:FixedWidthColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image x:Name="icon"
+                                       Width="16"
+                                       Height="16"
+                                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Source="../../Resources/Small/Lightning.png"
+                                       Visibility="Hidden" />
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Converter={StaticResource messageHasExceptionMetadata}}"
+                                                 Value="true">
+                                        <Setter TargetName="icon"
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Controls:FixedWidthColumn.CellTemplate>
+                    </Controls:FixedWidthColumn>
                     <GridViewColumn Header="Description"
                                     DisplayMemberBinding="{Binding Description}" />
                 </GridView>

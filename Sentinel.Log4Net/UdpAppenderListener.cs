@@ -241,7 +241,7 @@
 
                             switch (name)
                             {
-                                case "HostName":
+                                case "log4net:HostName":
                                     host = value;
                                     break;
                                 default:

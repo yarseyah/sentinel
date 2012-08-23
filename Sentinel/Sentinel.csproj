@@ -186,6 +186,7 @@
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
     <Compile Include="Support\Converters\IsTimingMessageValueConverter.cs" />
     <Compile Include="Support\Converters\MatchModeConverter.cs" />
+    <Compile Include="Support\Converters\MessageHasExceptionMetadataConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
     <Compile Include="Support\Converters\TypeToImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToLargeImageConverter.cs" />
@@ -575,6 +576,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Medium\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Lightning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.3\Microsoft.StyleCop.targets" />  -->
