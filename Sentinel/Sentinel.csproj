@@ -69,8 +69,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdParty\Microsoft Ribbon for WPF\Microsoft.Windows.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RibbonControlsLibrary">
       <HintPath>..\ThirdParty\Microsoft Ribbon for WPF\RibbonControlsLibrary.dll</HintPath>
@@ -508,6 +509,10 @@
     <Resource Include="Resources\Small\Trace.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MSBuildListener\MSBuildListener.csproj">
+      <Project>{1f9a47bd-297c-4e5b-81fc-541a47f25d77}</Project>
+      <Name>MSBuildListener</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
       <Project>{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}</Project>
       <Name>Sentinel.Interfaces</Name>

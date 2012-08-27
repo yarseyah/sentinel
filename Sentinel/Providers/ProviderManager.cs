@@ -6,6 +6,8 @@
     using System.Diagnostics;
     using System.Linq;
 
+    using MSBuildListener;
+
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.Providers.Interfaces;
@@ -44,7 +46,8 @@
                                         Implementor = typeof(FileMonitoringProvider),
                                         Settings = typeof(FileMonitorProviderPage)
                                     },
-                                UdpAppenderListener.ProviderRegistrationInformation
+                                UdpAppenderListener.ProviderRegistrationInformation,
+                                MSBuildAppenderListener.ProviderRegistrationRecord
                             };
         }
 

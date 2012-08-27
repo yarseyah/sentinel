@@ -1,12 +1,12 @@
-namespace Sentinel.Log4Net
+namespace MSBuildListener
 {
     using Sentinel.Interfaces.Providers;
 
-    public class UdpAppenderSettings : IUdpAppenderListenerSettings
+    public class MSBuildListenerSettings : IMSBuildListenerSettings
     {
-        public UdpAppenderSettings(IProviderSettings previousSettings)
+        public MSBuildListenerSettings(IProviderSettings providerSettings)
         {
-            ProviderSettings = previousSettings;
+            this.ProviderSettings = providerSettings;
         }
 
         public string Name
