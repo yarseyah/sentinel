@@ -125,6 +125,12 @@ namespace Sentinel.Highlighters
                                 }
                             }
 
+                            // Top align values
+                            style.Setters.Add(
+                                new Setter(
+                                    Control.VerticalContentAlignmentProperty, 
+                                    VerticalAlignment.Top));
+
                             style.Triggers.Add(trigger);
                             SetStyleSpacing(style);
                             styles[highlighter] = style;
