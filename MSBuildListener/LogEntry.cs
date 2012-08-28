@@ -38,10 +38,13 @@ namespace MSBuildListener
                     break;
             }
 
-            Description = (string) content["Message"];
+            Description = (string)content["Message"];
             DateTime = (DateTime)content["Timestamp"];
             Thread = ((int)content["ThreadId"]).ToString();
             Source = (string)content["SenderName"];
+            System = msbuildEventType;
+
+            MetaData = new Dictionary<string, object> { { "Original", content } };
         }
 
         /// <summary>
