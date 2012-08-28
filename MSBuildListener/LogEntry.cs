@@ -3,12 +3,45 @@ namespace MSBuildListener
     using System;
     using System.Collections.Generic;
 
+    using Newtonsoft.Json.Linq;
+
     using Sentinel.Interfaces;
 
     internal class LogEntry : ILogEntry
     {
         public LogEntry()
         {
+        }
+
+        public LogEntry(string msbuildEventType, JObject content)
+        {
+            if (string.IsNullOrWhiteSpace(msbuildEventType))
+            {
+                throw new ArgumentNullException("msbuildEventType");
+            }
+
+            if (content == null)
+            {
+                throw new ArgumentNullException("content");
+            }
+
+            switch (msbuildEventType)
+            {
+                case "ErrorRaised":
+                    Type = "ERROR";
+                    break;
+                case "WarningRaised":
+                    Type = "WARN";
+                    break;
+                default:
+                    Type = "INFO";
+                    break;
+            }
+
+            Description = (string) content["Message"];
+            DateTime = (DateTime)content["Timestamp"];
+            Thread = ((int)content["ThreadId"]).ToString();
+            Source = (string)content["SenderName"];
         }
 
         /// <summary>

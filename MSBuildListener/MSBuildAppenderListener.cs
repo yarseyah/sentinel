@@ -205,18 +205,37 @@ namespace MSBuildListener
         {
             try
             {
-                var obj = JToken.Parse(message);
-                var property = obj as JProperty;
+                var json = JToken.Parse(message);
 
-                if (property != null)
+                if (json != null)
                 {
-                    var logEntry = new LogEntry
-                                       {
-                                           DateTime = DateTime.Now, 
-                                           Description = "hard coded for now", 
-                                           Type = property.Name
-                                       };
-                    return logEntry;
+                    var jsonObject = json as JObject;
+
+                    if (jsonObject != null && jsonObject.Children().Count() == 1)
+                    {
+                        var property = jsonObject.Children().First() as JProperty;
+
+                        if (property == null)
+                        {
+                            Log.Error("First item in JObject should be a property");
+                        }
+                        else
+                        {
+                            var msbuildEventType = property.Name;
+                            var content = property.Value as JObject;
+
+                            if ( string.IsNullOrWhiteSpace(msbuildEventType) || content == null)
+                            {
+                                Log.ErrorFormat(
+                                    "Expected payload to consist of a property corresponding to the MSBuild event type name, "
+                                    + "and a value which is the serialized object corresponding to the type.");
+                            }
+                            else
+                            {
+                                return new LogEntry(msbuildEventType, content);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception e)
