@@ -1,10 +1,8 @@
 #region License
-//
 // © Copyright Ray Hayes
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
-//
 #endregion
 
 namespace Sentinel.Highlighters
@@ -35,7 +33,7 @@ namespace Sentinel.Highlighters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(value is ILogEntry, "Supplied value must be a LogEntry for conversion.");
-            return highlighter.IsMatch(value as ILogEntry) && highlighter.Enabled
+            return highlighter.Enabled && highlighter.IsMatch(value as ILogEntry)
                        ? "Match"
                        : "Not Match";
         }
