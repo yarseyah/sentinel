@@ -10,6 +10,7 @@ namespace Sentinel.Highlighters
     #region Using directives
 
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -152,15 +153,19 @@ namespace Sentinel.Highlighters
             var entry = item as ILogEntry;
             if (entry != null)
             {
-                foreach (var pair in styles
-                    .Where(pair => pair.Key.Enabled)
-                    .Where(pair => pair.Key.IsMatch(entry)))
+                foreach (var pair in styles.Where(pair => pair.Key.Enabled).Where(pair => pair.Key.IsMatch(entry)))
                 {
                     return pair.Value;
                 }
             }
 
-            return base.SelectStyle(item, container);
+            var defaultStyle = new Style(typeof(ListViewItem));
+
+            Debug.Assert(defaultStyle != null, "Should always get a default style");
+            SetStyleSpacing(defaultStyle);
+            defaultStyle.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Top));
+
+            return defaultStyle;
         }
 
         /// <summary>
