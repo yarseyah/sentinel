@@ -11,7 +11,7 @@ using log4net.Config;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ray Hayes")]
 [assembly: AssemblyProduct("Log4NetTester")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2010")]
+[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
