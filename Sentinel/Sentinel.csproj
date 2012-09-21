@@ -159,7 +159,6 @@
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
     <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />
-    <Compile Include="Providers\Log4NetProvider.cs" />
     <Compile Include="Providers\MessageFormatPage.xaml.cs">
       <DependentUpon>MessageFormatPage.xaml</DependentUpon>
     </Compile>
@@ -177,7 +176,6 @@
     <Compile Include="Providers\SelectProviderPage.xaml.cs">
       <DependentUpon>SelectProviderPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Providers\UdpNetworkConfigurationPage.cs" />
     <Compile Include="Services\AttributeHelper.cs" />
     <Compile Include="Services\DictionaryHelper.cs" />
     <Compile Include="Services\ServiceLocator.cs" />

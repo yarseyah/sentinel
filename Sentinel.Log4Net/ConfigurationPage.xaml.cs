@@ -123,7 +123,8 @@
                 saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
 
             var providerInfo = (IProviderSettings)saveData;
-            return new UdpAppenderSettings(providerInfo) { Port = Port };
+            return new UdpAppenderSettings(providerInfo)
+                { Port = Port };
         }
 
         protected void OnPropertyChanged(string propertyName)

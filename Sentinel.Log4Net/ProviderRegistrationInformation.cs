@@ -8,14 +8,14 @@ namespace Sentinel.Log4Net
     {
         public ProviderRegistrationInformation(IProviderInfo providerInfo)
         {
-            this.Info = providerInfo;
+            Info = providerInfo;
         }
 
         public Guid Identifier
         {
             get
             {
-                return this.Info.Identifier;
+                return Info.Identifier;
             }
         }
 

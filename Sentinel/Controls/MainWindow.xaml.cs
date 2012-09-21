@@ -28,6 +28,7 @@ namespace Sentinel.Controls
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Log4Net;
     using Sentinel.Logs.Gui;
     using Sentinel.Logs.Interfaces;
     using Sentinel.Providers;
@@ -256,20 +257,26 @@ namespace Sentinel.Controls
                     frame.SetViews(new List<string> { LogMessages.Info.Identifier });
                     ViewManager.Viewers.Add(frame);
 
-                    // Create the providers.
                     var providerManager = services.Get<IProviderManager>();
-                    IProviderSettings providerSettings = new NetworkSettings
-                        {
-                            IsUdp = protocol == "udp", 
-                            Port = port, 
-                            Name = name
-                        };
+                    var providerSettings = provider == "nlog"
+                                               ? new NetworkSettings
+                                                   { 
+                                                       IsUdp = protocol == "udp", 
+                                                       Port = port, 
+                                                       Name = name 
+                                                   }
+                                               : (IProviderSettings)
+                                                 new Sentinel.Log4Net.UdpAppenderSettings()
+                                                     {
+                                                         Port = port, 
+                                                         Name = name
+                                                     };
 
                     var logProvider =
                         providerManager.Create(
-                            provider == "nlog" 
-                                ? NLogViewerProvider.Info.Identifier 
-                                : Log4NetProvider.Info.Identifier,
+                            provider == "nlog"
+                                ? NLogViewerProvider.Info.Identifier
+                                : UdpAppenderListener.ProviderRegistrationInformation.Info.Identifier,
                             providerSettings);
 
                     logProvider.Logger = logTarget;

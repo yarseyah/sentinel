@@ -23,15 +23,6 @@
         {
             providers = new List<IProviderRegistrationRecord>
                             {
-                                // Note that the Log4net provider only supports UDP and not TCP
-                                // so a slightly different configuration page is used.
-                                new ProviderRegistrationRecord
-                                    {
-                                        Identifier = Log4NetProvider.Id,
-                                        Info = Log4NetProvider.Info,
-                                        Implementor = typeof(Log4NetProvider),
-                                        Settings = typeof(UdpNetworkConfigurationPage)
-                                    },
                                 new ProviderRegistrationRecord
                                     {
                                         Identifier = NLogViewerProvider.Id,
@@ -102,9 +93,8 @@
 
         public ILogProvider Get(string name)
         {
-            Debug.Assert(providerInstances.Any(p => p.Key == name),
-                         "There is no instance with the identifier " + name);
-            if (!providerInstances.Any(p => p.Key == name))
+            Debug.Assert(providerInstances.Any(p => p.Key == name), "There is no instance with the identifier " + name);
+            if (providerInstances.All(p => p.Key != name))
             {
                 throw new ArgumentException("There is no instance with the identifier " + name, "name");
             }
@@ -135,8 +125,8 @@
         }
 
         /// <summary>
-        /// Gets the configuration abstaction for the specified Guid.  
-        /// Type left to caller to determine (as long as it is satified
+        /// Gets the configuration abstraction for the specified Guid.  
+        /// Type left to caller to determine (as long as it is satisfied
         /// by the implementer too).
         /// </summary>
         /// <typeparam name="T">Type of configuration</typeparam>
