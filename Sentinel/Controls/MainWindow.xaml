@@ -1,12 +1,11 @@
-﻿<r:RibbonWindow
+﻿<RibbonWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:r="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:WpfExtras="clr-namespace:WpfExtras;assembly=WpfExtras"
-    xmlns:Converters1="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" x:Class="Sentinel.Controls.MainWindow"
+    xmlns:Converters1="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" 
+    x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
     Width="1017"
@@ -17,7 +16,7 @@
     Closing="OnClosed"
     ResizeMode="CanResizeWithGrip">
 
-    <r:RibbonWindow.Resources>
+    <RibbonWindow.Resources>
         <Style
             TargetType="{x:Type Image}">
             <Setter
@@ -65,28 +64,28 @@
             Source="{Binding Highlight.Highlighters}" />
         <Converters1:CollapseIfZeroConverter
             x:Key="collapseIfZero" />
-    </r:RibbonWindow.Resources>
+    </RibbonWindow.Resources>
 
     <DockPanel>
 
-        <r:Ribbon
+        <Ribbon
             DockPanel.Dock="Top"
             ShowQuickAccessToolBarOnTop="False">
 
-            <r:Ribbon.ApplicationMenu>
-                <r:RibbonApplicationMenu>
-                    <r:RibbonApplicationMenuItem
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu>
+                    <RibbonApplicationMenuItem
                         Header="About"
                         IsEnabled="False"
                         ImageSource="/Resources/Large/Info.PNG"
                         KeyTip="A" />
-                    <r:RibbonApplicationMenuItem
+                    <RibbonApplicationMenuItem
                         Header="Preferences"
                         IsChecked="{Binding Preferences.Show}"
                         ImageSource="/Resources/Small/Settings.PNG"
                         KeyTip="X" />
                
-                    <r:RibbonApplicationMenu.FooterPaneContent>
+                    <RibbonApplicationMenu.FooterPaneContent>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
@@ -96,16 +95,16 @@
                                 <ColumnDefinition
                                     Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <r:RibbonButton
+                            <RibbonButton
                                 SmallImageSource="/Resources/Small/Exit.PNG"
                                 Label="Exit"
                                 HorizontalAlignment="Right"
                                 Command="{Binding Exit}"
                                 Grid.Column="2" />
                         </Grid>
-                    </r:RibbonApplicationMenu.FooterPaneContent>
+                    </RibbonApplicationMenu.FooterPaneContent>
 
-                    <r:RibbonApplicationMenu.AuxiliaryPaneContent>
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
                         <StackPanel>
                             <TextBlock
                                 FontWeight="Bold"
@@ -115,36 +114,36 @@
                                 Most of the general preferences and session management features are to move into here.
                             </TextBlock>
                         </StackPanel>
-                    </r:RibbonApplicationMenu.AuxiliaryPaneContent>
-                </r:RibbonApplicationMenu>
-            </r:Ribbon.ApplicationMenu>
+                    </RibbonApplicationMenu.AuxiliaryPaneContent>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
 
-            <r:RibbonTab Header="Home">
-                <r:RibbonGroup Header="General">
-                    <r:RibbonButton Label="Add"
+            <RibbonTab Header="Home">
+                <RibbonGroup Header="General">
+                    <RibbonButton Label="Add"
                                     SmallImageSource="/Resources/Small/Add.png"
                                     Command="{Binding Add}" />
-                    <r:RibbonToggleButton ToolTip="Show the Preferences dialog"
+                    <RibbonToggleButton ToolTip="Show the Preferences dialog"
                                           IsChecked="{Binding Preferences.Show}"
                                           SmallImageSource="/Resources/Small/Settings.png"
                                           Label="Preferences">
-                    </r:RibbonToggleButton>
-                    <r:RibbonButton Label="Exit"
+                    </RibbonToggleButton>
+                    <RibbonButton Label="Exit"
                                     SmallImageSource="/Resources/Small/Exit.png"
                                     LargeImageSource="/Resources/Medium/Exit.png"
                                     Command="{Binding Exit}">
-                        <r:RibbonButton.ControlSizeDefinition>
-                            <r:RibbonControlSizeDefinition />
-                        </r:RibbonButton.ControlSizeDefinition>
-                    </r:RibbonButton>
-                </r:RibbonGroup>
+                        <RibbonButton.ControlSizeDefinition>
+                            <RibbonControlSizeDefinition />
+                        </RibbonButton.ControlSizeDefinition>
+                    </RibbonButton>
+                </RibbonGroup>
 
                 <!-- Standard filters -->
-                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource standardHighlighters}}"
+                <RibbonGroup ItemsSource="{Binding Source={StaticResource standardHighlighters}}"
                                Header="Highlighters">
-                    <r:RibbonGroup.ItemTemplate>
+                    <RibbonGroup.ItemTemplate>
                         <DataTemplate>
-                            <r:RibbonToggleButton Label="{Binding Name}"
+                            <RibbonToggleButton Label="{Binding Name}"
                                                   IsChecked="{Binding Enabled}"
                                                   HorizontalContentAlignment="Center"
                                                   VerticalContentAlignment="Bottom"
@@ -153,15 +152,15 @@
                                                   ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                                   ToolTipDescription="{Binding Description}"
                                                   ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
-                            </r:RibbonToggleButton>
+                            </RibbonToggleButton>
                         </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
-                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource standardFilters}}"
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+                <RibbonGroup ItemsSource="{Binding Source={StaticResource standardFilters}}"
                                Header="Filters">
-                    <r:RibbonGroup.ItemTemplate>
+                    <RibbonGroup.ItemTemplate>
                         <DataTemplate>
-                            <r:RibbonToggleButton Label="{Binding Name}"
+                            <RibbonToggleButton Label="{Binding Name}"
                                                   IsChecked="{Binding Enabled}"
                                                   HorizontalContentAlignment="Center"
                                                   VerticalContentAlignment="Bottom"
@@ -173,36 +172,36 @@
                                                   ToolTipFooterTitle="Using filters"
                                                   ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted."
                                                   ToolTipFooterImageSource="/Resources/Small/Info.png">
-                            </r:RibbonToggleButton>
+                            </RibbonToggleButton>
                         </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
-                <r:RibbonGroup Header="Search" IsEnabled="False">
-                    <r:RibbonTextBox Text="{Binding Search, NotifyOnTargetUpdated=True}" />
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+                <RibbonGroup Header="Search" IsEnabled="False">
+                    <RibbonTextBox Text="{Binding Search, NotifyOnTargetUpdated=True}" />
 
-                    <r:RibbonSplitButton Label="Options">
-                        <r:RibbonSplitMenuItem Header="Case-sensitive" />
-                        <r:RibbonSplitMenuItem Header="Case-insensitive" />
-                        <r:RibbonSplitMenuItem Header="Regular Expression" />
-                    </r:RibbonSplitButton>
+                    <RibbonSplitButton Label="Options">
+                        <RibbonSplitMenuItem Header="Case-sensitive" />
+                        <RibbonSplitMenuItem Header="Case-insensitive" />
+                        <RibbonSplitMenuItem Header="Regular Expression" />
+                    </RibbonSplitButton>
                     
                     <StackPanel>
-                        <r:RibbonToggleButton Label="Highlight"
+                        <RibbonToggleButton Label="Highlight"
                                               HorizontalAlignment="Left" 
                                               SmallImageSource="/Resources/Small/Info.png"
                                               VerticalContentAlignment="Center"/>
-                        <r:RibbonToggleButton Label="Filter"
+                        <RibbonToggleButton Label="Filter"
                                               HorizontalAlignment="Left"
                                               SmallImageSource="/Resources/Small/Info.png"
                                               VerticalContentAlignment="Center" />
-                        <r:RibbonToggleButton Label="Select"
+                        <RibbonToggleButton Label="Select"
                                               HorizontalAlignment="Left"
                                               SmallImageSource="/Resources/Small/Info.png"
                                               VerticalContentAlignment="Center" />
                     </StackPanel>
-                </r:RibbonGroup>
-                <r:RibbonGroup Header="Columns">
-                    <r:RibbonToggleButton Label="Exception"
+                </RibbonGroup>
+                <RibbonGroup Header="Columns">
+                    <RibbonToggleButton Label="Exception"
                                           IsChecked="{Binding Preferences.ShowExceptionColumn}"
                                           HorizontalContentAlignment="Center"
                                           VerticalContentAlignment="Bottom"
@@ -211,26 +210,26 @@
                                           ToolTipTitle="Show Exceptions"
                                           ToolTipDescription="{Binding Description}"
                                           ToolTipImageSource="../Resources/Small/Lightning.png">
-                    </r:RibbonToggleButton>
-                </r:RibbonGroup>
-            </r:RibbonTab>
+                    </RibbonToggleButton>
+                </RibbonGroup>
+            </RibbonTab>
 
-            <r:RibbonTab
+            <RibbonTab
                 Header="Highlighting">
-                <r:RibbonGroup
+                <RibbonGroup
                     Header="Options">
-                    <r:RibbonButton
+                    <RibbonButton
                         Label="Add New Highlighter"
                         LargeImageSource="/Resources/Small/Add.png"
                         IsEnabled="False" />
-                </r:RibbonGroup>
-                <r:RibbonGroup
+                </RibbonGroup>
+                <RibbonGroup
                     ItemsSource="{Binding Source={StaticResource customHighlighters}}"
                     Visibility="{Binding Source={StaticResource customHighlighters}, Path=Count, Converter={StaticResource collapseIfZero}}"
                     Header="Custom Highlighters">
-                    <r:RibbonGroup.ItemTemplate>
+                    <RibbonGroup.ItemTemplate>
                         <DataTemplate>
-                            <r:RibbonToggleButton
+                            <RibbonToggleButton
                                 Label="{Binding Name}"
                                 IsChecked="{Binding Enabled}"
                                 HorizontalContentAlignment="Center"
@@ -240,23 +239,23 @@
                                 ToolTipTitle="{Binding Name, StringFormat=Filter for {0}}"
                                 ToolTipDescription="{Binding Description}"
                                 ToolTipImageSource="{Binding Pattern, Converter={StaticResource typeToLargeImage}}">
-                            </r:RibbonToggleButton>
+                            </RibbonToggleButton>
                         </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
-            </r:RibbonTab>
-            <r:RibbonTab Header="Filtering">
-                <r:RibbonGroup Header="Options">
-                    <r:RibbonButton Label="Add New Filter"
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Filtering">
+                <RibbonGroup Header="Options">
+                    <RibbonButton Label="Add New Filter"
                                     LargeImageSource="/Resources/Small/Add.png"
                                     IsEnabled="False" />
-                </r:RibbonGroup>
-                <r:RibbonGroup ItemsSource="{Binding Source={StaticResource customFilters}}"
+                </RibbonGroup>
+                <RibbonGroup ItemsSource="{Binding Source={StaticResource customFilters}}"
                                Visibility="{Binding Source={StaticResource customFilters}, Path=Count, Converter={StaticResource collapseIfZero}}"
                                Header="Custom Filters">
-                    <r:RibbonGroup.ItemTemplate>
+                    <RibbonGroup.ItemTemplate>
                         <DataTemplate>
-                            <r:RibbonToggleButton Label="{Binding Name}"
+                            <RibbonToggleButton Label="{Binding Name}"
                                                   IsChecked="{Binding Enabled}"
                                                   HorizontalContentAlignment="Center"
                                                   VerticalContentAlignment="Bottom"
@@ -268,19 +267,19 @@
                                                   ToolTipFooterTitle="Using filters"
                                                   ToolTipFooterDescription="Note, when a filter is enabled, matching messages are omitted.  This is a user defined filter."
                                                   ToolTipFooterImageSource="/Resources/Small/Info.png">
-                            </r:RibbonToggleButton>
+                            </RibbonToggleButton>
                         </DataTemplate>
-                    </r:RibbonGroup.ItemTemplate>
-                </r:RibbonGroup>
-            </r:RibbonTab>
-            <r:RibbonTab Header="Classify" IsEnabled="False">
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Classify" IsEnabled="False">
                 
-            </r:RibbonTab>
-        </r:Ribbon>
+            </RibbonTab>
+        </Ribbon>
 
         <TabControl
             x:Name="tabControl"
             Grid.Row="1">
         </TabControl>
     </DockPanel>
-</r:RibbonWindow>
+</RibbonWindow>
