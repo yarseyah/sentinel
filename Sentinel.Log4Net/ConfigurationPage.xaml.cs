@@ -23,8 +23,6 @@
 
         private int port;
 
-        private bool isUdp = true;
-
         public ConfigurationPage()
         {
             InitializeComponent();
@@ -40,22 +38,6 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual bool SupportsTcp
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public virtual bool SupportsUdp
-        {
-            get
-            {
-                return true;
-            }
-        }
-
         public int Port
         {
             get
@@ -69,23 +51,6 @@
                 {
                     port = value;
                     OnPropertyChanged("Port");
-                }
-            }
-        }
-
-        public bool IsUdp
-        {
-            get
-            {
-                return isUdp;
-            }
-
-            set
-            {
-                if (isUdp != value)
-                {
-                    isUdp = value;
-                    OnPropertyChanged("IsUdp");
                 }
             }
         }
@@ -169,13 +134,6 @@
                 var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
-        }
-
-        private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // Establish default selection
-            Debug.Assert(SupportsUdp || SupportsTcp, "The provider needs to support at least one of UDP or TCP");
-            IsUdp = SupportsUdp;
         }
 
         private void SelectProviderPagePropertyChanged(object sender, PropertyChangedEventArgs e)

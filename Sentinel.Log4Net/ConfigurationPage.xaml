@@ -6,8 +6,7 @@
              xmlns:Converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" mc:Ignorable="d"
              d:DesignHeight="226"
              d:DesignWidth="294"
-             SnapsToDevicePixels="True"
-             Loaded="OnLoaded">
+             SnapsToDevicePixels="True">
 
     <UserControl.Resources>
         <Converters:BooleanInvertingValueConverter x:Key="InvertConverter" />
@@ -44,7 +43,7 @@
                    Grid.Column="1"
                    VerticalAlignment="Top"
                    TextWrapping="WrapWithOverflow">
-            <Run>Please note that depending upon your firewall settings, you may be prompted to confirm the openning of a network port.</Run>
+            <Run>Please note that depending upon your firewall settings, you may be prompted to confirm the opening of a network port.</Run>
             <LineBreak />
             <Run>This normally only occurs the first time.</Run>
         </TextBlock>
