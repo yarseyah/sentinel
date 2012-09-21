@@ -7,8 +7,8 @@
     <ProjectGuid>{1F9A47BD-297C-4E5B-81FC-541A47F25D77}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MSBuildListener</RootNamespace>
-    <AssemblyName>MSBuildListener</AssemblyName>
+    <RootNamespace>Sentinel.MSBuild</RootNamespace>
+    <AssemblyName>Sentinel.MSBuild</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>

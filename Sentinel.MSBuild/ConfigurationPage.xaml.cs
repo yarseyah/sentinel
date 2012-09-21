@@ -1,4 +1,4 @@
-﻿namespace MSBuildListener
+﻿namespace Sentinel.MSBuild
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;

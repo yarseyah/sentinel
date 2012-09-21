@@ -507,7 +507,7 @@
     <Resource Include="Resources\Small\Trace.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MSBuildListener\MSBuildListener.csproj">
+    <ProjectReference Include="..\Sentinel.MSBuild\Sentinel.MSBuild.csproj">
       <Project>{1f9a47bd-297c-4e5b-81fc-541a47f25d77}</Project>
       <Name>MSBuildListener</Name>
     </ProjectReference>

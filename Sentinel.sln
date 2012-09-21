@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Log4Net", "Sentine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Interfaces", "Sentinel.Interfaces\Sentinel.Interfaces.csproj", "{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuildListener", "MSBuildListener\MSBuildListener.csproj", "{1F9A47BD-297C-4E5B-81FC-541A47F25D77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.MSBuild", "Sentinel.MSBuild\Sentinel.MSBuild.csproj", "{1F9A47BD-297C-4E5B-81FC-541A47F25D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
