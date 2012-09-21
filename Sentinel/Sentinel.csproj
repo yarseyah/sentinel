@@ -509,7 +509,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sentinel.MSBuild\Sentinel.MSBuild.csproj">
       <Project>{1f9a47bd-297c-4e5b-81fc-541a47f25d77}</Project>
-      <Name>MSBuildListener</Name>
+      <Name>Sentinel.MSBuild</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
       <Project>{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}</Project>
