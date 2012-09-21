@@ -26,32 +26,9 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        <TextBlock Text="Protocol : "
-                   Margin="3"
-                   VerticalAlignment="Top" />
         <StackPanel Grid.Row="0"
                     Grid.Column="1"
-                    IsEnabled="False">
-            <RadioButton Content="UDP"
-                         Margin="3"
-                         IsEnabled="{Binding SupportsUdp}"
-                         IsChecked="{Binding IsUdp}" />
-            <RadioButton Content="TCP"
-                         Margin="3"
-                         IsEnabled="{Binding SupportsTcp}"
-                         IsChecked="{Binding IsUdp, Converter={StaticResource InvertConverter}}" />
-        </StackPanel>
-
-        <TextBlock Margin="3"
-                   Foreground="Red"
-                   Text="Caution: setting software up for TCP may have a performance impact."
-                   Grid.Row="1"
-                   Grid.Column="1"
-                   VerticalAlignment="Top"
-                   Visibility="{Binding IsUdp, Converter={StaticResource visToHiddenConverter}, ConverterParameter=true}"
-                   TextWrapping="WrapWithOverflow" />
-
+                    IsEnabled="False"></StackPanel>
         <TextBlock Text="Port : "
                    Margin="3"
                    Grid.Row="2"
@@ -71,33 +48,5 @@
             <LineBreak />
             <Run>This normally only occurs the first time.</Run>
         </TextBlock>
-
-        <TextBlock
-            Text="In Development - Hardcoded values"
-            FontSize="30"
-            Height="87"
-            Foreground="Red"
-            Grid.ColumnSpan="2"
-            Grid.Row="1"
-            VerticalAlignment="Center"
-            TextAlignment="Center"
-            TextWrapping="WrapWithOverflow"
-            RenderTransformOrigin="0.5,0.5"
-            Grid.RowSpan="3"
-            HorizontalAlignment="Center">
-            <TextBlock.Effect>
-                <DropShadowEffect />
-            </TextBlock.Effect>
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform />
-                    <SkewTransform />
-                    <RotateTransform
-                        Angle="-30" />
-                    <TranslateTransform />
-                </TransformGroup>
-            </TextBlock.RenderTransform>
-        </TextBlock>
-
     </Grid>
 </UserControl>

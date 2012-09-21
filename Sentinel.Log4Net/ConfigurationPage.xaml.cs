@@ -62,6 +62,7 @@
             {
                 return port;
             }
+
             set
             {
                 if (port != value)
@@ -78,6 +79,7 @@
             {
                 return isUdp;
             }
+
             set
             {
                 if (isUdp != value)
@@ -118,6 +120,7 @@
             {
                 return isValid;
             }
+
             private set
             {
                 if (isValid != value)
@@ -154,8 +157,8 @@
             Debug.Assert(
                 saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
 
-            var previousInfo = (IProviderSettings)saveData;
-            return new UdpAppenderSettings(previousInfo);
+            var providerInfo = (IProviderSettings)saveData;
+            return new UdpAppenderSettings(providerInfo) { Port = Port };
         }
 
         protected void OnPropertyChanged(string propertyName)

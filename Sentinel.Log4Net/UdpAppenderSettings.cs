@@ -4,9 +4,9 @@ namespace Sentinel.Log4Net
 
     public class UdpAppenderSettings : IUdpAppenderListenerSettings
     {
-        public UdpAppenderSettings(IProviderSettings previousSettings)
+        public UdpAppenderSettings(IProviderSettings providerSettings)
         {
-            ProviderSettings = previousSettings;
+            ProviderSettings = providerSettings;
         }
 
         public string Name
@@ -31,6 +31,12 @@ namespace Sentinel.Log4Net
             {
                 return ProviderSettings.Info;
             }
+        }
+
+        public int Port
+        {
+            get; 
+            set;
         }
 
         private IProviderSettings ProviderSettings { get; set; }

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
@@ -119,13 +118,19 @@
         {
             Log.Debug("SocketListener started");
 
-            while (!this.cancellationTokenSource.IsCancellationRequested)
+            if (udpSettings == null)
             {
-                var endPoint = new IPEndPoint(IPAddress.Any, 9123);
+                Log.Error("UDP settings has not been initialised");
+                throw new NullReferenceException();
+            }
+
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                var endPoint = new IPEndPoint(IPAddress.Any, udpSettings.Port);
 
                 using (var listener = new UdpClient(endPoint))
                 {
-                    while (!this.cancellationTokenSource.IsCancellationRequested)
+                    while (!cancellationTokenSource.IsCancellationRequested)
                     {
                         var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
                         listener.Client.ReceiveTimeout = 1000;
@@ -136,9 +141,9 @@
                             Log.Debug(string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-                            lock (this.PendingQueue)
+                            lock (PendingQueue)
                             {
-                                this.PendingQueue.Enqueue(message);
+                                PendingQueue.Enqueue(message);
                             }
                         }
                         catch (SocketException socketException)
