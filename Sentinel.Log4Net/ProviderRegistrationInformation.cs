@@ -33,7 +33,7 @@ namespace Sentinel.Log4Net
         {
             get
             {
-                return typeof(UdpAppenderListener);
+                return typeof(Log4NetProvider);
             }
         }
     }

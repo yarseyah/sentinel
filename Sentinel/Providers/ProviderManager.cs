@@ -25,7 +25,7 @@
             providers = new List<IProviderRegistrationRecord>
                             {
                                 NLogViewerProvider.ProviderRegistrationInformation,
-                                UdpAppenderListener.ProviderRegistrationInformation,
+                                Log4NetProvider.ProviderRegistrationInformation,
                                 FileMonitoringProvider.ProviderRegistrationInformation,
                                 MSBuildProvider.ProviderRegistrationRecord
                             };

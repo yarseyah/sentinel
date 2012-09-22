@@ -16,10 +16,10 @@
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
-    public class UdpAppenderListener : INetworkProvider
+    public class Log4NetProvider : INetworkProvider
     {
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
-            new ProviderRegistrationInformation(new Log4NetUdpListenerProvider());
+            new ProviderRegistrationInformation(new ProviderInfo());
 
         protected readonly Queue<string> PendingQueue = new Queue<string>();
 
@@ -39,12 +39,12 @@
 
         private Task messagePumpTask;
 
-        static UdpAppenderListener()
+        static Log4NetProvider()
         {
             NamespaceManager.AddNamespace("log4net", "http://logging.apache.org/log4net");
         }
 
-        public UdpAppenderListener(IProviderSettings settings)
+        public Log4NetProvider(IProviderSettings settings)
         {
             if (settings == null)
             {
@@ -310,6 +310,33 @@
             }
 
             return message.StartsWith("<log4net:event");
+        }
+
+        internal class ProviderInfo : IProviderInfo
+        {
+            public Guid Identifier
+            {
+                get
+                {
+                    return new Guid("D19E8097-FC08-47AF-8418-F737168A9645");
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return "Log4Net UdpAppender Provider";
+                }
+            }
+
+            public string Description
+            {
+                get
+                {
+                    return "Handler for the remote side of log4net's UdpAppender";
+                }
+            }
         }
     }
 }

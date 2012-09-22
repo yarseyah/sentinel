@@ -7,7 +7,7 @@ namespace Sentinel.Log4Net
         public UdpAppenderSettings()
         {
             Name = "Log4net UDP Appender";
-            Info = UdpAppenderListener.ProviderRegistrationInformation.Info;
+            Info = Log4NetProvider.ProviderRegistrationInformation.Info;
         }
 
         public UdpAppenderSettings(IProviderSettings providerInfo)

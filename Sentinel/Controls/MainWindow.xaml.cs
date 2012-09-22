@@ -277,7 +277,7 @@ namespace Sentinel.Controls
                         providerManager.Create(
                             provider == "nlog"
                                 ? NLogViewerProvider.ProviderRegistrationInformation.Info.Identifier
-                                : UdpAppenderListener.ProviderRegistrationInformation.Info.Identifier,
+                                : Log4NetProvider.ProviderRegistrationInformation.Info.Identifier,
                             providerSettings);
 
                     logProvider.Logger = logTarget;
