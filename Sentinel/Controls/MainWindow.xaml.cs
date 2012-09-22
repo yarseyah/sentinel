@@ -31,6 +31,7 @@ namespace Sentinel.Controls
     using Sentinel.Log4Net;
     using Sentinel.Logs.Gui;
     using Sentinel.Logs.Interfaces;
+    using Sentinel.NLog;
     using Sentinel.Providers;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;

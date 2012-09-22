@@ -1,5 +1,5 @@
 
-namespace Sentinel.Providers
+namespace Sentinel.NLog
 {
     using System;
     using System.Collections.Generic;

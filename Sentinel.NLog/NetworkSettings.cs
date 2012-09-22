@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Providers
+﻿namespace Sentinel.NLog
 {
     public class NetworkSettings : ProviderSettings
     {

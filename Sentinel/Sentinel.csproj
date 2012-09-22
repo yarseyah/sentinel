@@ -162,13 +162,7 @@
     <Compile Include="Providers\MessageFormatPage.xaml.cs">
       <DependentUpon>MessageFormatPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Providers\NetworkBatchingProvider.cs" />
-    <Compile Include="Providers\NetworkConfigurationPage.xaml.cs">
-      <DependentUpon>NetworkConfigurationPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Providers\NetworkSettings.cs" />
     <Compile Include="Providers\NewProviderWizard.cs" />
-    <Compile Include="Providers\NLogViewerProvider.cs" />
     <Compile Include="Providers\ProviderInfo.cs" />
     <Compile Include="Providers\ProviderManager.cs" />
     <Compile Include="Providers\ProviderRegistrationRecord.cs" />
@@ -387,10 +381,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Providers\NetworkConfigurationPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Providers\SelectProviderPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -518,6 +508,10 @@
     <ProjectReference Include="..\Sentinel.Log4Net\Sentinel.Log4Net.csproj">
       <Project>{54F01DDC-4CFA-46F0-9BF7-52A23F3302DA}</Project>
       <Name>Sentinel.Log4Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sentinel.NLog\Sentinel.NLog.csproj">
+      <Project>{EABC1023-A456-44A7-9D8C-FCD0F6323C58}</Project>
+      <Name>Sentinel.NLog</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfExtras\WpfExtras.csproj">
       <Project>{1DD6CD3B-E53D-4770-97C9-6A5B0B551E89}</Project>

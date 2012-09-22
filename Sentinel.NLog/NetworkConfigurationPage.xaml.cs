@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Controls;
-using Sentinel.Providers.Interfaces;
-using WpfExtras;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.NLog
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Windows.Controls;
+
     using Sentinel.Interfaces.Providers;
+
+    using WpfExtras;
 
     /// <summary>
     /// Interaction logic for NetworkConfigurationPage.xaml
@@ -145,7 +145,7 @@ namespace Sentinel.Providers
             Debug.Assert(saveData != null, "Expecting the save-data component to have details from the previous pages.");
             Debug.Assert(saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
 
-            IProviderSettings previousInfo = (IProviderSettings) saveData;
+            var previousInfo = (IProviderSettings)saveData;
 
             return new NetworkSettings
                        {

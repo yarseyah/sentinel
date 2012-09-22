@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.Interfaces", "Sent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.MSBuild", "Sentinel.MSBuild\Sentinel.MSBuild.csproj", "{1F9A47BD-297C-4E5B-81FC-541A47F25D77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.NLog", "Sentinel.NLog\Sentinel.NLog.csproj", "{EABC1023-A456-44A7-9D8C-FCD0F6323C58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,16 @@ Global
 		{1F9A47BD-297C-4E5B-81FC-541A47F25D77}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1F9A47BD-297C-4E5B-81FC-541A47F25D77}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1F9A47BD-297C-4E5B-81FC-541A47F25D77}.Release|x86.ActiveCfg = Release|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EABC1023-A456-44A7-9D8C-FCD0F6323C58}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

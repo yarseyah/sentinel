@@ -9,6 +9,7 @@
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.MSBuild;
+    using Sentinel.NLog;
     using Sentinel.Providers.Interfaces;
 
     public class ProviderManager : IProviderManager

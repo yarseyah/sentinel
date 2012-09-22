@@ -1,22 +1,23 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
-using Sentinel.Support.Mvvm;
-using Sentinel.Views.Interfaces;
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
+    using System.Diagnostics;
+    using System.Windows.Input;
+
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Views.Interfaces;
+
     public class LogViewerToolbarButton
-        : ViewModelBase
-        , ILogViewerToolbarButton
+        : ViewModelBase, ILogViewerToolbarButton
     {
         private string imageIdentifier;
 
         private bool isChecked;
 
-        public LogViewerToolbarButton(string label,
-                                      string toolTip,
-                                      bool checkable,
-                                      ICommand command)
+        public LogViewerToolbarButton(
+            string label,
+            string toolTip,
+            bool checkable,
+            ICommand command)
         {
             Tooltip = toolTip;
             Label = label;
@@ -34,11 +35,14 @@ namespace Sentinel.Views.Gui
             {
                 return imageIdentifier;
             }
+
             set
             {
-                if (imageIdentifier == value) return;
-                imageIdentifier = value;
-                OnPropertyChanged("ImageIdentifier");
+                if (imageIdentifier != value)
+                {
+                    imageIdentifier = value;
+                    OnPropertyChanged("ImageIdentifier");
+                }
             }
         }
 
@@ -48,13 +52,16 @@ namespace Sentinel.Views.Gui
             {
                 return isChecked;
             }
+
             set
             {
                 Debug.Assert(CanCheck, "Should not be able to check a non-checkable button, so why look?");
 
-                if (isChecked == value) return;
-                isChecked = value;
-                OnPropertyChanged("IsChecked");
+                if (isChecked != value)
+                {
+                    isChecked = value;
+                    OnPropertyChanged("IsChecked");
+                }
             }
         }
 

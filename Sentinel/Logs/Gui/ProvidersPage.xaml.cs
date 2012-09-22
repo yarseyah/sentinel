@@ -11,6 +11,7 @@ namespace Sentinel.Logs.Gui
     using System.Windows.Input;
 
     using Sentinel.Interfaces.Providers;
+    using Sentinel.NLog;
     using Sentinel.Providers;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
@@ -162,22 +163,17 @@ namespace Sentinel.Logs.Gui
 
         private void AddNewProvider(object obj)
         {
-            ServiceLocator services = ServiceLocator.Instance;
-
-            INewProviderWizard wizard = services.Get<INewProviderWizard>();
+            var services = ServiceLocator.Instance;
+            var wizard = services.Get<INewProviderWizard>();
 
             if (wizard != null)
             {
-                if (wizard.Display((Window) this.Parent))
+                if (wizard.Display((Window)Parent))
                 {
-                    IProviderInfo info = wizard.Provider;
-                    IProviderSettings settings = wizard.Settings;
+                    var info = wizard.Provider;
+                    var settings = wizard.Settings;
 
-                    PendingProviderRecord rec = new PendingProviderRecord
-                                                    {
-                                                        Info = info,
-                                                        Settings = settings
-                                                    };
+                    var rec = new PendingProviderRecord { Info = info, Settings = settings };
 
                     Providers.Add(rec);
                 }
@@ -192,8 +188,8 @@ namespace Sentinel.Logs.Gui
         {
             // TODO: confirmation of deletion.
 
-            int index = SelectedProviderIndex;
-            if ( index != -1 && index < Providers.Count )
+            var index = SelectedProviderIndex;
+            if (index != -1 && index < Providers.Count)
             {
                 Providers.RemoveAt(index);
             }
@@ -245,17 +241,17 @@ namespace Sentinel.Logs.Gui
 
         private string ValidateProviders()
         {
-            if ( Providers == null )
+            if (Providers == null)
             {
                 return "[Internal Error] Providers structure can not be null";
             }
 
-            if ( Providers.Count == 0 )
+            if (Providers.Count == 0)
             {
                 return "At least one provider must be specified";
             }
 
-            if ( Providers.GroupBy( p => p.Settings.Name ).Where( g => g.Count() > 1).Any() )
+            if (Providers.GroupBy(p => p.Settings.Name).Any(g => g.Count() > 1))
             {
                 return "Duplicate provider names are not supported, please provide appropriate names.";
             }
@@ -266,51 +262,35 @@ namespace Sentinel.Logs.Gui
             var providersGroupedByPort = providersWithPorts
                 .GroupBy(p => p.Port);
 
-            if ( providersGroupedByPort.Where(g => g.Count() > 1).Any() )
+            if (providersGroupedByPort.Any(g => g.Count() > 1))
             {
                 // Duplicate port #
-                int duplicatePort = providersGroupedByPort
-                    .Where( g => g.Count() > 1 )
-                    .First().Key;
-
-                return
-                    string.Format(
-                        "Duplicate network ports are not permitted, you have specified port number {0} more than once",
-                        duplicatePort);
+                var duplicatePort = providersGroupedByPort.First(g => g.Count() > 1).Key;
+                return string.Format("Duplicate network ports are not permitted, you have specified port number {0} more than once", duplicatePort);
             }
 
-            IProviderManager providerManager = ServiceLocator.Instance.Get<IProviderManager>();
+            var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
 
-            if ( providerManager != null 
-                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name)).Any() )
+            if (providerManager != null
+                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name)).Any())
             {
-                var duplicates = Providers
-                    .Select(p => p.Settings.Name)
-                    .Intersect(providerManager.GetInstances().Select(p2 => p2.Name));
-                return string.Format(
-                    "Providers should be uniquely named, there is already one called {0}",
-                    duplicates.First());
+                var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name));
+                return string.Format("Providers should be uniquely named, there is already one called {0}", duplicates.First());
             }
 
-            if ( providerManager != null 
+            if (providerManager != null
                 && providerManager.GetInstances().OfType<INetworkProvider>().Any()
                 && providersWithPorts.Any())
             {
                 // Get the two lists:
-                var instances = providerManager
-                    .GetInstances()
-                    .OfType<INetworkProvider>()
-                    .Select(i => i.Port);
-                var newSettings = providersWithPorts
-                    .Select(p => p.Port);
+                var instances = providerManager.GetInstances().OfType<INetworkProvider>().Select(i => i.Port);
+                var newSettings = providersWithPorts.Select(p => p.Port);
 
                 var intersection = instances.Intersect(newSettings);
 
-                if ( intersection.Any() )
+                if (intersection.Any())
                 {
-                    return string.Format(
-                        "Network port numbers must be unique, port number {0} is already in use.",
-                        intersection.First());
+                    return string.Format("Network port numbers must be unique, port number {0} is already in use.", intersection.First());
                 }
             }
 

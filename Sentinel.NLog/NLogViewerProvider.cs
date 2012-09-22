@@ -1,11 +1,10 @@
 ﻿
-namespace Sentinel.Providers
+namespace Sentinel.NLog
 {
     using System;
     using System.Collections.Generic;
     using System.Xml.Linq;
 
-    using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
     public class NLogViewerProvider : NetworkBatchingProvider
