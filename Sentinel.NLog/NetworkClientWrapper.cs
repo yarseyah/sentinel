@@ -12,8 +12,6 @@ namespace Sentinel.NLog
 
         private readonly UdpClient udpClient;
 
-        private readonly TcpListener tcpListener;
-
         private readonly TcpClient tcpClient;
 
         public NetworkClientWrapper(NetworkProtocol protocol, IPEndPoint endPoint)
@@ -25,7 +23,6 @@ namespace Sentinel.NLog
             }
             else
             {
-                tcpListener = new TcpListener(endPoint);
                 tcpClient = new TcpClient(endPoint);
             }
         }
