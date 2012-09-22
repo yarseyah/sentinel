@@ -8,6 +8,8 @@
     using System.Windows;
     using System.Windows.Controls;
 
+    using Common.Logging;
+
     using Sentinel.Interfaces.Providers;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
@@ -19,17 +21,19 @@
     /// </summary>
     public partial class SelectProviderPage : IWizardPage
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
         private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
+
+        private readonly List<IProviderInfo> providers = new List<IProviderInfo>();
 
         private readonly IProviderManager providerManager;
 
         private string name;
 
         private bool isValid;
-
-        private List<IProviderInfo> providers = new List<IProviderInfo>();
 
         /// <summary>
         /// The additionalPages collection will maintain any child pages created
@@ -57,7 +61,7 @@
             providerManager = ServiceLocator.Instance.Get<IProviderManager>();
             if (providerManager != null)
             {
-                foreach (Guid guid in providerManager)
+                foreach (var guid in providerManager)
                 {
                     providers.Add(providerManager.GetInformation(guid));
 
@@ -74,21 +78,24 @@
         {
             if (e.PropertyName == "SelectedProvider")
             {
-                int index = SelectedProvider;
+                var index = SelectedProvider;
                 IsValid = index != -1 && !string.IsNullOrEmpty(name);
                 SetChildPages(index);
-                return;
             }
         }
 
         private void SetChildPages(int index)
         {
-            if ( index < 0 || index >= providers.Count ) return;
+            if (index < 0 || index >= providers.Count)
+            {
+                return;
+            }
+
+            SelectedProviderDescription = providers[index].Description;
 
             // See whether a page can be cached.
-            if ( additionalPages[index] == null )
+            if (additionalPages[index] == null)
             {
-                SelectedProviderDescription = providers[index].Description;
                 var info = providers[index];
 
                 if (providerManager != null)
@@ -97,9 +104,9 @@
                 }
             }
 
-            while(children.Any())
+            while (children.Any())
             {
-                IWizardPage p = children.First();
+                var p = children.First();
                 RemoveChild(p);
             }
 
@@ -125,9 +132,13 @@
             }
             set
             {
-                if (selectedProvider == value) return;
-                selectedProvider = value;
-                OnPropertyChanged("SelectedProvider");
+                if (selectedProvider != value)
+                {
+                    Log.DebugFormat("Selected provider index changed to {0}", value);
+
+                    selectedProvider = value;
+                    OnPropertyChanged("SelectedProvider");
+                }
             }
         }
 
@@ -135,13 +146,17 @@
         {
             get
             {
+                Log.DebugFormat("Retrieving description: {0}", selectedProviderDescription);
                 return selectedProviderDescription;
             }
+
             private set
             {
-                if (selectedProviderDescription == value) return;
-                selectedProviderDescription = value;
-                OnPropertyChanged("SelectedProviderDescription");
+                if (selectedProviderDescription != value)
+                {
+                    selectedProviderDescription = value;
+                    OnPropertyChanged("SelectedProviderDescription");
+                }
             }
         }
 
@@ -158,8 +173,6 @@
                 OnPropertyChanged("LoggerName");
             }
         }
-
-        #region Implementation of IWizardPage
 
         public string Title
         {
@@ -230,23 +243,17 @@
             return saveData;
         }
 
-        #endregion
-
-        #region Implementation of INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
 
         private void PageLoaded(object sender, RoutedEventArgs e)
         {

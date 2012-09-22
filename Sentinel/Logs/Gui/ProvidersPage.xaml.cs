@@ -10,6 +10,8 @@ namespace Sentinel.Logs.Gui
     using System.Windows.Controls;
     using System.Windows.Input;
 
+    using Common.Logging;
+
     using Sentinel.Interfaces.Providers;
     using Sentinel.NLog;
     using Sentinel.Providers;
@@ -25,6 +27,8 @@ namespace Sentinel.Logs.Gui
     /// </summary>
     public partial class ProvidersPage : IWizardPage, IDataErrorInfo
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
         private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
@@ -65,15 +69,17 @@ namespace Sentinel.Logs.Gui
             {
                 return selectedProviderIndex;
             }
+
             set
             {
-                if (selectedProviderIndex == value) return;
-                selectedProviderIndex = value;
-                OnPropertyChanged("SelectedProviderIndex");
+                if (selectedProviderIndex != value)
+                {
+                    Log.DebugFormat("Selected provider index is {0}", value);
+                    selectedProviderIndex = value;
+                    OnPropertyChanged("SelectedProviderIndex");
+                }
             }
         }
-
-        #region Implementation of INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -82,12 +88,10 @@ namespace Sentinel.Logs.Gui
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
 
         #region Implementation of IWizardPage
 

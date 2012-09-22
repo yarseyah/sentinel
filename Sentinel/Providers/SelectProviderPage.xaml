@@ -10,8 +10,8 @@
     <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <Grid.ColumnDefinitions>
@@ -30,14 +30,12 @@
         <TextBlock Text="Provider Type : "
                    Margin="3"
                    Grid.Row="1"
-                   VerticalAlignment="Center" />
-        <ComboBox x:Name="providerCombo"
-                  Margin="3"
-                  Grid.Row="1"
-                  Grid.Column="1"
+                   VerticalAlignment="Top"/>
+        <ListView SelectionMode="Single"
                   ItemsSource="{Binding Providers}"
                   SelectedIndex="{Binding SelectedProvider}"
-                  VerticalAlignment="Center" />
+                  Grid.Row="1"
+                  Grid.Column="1" />
         <TextBlock Text="Provider Details : "
                    Margin="3"
                    Grid.Row="2"
