@@ -1,51 +1,45 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Providers.Interfaces;
-
-#endregion
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.FileMonitor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
     public class FileMonitoringProvider : ILogProvider
     {
-        public const string ID = "1a2f8249-b390-4baa-ba5e-3d67804ba1ed";
-        public const string NAME = "File Monitoring Provider";
-        public const string DESCRIPTION = "Monitor a text file for new log entries.";
+        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation = new ProviderRegistrationInformation(new ProviderInfo());
 
-        public static readonly Guid Id = new Guid(ID);
-
-        public static readonly ProviderInfo Info = new ProviderInfo(Id, NAME, DESCRIPTION);
         private readonly bool loadExistingContent;
+
         private readonly Regex patternMatching;
 
         private readonly Queue<ILogEntry> pendingQueue = new Queue<ILogEntry>();
+
         private readonly int refreshInterval = 250;
+
         private readonly List<string> usedGroupNames = new List<string>();
+
         private long bytesRead;
 
         protected BackgroundWorker purgeWorker;
+
         private BackgroundWorker worker;
 
         public FileMonitoringProvider(IProviderSettings settings)
         {
-            Debug.Assert(settings is IFileMonitoringProviderSettings,
-                         "The FileMonitoringProvider class expects configuration information "
-                         + "to be of IFileMonitoringProviderSettings type");
+            Debug.Assert(
+                settings is IFileMonitoringProviderSettings,
+                "The FileMonitoringProvider class expects configuration information " + "to be of IFileMonitoringProviderSettings type");
 
-            IFileMonitoringProviderSettings fileSettings = (IFileMonitoringProviderSettings) settings;
+            var fileSettings = (IFileMonitoringProviderSettings)settings;
             FileName = fileSettings.FileName;
             Information = settings.Info;
             refreshInterval = fileSettings.RefreshPeriod;
@@ -58,32 +52,17 @@ namespace Sentinel.Providers
             worker.DoWork += DoWork;
             worker.RunWorkerCompleted += DoWorkComplete;
 
-            purgeWorker = new BackgroundWorker
-                              {
-                                  WorkerReportsProgress = true
-                              };
+            purgeWorker = new BackgroundWorker { WorkerReportsProgress = true };
             purgeWorker.DoWork += PurgeWorkerDoWork;
         }
 
-        public string FileName
-        {
-            get;
-            private set;
-        }
+        public string FileName { get; private set; }
 
         #region Implementation of ILogProvider
 
-        public IProviderInfo Information
-        {
-            get;
-            private set;
-        }
+        public IProviderInfo Information { get; private set; }
 
-        public ILogger Logger
-        {
-            get;
-            set;
-        }
+        public ILogger Logger { get; set; }
 
         public void Start()
         {
@@ -110,11 +89,7 @@ namespace Sentinel.Providers
             }
         }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         public bool IsActive
         {
@@ -136,8 +111,7 @@ namespace Sentinel.Providers
                 {
                     if (pendingQueue.Any())
                     {
-                        Trace.WriteLine(string.Format("Adding a batch of {0} entries to the logger",
-                                                      pendingQueue.Count()));
+                        Trace.WriteLine(string.Format("Adding a batch of {0} entries to the logger", pendingQueue.Count()));
                         Logger.AddBatch(pendingQueue);
                         Trace.WriteLine("Done adding the batch");
                     }
@@ -157,12 +131,11 @@ namespace Sentinel.Providers
         private void DoWork(object sender, DoWorkEventArgs e)
         {
             // Read existing content.
-            FileInfo fi = new FileInfo(FileName);
+            var fi = new FileInfo(FileName);
 
             // Keep hold of incomplete lines, if any.
-            string incomplete = string.Empty;
-
-            StringBuilder sb = new StringBuilder();
+            var incomplete = string.Empty;
+            var sb = new StringBuilder();
 
             if (!loadExistingContent)
             {
@@ -175,21 +148,21 @@ namespace Sentinel.Providers
                 {
                     fi.Refresh();
 
-                    long length = fi.Length;
+                    var length = fi.Length;
                     if (length > bytesRead)
                     {
-                        using (FileStream fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
+                        using (var fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
                         {
-                            long position = fs.Seek(bytesRead, SeekOrigin.Begin);
+                            var position = fs.Seek(bytesRead, SeekOrigin.Begin);
                             Debug.Assert(position == bytesRead, "Seek did not go to where we asked.");
 
                             // Calculate length of file.
-                            long bytesToRead = length - position;
+                            var bytesToRead = length - position;
                             Debug.Assert(bytesToRead < Int32.MaxValue, "Too much data to read using this method!");
 
-                            byte[] buffer = new byte[bytesToRead];
+                            var buffer = new byte[bytesToRead];
 
-                            int bytesSuccessfullyRead = fs.Read(buffer, 0, (int) bytesToRead);
+                            var bytesSuccessfullyRead = fs.Read(buffer, 0, (int)bytesToRead);
                             Debug.Assert(bytesSuccessfullyRead == bytesToRead, "Did not get as much as expected!");
 
                             // Put results into a buffer (prepend any unprocessed data retained from last read).
@@ -197,13 +170,13 @@ namespace Sentinel.Providers
                             sb.Append(incomplete);
                             sb.Append(Encoding.ASCII.GetString(buffer, 0, bytesSuccessfullyRead));
 
-                            using (StringReader sr = new StringReader(sb.ToString()))
+                            using (var sr = new StringReader(sb.ToString()))
                             {
                                 while (sr.Peek() != -1)
                                 {
-                                    string line = sr.ReadLine();
+                                    var line = sr.ReadLine();
+                                    
                                     // Trace.WriteLine("Read: " + line);
-
                                     DecodeAndQueueMessage(line);
                                 }
                             }
@@ -221,7 +194,7 @@ namespace Sentinel.Providers
         private void DecodeAndQueueMessage(string message)
         {
             Debug.Assert(patternMatching != null, "Regular expression has not be set");
-            Match m = patternMatching.Match(message);
+            var m = patternMatching.Match(message);
 
             if (!m.Success)
             {
@@ -231,7 +204,7 @@ namespace Sentinel.Providers
 
             lock (pendingQueue)
             {
-                LogEntry entry = new LogEntry();
+                var entry = new LogEntry();
 
                 if (usedGroupNames.Contains("Description"))
                 {
@@ -266,6 +239,33 @@ namespace Sentinel.Providers
         {
             // TODO: brutal...
             worker = null;
+        }
+
+        public class ProviderInfo : IProviderInfo
+        {
+            public Guid Identifier
+            {
+                get
+                {
+                    return new Guid("1a2f8249-b390-4baa-ba5e-3d67804ba1ed");
+                }
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return "File Monitoring Provider";
+                }
+            }
+
+            public string Description
+            {
+                get
+                {
+                    return "Monitor a text file for new log entries.";
+                }
+            }
         }
     }
 }

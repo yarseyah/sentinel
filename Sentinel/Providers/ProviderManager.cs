@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Linq;
 
+    using Sentinel.FileMonitor;
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.MSBuild;
@@ -25,13 +26,7 @@
                             {
                                 NLogViewerProvider.ProviderRegistrationInformation,
                                 UdpAppenderListener.ProviderRegistrationInformation,
-                                new ProviderRegistrationRecord
-                                    {
-                                        Identifier = FileMonitoringProvider.Id,
-                                        Info = FileMonitoringProvider.Info,
-                                        Implementor = typeof(FileMonitoringProvider),
-                                        Settings = typeof(FileMonitorProviderPage)
-                                    },
+                                FileMonitoringProvider.ProviderRegistrationInformation,
                                 MSBuildAppenderListener.ProviderRegistrationRecord
                             };
         }

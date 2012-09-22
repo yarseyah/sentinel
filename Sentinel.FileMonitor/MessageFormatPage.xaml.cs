@@ -1,19 +1,16 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using WpfExtras;
-
-#endregion
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.FileMonitor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using WpfExtras;
+
     /// <summary>
     ///   Interaction logic for MessageFormatPage.xaml
     /// </summary>
@@ -63,21 +60,23 @@ namespace Sentinel.Providers
         }
 
         private bool showCustomWarning = false;
+
         public bool ShowCustomWarning
         {
             get
             {
                 return showCustomWarning;
             }
+
             private set
             {
-                if (showCustomWarning == value) return;
-                showCustomWarning = value;
-                OnPropertyChanged("ShowCustomWarning");
+                if (showCustomWarning != value)
+                {
+                    showCustomWarning = value;
+                    OnPropertyChanged("ShowCustomWarning");
+                }
             }
         }
-
-        #region Implementation of INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -90,10 +89,6 @@ namespace Sentinel.Providers
                 handler(this, e);
             }
         }
-
-        #endregion
-
-        #region Implementation of IWizardPage
 
         public string Title
         {
@@ -183,8 +178,6 @@ namespace Sentinel.Providers
                     throw new NotSupportedException("Custom message formats are not handled on this page.");
             }
         }
-
-        #endregion
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {

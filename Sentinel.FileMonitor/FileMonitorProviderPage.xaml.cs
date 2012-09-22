@@ -1,25 +1,20 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Security;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Microsoft.Win32;
-using Sentinel.Providers.Interfaces;
-using WpfExtras;
-using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
-
-#endregion
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.FileMonitor
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Security;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+
+    using Microsoft.Win32;
+
     using Sentinel.Interfaces.Providers;
+
+    using WpfExtras;
 
     /// <summary>
     ///   Interaction logic for FileMonitorProviderPage.xaml
@@ -96,11 +91,14 @@ namespace Sentinel.Providers
             {
                 return refresh;
             }
+
             set
             {
-                if (refresh == value) return;
-                refresh = value;
-                OnPropertyChanged("Refresh");
+                if (refresh != value)
+                {
+                    refresh = value;
+                    OnPropertyChanged("Refresh");
+                }
             }
         }
 
@@ -127,15 +125,16 @@ namespace Sentinel.Providers
             {
                 return loadExisting;
             }
+
             set
             {
-                if (loadExisting == value) return;
-                loadExisting = value;
-                OnPropertyChanged("LoadExisting");
+                if (loadExisting != value)
+                {
+                    loadExisting = value;
+                    OnPropertyChanged("LoadExisting");
+                }
             }
         }
-
-        #region Implementation of INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -148,10 +147,6 @@ namespace Sentinel.Providers
                 handler(this, e);
             }
         }
-
-        #endregion
-
-        #region Implementation of IWizardPage
 
         public string Title
         {
@@ -238,11 +233,7 @@ namespace Sentinel.Providers
 
             return saveData;
         }
-
-        #endregion
-
-        #region Implementation of IDataErrorInfo
-
+        
         /// <summary>
         ///   Gets the error message for the property with the given name.
         /// </summary>
@@ -300,8 +291,6 @@ namespace Sentinel.Providers
                 return this["FileName"];
             }
         }
-
-        #endregion
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {

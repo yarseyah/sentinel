@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using WpfExtras;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.FileMonitor
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Text.RegularExpressions;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for CustomMessageDecoderPage.xaml
     /// </summary>

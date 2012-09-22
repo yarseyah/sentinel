@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Providers
+﻿namespace Sentinel.FileMonitor
 {
     using Sentinel.Interfaces.Providers;
 
