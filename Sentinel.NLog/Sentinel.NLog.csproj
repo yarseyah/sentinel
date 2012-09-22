@@ -63,7 +63,6 @@
     </Compile>
     <Compile Include="NetworkProtocol.cs" />
     <Compile Include="NetworkSettings.cs" />
-    <Compile Include="NLogListenerProvider.cs" />
     <Compile Include="NLogViewerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

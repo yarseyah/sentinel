@@ -16,12 +16,12 @@ namespace Sentinel.MSBuild
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
-    public class MSBuildAppenderListener : INetworkProvider
+    public class MSBuildProvider : INetworkProvider
     {
         private const int PumpFrequency = 100;
 
         public static readonly IProviderRegistrationRecord ProviderRegistrationRecord =
-            new ProviderRegistrationInformation(new MSBuildListenerProvider());
+            new ProviderRegistrationInformation(new ProviderInfo());
 
         protected readonly Queue<string> PendingQueue = new Queue<string>();
 
@@ -33,7 +33,7 @@ namespace Sentinel.MSBuild
 
         private Task messagePumpTask;
 
-        public MSBuildAppenderListener(IProviderSettings settings)
+        public MSBuildProvider(IProviderSettings settings)
         {
             if (settings == null)
             {

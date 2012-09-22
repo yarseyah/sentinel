@@ -4,19 +4,30 @@ namespace Sentinel.NLog
 
     using Sentinel.Interfaces.Providers;
 
-    public class ProviderInfo : IProviderInfo
+    internal class ProviderInfo : IProviderInfo
     {
-        public ProviderInfo(Guid uniqueId, string name, string description)
+        public Guid Identifier
         {
-            Identifier = uniqueId;
-            Name = name;
-            Description = description;
+            get
+            {
+                return new Guid("F12581A5-64C0-4B35-91FC-81C9A09C1E0B");
+            }
         }
 
-        public Guid Identifier { get; private set; }
+        public string Name
+        {
+            get
+            {
+                return "NLog Viewer Provider";
+            }
+        }
 
-        public string Name { get; private set; }
-
-        public string Description { get; private set; }
+        public string Description
+        {
+            get
+            {
+                return "Handler for nLog's log4j networking protocol log target.";
+            }
+        }
     }
 }

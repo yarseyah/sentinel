@@ -27,7 +27,7 @@
                                 NLogViewerProvider.ProviderRegistrationInformation,
                                 UdpAppenderListener.ProviderRegistrationInformation,
                                 FileMonitoringProvider.ProviderRegistrationInformation,
-                                MSBuildAppenderListener.ProviderRegistrationRecord
+                                MSBuildProvider.ProviderRegistrationRecord
                             };
         }
 

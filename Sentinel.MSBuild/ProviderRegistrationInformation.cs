@@ -34,7 +34,7 @@ namespace Sentinel.MSBuild
         {
             get
             {
-                return typeof(MSBuildAppenderListener);
+                return typeof(MSBuildProvider);
             }
         }
     }

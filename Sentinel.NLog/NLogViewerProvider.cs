@@ -20,7 +20,7 @@
         private const int PumpFrequency = 100;
 
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
-            new ProviderRegistrationInformation(new NLogListenerProvider());
+            new ProviderRegistrationInformation(new ProviderInfo());
 
         private static readonly DateTime Log4jDateBase = new DateTime(1970, 1, 1);
 
