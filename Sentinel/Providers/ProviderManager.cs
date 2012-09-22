@@ -23,13 +23,8 @@
         {
             providers = new List<IProviderRegistrationRecord>
                             {
-                                new ProviderRegistrationRecord
-                                    {
-                                        Identifier = NLogViewerProvider.Id,
-                                        Info = NLogViewerProvider.Info,
-                                        Implementor = typeof(NLogViewerProvider),
-                                        Settings = typeof(NetworkConfigurationPage)
-                                    },
+                                NLogViewerProvider.ProviderRegistrationInformation,
+                                UdpAppenderListener.ProviderRegistrationInformation,
                                 new ProviderRegistrationRecord
                                     {
                                         Identifier = FileMonitoringProvider.Id,
@@ -37,7 +32,6 @@
                                         Implementor = typeof(FileMonitoringProvider),
                                         Settings = typeof(FileMonitorProviderPage)
                                     },
-                                UdpAppenderListener.ProviderRegistrationInformation,
                                 MSBuildAppenderListener.ProviderRegistrationRecord
                             };
         }

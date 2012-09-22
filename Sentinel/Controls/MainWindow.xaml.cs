@@ -262,7 +262,7 @@ namespace Sentinel.Controls
                     var providerSettings = provider == "nlog"
                                                ? new NetworkSettings
                                                    { 
-                                                       IsUdp = protocol == "udp", 
+                                                       Protocol = protocol == "udp" ? NetworkProtocol.Udp : NetworkProtocol.Tcp, 
                                                        Port = port, 
                                                        Name = name 
                                                    }
@@ -276,7 +276,7 @@ namespace Sentinel.Controls
                     var logProvider =
                         providerManager.Create(
                             provider == "nlog"
-                                ? NLogViewerProvider.Info.Identifier
+                                ? NLogViewerProvider.ProviderRegistrationInformation.Info.Identifier
                                 : UdpAppenderListener.ProviderRegistrationInformation.Info.Identifier,
                             providerSettings);
 

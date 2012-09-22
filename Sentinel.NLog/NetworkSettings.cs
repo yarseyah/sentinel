@@ -1,18 +1,14 @@
 ﻿namespace Sentinel.NLog
 {
-    public class NetworkSettings : ProviderSettings
+    public class NetworkSettings : ProviderSettings, INLogAppenderSettings
     {
         public NetworkSettings()
         {
             Port = 9999;
-            IsUdp = true;
+            Protocol = NetworkProtocol.Udp;
         }
 
-        public bool IsUdp
-        {
-            get;
-            set;
-        }
+        public NetworkProtocol Protocol { get; set; }
 
         public int Port
         {
@@ -26,7 +22,7 @@
             {
                 return string.Format(
                     "Listens on {0} port {1}",
-                    IsUdp ? "UDP" : "TCP",
+                    Protocol,
                     Port);
             }
         }

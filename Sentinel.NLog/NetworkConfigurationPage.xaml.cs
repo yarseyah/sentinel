@@ -152,7 +152,7 @@
                            Name = previousInfo.Name,
                            Info = previousInfo.Info,
                            Port = Port,
-                           IsUdp = IsUdp
+                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Udp
                        };
         }
 

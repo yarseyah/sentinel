@@ -1,31 +1,220 @@
-﻿
-namespace Sentinel.NLog
+﻿namespace Sentinel.NLog
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
 
+    using Common.Logging;
+
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
-    public class NLogViewerProvider : NetworkBatchingProvider
+    public class NLogViewerProvider : INetworkProvider
     {
-        public readonly static Guid Id = new Guid("f12581a5-64c0-4b35-91fc-81c9a09c1e0b");
+        private const int PumpFrequency = 100;
 
-        private static readonly DateTime log4jDateBase = new DateTime(1970, 1, 1);
+        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
+            new ProviderRegistrationInformation(new NLogListenerProvider());
 
-        public readonly static ProviderInfo Info = new ProviderInfo(
-            Id,
-            "nLog Viewer",
-            "Handler for nLog's log4j networking protocol log target.");
+        private static readonly DateTime Log4jDateBase = new DateTime(1970, 1, 1);
+
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+        private readonly Queue<string> pendingQueue = new Queue<string>();
+
+        private readonly INLogAppenderSettings networkSettings;
+
+        private CancellationTokenSource cancellationTokenSource;
+
+        private Task listenerTask;
 
         public NLogViewerProvider(IProviderSettings settings)
-            : base(settings)
         {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+
+            networkSettings = settings as INLogAppenderSettings;
+            if (networkSettings == null)
+            {
+                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", "settings");
+            }
+
+            Information = ProviderRegistrationInformation.Info;
         }
 
-        public override IProviderInfo Information { get { return Info; } }
+        public IProviderInfo Information { get; private set; }
 
-        protected override LogEntry DecodeEntry(string m)
+        public ILogger Logger { get; set; }
+
+        public string Name { get; set; }
+
+        public bool IsActive
+        {
+            get
+            {
+                return listenerTask != null && listenerTask.Status == TaskStatus.Running;
+            }
+        }
+
+        public int Port { get; private set; }
+
+        public void Start()
+        {
+            Log.Debug("Start requested");
+
+            if (listenerTask == null || listenerTask.IsCompleted)
+            {
+                cancellationTokenSource = new CancellationTokenSource();
+                var token = cancellationTokenSource.Token;
+
+                listenerTask = Task.Factory.StartNew(SocketListener, token);
+                Task.Factory.StartNew(MessagePump, token);
+            }
+            else
+            {
+                Log.WarnFormat("{0} listener task is already active and can not be started again.", networkSettings.Protocol);
+            }
+        }
+
+        public void Pause()
+        {
+            Log.Debug("Pause requested");
+            if (cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested)
+            {
+                Log.Debug("Cancellation token triggered");
+                cancellationTokenSource.Cancel();
+            }
+        }
+
+        public void Close()
+        {
+            Log.Debug("Close requested");
+            if (cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested)
+            {
+                Log.Debug("Cancellation token triggered");
+                cancellationTokenSource.Cancel();
+            }
+        }
+
+        private void SocketListener()
+        {
+            Log.Debug("SocketListener started");
+
+            if (networkSettings == null)
+            {
+                Log.Error("Network settings has not been initialised");
+                throw new NullReferenceException();
+            }
+
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                var endPoint = new IPEndPoint(IPAddress.Any, networkSettings.Port);
+
+                using (var listener = new NetworkClientWrapper(networkSettings.Protocol, endPoint))
+                {
+                    while (!cancellationTokenSource.IsCancellationRequested)
+                    {
+                        var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+                        listener.SetRecieveTimeout(1000);
+
+                        try
+                        {
+                            var bytes = listener.Receive(ref remoteEndPoint);
+
+                            Log.DebugFormat("Received {0} bytes from {1} ({2})", bytes.Length, remoteEndPoint.Address, networkSettings.Protocol);
+
+                            var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+                            lock (pendingQueue)
+                            {
+                                pendingQueue.Enqueue(message);
+                            }
+                        }
+                        catch (SocketException socketException)
+                        {
+                            if (socketException.SocketErrorCode != SocketError.TimedOut)
+                            {
+                                Log.Debug("SocketException", socketException);
+                                Log.DebugFormat(
+                                    "SocketException.SocketErrorCode = {0}",
+                                    socketException.SocketErrorCode);
+
+                                // Break out of the 'using socket' loop and try to establish a new socket.
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.DebugFormat("Exception: {0}", e.Message);
+                        }
+                    }
+                }
+            }
+
+            Log.Debug("SocketListener completed");
+        }
+
+        private void MessagePump()
+        {
+            Log.Debug("MessagePump started");
+
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                Thread.Sleep(PumpFrequency);
+
+                try
+                {
+                    if (Logger != null)
+                    {
+                        lock (pendingQueue)
+                        {
+                            var processedQueue = new Queue<ILogEntry>();
+
+                            while (pendingQueue.Count > 0)
+                            {
+                                var message = pendingQueue.Dequeue();
+
+                                if (IsValidEntry(message))
+                                {
+                                    var deserializeMessage = DecodeEntry(message);
+
+                                    if (deserializeMessage != null)
+                                    {
+                                        processedQueue.Enqueue(deserializeMessage);
+                                    }
+                                }
+                            }
+
+                            if (processedQueue.Any())
+                            {
+                                Logger.AddBatch(processedQueue);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            Log.Debug("MessagePump completed");
+        }
+
+        private bool IsValidEntry(string logEntry)
+        {
+            return logEntry.StartsWith("<log4j");
+        }
+
+        private LogEntry DecodeEntry(string m)
         {
             XNamespace log4j = "unique";
             string message = string.Format(
@@ -56,7 +245,7 @@ namespace Sentinel.NLog
 
             // description = ClassifyMessage(description, ref system, ref classification, ref type);
 
-            DateTime date = log4jDateBase + TimeSpan.FromMilliseconds(Double.Parse(record.Attribute("timestamp").Value));
+            DateTime date = Log4jDateBase + TimeSpan.FromMilliseconds(Double.Parse(record.Attribute("timestamp").Value));
 
             return new LogEntry
                        {
@@ -71,11 +260,6 @@ namespace Sentinel.NLog
                                               { "Host", host }
                                           }
                        };
-        }
-
-        protected override bool IsValidEntry(string logEntry)
-        {
-            return logEntry.StartsWith("<log4j");
         }
     }
 }
