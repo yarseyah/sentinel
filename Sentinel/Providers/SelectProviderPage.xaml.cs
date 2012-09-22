@@ -1,6 +1,5 @@
 ﻿namespace Sentinel.Providers
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -31,10 +30,6 @@
 
         private readonly IProviderManager providerManager;
 
-        private string name;
-
-        private bool isValid;
-
         /// <summary>
         /// The additionalPages collection will maintain any child pages created
         /// based upon the providers selection.  The indexes will match that of
@@ -42,7 +37,11 @@
         /// is made on the child page, the provider changed (by going back) and then
         /// reverted, the original settings will still be there!
         /// </summary>
-        private List<IWizardPage> additionalPages = new List<IWizardPage>();
+        private readonly List<IWizardPage> additionalPages = new List<IWizardPage>();
+
+        private string name;
+
+        private bool isValid;
 
         private int selectedProvider = -1;
 
@@ -74,13 +73,149 @@
             LoggerName = "Untitled";
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public IEnumerable<string> Providers
         {
-            if (e.PropertyName == "SelectedProvider")
+            get
             {
-                var index = SelectedProvider;
-                IsValid = index != -1 && !string.IsNullOrEmpty(name);
-                SetChildPages(index);
+                return providers.Select(i => i.Name);
+            }
+        }
+
+        public int SelectedProvider
+        {
+            get
+            {
+                return selectedProvider;
+            }
+
+            set
+            {
+                if (selectedProvider != value)
+                {
+                    Log.DebugFormat("Selected provider index changed to {0}", value);
+
+                    selectedProvider = value;
+                    OnPropertyChanged("SelectedProvider");
+                }
+            }
+        }
+
+        public string Title
+        {
+            get
+            {
+                return "Select Provider";
+            }
+        }
+
+        public string LoggerName
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                if (name != value)
+                {
+                    name = value;
+                    OnPropertyChanged("LoggerName");
+                }
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return "Select a log provider from the registered providers";
+            }
+        }
+
+        public ReadOnlyObservableCollection<IWizardPage> Children
+        {
+            get
+            {
+                return readonlyChildren;
+            }
+        }
+
+        public string SelectedProviderDescription
+        {
+            get
+            {
+                Log.DebugFormat("Retrieving description: {0}", selectedProviderDescription);
+                return selectedProviderDescription;
+            }
+
+            private set
+            {
+                if (selectedProviderDescription != value)
+                {
+                    selectedProviderDescription = value;
+                    OnPropertyChanged("SelectedProviderDescription");
+                }
+            }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                return isValid;
+            }
+
+            private set
+            {
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
+            }
+        }
+
+        public Control PageContent
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        public void AddChild(IWizardPage newItem)
+        {
+            children.Add(newItem);
+        }
+
+        public void RemoveChild(IWizardPage item)
+        {
+            children.Remove(item);
+        }
+
+        public object Save(object saveData)
+        {
+            if (saveData == null || !(saveData is ProviderSettings))
+            {
+                saveData = new ProviderSettings();
+            }
+
+            (saveData as ProviderSettings).Info = providers[SelectedProvider];
+            (saveData as ProviderSettings).Name = name;
+
+            return saveData;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
             }
         }
 
@@ -116,148 +251,19 @@
             }
         }
 
-        public IEnumerable<string> Providers
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            get
+            if (e.PropertyName == "SelectedProvider")
             {
-                return providers.Select(i => i.Name);
-            }
-        }
-
-        public int SelectedProvider
-        {
-            get
-            {
-                return selectedProvider;
-            }
-            set
-            {
-                if (selectedProvider != value)
-                {
-                    Log.DebugFormat("Selected provider index changed to {0}", value);
-
-                    selectedProvider = value;
-                    OnPropertyChanged("SelectedProvider");
-                }
-            }
-        }
-
-        public string SelectedProviderDescription
-        {
-            get
-            {
-                Log.DebugFormat("Retrieving description: {0}", selectedProviderDescription);
-                return selectedProviderDescription;
-            }
-
-            private set
-            {
-                if (selectedProviderDescription != value)
-                {
-                    selectedProviderDescription = value;
-                    OnPropertyChanged("SelectedProviderDescription");
-                }
-            }
-        }
-
-        public string LoggerName
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                if (name == value) return;
-                name = value;
-                OnPropertyChanged("LoggerName");
-            }
-        }
-
-        public string Title
-        {
-            get
-            {
-                return "Select Provider";
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return "Select a log provider from the registered providers";
-            }
-        }
-
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
-
-        public bool IsValid
-        {
-            get
-            {
-                return isValid;
-            }
-            private set
-            {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
-            }
-        }
-
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
-
-        public void AddChild(IWizardPage newItem)
-        {
-            children.Add(newItem);
-        }
-
-        public void RemoveChild(IWizardPage item)
-        {
-            children.Remove(item);
-        }
-
-        public object Save(object saveData)
-        {
-            if ( saveData == null || !(saveData is ProviderSettings) )
-            {
-                saveData = new ProviderSettings();
-            }
-
-            (saveData as ProviderSettings).Info = providers[SelectedProvider];
-            (saveData as ProviderSettings).Name = name;
-
-            return saveData;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
+                var index = SelectedProvider;
+                IsValid = index != -1 && !string.IsNullOrEmpty(name);
+                SetChildPages(index);
             }
         }
 
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
-            if ( SelectedProvider == -1 && providers.Any() )
+            if (SelectedProvider == -1 && providers.Any())
             {
                 SelectedProvider = 0;
             }
