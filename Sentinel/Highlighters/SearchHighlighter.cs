@@ -9,7 +9,10 @@ namespace Sentinel.Highlighters
 {
     #region Using directives
 
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Windows.Media;
 
@@ -40,6 +43,14 @@ namespace Sentinel.Highlighters
             }
         }
 
+        public IEnumerable<LogEntryField> Fields
+        {
+            get
+            {
+                var entries = Enum.GetValues(typeof(LogEntryField)).Cast<LogEntryField>();
+                return entries;
+            }
+        }
 
         [DataMember]
         public LogEntryField Field

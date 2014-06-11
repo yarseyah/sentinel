@@ -176,9 +176,17 @@
                         </DataTemplate>
                     </RibbonGroup.ItemTemplate>
                 </RibbonGroup>
-                <RibbonGroup Header="Search" IsEnabled="False">
-                    <RibbonTextBox Text="{Binding Search, NotifyOnTargetUpdated=True}" />
+                <RibbonGroup Header="Search" IsEnabled="True">
+                    <RibbonTextBox Text="{Binding Search.Search, UpdateSourceTrigger=PropertyChanged}" TextBoxWidth="200" />
 
+                    <RibbonComboBox>
+                        <RibbonGallery>
+                            <RibbonGalleryItem>Type</RibbonGalleryItem>
+                            <RibbonGalleryItem>Class</RibbonGalleryItem>
+                            <RibbonGalleryItem>Description</RibbonGalleryItem>
+                        </RibbonGallery>
+                    </RibbonComboBox>
+                    
                     <RibbonSplitButton Label="Options">
                         <RibbonSplitMenuItem Header="Case-sensitive" />
                         <RibbonSplitMenuItem Header="Case-insensitive" />

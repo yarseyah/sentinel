@@ -9,12 +9,17 @@ namespace Sentinel.Highlighters.Interfaces
 {
     #region Using directives
 
+    using System.Collections;
+    using System.Collections.Generic;
+
     using Sentinel.Interfaces;
 
     #endregion
 
     public interface ISearchHighlighter
     {
+        IEnumerable<LogEntryField> Fields { get; }
+
         LogEntryField Field { get; set; }
 
         IHighlighter Highlighter { get; }

@@ -87,6 +87,14 @@ namespace Sentinel.Controls
             }
         }
 
+        public ISearchHighlighter Search
+        {
+            get
+            {
+                return ServiceLocator.Instance.Get<ISearchHighlighter>();
+            }
+        }
+
         private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
         {
             if (wp != null)
