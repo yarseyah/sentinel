@@ -31,8 +31,8 @@ namespace NLogTester
         static void Main()
         {
             int i = 0;
-            int smallestSleep = 10;
-            int biggestSleep = 20;
+            int smallestSleep = 1000;
+            int biggestSleep = 2000;
 
             while(i<100000)
             {

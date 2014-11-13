@@ -48,63 +48,33 @@ namespace Sentinel.Highlighters.Gui
 
         public Highlighter Construct(AddEditHighlighter data)
         {
-            Highlighter highlighter = null;
-
-            Debug.Assert(
-                data.MatchField >= 0,
-                "Field selected must be a valid selection, e.g. >= 0");
-            Debug.Assert(
-                data.MatchField < data.MatchFields.Count(),
-                "Field selected must be within the available set of fields.");
-
-            Debug.Assert(
-                data.HighlightingMethod >= 0,
-                "Method must be a valid selection, >= 0");
-            Debug.Assert(
-                data.HighlightingMethod < data.HighlightingMethods.Count(),
-                "Method selected must be with the available set of methods.");
-
-            var mode = MatchModeConverter.ConvertFrom(data.HighlightingMethods.ElementAt(data.HighlightingMethod));
-
             Color? background = null;
             Color? foreground = null;
 
-            if (data.MatchField >= 0 && data.MatchField < data.MatchFields.Count())
+            var highlighter = new Highlighter
+                              {
+                                  Name = data.Name,
+                                  Field = data.Field,
+                                  Pattern = data.Pattern,
+                                  Mode = data.Mode,
+                                  Enabled = true
+                              };
+
+            if (data.OverrideBackgroundColour)
             {
-                LogEntryField fieldToMatch = LogEntryFieldHelper.FieldNameToEnumeration(
-                    data.MatchFields.ElementAt(data.MatchField));
-
-                switch (fieldToMatch)
-                {
-                    case LogEntryField.Type:
-                    case LogEntryField.System:
-                        highlighter = new Highlighter
-                                          {
-                                              Name = data.Name,
-                                              Field = fieldToMatch,
-                                              Pattern = data.Pattern,
-                                              Mode = mode,
-                                              Enabled = true
-                                          };
-                        if (data.OverrideBackgroundColour)
-                        {
-                            background = data.BackgroundColour;
-                        }
-
-                        if (data.OverrideForegroundColour)
-                        {
-                            foreground = data.ForegroundColour;
-                        }
-
-                        highlighter.Style = new HighlighterStyle
-                                                {
-                                                    Background = background,
-                                                    Foreground = foreground
-                                                };
-                        break;
-                }
+                background = data.BackgroundColour;
             }
 
+            if (data.OverrideForegroundColour)
+            {
+                foreground = data.ForegroundColour;
+            }
+
+            highlighter.Style = new HighlighterStyle
+                                    {
+                                        Background = background,
+                                        Foreground = foreground
+                                    };
             return highlighter;
         }
     }

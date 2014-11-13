@@ -54,7 +54,7 @@
                             <!-- Can be either a button or checkbox, define both and show/collapse on the DataTrigger -->
                             <CheckBox x:Name="primaryViewCheckbox"
                                       Style="{DynamicResource {x:Static ToolBar.CheckBoxStyleKey}}"
-                                      IsChecked="{Binding IsChecked}"
+                                      IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Command="{Binding Command}"
                                       Height="22">
                                 <CheckBox.ToolTip>
@@ -108,7 +108,7 @@
                 </Wpf:DataBoundToolbar.ItemTemplate>
             </Wpf:DataBoundToolbar>
 
-            <ToolBar Header="Search : "
+            <!--<ToolBar Header="Search : "
                      Width="Auto"
                      VerticalContentAlignment="Center">
                 <TextBox Width="100"
@@ -127,7 +127,8 @@
                         <ComboBoxItem Content="Description" />
                     </ComboBox.Items>
                 </ComboBox>                
-            </ToolBar>
+            </ToolBar>-->
+            
         </ToolBarTray>
 
         <DockPanel Grid.Row="1">

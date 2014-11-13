@@ -118,70 +118,14 @@ namespace Sentinel.Highlighters
 
         public void Initialise()
         {
-            Debug.Assert(!Highlighters.Any(), "Should not have any contents at initialisation");
+            Debug.Assert(!Highlighters.Any(), "Should not have any contents at initialisation");            
 
-            var trace = new Highlighter
-                {
-                    Name = "Trace",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "TRACE",
-                    Style = new HighlighterStyle { Foreground = Colors.DarkGray }
-                };
-
-            var debug = new Highlighter
-                {
-                    Name = "Debug",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "DEBUG",
-                    Style = new HighlighterStyle { Foreground = Colors.DarkGreen }
-                };
-            var info = new Highlighter
-                {
-                    Name = "Information",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "INFO",
-                    Style = new HighlighterStyle { Foreground = Colors.White, Background = Colors.Blue }
-                };
-            var warn = new Highlighter
-                {
-                    Name = "Warning",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "WARN",
-                    Style = new HighlighterStyle { Background = Colors.Yellow }
-                };
-            var error = new Highlighter
-                {
-                    Name = "Error",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "ERROR",
-                    Style = new HighlighterStyle { Background = Colors.Red }
-                };
-            var fatal = new Highlighter
-                {
-                    Name = "Fatal Error",
-                    Enabled = true,
-                    Field = LogEntryField.Type,
-                    Mode = MatchMode.Exact,
-                    Pattern = "FATAL",
-                    Style = new HighlighterStyle { Background = Colors.Black, Foreground = Colors.Yellow }
-                };
-
-            Highlighters.Add(trace as T);
-            Highlighters.Add(debug as T);
-            Highlighters.Add(info as T);
-            Highlighters.Add(warn as T);
-            Highlighters.Add(error as T);
-            Highlighters.Add(fatal as T);
+            Highlighters.Add(new StandardHighlighter("Trace", true, LogEntryField.Type, MatchMode.Exact, "TRACE", new HighlighterStyle { Background = Colors.LightGray }) as T);
+            Highlighters.Add(new StandardHighlighter("Debug", true, LogEntryField.Type,MatchMode.Exact,"DEBUG",new HighlighterStyle { Background = Colors.LightGreen }) as T);
+            Highlighters.Add(new StandardHighlighter("Info", true, LogEntryField.Type, MatchMode.Exact, "INFO", new HighlighterStyle { Foreground = Colors.White, Background = Colors.Blue }) as T);
+            Highlighters.Add(new StandardHighlighter("Warn", true, LogEntryField.Type, MatchMode.Exact, "WARN", new HighlighterStyle { Background = Colors.Yellow }) as T);
+            Highlighters.Add(new StandardHighlighter("Error", true, LogEntryField.Type, MatchMode.Exact, "ERROR", new HighlighterStyle { Foreground = Colors.White, Background = Colors.Red }) as T);
+            Highlighters.Add(new StandardHighlighter("Fatal", true, LogEntryField.Type, MatchMode.Exact, "FATAL", new HighlighterStyle { Foreground = Colors.Yellow, Background = Colors.Black }) as T);
         }
 
         private void AddHighlighter(object obj)
@@ -197,7 +141,7 @@ namespace Sentinel.Highlighters
                 var filter = sender as IHighlighter;
                 Trace.WriteLine(
                     string.Format(
-                        "FilterServer saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
+                        "HighlightingService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
             }
 
             OnPropertyChanged(string.Empty);

@@ -21,11 +21,16 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>http://localhost/Sentinel/</PublishUrl>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <PublishUrl>\\cimx\Installs\Sentinel\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -33,11 +38,17 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <SupportUrl>http://sentinel.codeplex.com/</SupportUrl>
+    <ProductName>Sentinel</ProductName>
+    <PublisherName>Sentinel</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <TrustUrlParameters>true</TrustUrlParameters>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>0.9.6.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,10 +73,29 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>B0274DED5261B57773C25EB189320F38D5D441E3</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,27 +129,22 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.0.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.1\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -131,13 +156,48 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classification\Classifier.cs" />
+    <Compile Include="Classification\Gui\AddClassifier.cs" />
+    <Compile Include="Classification\Gui\AddEditClassifier.cs" />
+    <Compile Include="Classification\Gui\AddEditClassifierWindow.xaml.cs">
+      <DependentUpon>AddEditClassifierWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classification\Gui\EditClassifier.cs" />
+    <Compile Include="Classification\Gui\RemoveClassifier.cs" />
+    <Compile Include="Controls\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RecentFileInfo.cs" />
     <Compile Include="Controls\WindowPlacementInfo.cs" />
+    <Compile Include="Extractors\ExtractingService.cs" />
+    <Compile Include="Extractors\Extractor.cs" />
+    <Compile Include="Extractors\Gui\AddEditExtractor.cs" />
+    <Compile Include="Extractors\Gui\AddEditExtractorWindow.xaml.cs">
+      <DependentUpon>AddEditExtractorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extractors\Gui\AddExtractor.cs" />
+    <Compile Include="Extractors\Gui\EditExtractor.cs" />
+    <Compile Include="Extractors\Gui\ExtractorsControl.xaml.cs">
+      <DependentUpon>ExtractorsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Extractors\Gui\RemoveExtractor.cs" />
+    <Compile Include="Extractors\Interfaces\IAddExtractorService.cs" />
+    <Compile Include="Extractors\Interfaces\IEditExtractorService.cs" />
+    <Compile Include="Extractors\Interfaces\IExtractingService.cs" />
+    <Compile Include="Extractors\Interfaces\IExtractor.cs" />
+    <Compile Include="Extractors\Interfaces\IRemoveExtractorService.cs" />
+    <Compile Include="Extractors\Interfaces\ISearchExtractor.cs" />
+    <Compile Include="Extractors\SearchExtractor.cs" />
     <Compile Include="Filters\Interfaces\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\ISearchFilter.cs" />
     <Compile Include="Filters\Interfaces\IStandardDebuggingFilter.cs" />
+    <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Filters\StandardFilter.cs" />
     <Compile Include="Highlighters\Interfaces\IHighlighter.cs" />
+    <Compile Include="Highlighters\Interfaces\IStandardDebuggingHighlighter.cs" />
+    <Compile Include="Highlighters\StandardHighlighter.cs" />
     <Compile Include="Images\ImageQuality.cs" />
-    <Compile Include="Images\Interfaces\ImageTypeRecord.cs" />
+    <Compile Include="Images\ImageTypeRecord.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
@@ -162,7 +222,9 @@
     <Compile Include="Interfaces\LogEntryField.cs" />
     <Compile Include="Interfaces\LogEntryFieldHelper.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
+    <Compile Include="Logs\Interfaces\ILogFileExporter.cs" />
     <Compile Include="Logs\Interfaces\ILogManager.cs" />
+    <Compile Include="Logs\LogFileExporter.cs" />
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
     <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />
@@ -176,12 +238,15 @@
     </Compile>
     <Compile Include="Services\AttributeHelper.cs" />
     <Compile Include="Services\DictionaryHelper.cs" />
+    <Compile Include="Services\Interfaces\ISessionManager.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
+    <Compile Include="Services\SessionManager.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
     <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
     <Compile Include="Support\Converters\ColourConverter.cs" />
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
     <Compile Include="Support\Converters\IsTimingMessageValueConverter.cs" />
+    <Compile Include="Support\Converters\LongPathToShortPathConverter.cs" />
     <Compile Include="Support\Converters\MatchModeConverter.cs" />
     <Compile Include="Support\Converters\MessageHasExceptionMetadataConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
@@ -217,9 +282,17 @@
     <Compile Include="Views\Interfaces\IViewManager.cs" />
     <Compile Include="Views\Interfaces\IWindowFrame.cs" />
     <Compile Include="Views\ViewManager.cs" />
-    <Page Include="Classification\Controls\ClassificationsControl.xaml">
+    <Page Include="Classification\Gui\AddEditClassifierWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Classification\Gui\ClassificationsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ImageTypesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -255,21 +328,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Classification\Classifiers.cs" />
-    <Compile Include="Classification\Controls\ClassificationsControl.xaml.cs">
+    <Compile Include="Classification\ClassifyingService.cs" />
+    <Compile Include="Classification\Gui\ClassificationsControl.xaml.cs">
       <DependentUpon>ClassificationsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classification\DescriptionClassifier.cs" />
-    <Compile Include="Classification\Interfaces\IAddClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IAddClassifyingService.cs" />
     <Compile Include="Classification\Interfaces\IClassifier.cs" />
-    <Compile Include="Classification\Interfaces\IClassifierService.cs" />
-    <Compile Include="Classification\Interfaces\IEditClassifier.cs" />
-    <Compile Include="Classification\Interfaces\IIncomingClassifier.cs" />
-    <Compile Include="Classification\IncomingClassifier.cs" />
-    <Compile Include="Classification\Interfaces\IRemoveClassifier.cs" />
-    <Compile Include="Classification\Interfaces\IVisualClassifier.cs" />
-    <Compile Include="Classification\TypeImageClassifier.cs" />
-    <Compile Include="Classification\VisualClassifier.cs" />
+    <Compile Include="Classification\Interfaces\IClassifyingService.cs" />
+    <Compile Include="Classification\Interfaces\IEditClassifyingService.cs" />
+    <Compile Include="Classification\Interfaces\IRemoveClassifyingService.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilteringService.cs" />
     <Compile Include="Filters\Gui\AddEditFilter.cs" />
@@ -333,6 +400,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Extractors\Gui\AddEditExtractorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Extractors\Gui\ExtractorsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Filters\Gui\AddEditFilterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -430,11 +505,13 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Sentinel_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Info.png" />
@@ -465,9 +542,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Sentinel.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Small\Play.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Clear.png" />
@@ -571,10 +645,70 @@
     <Resource Include="Resources\Medium\Exit.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Small\Lightning.png" />
+    <Resource Include="Resources\Small\MonoLightning.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Small\MonoLightning.png" />
+    <Resource Include="Resources\Small\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Unknown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Unknown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Unknown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Exception.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Thread.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Exception.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Thread.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Exception.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Thread.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

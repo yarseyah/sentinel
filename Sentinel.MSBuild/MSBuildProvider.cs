@@ -45,9 +45,13 @@ namespace Sentinel.MSBuild
             {
                 throw new ArgumentException("settings should be assignable to IMSBuildListenerSettings", "settings");
             }
+
+            ProviderSettings = settings; 
         }
 
         public IProviderInfo Information { get; private set; }
+
+        public IProviderSettings ProviderSettings { get; private set; }
 
         public ILogger Logger { get; set; }
 

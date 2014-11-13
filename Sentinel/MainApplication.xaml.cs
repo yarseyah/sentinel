@@ -30,6 +30,9 @@ using Sentinel.Services;
 using Sentinel.Views;
 using Sentinel.Views.Gui;
 using Sentinel.Views.Interfaces;
+using Sentinel.Extractors.Interfaces;
+using Sentinel.Extractors;
+using Sentinel.Services.Interfaces;
 
 #endregion
 
@@ -49,28 +52,8 @@ namespace Sentinel
 
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
-
-            locator.RegisterOrLoad<UserPreferences>(typeof(IUserPreferences), "Preferences");
-            locator.RegisterOrLoad<FilteringService<IFilter>>(typeof(IFilteringService<IFilter>), "Filters");
-            locator.RegisterOrLoad<HighlightingService<IHighlighter>>(
-                typeof(IHighlightingService<IHighlighter>), "Highlighters");
-            locator.RegisterOrLoad<SearchHighlighter>(typeof(ISearchHighlighter), "Search");
-
-            locator.Register(typeof(ITypeImageService), typeof(TypeToImageService), false);
-            locator.Register<ILogManager>(new LogManager());
-            locator.Register<LogWriter>(new LogWriter());
-            locator.Register(typeof(IViewManager), typeof(ViewManager), false);
-            locator.Register<IProviderManager>(new ProviderManager());
-            locator.Register<IWindowFrame>(new MultipleViewFrame());
-
-            locator.Register<INewProviderWizard>(new NewProviderWizard());
-
-            // Do this last so that other services have registered, e.g. the 
-            // TypeImageService is called by some classifiers!);););
-            if (!locator.IsRegistered<IClassifierService>())
-            {
-                locator.Register<IClassifierService>(new Classifiers());
-            }
+            
+            locator.Register<ISessionManager>(new SessionManager());
 
             // Request that the application close on main window close.
             ShutdownMode = ShutdownMode.OnMainWindowClose;
@@ -81,8 +64,7 @@ namespace Sentinel
         /// </summary>
         /// <param name="e">Exit event arguments.</param>
         protected override void OnExit(ExitEventArgs e)
-        {
-            ServiceLocator.Instance.Save();
+        {          
             base.OnExit(e);
         }
     }

@@ -60,7 +60,7 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Source field.
         /// </summary>
-        Source = 16,
+        //Source = 16, // TODO: Decide if this is necessary
 
         /// <summary>
         /// Description field, this is usually the log message sent from the source.
@@ -75,6 +75,6 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Host field of message, usually the originating machine's name.
         /// </summary>
-        Host = 64
+        //Host = 64 // TODO: Decide if this is necessary
     }
 }

@@ -1,16 +1,32 @@
 using Sentinel.Interfaces;
+using System.Runtime.Serialization;
 
 namespace Sentinel.Classification.Interfaces
 {
     public interface IClassifier
     {
-        bool Enabled { get; set; }
-
+        [DataMember]
         string Name { get; set; }
 
-        string Type { get; }
+        [DataMember]
+        string Type { get; set; }
 
-        bool IsMatch(object parameter);
+        [DataMember]
+        bool Enabled { get; set; }
+
+        [DataMember]
+        string Pattern { get; set; }
+
+        [DataMember]
+        string Description { get; }
+
+        [DataMember]
+        LogEntryField Field { get; set; }
+
+        [DataMember]
+        MatchMode Mode { get; set; }
+
+        bool IsMatch(ILogEntry entry);
 
         ILogEntry Classify(ILogEntry entry);
     }

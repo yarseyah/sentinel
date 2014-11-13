@@ -18,6 +18,7 @@ using Sentinel.Logs.Interfaces;
 namespace Sentinel.Views.Interfaces
 {
     using Sentinel.Interfaces;
+    using System.Collections.ObjectModel;
 
     public interface ILogViewer
     {
@@ -26,6 +27,8 @@ namespace Sentinel.Views.Interfaces
         ILogger Logger { get; }
 
         Control Presenter { get; }
+
+        ObservableCollection<ILogEntry> Messages { get; }
 
         string Status { get; }
 

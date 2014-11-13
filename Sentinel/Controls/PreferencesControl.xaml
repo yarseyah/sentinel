@@ -4,15 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Controls="clr-namespace:Sentinel.Controls"
              xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui"
-             xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Controls"
+             xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Gui"
              xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
+             xmlns:Extractors="clr-namespace:Sentinel.Extractors.Gui"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
     <Grid x:Name="LayoutRoot">
-        <TabControl>
+        <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="General">
                 <DockPanel Margin="5">
                     <StackPanel DockPanel.Dock="Top">
@@ -56,6 +57,12 @@
                                             Grid.Row="2"
                                             Margin="0,5,0,5"
                                             Grid.ColumnSpan="3">
+                                    <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"
+                                              HorizontalAlignment="Left"
+                                              MinWidth="100"
+                                              Margin="0,0,0,5"
+                                              ToolTip="Showing exceptions will become useful once it is fully implemented."
+                                              Content="Show the Exception column" />
                                     <CheckBox IsChecked="{Binding Preferences.ShowThreadColumn}"
                                               HorizontalAlignment="Left"
                                               MinWidth="100"
@@ -84,31 +91,38 @@
                     </StackPanel>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Classifications">
-                <GroupBox Header="Message Classifications"
-                          Margin="5">
-                    <ClassificationControls:ClassificationsControl />
-                </GroupBox>
-            </TabItem>
-            <TabItem Header="Images">
-                <GroupBox Header="Type Images">
-                    <Controls:ImageTypesControl />
-                </GroupBox>
-            </TabItem>
-            <TabItem Header="Highlighters">
-                <GroupBox Header="Record Highlighting"
+            <TabItem Header="Classifiers">
+                <GroupBox Header="Available Classifiers"
                           Margin="5">
                     <DockPanel>
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Highlighters make it possible to change the appearance of the rows within" />
-                            <Run Text="the table views so that certain conditions are made to stand out from others." />
+                            <Run Text="Classifiers change the type of log messages when enabled." />
+                            <Run Text="Messages are classified as they are received and cannot be changed afterwards." />
+                            </TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow"
+                                       Margin="0,5,0,5"
+                                       Text="The classifiers are evaluated in the order shown below and the last enabled match wins:" />
+                        </StackPanel>
+                        <ClassificationControls:ClassificationsControl />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Highlighters">
+                <GroupBox Header="Available Highlighters"
+                          Margin="5">
+                    <DockPanel>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                            <Run Text="Highlighters change the appearance of matching log messages when enabled" />
+                            <Run Text="so that certain messages are made to stand out from others." />
                             <Run Text="An example would be marking Error messages in a red background." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
                                        Margin="0,5,0,5"
-                                       Text="The highlighters are evaluated in the order shown below and the first enabled match wins." />
+                                       Text="The highlighters are evaluated in the order shown below and the first enabled match wins:" />
                         </StackPanel>
                         <Highlighters:HighlightersControl />
                     </DockPanel>
@@ -118,15 +132,56 @@
                 <GroupBox Header="Available Filters"
                           Margin="5">
                     <DockPanel>
-                        <TextBlock Margin="5"
-                                   DockPanel.Dock="Top"
-                                   TextWrapping="WrapWithOverflow">
-                            <Run Text="The list below indicates the available filters that may be applied" />
-                            <Run Text="to the presented list of entries, they do not prevent the messages" />
-                            <Run Text="from being recorded, just optionally displayed or not." />
-                        </TextBlock>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                            <Run Text="Filters remove matching log messages from view when enabled." />                            
+                            <Run Text="They do not prevent the messages from being recorded, just from being displayed." />
+                            </TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow"
+                                   Margin="0,5,0,5"
+                                   Text="The list below indicates the available filters that may be applied:" />
+                        </StackPanel>
                         <Filters:FiltersControl Height="Auto"
                                                 VerticalAlignment="Stretch" />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Extractors">
+                <GroupBox Header="Available Extractors"
+                    Margin="5">
+                    <DockPanel>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                            <Run Text="Extractors remove unmatching log messages from view when enabled." />                            
+                            <Run Text="They do not prevent the messages from being recorded, just from being displayed." />
+                            </TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow"
+                                   Margin="0,5,0,5"
+                                   Text="The list below indicates the available extractors that may be applied:" />
+                        </StackPanel>
+                        <Extractors:ExtractorsControl Height="Auto"
+                                                VerticalAlignment="Stretch" />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Images">
+                <GroupBox Header="Available Images"
+                          Margin="5">
+                    <DockPanel>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                            <Run Text="Images are displayed for log messages by matching types." />
+                            <Run Text="They are displayed for Classifiers, Highlighters, Filters, and Extractors" />                            
+                            <Run Text="by matching names." />
+                            </TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow"
+                                   Margin="0,5,0,5"
+                                   Text="The list below indicates the registered images:" />
+                        </StackPanel>
+                        <Controls:ImageTypesControl />
                     </DockPanel>
                 </GroupBox>
             </TabItem>

@@ -1,0 +1,105 @@
+﻿<Window x:Class="Sentinel.Extractors.Gui.AddEditExtractorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
+        Title="Add / Edit Extractor"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="SingleBorderWindow"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+        WindowStartupLocation="CenterOwner">
+    
+    <Window.Resources>
+        
+        <ObjectDataProvider x:Key="logEntryField"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SentinelInterfaces:LogEntryField" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        
+        <ObjectDataProvider x:Key="matchMode"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SentinelInterfaces:MatchMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        
+    </Window.Resources>
+
+    <DockPanel Height="Auto"
+               Margin="5">
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Bottom"
+                    Height="36"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+            <Button Content="_OK"
+                    Command="{Binding Accept}"
+                    Width="80"
+                    Margin="0,5"
+                    IsDefault="True" />
+            <Button Content="_Cancel"
+                    Command="{Binding Reject}"
+                    Width="80"
+                    Margin="5,5,0,5"
+                    IsCancel="True" />
+        </StackPanel>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Extractor name : "
+                   Margin="5" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     VerticalContentAlignment="Center" />
+
+            <Label Content="Field to match against : "
+                   Grid.Row="1"
+                   Margin="5" />
+            <ComboBox Grid.Column="1"
+                      Grid.Row="1"
+                      SelectedItem="{Binding Field, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Source={StaticResource logEntryField}}"
+                      Margin="5"
+                      VerticalContentAlignment="Center" />
+
+            <Label Content="Match method : "
+                   Margin="5"
+                   Grid.Row="2" />
+            <ComboBox Grid.Column="1"
+                      Grid.Row="2"
+                      SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Source={StaticResource matchMode}}"
+                      Margin="5"
+                      VerticalContentAlignment="Center" />
+
+            <Label Content="Match string :"
+                   Margin="5"
+                   Grid.Row="3" />
+            <TextBox x:Name="matchText"
+                     Margin="5"
+                     MinWidth="205"
+                     Grid.Row="3"
+                     Grid.Column="1"
+                     Text="{Binding Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center" />
+        </Grid>
+    </DockPanel>
+</Window>

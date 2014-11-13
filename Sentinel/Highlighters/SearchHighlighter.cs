@@ -67,6 +67,32 @@ namespace Sentinel.Highlighters
         }
 
         [DataMember]
+        public bool Enabled
+        {
+            get
+            {
+                return highlighter.Enabled;
+            }
+            set
+            {
+                highlighter.Enabled = value;
+            }
+        }
+
+        [DataMember]
+        public MatchMode Mode
+        {
+            get
+            {
+                return highlighter.Mode;
+            }
+            set
+            {
+                highlighter.Mode = value;
+            }
+        }
+
+        [DataMember]
         public string Search
         {
             get
@@ -76,8 +102,7 @@ namespace Sentinel.Highlighters
             }
 
             set
-            {
-                highlighter.Enabled = !string.IsNullOrEmpty(value);
+            {                
                 highlighter.Pattern = value;
             }
         }
@@ -91,11 +116,11 @@ namespace Sentinel.Highlighters
                 Name = "Search",
                 Style = new HighlighterStyle
                 {
-                    Background = Colors.PaleGreen,
-                    Foreground = Colors.Purple
+                    Background = Colors.Lime,
+                    Foreground = Colors.Fuchsia
                 },
                 Field = LogEntryField.System,
-                Mode = MatchMode.Substring,
+                Mode = MatchMode.CaseSensitive,
             };
 
             Search = string.Empty;

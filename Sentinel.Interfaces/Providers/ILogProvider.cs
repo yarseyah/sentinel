@@ -4,6 +4,8 @@ namespace Sentinel.Interfaces.Providers
     {
         IProviderInfo Information { get; }
 
+        IProviderSettings ProviderSettings { get; }
+
         ILogger Logger { get; set; }
 
         string Name { get; set; }

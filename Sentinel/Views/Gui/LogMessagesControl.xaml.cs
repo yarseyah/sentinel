@@ -35,8 +35,7 @@ namespace Sentinel.Views.Gui
             InitializeComponent();
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
-
-            // TODO: apparently nothing will pass this next test.... so code in braces never run... investigate
+            
             if (Highlight is INotifyPropertyChanged)
             {
                 (Highlight as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();

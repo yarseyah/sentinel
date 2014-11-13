@@ -1,5 +1,7 @@
-﻿namespace Sentinel.NLog
+﻿using System.Runtime.Serialization;
+namespace Sentinel.NLog
 {
+    [DataContract]
     public class NetworkSettings : ProviderSettings, INLogAppenderSettings
     {
         public NetworkSettings()
@@ -10,11 +12,7 @@
 
         public NetworkProtocol Protocol { get; set; }
 
-        public int Port
-        {
-            get;
-            set;
-        }
+        public int Port { get; set; }
 
         public override string Summary
         {

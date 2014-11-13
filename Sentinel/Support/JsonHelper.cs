@@ -36,6 +36,20 @@ namespace Sentinel.Support
             }            
         }
 
+        public static string SerializeToString<T>(T objectToSerilaize)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(objectToSerilaize, Formatting.Indented, Settings);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine("Exception caught in serialization:");
+                Trace.WriteLine(e.Message);
+                throw;
+            }
+        }
+
         public static T DeserializeFromFile<T>(string filename)
         {
             try
@@ -58,6 +72,21 @@ namespace Sentinel.Support
             catch (Exception e)
             {
                 Trace.WriteLine(string.Format("Exception when trying to de-serialize from {0}", filename));
+                Trace.WriteLine(e.Message);
+            }
+
+            return default(T);
+        }
+
+        public static T DeserializeFromString<T>(string value)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(value, Settings);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine("Exception when trying to de-serialize from given string");
                 Trace.WriteLine(e.Message);
             }
 

@@ -1,14 +1,19 @@
 ﻿namespace Sentinel.Interfaces.Providers
 {
+    using System.Runtime.Serialization;
+
     public interface IProviderSettings
     {
+        [DataMember]
         string Name { get; }
 
+        [DataMember]
         string Summary { get; }
 
         /// <summary>
         /// Reference back to the provider this setting is appropriate to.
-        /// </summary>
+        /// </summary>       
+        [DataMember]
         IProviderInfo Info { get; }
     }
 }

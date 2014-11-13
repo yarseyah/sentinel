@@ -17,11 +17,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Sentinel")]
-[assembly: AssemblyDescription("To watch over as a guard.")]
+[assembly: AssemblyDescription("To watch over as a guard and provide real-time organization of logging sessions.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ray Hayes")]
+[assembly: AssemblyCompany("Ray Hayes, Ishmal Lewis, et al.")]
 [assembly: AssemblyProduct("Sentinel")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2012")]
+[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -49,5 +49,4 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.3.0")]
-[assembly: AssemblyFileVersion("0.9.3.0")]
+[assembly: AssemblyVersion("0.9.6.0")]

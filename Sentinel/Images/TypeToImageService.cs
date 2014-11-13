@@ -21,39 +21,17 @@ using Sentinel.Support.Mvvm;
 namespace Sentinel.Images
 {
     using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using Sentinel.Interfaces;
 
-    public class TypeToImageService : ViewModelBase, ITypeImageService
+    [DataContract]
+    public class TypeToImageService : ViewModelBase, ITypeImageService, IDefaultInitialisation
     {
         private int selectedIndex;
 
         public TypeToImageService()
         {
             ImageMappings = new ObservableCollection<ImageTypeRecord>();
-
-            // TODO: Register defaults, this should be persisting somewhere
-            Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
-            Register("ERROR", ImageQuality.Medium, "/Resources/Medium/Error.png");
-            Register("ERROR", ImageQuality.Large, "/Resources/Large/Error.png");
-
-            Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
-            Register("WARN", ImageQuality.Medium, "/Resources/Medium/Warning.png");
-            Register("WARN", ImageQuality.Large, "/Resources/Large/Warning.png");
-
-            Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
-            Register("TRACE", ImageQuality.Medium, "/Resources/Medium/Trace.png");
-            Register("TRACE", ImageQuality.Large, "/Resources/Large/Trace.png");
-
-            Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
-            Register("DEBUG", ImageQuality.Medium, "/Resources/Medium/Debug.png");
-            Register("DEBUG", ImageQuality.Large, "/Resources/Large/Debug.png");
-
-            Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
-            Register("INFO", ImageQuality.Medium, "/Resources/Medium/Info.png");
-            Register("INFO", ImageQuality.Large, "/Resources/Large/Info.png");
-            
-            Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
-            Register("FATAL", ImageQuality.Medium, "/Resources/Medium/Fatal.png");
-            Register("FATAL", ImageQuality.Large, "/Resources/Large/Fatal.png");
 
             Add = new DelegateCommand(AddMapping);
             Edit = new DelegateCommand(EditMapping, e => selectedIndex != -1);
@@ -124,7 +102,7 @@ namespace Sentinel.Images
             }
         }
 
-        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true)
+        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true, bool mustHaveImage = false)
         {
             var typeName = type.ToUpper();
             var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
@@ -150,8 +128,8 @@ namespace Sentinel.Images
                     return Get(type, newQuality);
                 }
             }
-
-            return null;
+           
+            return (mustHaveImage) ? Get("Unknown", quality) : null;            
         }
 
         private void AddMapping(object obj)
@@ -161,10 +139,50 @@ namespace Sentinel.Images
 
         private void EditMapping(object obj)
         {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            if (typeImageRecord != null)
+            {
+                EditImage.Edit(typeImageRecord);
+            }
         }
 
         private void RemoveMapping(object obj)
         {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            RemoveImage.Remove(typeImageRecord);
+        }
+
+        public void Initialise()
+        {            
+            Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
+            Register("ERROR", ImageQuality.Medium, "/Resources/Medium/Error.png");
+            Register("ERROR", ImageQuality.Large, "/Resources/Large/Error.png");
+
+            Register("WARN", ImageQuality.Small, "/Resources/Small/Warning.png");
+            Register("WARN", ImageQuality.Medium, "/Resources/Medium/Warning.png");
+            Register("WARN", ImageQuality.Large, "/Resources/Large/Warning.png");
+
+            Register("TRACE", ImageQuality.Small, "/Resources/Small/Trace.png");
+            Register("TRACE", ImageQuality.Medium, "/Resources/Medium/Trace.png");
+            Register("TRACE", ImageQuality.Large, "/Resources/Large/Trace.png");
+
+            Register("DEBUG", ImageQuality.Small, "/Resources/Small/Debug.png");
+            Register("DEBUG", ImageQuality.Medium, "/Resources/Medium/Debug.png");
+            Register("DEBUG", ImageQuality.Large, "/Resources/Large/Debug.png");
+
+            Register("INFO", ImageQuality.Small, "/Resources/Small/Info.png");
+            Register("INFO", ImageQuality.Medium, "/Resources/Medium/Info.png");
+            Register("INFO", ImageQuality.Large, "/Resources/Large/Info.png");
+
+            Register("FATAL", ImageQuality.Small, "/Resources/Small/Fatal.png");
+            Register("FATAL", ImageQuality.Medium, "/Resources/Medium/Fatal.png");
+            Register("FATAL", ImageQuality.Large, "/Resources/Large/Fatal.png");
+
+            Register("TIMING", ImageQuality.Small, "/Resources/Small/Clock.png");
+
+            Register("UNKNOWN", ImageQuality.Small, "/Resources/Small/Unknown.png");
+            Register("UNKNOWN", ImageQuality.Medium, "/Resources/Medium/Unknown.png");
+            Register("UNKNOWN", ImageQuality.Large, "/Resources/Large/Unknown.png");
         }
     }
 }

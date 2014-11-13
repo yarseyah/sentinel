@@ -19,6 +19,7 @@ namespace Sentinel.Filters
     using Sentinel.Filters.Gui;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Services;
     using Sentinel.Support.Mvvm;
 
     [DataContract]
@@ -44,12 +45,21 @@ namespace Sentinel.Filters
             Remove = new DelegateCommand(RemoveFilter, e => selectedIndex != -1);
 
             Filters = new ObservableCollection<T>();
+            SearchFilters = new ObservableCollection<T>();
 
             // Register self as an observer of the collection.
             collectionHelper.OnPropertyChanged += CustomFilterPropertyChanged;
+            
             collectionHelper.ManagerName = "FilteringService";
             collectionHelper.NameLookup += e => e.Name;
+
             Filters.CollectionChanged += collectionHelper.AttachDetach;
+            SearchFilters.CollectionChanged += collectionHelper.AttachDetach;
+
+            var searchFilter = ServiceLocator.Instance.Get<ISearchFilter>();
+            Debug.Assert(searchFilter != null, "The search filter is null.");
+
+            if (searchFilter != null) SearchFilters.Add(searchFilter as T);
         }
 
         public override string DisplayName
@@ -88,12 +98,15 @@ namespace Sentinel.Filters
         }
 
         #region IFilteringService Members
-
+    
         public ObservableCollection<T> Filters { get; set; }
+
+        public ObservableCollection<T> SearchFilters { get; set; }
 
         public bool IsFiltered(ILogEntry entry)
         {
-            return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry));
+            return (Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||                
+                SearchFilters.Any(filter => filter.Enabled && filter.IsMatch(entry)));
         }
 
         #endregion
@@ -110,7 +123,7 @@ namespace Sentinel.Filters
                 var filter = sender as Filter;
                 Trace.WriteLine(
                     string.Format(
-                        "FilterServer saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
+                        "FilteringService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
             }
 
             OnPropertyChanged(string.Empty);
@@ -136,10 +149,10 @@ namespace Sentinel.Filters
             // Add the standard debugging filters
             Filters.Add(new StandardFilter("Trace", LogEntryField.Type, "TRACE") as T);
             Filters.Add(new StandardFilter("Debug", LogEntryField.Type, "DEBUG") as T);
-            Filters.Add(new StandardFilter("Information", LogEntryField.Type, "INFO") as T);
-            Filters.Add(new StandardFilter("Warning", LogEntryField.Type, "WARN") as T);
+            Filters.Add(new StandardFilter("Info", LogEntryField.Type, "INFO") as T);
+            Filters.Add(new StandardFilter("Warn", LogEntryField.Type, "WARN") as T);
             Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
-            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);
+            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);            
         }
     }
 }

@@ -40,6 +40,7 @@
                 "The FileMonitoringProvider class expects configuration information " + "to be of IFileMonitoringProviderSettings type");
 
             var fileSettings = (IFileMonitoringProviderSettings)settings;
+            ProviderSettings = fileSettings;
             FileName = fileSettings.FileName;
             Information = settings.Info;
             refreshInterval = fileSettings.RefreshPeriod;
@@ -61,6 +62,8 @@
         #region Implementation of ILogProvider
 
         public IProviderInfo Information { get; private set; }
+
+        public IProviderSettings ProviderSettings { get; private set; }
 
         public ILogger Logger { get; set; }
 

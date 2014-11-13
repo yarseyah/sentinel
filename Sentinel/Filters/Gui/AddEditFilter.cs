@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using Sentinel.Support.Mvvm;
+using Sentinel.Interfaces;
 
 #endregion
 
@@ -21,28 +22,15 @@ namespace Sentinel.Filters.Gui
 {
     public class AddEditFilter : ViewModelBase
     {
-        private readonly List<string> fields = new List<string>
-                                                   {
-                                                       "Type",
-                                                       "System"
-                                                   };
-
-        private readonly List<string> filterMethods = new List<string>
-                                                          {
-                                                              "Exact",
-                                                              "Substring",
-                                                              "RegularExpression"
-                                                          };
-
         private readonly Window window;
-
-        private int fieldIndex = 0;
-
-        private int filterMethod = 0;
 
         private string name = "Unnamed";
 
         private string pattern = "pattern";
+
+        private LogEntryField field;
+
+        private MatchMode mode;
 
         public AddEditFilter(Window window, bool editMode)
         {
@@ -58,55 +46,31 @@ namespace Sentinel.Filters.Gui
 
         public ICommand Accept { get; private set; }
 
-        public int FieldIndex
+        public LogEntryField Field
         {
             get
             {
-                return fieldIndex;
+                return field;
             }
-
             set
             {
-                if (fieldIndex != value)
-                {
-                    fieldIndex = value;
-                    OnPropertyChanged("FieldIndex");
-                }
+                field = value;
+                OnPropertyChanged("Field");
             }
         }
 
-        public IEnumerable<string> Fields
+        public MatchMode Mode
         {
             get
             {
-                return fields;
+                return mode;
             }
-        }
-
-        public int FilterMethod
-        {
-            get
-            {
-                return filterMethod;
-            }
-
             set
             {
-                if (filterMethod != value)
-                {
-                    filterMethod = value;
-                    OnPropertyChanged("FilterMethod");
-                }
+                mode = value;
+                OnPropertyChanged("Mode");
             }
-        }
-
-        public IEnumerable<string> FilterMethods
-        {
-            get
-            {
-                return filterMethods;
-            }
-        }
+        }        
 
         public string Name
         {

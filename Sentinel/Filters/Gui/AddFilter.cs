@@ -52,25 +52,14 @@ namespace Sentinel.Filters.Gui
 
         private static Filter Construct(AddEditFilter data)
         {
-            Filter filter = null;
-
-            if (data.FieldIndex >= 0 && data.FieldIndex < data.Fields.Count())
+            return new Filter
             {
-                LogEntryField fieldToMatch =
-                    LogEntryFieldHelper.FieldNameToEnumeration(data.Fields.ElementAt(data.FieldIndex));
-                MatchMode mode = MatchModeConverter.ConvertFrom(data.FilterMethods.ElementAt(data.FilterMethod));
-
-                filter = new Filter
-                             {
-                                 Name = data.Name,
-                                 Field = fieldToMatch,
-                                 Mode = mode,
-                                 Pattern = data.Pattern,
-                                 Enabled = true
-                             };
-            }
-
-            return filter;
+                Name = data.Name,
+                Field = data.Field,
+                Mode = data.Mode,
+                Pattern = data.Pattern,
+                Enabled = true
+            };
         }
     }
 }

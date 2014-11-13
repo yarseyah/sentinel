@@ -40,20 +40,13 @@ namespace Sentinel.Filters
         public Filter()
         {
             PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    if (e.PropertyName == "Pattern" || e.PropertyName == "Mode")
-                    {
-                        if (Mode == MatchMode.RegularExpression)
-                        {
-                            regex = string.IsNullOrWhiteSpace(Pattern) ? null : new Regex(Pattern);
-                        }
-                    }
-
-                    if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
-                    {
-                        OnPropertyChanged("Description");
-                    }
-                };
+                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
+                    OnPropertyChanged("Description");
+                }
+            };
         }
 
         public Filter(string name, LogEntryField field, string pattern)
@@ -61,6 +54,16 @@ namespace Sentinel.Filters
             Name = name;
             Pattern = pattern;
             Field = field;
+            regex = new Regex(pattern);
+
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                {
+                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
+                    OnPropertyChanged("Description");
+                }
+            };
         }
 
         public string Name
@@ -155,14 +158,17 @@ namespace Sentinel.Filters
         {
             get
             {
-                string modeDescription = "exact";
+                string modeDescription = "Exact";
                 switch (Mode)
                 {
                     case MatchMode.RegularExpression:
-                        modeDescription = "regex";
+                        modeDescription = "RegEx";
                         break;
-                    case MatchMode.Substring:
-                        modeDescription = "substring";
+                    case MatchMode.CaseSensitive:
+                        modeDescription = "Case sensitive";
+                        break;
+                    case MatchMode.CaseInsensitive:
+                        modeDescription = "Case insensitive";
                         break;
                 }
 
@@ -170,18 +176,53 @@ namespace Sentinel.Filters
             }
         }
 
-        public bool IsMatch(ILogEntry entry)
+        public bool IsMatch(ILogEntry logEntry)
         {
-            Debug.Assert(entry != null, "LogEntry can not be null.");
+            Debug.Assert(logEntry != null, "LogEntry can not be null.");
 
-            string target = Field == LogEntryField.System ? entry.System : entry.Type;
+            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+
+            string target;
+
+            switch (Field)
+            {
+                case LogEntryField.None:
+                    target = "";
+                    break;
+                case LogEntryField.Type:
+                    target = logEntry.Type;
+                    break;
+                case LogEntryField.System:
+                    target = logEntry.System;
+                    break;
+                case LogEntryField.Classification:
+                    target = "";
+                    break;
+                case LogEntryField.Thread:
+                    target = logEntry.Thread;
+                    break;
+                //case LogEntryField.Source:
+                //    target = logEntry.Source;
+                //    break;
+                case LogEntryField.Description:
+                    target = logEntry.Description;
+                    break;
+                //case LogEntryField.Host:
+                //    target = "";
+                //    break;
+                default:
+                    target = "";
+                    break;
+            }
 
             switch (Mode)
             {
                 case MatchMode.Exact:
                     return target.Equals(Pattern);
-                case MatchMode.Substring:
+                case MatchMode.CaseSensitive:
                     return target.Contains(Pattern);
+                case MatchMode.CaseInsensitive:
+                    return target.ToLower().Contains(Pattern.ToLower());
                 case MatchMode.RegularExpression:
                     return regex != null && regex.IsMatch(target);
                 default:

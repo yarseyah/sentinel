@@ -22,6 +22,10 @@ namespace Sentinel.Highlighters.Interfaces
 
         LogEntryField Field { get; set; }
 
+        bool Enabled { get; set; }
+
+        MatchMode Mode { get; set; }
+
         IHighlighter Highlighter { get; }
 
         string Search { get; set; }

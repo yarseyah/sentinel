@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using System.Windows.Input;
 
 #endregion
@@ -23,6 +24,7 @@ namespace Sentinel.Images.Interfaces
 
         ICommand Edit { get; }
 
+        [DataMember]
         ObservableCollection<ImageTypeRecord> ImageMappings { get; }
 
         ICommand Remove { get; }
@@ -31,6 +33,6 @@ namespace Sentinel.Images.Interfaces
 
         void Register(string type, ImageQuality quality, string image);
 
-        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true);
+        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true, bool mustHaveImage = false);
     }
 }

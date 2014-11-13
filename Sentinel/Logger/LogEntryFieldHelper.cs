@@ -21,14 +21,14 @@ namespace Sentinel.Logger
                     return LogEntryField.Type;
                 case "System":
                     return LogEntryField.System;
-                case "Source":
-                    return LogEntryField.Source;
+                //case "Source":
+                //    return LogEntryField.Source;
                 case "Classification":
                     return LogEntryField.Classification;
                 case "Description":
                     return LogEntryField.Description;
-                case "Host":
-                    return LogEntryField.Host;
+                //case "Host":
+                //    return LogEntryField.Host;
                 default:
                     return LogEntryField.None;
             }

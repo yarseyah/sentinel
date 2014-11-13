@@ -41,7 +41,7 @@ namespace Sentinel.Views.Gui
     {
         private readonly IUserPreferences preferences = ServiceLocator.Instance.Get<IUserPreferences>();
 
-        private readonly ISearchHighlighter searchHighlighter;
+        //private readonly ISearchHighlighter searchHighlighter;
         private readonly IViewManager viewManager = ServiceLocator.Instance.Get<IViewManager>();
         private ILogger log;
         private string primaryTitle;
@@ -59,9 +59,8 @@ namespace Sentinel.Views.Gui
                 (preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
             }
 
-            Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
-            Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
-            searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
+            //Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
+            //searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
 
             SetupSplitter();
 
@@ -74,10 +73,8 @@ namespace Sentinel.Views.Gui
 
         public ICommand Save { get; private set; }
 
-        public IFilteringService<IFilter> Filters { get; private set; }
-
-        public IHighlightingService<IHighlighter> Highlight { get; private set; }
-
+        //public IFilteringService<IFilter> Filters { get; private set; }
+        
         public ILogViewer PrimaryView
         {
             get
@@ -144,19 +141,19 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        public string Search
-        {
-            get
-            {
-                Debug.Assert(searchHighlighter != null, "Should always have a search highlighter");
-                return searchHighlighter.Search;
-            }
+        //public string Search
+        //{
+        //    get
+        //    {
+        //        Debug.Assert(searchHighlighter != null, "Should always have a search highlighter");
+        //        return searchHighlighter.Search;
+        //    }
 
-            set
-            {
-                searchHighlighter.Search = value;
-            }
-        }
+        //    set
+        //    {
+        //        searchHighlighter.Search = value;
+        //    }
+        //}
 
         #region IWindowFrame Members
 

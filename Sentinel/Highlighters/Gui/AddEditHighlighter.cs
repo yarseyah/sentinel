@@ -26,20 +26,6 @@ namespace Sentinel.Highlighters.Gui
 {
     public class AddEditHighlighter : ViewModelBase
     {
-        private readonly List<string> highlightingMethods = new List<string>
-                                                                {
-                                                                    "Exact",
-                                                                    "Substring",
-                                                                    "RegularExpression"
-                                                                };
-
-        private readonly List<string> matchFields = new List<string>
-                                                        {
-                                                            "Type",
-                                                            "System",
-                                                            // "Description"
-                                                        };
-
         private readonly Window window;
 
         private int backgroundColourIndex = 1;
@@ -48,19 +34,19 @@ namespace Sentinel.Highlighters.Gui
 
         private bool coloursAreClose;
 
-        private int fieldIndex;
-
-        private int foregroundColourIndex;
-
-        private int hightlightingMethodIndex;
-
-        private string name = string.Empty;
+        private int foregroundColourIndex;                
 
         private bool overrideBackgroundColour = false;
 
         private bool overrideForegroundColour = false;
 
-        private string pattern = string.Empty;
+        private string name = "Untitled";
+
+        private string pattern = "pattern";
+
+        private LogEntryField field;
+
+        private MatchMode mode;
 
         public AddEditHighlighter(Window window, bool editMode)
         {
@@ -187,91 +173,31 @@ namespace Sentinel.Highlighters.Gui
             }
         }
 
-        public int HighlightingMethod
+        public LogEntryField Field
         {
             get
             {
-                return hightlightingMethodIndex;
+                return field;
             }
-
             set
             {
-                if (hightlightingMethodIndex != value)
-                {
-                    hightlightingMethodIndex = value;
-                    OnPropertyChanged("HighlightingMethod");
-                }
+                field = value;
+                OnPropertyChanged("Field");
             }
         }
 
-        public IEnumerable<string> HighlightingMethods
+        public MatchMode Mode
         {
             get
             {
-                return highlightingMethods;
+                return mode;
             }
-        }
-
-        public int MatchField
-        {
-            get
-            {
-                return fieldIndex;
-            }
-
             set
             {
-                if (fieldIndex != value)
-                {
-                    fieldIndex = value;
-                    OnPropertyChanged("MatchField");
-                }
+                mode = value;
+                OnPropertyChanged("Mode");
             }
-        }
-
-        public IEnumerable<string> MatchFields
-        {
-            get
-            {
-                return matchFields;
-            }
-        }
-
-        public MatchMode MatchMode
-        {
-            get
-            {
-                switch (HighlightingMethod)
-                {
-                    case 0:
-                        return MatchMode.Exact;
-                    case 1:
-                        return MatchMode.Substring;
-                    case 2:
-                        return MatchMode.RegularExpression;
-                }
-
-                return MatchMode.Exact;
-            }
-
-            set
-            {
-                switch (value)
-                {
-                    case MatchMode.Exact:
-                        HighlightingMethod = 0;
-                        break;
-                    case MatchMode.Substring:
-                        HighlightingMethod = 1;
-                        break;
-                    case MatchMode.RegularExpression:
-                        HighlightingMethod = 2;
-                        break;
-                }
-
-                OnPropertyChanged("MatchMode");
-            }
-        }
+        } 
 
         public string Name
         {

@@ -1,7 +1,9 @@
 ﻿namespace Sentinel.NLog
 {
     using Sentinel.Interfaces.Providers;
+    using System.Runtime.Serialization;
 
+    [DataContract]
     public class ProviderSettings : IProviderSettings
     {
         #region Implementation of IProviderSettings

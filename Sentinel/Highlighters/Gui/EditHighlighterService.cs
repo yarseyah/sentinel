@@ -36,20 +36,8 @@ namespace Sentinel.Highlighters.Gui
 
             data.Name = highlighter.Name;
             data.Pattern = highlighter.Pattern;
-            data.MatchMode = highlighter.Mode;
-
-            if (highlighter != null)
-            {
-                switch (highlighter.Field)
-                {
-                    case LogEntryField.Type:
-                        data.MatchField = 0;
-                        break;
-                    case LogEntryField.System:
-                        data.MatchField = 1;
-                        break;
-                }
-            }
+            data.Mode = highlighter.Mode;
+            data.Field = highlighter.Field;         
 
             if (highlighter.Style != null && highlighter.Style.Background != null)
             {
@@ -79,10 +67,8 @@ namespace Sentinel.Highlighters.Gui
             {
                 highlighter.Name = data.Name;
                 highlighter.Pattern = data.Pattern;
-                highlighter.Mode = data.MatchMode;
-
-                highlighter.Field = LogEntryFieldHelper.FieldNameToEnumeration(
-                    data.MatchFields.ElementAt(data.MatchField));
+                highlighter.Mode = data.Mode;
+                highlighter.Field = data.Field;
 
                 if (highlighter.Style == null && (data.OverrideBackgroundColour || data.OverrideForegroundColour))
                 {

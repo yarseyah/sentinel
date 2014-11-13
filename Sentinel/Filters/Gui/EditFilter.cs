@@ -34,18 +34,18 @@ namespace Sentinel.Filters.Gui
             window.Owner = Application.Current.MainWindow;
 
             data.Name = filter.Name;
-            data.FieldIndex = filter.Field == LogEntryField.Type ? 0 : 1;
+            data.Field = filter.Field;
             data.Pattern = filter.Pattern;
-            data.FilterMethod = MatchModeConverter.Convert(filter.Mode, data.FilterMethods);
+            data.Mode = filter.Mode;
 
             bool? dialogResult = window.ShowDialog();
 
-            if (dialogResult != null && (bool) dialogResult)
+            if (dialogResult != null && (bool)dialogResult)
             {
                 filter.Name = data.Name;
                 filter.Pattern = data.Pattern;
-                filter.Mode = MatchModeConverter.ConvertFrom(data.FilterMethods.ElementAt(data.FilterMethod));
-                filter.Field = LogEntryFieldHelper.FieldNameToEnumeration(data.Fields.ElementAt(data.FieldIndex));
+                filter.Mode = data.Mode;
+                filter.Field = data.Field;
             }
         }
 

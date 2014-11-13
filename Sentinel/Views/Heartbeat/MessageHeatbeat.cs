@@ -147,6 +147,8 @@ namespace Sentinel.Views.Heartbeat
 
         #region Implementation of ILogViewer
 
+        public ObservableCollection<ILogEntry> Messages { get; private set; }
+
         public string Name
         {
             get

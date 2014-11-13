@@ -14,6 +14,7 @@ using System.Windows;
 using Sentinel.Images.Controls;
 using Sentinel.Images.Interfaces;
 using Sentinel.Support.Mvvm;
+using System;
 
 #endregion
 
@@ -40,15 +41,15 @@ namespace Sentinel.Images
                 addImageWindow = new AddImageWindow { DataContext = this, Owner = Application.Current.MainWindow };
 
                 var imageService = Services.ServiceLocator.Instance.Get<ITypeImageService>();
-                var data = new AddEditTypeImageViewModel(addImageWindow, imageService);
+                var data = new AddEditTypeImageViewModel(addImageWindow, imageService, true);
                 var dialogResult = addImageWindow.ShowDialog();
 
                 if (dialogResult == true)
                 {
                     if (imageService != null)
                     {
-                        // TODO: need to extend to support ImageQuality (defaulting to Small)
-                        imageService.Register(data.Type, ImageQuality.Small, data.FileName);
+                        var imageSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), data.Size);
+                        imageService.Register(data.Type, imageSize, data.FileName);
                     }
                 }
 

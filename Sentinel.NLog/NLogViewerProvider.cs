@@ -48,9 +48,12 @@
             }
 
             Information = ProviderRegistrationInformation.Info;
+            ProviderSettings = networkSettings;
         }
 
         public IProviderInfo Information { get; private set; }
+
+        public IProviderSettings ProviderSettings { get; private set; }
 
         public ILogger Logger { get; set; }
 
@@ -253,7 +256,7 @@
                            System = system,
                            Thread = record.Attribute("thread").Value,
                            Description = description,
-                           Type = type,
+                           Type = type,                           
                            MetaData = new Dictionary<string, object>
                                           {
                                               { "Classification", classification },

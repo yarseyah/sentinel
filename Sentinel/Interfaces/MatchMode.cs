@@ -29,7 +29,12 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Case-sensitive sub-string match.
         /// </summary>
-        Substring,
+        CaseSensitive,
+
+        /// <summary>
+        /// Case-insensitive sub-string match.
+        /// </summary>
+        CaseInsensitive,
 
         /// <summary>
         /// Regular expression matching.

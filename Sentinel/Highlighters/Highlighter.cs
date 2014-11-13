@@ -29,9 +29,10 @@ namespace Sentinel.Highlighters
 
         private IHighlighterStyle style;
 
-        private string typeMatch;
+        private string pattern;
 
         private Regex regex;
+
         #endregion
 
         public Highlighter()
@@ -40,17 +41,33 @@ namespace Sentinel.Highlighters
             Enabled = false;
 
             PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    if (e.PropertyName != "Pattern" && e.PropertyName != "Mode")
-                    {
-                        return;
-                    }
+                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
+                    OnPropertyChanged("Description");
+                }
+            };
+        }
 
-                    if (Mode == MatchMode.RegularExpression)
-                    {
-                        regex = new Regex(Pattern);
-                    }
-                };
+        public Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, HighlighterStyle style)
+        {
+            Name = name;
+            Enabled = enabled;
+            Field = field;
+            Mode = mode;
+            Pattern = pattern;
+            Style = style;
+            regex = new Regex(pattern);
+
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                {
+                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
+                    OnPropertyChanged("Description");
+                }
+            };
         }
 
         public string Name
@@ -126,18 +143,40 @@ namespace Sentinel.Highlighters
             }
         }
 
+        public string Description
+        {
+            get
+            {
+                string modeDescription = "Exact";
+                switch (Mode)
+                {
+                    case MatchMode.RegularExpression:
+                        modeDescription = "RegEx";
+                        break;
+                    case MatchMode.CaseSensitive:
+                        modeDescription = "Case sensitive";
+                        break;
+                    case MatchMode.CaseInsensitive:
+                        modeDescription = "Case insensitive";
+                        break;
+                }
+
+                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+            }
+        }
+
         public string Pattern
         {
             get
             {
-                return typeMatch;
+                return pattern;
             }
 
             set
             {
-                if (typeMatch != value)
+                if (pattern != value)
                 {
-                    typeMatch = value;
+                    pattern = value;
                     OnPropertyChanged("Pattern");
                 }
             }
@@ -163,14 +202,50 @@ namespace Sentinel.Highlighters
         public bool IsMatch(ILogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "logEntry can not be null.");
-            var target = Field == LogEntryField.System ? logEntry.System : logEntry.Type;
+
+            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+
+            string target;
+
+            switch (Field)
+            {
+                case LogEntryField.None:
+                    target = "";
+                    break;
+                case LogEntryField.Type:
+                    target = logEntry.Type;
+                    break;
+                case LogEntryField.System:
+                    target = logEntry.System;
+                    break;
+                case LogEntryField.Classification:
+                    target = "";
+                    break;
+                case LogEntryField.Thread:
+                    target = logEntry.Thread;
+                    break;
+                //case LogEntryField.Source:
+                //    target = logEntry.Source;
+                //    break;
+                case LogEntryField.Description:
+                    target = logEntry.Description;
+                    break;
+                //case LogEntryField.Host:
+                //    target = "";
+                //    break;
+                default:
+                target = "";
+                break;
+            }
 
             switch (Mode)
             {
                 case MatchMode.Exact:
                     return target.Equals(Pattern);
-                case MatchMode.Substring:
+                case MatchMode.CaseSensitive:
                     return target.Contains(Pattern);
+                case MatchMode.CaseInsensitive:
+                    return target.ToLower().Contains(Pattern.ToLower());
                 case MatchMode.RegularExpression:
                     return regex != null && regex.IsMatch(target);
             }

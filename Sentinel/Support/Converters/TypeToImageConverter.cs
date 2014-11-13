@@ -40,14 +40,14 @@ namespace Sentinel.Support.Converters
             {
                 if (imageService != null)
                 {
-                    var record = imageService.Get(valueAsString, quality);
+                    var record = imageService.Get(valueAsString, quality, true, true);
 
                     if (record != null && !string.IsNullOrEmpty(record.Image))
                     {
                         var image = new BitmapImage();
 
                         image.BeginInit();
-                        image.UriSource = new Uri(record.Image, UriKind.Relative);
+                        image.UriSource = new Uri(record.Image, UriKind.RelativeOrAbsolute);
                         image.EndInit();
 
                         return image;

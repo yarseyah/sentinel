@@ -5,6 +5,7 @@ namespace Sentinel.NLog
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
 
     public class NetworkClientWrapper : IDisposable
     {
@@ -19,7 +20,10 @@ namespace Sentinel.NLog
             isUdp = protocol == NetworkProtocol.Udp;
             if (isUdp)
             {
-                udpClient = new UdpClient(endPoint);
+                udpClient = new UdpClient();
+                udpClient.ExclusiveAddressUse = false;
+                udpClient.Client.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.ReuseAddress, true);
+                udpClient.Client.Bind(endPoint);
             }
             else
             {
@@ -33,7 +37,7 @@ namespace Sentinel.NLog
             {
                 return udpClient.Receive(ref remoteEndPoint);
             }
-            
+
             var returnBuffer = new List<byte>();
             var stream = tcpClient.GetStream();
             var buffer = new byte[10240];
@@ -49,6 +53,8 @@ namespace Sentinel.NLog
 
         public void Dispose()
         {
+            if (udpClient != null) udpClient.Close();
+            if (tcpClient != null) tcpClient.Close();
         }
 
         public void SetRecieveTimeout(int timeout)

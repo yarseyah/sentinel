@@ -35,7 +35,7 @@ namespace Sentinel.Images
                     {ImageError.NotFound, "Image not found."},
                     {
                         ImageError.TooLarge,
-                        "Image must be less than 128x128. [Note: images are most often used at 20x20]"
+                        "Image must be less than 128x128. [Note: images are most often used at 64x64]"
                         },
                     {ImageError.Unknown, "Problem with reading image."},
                     {ImageError.NoError, null}
@@ -47,7 +47,7 @@ namespace Sentinel.Images
             new Dictionary<TypeError, string>
                 {
                     {TypeError.NotSpecified, "Type name must be specified."},
-                    {TypeError.Duplicate, "There is already an entry for types with this name."},
+                    {TypeError.Duplicate, "There is already an entry for this type name and size combination."},
                     {TypeError.NoError, null}
                 };
 
@@ -59,16 +59,28 @@ namespace Sentinel.Images
 
         private BitmapImage image;
 
-        private ImageError imageError = ImageError.NotSpecified;
+        private ImageError imageError;
 
         private string type = string.Empty;
 
-        private TypeError typeError = TypeError.NotSpecified;
+        private string size = "Small";
 
-        public AddEditTypeImageViewModel(Window window, ITypeImageService images)
-        {
+        private bool _isAddMode;
+
+        private TypeError typeError;
+
+        public AddEditTypeImageViewModel(Window window, ITypeImageService images, bool isAddMode)
+        {            
             this.window = window;
+            if (window != null)
+            {
+                window.Title = String.Format("{0} Image", (isAddMode ? "Edit" : "Add"));
+            }
             this.window.DataContext = this;
+
+            _isAddMode = isAddMode;
+            imageError = isAddMode ? ImageError.NotSpecified : ImageError.NoError;
+            typeError = isAddMode ? TypeError.NotSpecified : TypeError.NoError;
 
             Accept = new DelegateCommand(e => CloseDialog(true), c => IsValid);
             Reject = new DelegateCommand(e => CloseDialog(false));
@@ -77,6 +89,14 @@ namespace Sentinel.Images
             ImageService = images;
 
             UpdateErrorMessage(false);
+
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == "FileName")
+                {
+                    LoadImageFromFileName(FileName);
+                }
+            };
         }
 
         /// <summary>
@@ -159,6 +179,39 @@ namespace Sentinel.Images
             }
         }
 
+        public string Size
+        {
+            get
+            {
+                return size;
+            }
+
+            set
+            {
+                if (size != value)
+                {
+                    size = value;
+                    OnPropertyChanged("Size");
+                }
+            }
+        }
+
+        public bool IsAddMode
+        {
+            get
+            {
+                return _isAddMode;
+            }
+            set
+            {
+                if (_isAddMode != value)
+                {
+                    _isAddMode = value;
+                    OnPropertyChanged("IsAddMode");
+                }
+            }
+        }
+
         #region IDataErrorInfo Members
 
         /// <summary>
@@ -199,14 +252,15 @@ namespace Sentinel.Images
             {
                 string error = null;
 
-                if (fieldName == "Type")
+                if (_isAddMode && (fieldName == "Type" || fieldName == "Size"))
                 {
                     var oldTypeError = typeError;
 
                     // TODO: need to be aware of the different qualities of images, using best available
+                    ImageQuality selectedSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size);
                     if (!string.IsNullOrEmpty(Type)
                         && ImageService != null
-                        && ImageService.Get(Type) != null)
+                        && ImageService.Get(Type, selectedSize, false, false) != null)
                     {
                         typeError = TypeError.Duplicate;
                     }
@@ -214,7 +268,7 @@ namespace Sentinel.Images
                     {
                         typeError = TypeError.NotSpecified;
                     }
-                    else if (fieldName == "Type")
+                    else if (fieldName == "Type" || fieldName == "Size")
                     {
                         typeError = TypeError.NoError;
                     }
@@ -246,45 +300,55 @@ namespace Sentinel.Images
                 };
 
             var dialogResult = openFileDialog.ShowDialog(window);
-            var oldImageError = imageError;
+            
 
             if (dialogResult == true)
             {
-                try
-                {
-                    // Check file exists, it should!
-                    var fi = new FileInfo(openFileDialog.FileName);
-                    if (fi.Exists)
-                    {
-                        var i = new BitmapImage();
-                        i.BeginInit();
-                        i.UriSource = new Uri(openFileDialog.FileName, UriKind.RelativeOrAbsolute);
-                        i.EndInit();
 
-                        Image = i;
-
-                        // Some santity checking.
-                        this.imageError = i.Width <= 128 && i.Height <= 128 ? ImageError.NoError : ImageError.TooLarge;
-                    }
-                    else
-                    {
-                        Image = null;
-                        imageError = ImageError.NotFound;
-                    }
-                }
-                catch (Exception)
-                {
-                    Image = null;
-                    imageError = ImageError.Unknown;
-                }
+                //LoadImageFromFileName(openFileDialog.FileName);
 
                 // In all cases, keep the filename entered or it is confusing for the user.
+                // Plus, we need to raise the PropertyChanged event for the FileName property.
                 FileName = openFileDialog.FileName;
+                
+            }
+        }
 
-                if (imageError != oldImageError)
+        private void LoadImageFromFileName(string fileName)
+        {
+            var oldImageError = imageError;
+
+            try
+            {
+                // Check file exists, it should!
+                var fi = new FileInfo(fileName);
+                if (fi.Exists)
                 {
-                    UpdateErrorMessage(true);
+                    var i = new BitmapImage();
+                    i.BeginInit();
+                    i.UriSource = new Uri(fileName, UriKind.RelativeOrAbsolute);
+                    i.EndInit();
+
+                    Image = i;
+
+                    // Some santity checking.
+                    this.imageError = i.Width <= 128 && i.Height <= 128 ? ImageError.NoError : ImageError.TooLarge;
                 }
+                else
+                {
+                    Image = null;
+                    imageError = ImageError.NotFound;
+                }
+            }
+            catch (Exception)
+            {
+                Image = null;
+                imageError = ImageError.Unknown;
+            }
+
+            if (imageError != oldImageError)
+            {
+                UpdateErrorMessage(true);
             }
         }
 

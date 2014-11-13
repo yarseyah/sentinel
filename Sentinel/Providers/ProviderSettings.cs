@@ -1,6 +1,7 @@
 ﻿namespace Sentinel.Providers
 {
     using Sentinel.Interfaces.Providers;
+    using System.Runtime.Serialization;
 
     public class ProviderSettings : IProviderSettings
     {

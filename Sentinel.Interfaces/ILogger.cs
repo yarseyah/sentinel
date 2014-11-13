@@ -19,6 +19,11 @@
         string Name { get; set; }
 
         /// <summary>
+        /// Indicates whether new entries are added to the Entries collection.
+        /// </summary>
+        bool Enabled { get; set; }
+
+        /// <summary>
         /// Gets the newly added entries for the logger.
         /// </summary>
         IEnumerable<ILogEntry> NewEntries { get; }

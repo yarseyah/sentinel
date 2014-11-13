@@ -1,0 +1,32 @@
+﻿<Window x:Class="Sentinel.Controls.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About" Height="200" Width="450"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" >
+
+    <Grid x:Name="LayoutRoot" Margin="0,0,0,4">
+        <DockPanel Margin="5">
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Margin="5,5,0,0" FontSize="18" FontWeight="Bold">
+                    <Run Name="AssemblyNameLabel" Text="Assembly Name"/>
+                </TextBlock>
+                <TextBlock Margin="5,0,0,10" FontSize="14" TextWrapping="WrapWithOverflow">                    
+                    <Run Name="DescriptionLabel" Text="Description" />
+                </TextBlock>
+                <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
+                    <Run Text="Version - " />
+                    <Run Name="VersionNumberLabel" Text="1.0.0" />
+                </TextBlock>
+                <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
+                    <Run Text="Contributors - " />
+                    <Run Name="DeveloperInfoLabel" Text="Ray Hayes et al." />
+                </TextBlock>
+                <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
+                    <Run Name="CopyrightInfoLabel" Text="Copyright info" />
+                </TextBlock>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

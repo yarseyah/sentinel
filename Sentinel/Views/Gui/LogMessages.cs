@@ -20,6 +20,7 @@ using Sentinel.Views.Interfaces;
 namespace Sentinel.Views.Gui
 {
     using Sentinel.Filters;
+    using Sentinel.Extractors.Interfaces;
 
     public class LogMessages
         : ViewModelBase
@@ -34,16 +35,18 @@ namespace Sentinel.Views.Gui
         public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
 
         private readonly IFilteringService<IFilter> filteringService;
+        private readonly IExtractingService<IExtractor> extractingService;
         private readonly Queue<ILogEntry> pendingAdditions = new Queue<ILogEntry>();
         private readonly LogMessagesControl presenter;
 
-        private bool clearPending;
+        private bool clearPending;        
         private int filteredCount;
+        private int extractedCount;
         private ILogger logger;
         private bool rebuildList;
         private string status;
         private int unfilteredCount;
-        private bool autoscroll;
+        private bool autoscroll = true;
 
         public LogMessages()
         {
@@ -70,6 +73,16 @@ namespace Sentinel.Views.Gui
                 }
             }
 
+            extractingService = ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
+            if (extractingService != null)
+            {
+                var notify = extractingService as INotifyPropertyChanged;
+                if (notify != null)
+                {
+                    notify.PropertyChanged += (sender, e) => ApplyExtracting();
+                }
+            }
+
             InitialiseToolbar();
         }
 
@@ -90,13 +103,28 @@ namespace Sentinel.Views.Gui
                 new DelegateCommand(e => clearPending = true));
             clearButton.ImageIdentifier = "Clear";
 
+            var pauseButton = new LogViewerToolbarButton(
+                "Pause",
+                "Pause the addition of messages to the display",
+                true,
+                new DelegateCommand(PauseMessagesHandler));
+            pauseButton.IsChecked = false;
+            pauseButton.ImageIdentifier = "Pause";
+
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
                                   autoscrollButton,
-                                  clearButton
+                                  clearButton,
+                                  pauseButton
                               };
 
             ToolbarItems = toolbar;
+        }
+
+        private void PauseMessagesHandler(object obj)
+        {
+            Debug.Assert(logger != null, "Logger has not been instantiated");
+            logger.Enabled = !logger.Enabled;
         }
 
         public ObservableCollection<ILogEntry> Messages { get; private set; }
@@ -117,6 +145,25 @@ namespace Sentinel.Views.Gui
                 {
                     filteredCount = value;
                     OnPropertyChanged("FilteredCount");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the count of extracted entries.
+        /// </summary>
+        public int ExtractedCount
+        {
+            get
+            {
+                return extractedCount;
+            }
+            private set
+            {
+                if (extractedCount != value)
+                {
+                    extractedCount = value;
+                    OnPropertyChanged("ExtractedCount");
                 }
             }
         }
@@ -159,6 +206,7 @@ namespace Sentinel.Views.Gui
 
         #endregion
 
+        
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Logger")
@@ -193,6 +241,11 @@ namespace Sentinel.Views.Gui
                         }
                     }
                 }
+            }
+            else if (e.PropertyName =="Enabled")
+            {
+                var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
+                pauseButton.IsChecked = !logger.Enabled;
             }
         }
 
@@ -272,15 +325,15 @@ namespace Sentinel.Views.Gui
         /// <param name="entry">Entry to add.</param>
         private void AddIfPassesFilters(ILogEntry entry)
         {
-            // If no filtering service, then assume it passes.
-            if (filteringService == null)
+            // If no filtering service or no extracting service, then assume it passes.
+            if (filteringService == null || extractingService == null)
             {
                 Messages.Add(entry);
             }
             else
             {
-                if (!filteringService.IsFiltered(entry))
-                {
+                if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
+                {                    
                     Messages.Add(entry);
                 }
             }
@@ -294,6 +347,25 @@ namespace Sentinel.Views.Gui
             lock (Messages)
             {
                 Trace.WriteLine("Applying filters...");
+
+                // About to get the full dataset from the LogEntriesManager,
+                // therefore anything in the pendingQueue is unneeded as it
+                // will already be in the complete collection and the incomplete
+                // filtered copy of that list is going to be disposed.
+                lock (pendingAdditions)
+                {
+                    pendingAdditions.Clear();
+                }
+
+                rebuildList = true;
+            }
+        }
+
+        private void ApplyExtracting()
+        {
+            lock (Messages)
+            {
+                Trace.WriteLine("Applying extractors...");
 
                 // About to get the full dataset from the LogEntriesManager,
                 // therefore anything in the pendingQueue is unneeded as it

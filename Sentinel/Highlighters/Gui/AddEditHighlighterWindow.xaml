@@ -1,6 +1,8 @@
 ﻿<Window x:Class="Sentinel.Highlighters.Gui.AddEditHighlighterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
         xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
         Title="Add / Edit Highlighter"
         ResizeMode="NoResize"
@@ -10,6 +12,23 @@
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
+        
+        <ObjectDataProvider x:Key="logEntryField"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SentinelInterfaces:LogEntryField" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="matchMode"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SentinelInterfaces:MatchMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        
         <Style x:Key="ColorSelectorCombobox"
                TargetType="ComboBox">
             <Setter Property="ItemTemplate">
@@ -85,8 +104,8 @@
                    Margin="5" />
             <ComboBox Grid.Column="1"
                       Grid.Row="1"
-                      SelectedIndex="{Binding MatchField}"
-                      ItemsSource="{Binding MatchFields}"
+                      SelectedItem="{Binding Field, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Source={StaticResource logEntryField}}"
                       Margin="5"
                       VerticalContentAlignment="Center" />
 
@@ -95,8 +114,8 @@
                    Grid.Row="2" />
             <ComboBox Grid.Column="1"
                       Grid.Row="2"
-                      SelectedIndex="{Binding HighlightingMethod}"
-                      ItemsSource="{Binding HighlightingMethods}"
+                      SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Source={StaticResource matchMode}}"
                       Margin="5"
                       VerticalContentAlignment="Center" />
 

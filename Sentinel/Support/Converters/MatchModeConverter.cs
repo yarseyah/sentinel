@@ -42,7 +42,7 @@ namespace Sentinel.Support.Converters
             switch (matchString)
             {
                 case "substring":
-                    return MatchMode.Substring;
+                    return MatchMode.CaseSensitive;
                 case "regularexpression":
                 case "regex":
                     return MatchMode.RegularExpression;
