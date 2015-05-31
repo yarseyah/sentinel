@@ -1,7 +1,9 @@
 ﻿<Window x:Class="Sentinel.Controls.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About" Height="200" Width="450"
+        Title="About"
+        Height="222"
+        Width="450"
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" >
@@ -17,11 +19,18 @@
                 </TextBlock>
                 <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
                     <Run Text="Version - " />
-                    <Run Name="VersionNumberLabel" Text="1.0.0" />
+                    <Run Name="VersionNumberLabel" Text="0.10.0.0" />
+                </TextBlock>
+                <TextBlock Margin="5"
+                           FontSize="14"
+                           TextWrapping="WrapWithOverflow">
+                    <Run Text="Created By - " />
+                    <Run Name="CreatorInfoLabel"
+                         Text="Ray Hayes" />
                 </TextBlock>
                 <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
                     <Run Text="Contributors - " />
-                    <Run Name="DeveloperInfoLabel" Text="Ray Hayes et al." />
+                    <Run Name="DeveloperInfoLabel" Text="Ishmal Lewis" />
                 </TextBlock>
                 <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
                     <Run Name="CopyrightInfoLabel" Text="Copyright info" />
