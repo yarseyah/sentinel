@@ -1,9 +1,10 @@
-﻿using Sentinel.Extractors.Interfaces;
-using Sentinel.Services;
-using System.Windows.Controls;
-
-namespace Sentinel.Extractors.Gui
+﻿namespace Sentinel.Extractors.Gui
 {
+    using System.Windows.Controls;
+
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Services;
+
     /// <summary>
     /// Interaction logic for ExtractorsControl.xaml
     /// </summary>

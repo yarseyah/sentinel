@@ -21,12 +21,12 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <PublishUrl>$(SolutionDir)\Installs\Sentinel\</PublishUrl>
+    <PublishUrl>C:\Users\Ray\Development\sentinel\\Installs\Sentinel\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
+    <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -34,6 +34,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>https://sentinel.codeplex.com/releases/clickonce/</InstallUrl>
     <SupportUrl>http://sentinel.codeplex.com/</SupportUrl>
     <ProductName>Sentinel</ProductName>
     <PublisherName>Sentinel</PublisherName>
@@ -41,7 +42,7 @@
     <WebPage>publish.htm</WebPage>
     <TrustUrlParameters>true</TrustUrlParameters>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.9.6.0</ApplicationVersion>
+    <ApplicationVersion>0.10.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>

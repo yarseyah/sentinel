@@ -1,14 +1,10 @@
-﻿using Sentinel.Classification.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace Sentinel.Classification.Gui
+﻿namespace Sentinel.Classification.Gui
 {
+    using System.Diagnostics;
+    using System.Windows;
+
+    using Sentinel.Classification.Interfaces;
+
     public class EditClassifier : IEditClassifyingService
     {
         public void Edit(IClassifier classifier)
@@ -26,7 +22,7 @@ namespace Sentinel.Classification.Gui
             data.Mode = classifier.Mode;
             data.Type = classifier.Type;
             
-            bool? dialogResult = window.ShowDialog();
+            var dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)
             {

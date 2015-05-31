@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace nLog1Tester
+﻿namespace nLog1Tester
 {
     using System;
     using System.Threading;
 
-    class Program
+    using NLog;
+
+    public static class Program
     {
-        private static readonly NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new Random();
 
-        static void Main()
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxValue" /> is less than zero. </exception>
+        public static void Main()
         {
             for (int i = 0; i < 1000; i++)
             {
-                log.Trace("Trace message {0}", i);
-                Thread.Sleep(random.Next(100));
-                log.Debug("Debug message {0}", i);
-                Thread.Sleep(random.Next(100));
-                log.Warn("Warn message {0}", i);
-                Thread.Sleep(random.Next(100));
-                log.Info("Info message {0}", i);
-                Thread.Sleep(random.Next(100));
-                log.Error("Error message {0}", i);
-                Thread.Sleep(random.Next(100));
-                log.Fatal("Fatal message {0}", i);
-                Thread.Sleep(random.Next(100));
+                Log.Trace("Trace message {0}", i);
+                Thread.Sleep(Random.Next(100));
+                Log.Debug("Debug message {0}", i);
+                Thread.Sleep(Random.Next(100));
+                Log.Warn("Warn message {0}", i);
+                Thread.Sleep(Random.Next(100));
+                Log.Info("Info message {0}", i);
+                Thread.Sleep(Random.Next(100));
+                Log.Error("Error message {0}", i);
+                Thread.Sleep(Random.Next(100));
+                Log.Fatal("Fatal message {0}", i);
+                Thread.Sleep(Random.Next(100));
             }
         }
     }

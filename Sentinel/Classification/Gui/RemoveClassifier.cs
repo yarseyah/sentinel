@@ -1,14 +1,10 @@
-﻿using Sentinel.Classification.Interfaces;
-using Sentinel.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace Sentinel.Classification.Gui
+﻿namespace Sentinel.Classification.Gui
 {
+    using System.Windows;
+
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Services;
+
     public class RemoveClassifier : IRemoveClassifyingService
     {
         public void Remove(IClassifier classifier)
@@ -17,12 +13,12 @@ namespace Sentinel.Classification.Gui
 
             if (service != null)
             {
-                string prompt = string.Format(
-                    "Are you sure you want to remove the selected classifier?\r\n\r\n" +
-                    "Classifier Name = \"{0}\"",
-                    classifier.Name);
+                var prompt =
+                    string.Format(
+                        "Are you sure you want to remove the selected classifier?\r\n\r\n" + "Classifier Name = \"{0}\"",
+                        classifier.Name);
 
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     prompt,
                     "Remove Extractor",
                     MessageBoxButton.YesNo,

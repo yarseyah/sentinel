@@ -1,27 +1,24 @@
-﻿using Sentinel.Classification.Interfaces;
-using Sentinel.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace Sentinel.Classification.Gui
+﻿namespace Sentinel.Classification.Gui
 {
+    using System.Windows;
+
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Services;
+
     public class AddClassifier : IAddClassifyingService
     {
         public void Add()
         {
-            AddEditClassifierWindow classifierWindow = new AddEditClassifierWindow();
-            using (AddEditClassifier data = new AddEditClassifier(classifierWindow, false))
+            var classifierWindow = new AddEditClassifierWindow();
+            using (var data = new AddEditClassifier(classifierWindow, false))
             {
                 classifierWindow.DataContext = data;
                 classifierWindow.Owner = Application.Current.MainWindow;
-                bool? dialogResult = classifierWindow.ShowDialog();
+
+                var dialogResult = classifierWindow.ShowDialog();
                 if (dialogResult != null && (bool)dialogResult)
                 {
-                    Classifier classifier = Construct(data);
+                    var classifier = Construct(data);
                     if (classifier != null)
                     {
                         var service = ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
@@ -37,14 +34,14 @@ namespace Sentinel.Classification.Gui
         private static Classifier Construct(AddEditClassifier data)
         {
             return new Classifier
-            {
-                Name = data.Name,
-                Type = data.Type,
-                Field = data.Field,
-                Mode = data.Mode,
-                Pattern = data.Pattern,
-                Enabled = true
-            };
+                       {
+                           Name = data.Name,
+                           Type = data.Type,
+                           Field = data.Field,
+                           Mode = data.Mode,
+                           Pattern = data.Pattern,
+                           Enabled = true
+                       };
         }
     }
 }

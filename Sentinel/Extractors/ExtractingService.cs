@@ -1,17 +1,18 @@
-﻿using Sentinel.Extractors.Gui;
-using Sentinel.Extractors.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Windows.Input;
-
-namespace Sentinel.Extractors
+﻿namespace Sentinel.Extractors
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Windows.Input;
+
+    using Sentinel.Extractors.Gui;
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Mvvm;
+
     [DataContract]
     public class ExtractingService<T> : ViewModelBase, IExtractingService<T>, IDefaultInitialisation
         where T : class, IExtractor
@@ -49,7 +50,10 @@ namespace Sentinel.Extractors
             var searchExtractor = ServiceLocator.Instance.Get<ISearchExtractor>();
             Debug.Assert(searchExtractor != null, "The search extractor is null.");
 
-            if (searchExtractor != null) SearchExtractors.Add(searchExtractor as T);
+            if (searchExtractor != null)
+            {
+                SearchExtractors.Add(searchExtractor as T);
+            }
         }
 
         public override string DisplayName
@@ -58,6 +62,7 @@ namespace Sentinel.Extractors
             {
                 return displayName;
             }
+
             set
             {
                 displayName = value;
@@ -87,19 +92,20 @@ namespace Sentinel.Extractors
             }
         }
 
-        #region IExtractingService Members
+        public ObservableCollection<T> Extractors { get; set; }
 
-        public System.Collections.ObjectModel.ObservableCollection<T> Extractors { get; set; }
+        public ObservableCollection<T> SearchExtractors { get; set; }
 
-        public System.Collections.ObjectModel.ObservableCollection<T> SearchExtractors { get; set; }
+        public void Initialise()
+        {
+            // For adding standard extractors
+        }
 
         public bool IsFiltered(ILogEntry entry)
         {
-            return (Extractors.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||
-                SearchExtractors.Any(filter => filter.Enabled && filter.IsMatch(entry)));
+            return Extractors.Any(filter => filter.Enabled && filter.IsMatch(entry))
+                   || SearchExtractors.Any(filter => filter.Enabled && filter.IsMatch(entry));
         }
-
-        #endregion IExtractingService Members
 
         private void AddExtractor(object obj)
         {
@@ -132,11 +138,6 @@ namespace Sentinel.Extractors
         {
             var extractor = Extractors.ElementAt(SelectedIndex);
             removeExtractorService.Remove(extractor);
-        }
-
-        public void Initialise()
-        {
-            // For adding standard extractors
         }
     }
 }

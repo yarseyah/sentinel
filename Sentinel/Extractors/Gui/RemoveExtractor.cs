@@ -1,14 +1,13 @@
-﻿using Sentinel.Extractors.Interfaces;
-using Sentinel.Services;
-using System.Windows;
-
-namespace Sentinel.Extractors.Gui
+﻿namespace Sentinel.Extractors.Gui
 {
+    using System.Windows;
+
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Services;
+
     public class RemoveExtractor
         : IRemoveExtractorService
     {
-        #region IRemoveExtractorService Members
-
         public void Remove(IExtractor extractor)
         {
             var service = ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
@@ -20,7 +19,7 @@ namespace Sentinel.Extractors.Gui
                     "Extractor Name = \"{0}\"",
                     extractor.Name);
 
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     prompt,
                     "Remove Extractor",
                     MessageBoxButton.YesNo,
@@ -33,7 +32,5 @@ namespace Sentinel.Extractors.Gui
                 }
             }
         }
-
-        #endregion IRemoveExtractorService Members
     }
 }

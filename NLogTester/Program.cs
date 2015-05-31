@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-
-namespace NLogTester
+﻿namespace NLogTester
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
 
-    class Program
+    public static class Program
     {
-        private static readonly NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new Random();
 
-        private static readonly List<string> reasons = new List<string>
+        private static readonly List<string> Reasons = new List<string>
                                                            {
                                                                "Starting system",
                                                                "Closing system",
@@ -19,22 +18,16 @@ namespace NLogTester
                                                                "Unknown issue encountered"
                                                            };
 
-        private static readonly List<string> sources = new List<string>
-                                                           {
-                                                               "Foo",
-                                                               "Bar",
-                                                               "LongSystemName",
-                                                               "Kernel32"
-                                                           };
+        private static readonly List<string> Sources = new List<string> { "Foo", "Bar", "LongSystemName", "Kernel32" };
 
 
-        static void Main()
+        public static void Main()
         {
-            int i = 0;
-            int smallestSleep = 1000;
-            int biggestSleep = 2000;
+            var i = 0;
+            var smallestSleep = 1000;
+            var biggestSleep = 2000;
 
-            while(i<100000)
+            while (i < 100000)
             {
                 // Randomly generate a message:
                 string text = RandomMessage(i++);
@@ -42,27 +35,33 @@ namespace NLogTester
                 // Randomly assign a message
                 LogMessage(text);
 
-                Thread.Sleep(random.Next(smallestSleep, biggestSleep));
+                Thread.Sleep(Random.Next(smallestSleep, biggestSleep));
             }
         }
 
         private static void LogMessage(string text)
         {
-            int randomType = random.Next(0, 6);
+            var randomType = Random.Next(0, 6);
 
-            switch(randomType)
+            switch (randomType)
             {
-                case 0: log.Error(text);
+                case 0:
+                    Log.Error(text);
                     break;
-                case 1: log.Fatal(text);
+                case 1:
+                    Log.Fatal(text);
                     break;
-                case 2: log.Info(text);
+                case 2:
+                    Log.Info(text);
                     break;
-                case 3: log.Warn(text);
+                case 3:
+                    Log.Warn(text);
                     break;
-                case 4: log.Trace(text);
+                case 4:
+                    Log.Trace(text);
                     break;
-                default: log.Debug(text);
+                default:
+                    Log.Debug(text);
                     break;
             }
         }
@@ -70,9 +69,9 @@ namespace NLogTester
         private static string RandomMessage(int i)
         {
 #if !TESTING_MESSAGE_THROUGHPUT
-            int randomNumber = random.Next(0, 5);
+            var randomNumber = Random.Next(0, 5);
 #else
-            int randomNumber = Int32.MaxValue;
+            var randomNumber = Int32.MaxValue;
 #endif
             switch (randomNumber)
             {
@@ -93,12 +92,12 @@ namespace NLogTester
 
         private static string RandomReason()
         {
-            return reasons[random.Next(reasons.Count)];
+            return Reasons[Random.Next(Reasons.Count)];
         }
 
         private static string RandomSrc()
         {
-            return sources[random.Next(sources.Count)];
+            return Sources[Random.Next(Sources.Count)];
         }
     }
 }

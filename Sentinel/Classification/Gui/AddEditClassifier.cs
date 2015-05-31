@@ -1,11 +1,11 @@
-﻿using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-using System;
-using System.Windows;
-using System.Windows.Input;
-
-namespace Sentinel.Classification.Gui
+﻿namespace Sentinel.Classification.Gui
 {
+    using System.Windows;
+    using System.Windows.Input;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     public class AddEditClassifier : ViewModelBase
     {
         private readonly Window window;
@@ -25,13 +25,14 @@ namespace Sentinel.Classification.Gui
             this.window = window;
             if (window != null)
             {
-                window.Title = String.Format("{0} Classifier", (editMode ? "Edit" : "Register"));
+                window.Title = string.Format("{0} Classifier", editMode ? "Edit" : "Register");
             }
 
             Accept = new DelegateCommand(AcceptDialog, Validates);
             Reject = new DelegateCommand(RejectDialog);
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Accept { get; private set; }
 
         public LogEntryField Field
@@ -40,6 +41,7 @@ namespace Sentinel.Classification.Gui
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -53,6 +55,7 @@ namespace Sentinel.Classification.Gui
             {
                 return mode;
             }
+            
             set
             {
                 mode = value;
@@ -111,23 +114,7 @@ namespace Sentinel.Classification.Gui
             }
         }
 
-        //public string Image
-        //{
-        //    get
-        //    {
-        //        return image;
-        //    }
-
-        //    set
-        //    {
-        //        if (value != image)
-        //        {
-        //            image = value;
-        //            OnPropertyChanged("Image");
-        //        }
-        //    }
-        //}
-
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Reject { get; private set; }
 
         private void AcceptDialog(object obj)
@@ -144,8 +131,7 @@ namespace Sentinel.Classification.Gui
 
         private bool Validates(object obj)
         {
-            return Name.Length > 0
-                   && Pattern.Length > 0;
+            return Name.Length > 0 && Pattern.Length > 0;
         }
     }
 }

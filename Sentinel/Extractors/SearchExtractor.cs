@@ -1,9 +1,10 @@
-﻿using Sentinel.Extractors.Interfaces;
-using Sentinel.Interfaces;
-using System.Runtime.Serialization;
-
-namespace Sentinel.Extractors
+﻿namespace Sentinel.Extractors
 {
+    using System.Runtime.Serialization;
+
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Interfaces;
+
     [DataContract]
     public class SearchExtractor
         : Extractor, IDefaultInitialisation, ISearchExtractor
@@ -14,9 +15,9 @@ namespace Sentinel.Extractors
 
         public void Initialise()
         {
-            base.Name = "SearchExtractor";
-            base.Field = LogEntryField.System;
-            base.Pattern = string.Empty;
+            Name = "SearchExtractor";
+            Field = LogEntryField.System;
+            Pattern = string.Empty;
         }
     }
 }

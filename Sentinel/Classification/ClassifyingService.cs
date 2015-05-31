@@ -1,37 +1,22 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using Sentinel.Classification.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-using System.Runtime.Serialization;
-using System.ComponentModel;
-using Sentinel.Classification.Gui;
-
-#endregion
-
-namespace Sentinel.Classification
+﻿namespace Sentinel.Classification
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Windows.Input;
+
+    using Sentinel.Classification.Gui;
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     /// <summary>
     /// View Model for classifier collection.  This has been written to operate
     /// as a ServiceLocator provided resource, so there is only one collection
     /// across the whole of the system.
     /// </summary>
-    //[Export(typeof(IClassifierService))]
     [DataContract]
     public class ClassifyingService<T> : ViewModelBase, IClassifyingService<T>, IDefaultInitialisation
         where T : class, IClassifier
@@ -58,7 +43,7 @@ namespace Sentinel.Classification
             Remove = new DelegateCommand(RemoveClassifier, e => SelectedIndex != -1);
             OrderEarlier = new DelegateCommand(MoveItemUp, e => SelectedIndex > 0);
             OrderLater = new DelegateCommand(
-                MoveItemDown,
+                MoveItemDown, 
                 e => SelectedIndex < Classifiers.Count - 1 && SelectedIndex != -1);
 
             Classifiers = new ObservableCollection<T>();
@@ -76,26 +61,12 @@ namespace Sentinel.Classification
             {
                 return displayName;
             }
+
             set
             {
                 displayName = value;
             }
         }
-
-        private void CustomClassifierPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is IClassifier)
-            {
-                var filter = sender as IClassifier;
-                Trace.WriteLine(
-                    string.Format(
-                        "ClassifyingService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
-            }
-
-            OnPropertyChanged(string.Empty);
-        }
-
-        #region IClassifierService Members
 
         /// <summary>
         /// Gets the <c>ICommand</c> providing the add-classifier functionality.
@@ -158,14 +129,19 @@ namespace Sentinel.Classification
             }
         }
 
+        public void Initialise()
+        {
+            Classifiers.Add(new Classifier("Timing messages", true, LogEntryField.Description, MatchMode.RegularExpression, @"^\[SimulationTime\] (?<description>[^$]+)$", "TIMING") as T);
+            Classifiers.Add(new Classifier("Smp messages", true, LogEntryField.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);           
+            Classifiers.Add(new Classifier("SimSat messages", true, LogEntryField.Description, MatchMode.RegularExpression, "SIMSAT:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
+        }
+
         public ILogEntry Classify(ILogEntry entry)
         {
             return Classifiers
                 .Where(classifier => classifier.Enabled)
                 .Aggregate(entry, (current, classifier) => classifier.Classify(current));
         }
-
-        #endregion
 
         /// <summary>
         /// Add a new classifier to the collection of classifiers.
@@ -216,13 +192,13 @@ namespace Sentinel.Classification
                 lock (this)
                 {
                     Debug.Assert(
-                        selectedIndex >= 0,
+                        selectedIndex >= 0, 
                         "SelectedIndex must be >= 0.");
                     Debug.Assert(
-                        selectedIndex < Classifiers.Count - 1,
+                        selectedIndex < Classifiers.Count - 1, 
                         "SelectedIndex must be within the index range of Items collection");
                     Debug.Assert(
-                        Classifiers.Count > 1,
+                        Classifiers.Count > 1, 
                         "Can not move an item unless there is more than one.");
 
                     lock (Classifiers)
@@ -276,12 +252,19 @@ namespace Sentinel.Classification
             removeClassifyingService.Remove(classifier);
         }
 
-        public void Initialise()
+        private void CustomClassifierPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Classifiers.Add(new Classifier("Timing messages", true, LogEntryField.Description, MatchMode.RegularExpression, @"^\[SimulationTime\] (?<description>[^$]+)$", "TIMING") as T);
-            Classifiers.Add(new Classifier("Smp messages", true, LogEntryField.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);           
-            Classifiers.Add(new Classifier("SimSat messages", true, LogEntryField.Description, MatchMode.RegularExpression, "SIMSAT:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
+            var classifier = sender as IClassifier;
+            if (classifier != null)
+            {
+                Trace.WriteLine(
+                    string.Format(
+                        "ClassifyingService saw some activity on {0} (IsEnabled = {1})",
+                        classifier.Name,
+                        classifier.Enabled));
+            }
 
+            OnPropertyChanged(string.Empty);
         }
     }
 }

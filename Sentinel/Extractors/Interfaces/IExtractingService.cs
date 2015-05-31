@@ -1,9 +1,10 @@
-﻿using Sentinel.Interfaces;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-
-namespace Sentinel.Extractors.Interfaces
+﻿namespace Sentinel.Extractors.Interfaces
 {
+    using System.Collections.ObjectModel;
+    using System.Runtime.Serialization;
+
+    using Sentinel.Interfaces;
+
     public interface IExtractingService<T>
     {
         [DataMember]

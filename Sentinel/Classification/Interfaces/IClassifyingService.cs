@@ -1,10 +1,11 @@
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Sentinel.Interfaces;
-using System.Runtime.Serialization;
-
 namespace Sentinel.Classification.Interfaces
 {
+    using System.Collections.ObjectModel;
+    using System.Runtime.Serialization;
+    using System.Windows.Input;
+
+    using Sentinel.Interfaces;
+
     public interface IClassifyingService<T>
     {
         ICommand Add { get; }

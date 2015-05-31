@@ -1,12 +1,12 @@
-﻿using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-
-namespace Sentinel.Extractors.Gui
+﻿namespace Sentinel.Extractors.Gui
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Input;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     public class AddEditExtractor : ViewModelBase
     {
         private readonly Window window;        
@@ -24,7 +24,7 @@ namespace Sentinel.Extractors.Gui
             this.window = window;
             if (window != null)
             {
-                window.Title = String.Format("{0} Extractor", (editMode ? "Edit" : "Register"));
+                window.Title = string.Format("{0} Extractor", editMode ? "Edit" : "Register");
             }
 
             Accept = new DelegateCommand(AcceptDialog, Validates);
@@ -33,11 +33,13 @@ namespace Sentinel.Extractors.Gui
 
         public ICommand Accept { get; private set; }
 
-        public LogEntryField Field {
+        public LogEntryField Field 
+        {
             get
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -45,7 +47,8 @@ namespace Sentinel.Extractors.Gui
             }
         }
 
-        public MatchMode Mode {
+        public MatchMode Mode 
+        {
             get
             {
                 return mode;

@@ -1,6 +1,4 @@
-﻿
-
-namespace Log4NetTester
+﻿namespace Log4NetTester
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +6,7 @@ namespace Log4NetTester
 
     using log4net;
 
-    public class Program
+    public static class Program
     {
         private static readonly ILog Log = LogManager.GetLogger("Log4NetTester");
 
@@ -35,8 +33,8 @@ namespace Log4NetTester
         {
             var i = 0;
 
-            int smallestSleep = 100;
-            int biggestSleep = 200;
+            var smallestSleep = 100;
+            var biggestSleep = 200;
 
             while (i < 100000)
             {

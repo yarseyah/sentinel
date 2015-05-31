@@ -1,16 +1,8 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-namespace Sentinel.Controls
+﻿namespace Sentinel.Controls
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -19,32 +11,29 @@ namespace Sentinel.Controls
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Controls.Ribbon;
     using System.Windows.Data;
     using System.Windows.Input;
 
     using Common.Logging;
 
+    using Microsoft.Win32;
+
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Extractors.Interfaces;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
-    using Sentinel.Log4Net;
-    using Sentinel.Logs.Gui;
     using Sentinel.Logs.Interfaces;
-    using Sentinel.NLog;
-    using Sentinel.Providers;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
+    using Sentinel.Services.Interfaces;
     using Sentinel.Support;
     using Sentinel.Support.Mvvm;
-    using Sentinel.Views.Gui;
     using Sentinel.Views.Interfaces;
-    using System.Windows.Controls.Ribbon;
-    using Sentinel.Extractors.Interfaces;
-    using Microsoft.Win32;
-    using Sentinel.Services.Interfaces;
-    using System.Collections.ObjectModel;
-    using Sentinel.Classification.Interfaces;
+
+    using WpfExtras.Converters;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -53,15 +42,15 @@ namespace Sentinel.Controls
     {
         private readonly ILog log = LogManager.GetCurrentClassLogger();
 
-        private PreferencesWindow preferencesWindow;
-
-        private int preferencesWindowTabSelected;
-
         private readonly string persistingFilename;
 
         private readonly string persistingRecentFileName;
 
-        private List<string> _recentFilePathList;
+        private List<string> recentFilePathList;
+
+        private PreferencesWindow preferencesWindow;
+
+        private int preferencesWindowTabSelected;
 
         public MainWindow()
         {
@@ -72,50 +61,42 @@ namespace Sentinel.Controls
 
             // Restore persisted window placement
             RestoreWindowPosition();
+
             // Get recently opened files
             GetRecentlyOpenedFiles();
         }
 
-        private void GetRecentlyOpenedFiles()
-        {
-            if (string.IsNullOrWhiteSpace(persistingRecentFileName))
-            {
-                return;
-            }
-
-            var fileName = Path.ChangeExtension(persistingRecentFileName, ".json");
-            var recentFileInfo = JsonHelper.DeserializeFromFile<RecentFileInfo>(fileName);
-
-            if (recentFileInfo != null)
-            {
-                _recentFilePathList = recentFileInfo.RecentFilePaths.ToList();
-            }
-            else
-            {
-                _recentFilePathList = new List<string>();
-            }
-        }
-
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand About { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand ShowPreferences { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand ExportLogs { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Exit { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand NewSession { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand SaveSession { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand LoadSession { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IUserPreferences Preferences { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IViewManager ViewManager { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IFilteringService<IFilter> Filters
         {
             get
@@ -124,6 +105,7 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IHighlightingService<IHighlighter> Highlighters
         {
             get
@@ -132,6 +114,7 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IClassifyingService<IClassifier> ClassifyingService
         {
             get
@@ -139,7 +122,8 @@ namespace Sentinel.Controls
                 return ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
             }
         }
-        
+
+        // ReSharper disable once MemberCanBePrivate.Global
         public IExtractingService<IExtractor> Extractors
         {
             get
@@ -148,6 +132,7 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ISearchHighlighter Search
         {
             get
@@ -156,6 +141,7 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ISearchFilter SearchFilter
         {
             get
@@ -164,6 +150,7 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ISearchExtractor SearchExtractor
         {
             get
@@ -172,22 +159,23 @@ namespace Sentinel.Controls
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
 
         private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
         {
-            if (wp != null)
+            if (wp == null)
             {
-                var virtualScreen = new Rect(
-                    SystemParameters.VirtualScreenLeft,
-                    SystemParameters.VirtualScreenTop,
-                    SystemParameters.VirtualScreenWidth,
-                    SystemParameters.VirtualScreenHeight);
-                var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
-                return virtualScreen.IntersectsWith(window) ? wp : null;
+                return null;
             }
-
-            return null;
+            
+            var virtualScreen = new Rect(
+                SystemParameters.VirtualScreenLeft, 
+                SystemParameters.VirtualScreenTop, 
+                SystemParameters.VirtualScreenWidth, 
+                SystemParameters.VirtualScreenHeight);
+            var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
+            return virtualScreen.IntersectsWith(window) ? wp : null;
         }
 
         private void ShowPreferencesAction(object obj)
@@ -198,14 +186,21 @@ namespace Sentinel.Controls
 
         private void ExportLogsAction(object obj)
         {
-            //Get Log
-            TabItem tab = (TabItem)tabControl.SelectedItem;
-            IWindowFrame frame = (IWindowFrame)tab.Content;
-            bool restartLogging = false;
-            //Notify user that log messages will be paused during this operation
+            // Get Log
+            var tab = (TabItem)tabControl.SelectedItem;
+            var frame = (IWindowFrame)tab.Content;
+            var restartLogging = false;
+
+            // Notify user that log messages will be paused during this operation
             if (frame.Log.Enabled)
             {
-                if (MessageBox.Show("The log viewer must be paused momentarily for this operation to continue. Is it OK to pause logging?", "Sentinel", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                var messageBoxResult = MessageBox.Show(
+                    "The log viewer must be paused momentarily for this operation to continue. Is it OK to pause logging?",
+                    "Sentinel",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     frame.Log.Enabled = false;
                     restartLogging = true;
@@ -216,12 +211,14 @@ namespace Sentinel.Controls
                 }
             }
 
-            //open a save file dialog
-            SaveFileDialog savefile = new SaveFileDialog();
-            savefile.FileName = frame.Log.Name;
-            savefile.DefaultExt = ".log";
-            savefile.Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt";
-            savefile.FilterIndex = 0;
+            // Open a save file dialog
+            var savefile = new SaveFileDialog
+                               {
+                                   FileName = frame.Log.Name,
+                                   DefaultExt = ".log",
+                                   Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
+                                   FilterIndex = 0
+                               };
 
             var result = savefile.ShowDialog(this);
             if (result == true)
@@ -237,12 +234,14 @@ namespace Sentinel.Controls
         {
             var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
 
-            //open a save file dialog
-            SaveFileDialog savefile = new SaveFileDialog();
-            savefile.FileName = sessionManager.Name;
-            savefile.DefaultExt = ".sntl";
-            savefile.Filter = "Sentinel session (.sntl)|*.sntl";
-            savefile.FilterIndex = 0;
+            // Open a save file dialog
+            var savefile = new SaveFileDialog
+                               {
+                                   FileName = sessionManager.Name,
+                                   DefaultExt = ".sntl",
+                                   Filter = "Sentinel session (.sntl)|*.sntl",
+                                   FilterIndex = 0
+                               };
 
             var result = savefile.ShowDialog(this);
             if (result == true)
@@ -254,9 +253,20 @@ namespace Sentinel.Controls
 
         private void AddToRecentFiles(string fileName)
         {
-            if (RecentFiles.Contains(fileName)) RecentFiles.Move(RecentFiles.IndexOf(fileName), 0);
-            else RecentFiles.Insert(0, fileName);
-            if (RecentFiles.Count > 13) RecentFiles.Remove(RecentFiles.LastOrDefault());
+            if (RecentFiles.Contains(fileName))
+            {
+                RecentFiles.Move(RecentFiles.IndexOf(fileName), 0);
+            }
+            else
+            {
+                RecentFiles.Insert(0, fileName);
+            }
+
+            // Keep list at no more than 13
+            if (RecentFiles.Count > 13)
+            {
+                RecentFiles.Remove(RecentFiles.LastOrDefault());
+            }
         }
 
         private void NewSessionAction(object obj)
@@ -265,15 +275,27 @@ namespace Sentinel.Controls
 
             if (!sessionManager.IsSaved)
             {
-                var userResult = MessageBox.Show("Do you want to save changes you made to " + sessionManager.Name + "?", "Sentinel", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                if (userResult == MessageBoxResult.Cancel) return;
-                else if (userResult == MessageBoxResult.Yes)
+                var userResult = MessageBox.Show(
+                    "Do you want to save changes you made to " + sessionManager.Name + "?",
+                    "Sentinel",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (userResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+
+                if (userResult == MessageBoxResult.Yes)
                 {
                     SaveSession.Execute(null);
-                    
+
                     // if the user clicked "Cancel" at the save dialog box
-                    if (!sessionManager.IsSaved) return;
-                }                
+                    if (!sessionManager.IsSaved)
+                    {
+                        return;
+                    }
+                }
             }
 
             // Remove the tab control.
@@ -293,54 +315,76 @@ namespace Sentinel.Controls
 
             if (!sessionManager.IsSaved)
             {
-                var userResult = MessageBox.Show("Do you want to save changes you made to " + sessionManager.Name + "?", "Sentinel", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                if (userResult == MessageBoxResult.Cancel) return;
-                else if (userResult == MessageBoxResult.Yes)
+                var userResult = MessageBox.Show(
+                    "Do you want to save changes you made to " + sessionManager.Name + "?", 
+                    "Sentinel", 
+                    MessageBoxButton.YesNoCancel, 
+                    MessageBoxImage.Warning);
+
+                if (userResult == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+                
+                if (userResult == MessageBoxResult.Yes)
                 {
                     SaveSession.Execute(null);
 
                     // if the user clicked "Cancel" at the save dialog box
-                    if (!sessionManager.IsSaved) return;
+                    if (!sessionManager.IsSaved)
+                    {
+                        return;
+                    }
                 }
             }
 
             if (fileNameToLoad == null)
             {
-                // Open file dialog
-                //open a save file dialog
-                OpenFileDialog openFile = new OpenFileDialog();
-                openFile.FileName = sessionManager.Name;
-                openFile.DefaultExt = ".sntl";
-                openFile.Filter = "Sentinel session (.sntl)|*.sntl";
-                openFile.FilterIndex = 0;
+                // open a save file dialog
+                var openFile = new OpenFileDialog
+                                   {
+                                       FileName = sessionManager.Name,
+                                       DefaultExt = ".sntl",
+                                       Filter = "Sentinel session (.sntl)|*.sntl",
+                                       FilterIndex = 0
+                                   };
 
                 var result = openFile.ShowDialog(this);
-                if (result == true) fileNameToLoad = openFile.FileName;
-                else return;
-            }
-                // Remove the tab control.
-                if (tabControl.Items.Count > 0)
+                if (result == true)
                 {
-                    var tab = tabControl.SelectedItem;
-                    tabControl.Items.Remove(tab);
+                    fileNameToLoad = openFile.FileName;
                 }
+                else
+                {
+                    return;
+                }
+            }
 
-                RemoveBindingReferences();
+            // Remove the tab control.
+            if (tabControl.Items.Count > 0)
+            {
+                var tab = tabControl.SelectedItem;
+                tabControl.Items.Remove(tab);
+            }
 
-                sessionManager.LoadSession(fileNameToLoad);
-                AddToRecentFiles(fileNameToLoad);               
+            RemoveBindingReferences();
 
-                BindViewToViewModel();
+            sessionManager.LoadSession(fileNameToLoad);
+            AddToRecentFiles(fileNameToLoad);
 
-                if (sessionManager.ProviderSettings.Count() == 0) return;
+            BindViewToViewModel();
 
-                var frame = ServiceLocator.Instance.Get<IWindowFrame>();
+            if (!sessionManager.ProviderSettings.Any())
+            {
+                return;
+            }
 
-                // Add to the tab control.
-                var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-                tabControl.Items.Add(newTab);
-                tabControl.SelectedItem = newTab;
-            
+            var frame = ServiceLocator.Instance.Get<IWindowFrame>();
+
+            // Add to the tab control.
+            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
+            tabControl.Items.Add(newTab);
+            tabControl.SelectedItem = newTab;
         }
 
         /// <summary>
@@ -350,7 +394,7 @@ namespace Sentinel.Controls
         /// <param name="obj">Object to add as a new listener.</param>
         private void AddNewListenerAction(object obj)
         {
-            //Load a new session
+            // Load a new session
             var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
 
             RemoveBindingReferences();
@@ -359,7 +403,10 @@ namespace Sentinel.Controls
 
             BindViewToViewModel();
 
-            if (sessionManager.ProviderSettings.Count() == 0) return;
+            if (!sessionManager.ProviderSettings.Any())
+            {
+                return;
+            }
 
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
@@ -377,13 +424,14 @@ namespace Sentinel.Controls
                 var about = new AboutWindow(this);
                 about.ShowDialog();
             });
+
             Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
             ExportLogs = new DelegateCommand(ExportLogsAction, b => tabControl.Items.Count > 0);
             SaveSession = new DelegateCommand(SaveSessionAction);
             NewSession = new DelegateCommand(NewSessionAction);
             LoadSession = new DelegateCommand(LoadSessionAction);
-            RecentFiles = new ObservableCollection<string>(_recentFilePathList.Take(13));
+            RecentFiles = new ObservableCollection<string>(recentFilePathList.Take(13));
 
             BindViewToViewModel();
 
@@ -418,7 +466,7 @@ namespace Sentinel.Controls
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
             var filePath = commandLine.FirstOrDefault();
-            if (System.IO.File.Exists(filePath) && Path.GetExtension(filePath).ToUpper() == ".SNTL")
+            if (File.Exists(filePath) && Path.GetExtension(filePath).ToUpper() == ".SNTL")
             {
                 var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
 
@@ -428,7 +476,10 @@ namespace Sentinel.Controls
 
                 BindViewToViewModel();
 
-                if (sessionManager.ProviderSettings.Count() == 0) return;
+                if (!sessionManager.ProviderSettings.Any())
+                {
+                    return;
+                }
 
                 var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
@@ -497,10 +548,10 @@ namespace Sentinel.Controls
         {
             var windowInfo = new WindowPlacementInfo
                 {
-                    Height = (int)Height,
-                    Top = (int)Top,
-                    Left = (int)Left,
-                    Width = (int)Width,
+                    Height = (int)Height, 
+                    Top = (int)Top, 
+                    Left = (int)Left, 
+                    Width = (int)Width, 
                     WindowState = WindowState
                 };
 
@@ -509,7 +560,7 @@ namespace Sentinel.Controls
 
             var recentFileInfo = new RecentFileInfo
             {
-                RecentFilePaths = RecentFiles.ToList(),
+                RecentFilePaths = RecentFiles.ToList(), 
             };
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
         }
@@ -540,6 +591,7 @@ namespace Sentinel.Controls
             {
                 throw new ArgumentException("e");
             }
+
             var type = e.Item.GetType();
             e.Accepted = e.Item is IStandardDebuggingHighlighter;
         }
@@ -559,41 +611,49 @@ namespace Sentinel.Controls
             Debug.Assert(sender.GetType() == typeof(RibbonToggleButton), string.Format("A {0} accessed the wrong method", sender.GetType()));
 
             var button = sender as RibbonToggleButton;
-
-            switch (button.Label)
+            if (button != null)
             {
-                case "Highlight":
-                    BindSearchToSearchHighlighter();
-                    break;
-                case "Filter":
-                    BindSearchToSearchFilter();
-                    break;
-                case "Extract":
-                    BindSearchToSearchExtractor();
-                    break;
-                default:
-                    break;
+                switch (button.Label)
+                {
+                    case "Highlight":
+                        BindSearchToSearchHighlighter();
+                        break;
+                    case "Filter":
+                        BindSearchToSearchFilter();
+                        break;
+                    case "Extract":
+                        BindSearchToSearchExtractor();
+                        break;
+                }
             }
         }
 
         private void BindSearchToSearchExtractor()
         {
-            SearchRibbonTextBox.SetBinding(RibbonTextBox.TextProperty, new Binding()
-            {
-                Source = SearchExtractor,
-                Path = new PropertyPath("Pattern"),
+            SearchRibbonTextBox.SetBinding(
+                TextBox.TextProperty,
+                new Binding()
+                    {
+                        Source = SearchExtractor, 
+                Path = new PropertyPath("Pattern"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
-            SearchModeListBox.SetBinding(ListBox.SelectedItemProperty, new Binding()
-            {
-                Source = SearchExtractor,
-                Path = new PropertyPath("Mode"),
+
+            SearchModeListBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = SearchExtractor, 
+                Path = new PropertyPath("Mode"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
-            SearchTargetComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
-            {
-                Source = SearchExtractor,
-                Path = new PropertyPath("Field"),
+
+            SearchTargetComboBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = SearchExtractor, 
+                Path = new PropertyPath("Field"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
             HighlightToggleButton.IsChecked = false;
@@ -602,22 +662,28 @@ namespace Sentinel.Controls
 
         private void BindSearchToSearchFilter()
         {
-            SearchRibbonTextBox.SetBinding(RibbonTextBox.TextProperty, new Binding()
-            {
-                Source = SearchFilter,
-                Path = new PropertyPath("Pattern"),
+            SearchRibbonTextBox.SetBinding(
+                TextBox.TextProperty,
+                new Binding()
+                    {
+                        Source = SearchFilter, 
+                Path = new PropertyPath("Pattern"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            SearchModeListBox.SetBinding(ListBox.SelectedItemProperty, new Binding()
-            {
-                Source = SearchFilter,
-                Path = new PropertyPath("Mode"),
+                    });
+            SearchModeListBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = SearchFilter, 
+                Path = new PropertyPath("Mode"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            SearchTargetComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
-            {
-                Source = SearchFilter,
-                Path = new PropertyPath("Field"),
+                    });
+            SearchTargetComboBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = SearchFilter, 
+                Path = new PropertyPath("Field"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
             HighlightToggleButton.IsChecked = false;
@@ -626,22 +692,28 @@ namespace Sentinel.Controls
 
         private void BindSearchToSearchHighlighter()
         {
-            SearchRibbonTextBox.SetBinding(RibbonTextBox.TextProperty, new Binding()
-            {
-                Source = Search,
-                Path = new PropertyPath("Search"),
+            SearchRibbonTextBox.SetBinding(
+                TextBox.TextProperty,
+                new Binding()
+                    {
+                        Source = Search, 
+                Path = new PropertyPath("Search"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            SearchModeListBox.SetBinding(ListBox.SelectedItemProperty, new Binding()
-            {
-                Source = Search,
-                Path = new PropertyPath("Mode"),
+                    });
+            SearchModeListBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = Search, 
+                Path = new PropertyPath("Mode"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            SearchTargetComboBox.SetBinding(ComboBox.SelectedItemProperty, new Binding()
-            {
-                Source = Search,
-                Path = new PropertyPath("Field"),
+                    });
+            SearchTargetComboBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding()
+                    {
+                        Source = Search, 
+                Path = new PropertyPath("Field"), 
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
             FilterToggleButton.IsChecked = false;
@@ -650,15 +722,24 @@ namespace Sentinel.Controls
 
         private void RemoveBindingReferences()
         {
-            (Preferences as INotifyPropertyChanged).PropertyChanged -= PreferencesChanged;
+            var notifyPropertyChanged = Preferences as INotifyPropertyChanged;
+            if (notifyPropertyChanged != null)
+            {
+                notifyPropertyChanged.PropertyChanged -= PreferencesChanged;
+            }
+
             ViewManager.Viewers.CollectionChanged -= ViewManagerChanged;
         }
 
         private void BindViewToViewModel()
         {
             // Append version number to caption (to save effort of producing an about screen)
-            Title = string.Format("{0} ({1}) {2}", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version, ServiceLocator.Instance.Get<ISessionManager>().Name);
-            
+            Title = string.Format(
+                "{0} ({1}) {2}",
+                Assembly.GetExecutingAssembly().GetName().Name,
+                Assembly.GetExecutingAssembly().GetName().Version,
+                ServiceLocator.Instance.Get<ISessionManager>().Name);
+
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
             ViewManager = ServiceLocator.Instance.Get<IViewManager>();
 
@@ -672,138 +753,137 @@ namespace Sentinel.Controls
             DataContext = this;
 
             // When a new item is added, select the newest one.
-            ViewManager.Viewers.CollectionChanged += ViewManagerChanged;         
+            ViewManager.Viewers.CollectionChanged += ViewManagerChanged;
 
-            //View-specific bindings
-            var collapseIfZero = new WpfExtras.Converters.CollapseIfZeroConverter();
+            // View-specific bindings
+            var collapseIfZero = new CollapseIfZeroConverter();
 
             var standardHighlighters = new CollectionViewSource() { Source = Highlighters.Highlighters };
-            standardHighlighters.View.Filter = c =>
-            {
-                if (c is IStandardDebuggingHighlighter) return true;
-                return false;
-            };
-                        
+            standardHighlighters.View.Filter = c => c is IStandardDebuggingHighlighter;
+
             var customHighlighters = new CollectionViewSource() { Source = Highlighters.Highlighters };
-            customHighlighters.View.Filter = c =>
-            {
-                if (c is IStandardDebuggingHighlighter) return false;
-                return true;
-            };
+            customHighlighters.View.Filter = c => !(c is IStandardDebuggingHighlighter);
 
-            StandardHighlightersRibbonGroup.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = standardHighlighters
-            });
+            StandardHighlightersRibbonGroup.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding { Source = standardHighlighters });
 
-            StandardHighlighterRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = standardHighlighters
-            });
-            StandardHighlighterRibbonGroupOnTab.SetBinding(RibbonGroup.VisibilityProperty, new Binding()
-            {
-                Source = standardHighlighters,
-                Path = new PropertyPath("Count"),
-                Converter = collapseIfZero
-            });
-            CustomHighlighterRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = customHighlighters
-            });
-            CustomHighlighterRibbonGroupOnTab.SetBinding(RibbonGroup.VisibilityProperty, new Binding()
-            {
-                Source = customHighlighters,
-                Path = new PropertyPath("Count"),
-                Converter = collapseIfZero
-            });
+            StandardHighlighterRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding { Source = standardHighlighters });
+            StandardHighlighterRibbonGroupOnTab.SetBinding(
+                VisibilityProperty,
+                new Binding
+                    {
+                        Source = standardHighlighters,
+                        Path = new PropertyPath("Count"),
+                        Converter = collapseIfZero
+                    });
+            CustomHighlighterRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding { Source = customHighlighters });
+            CustomHighlighterRibbonGroupOnTab.SetBinding(
+                VisibilityProperty,
+                new Binding
+                    {
+                        Source = customHighlighters,
+                        Path = new PropertyPath("Count"),
+                        Converter = collapseIfZero
+                    });
 
             var standardFilters = new CollectionViewSource() { Source = Filters.Filters };
-            standardFilters.View.Filter = c =>
-            {
-                if (c is IStandardDebuggingFilter) return true;
-                return false;
-            };
-            var customFilters = new CollectionViewSource() { Source = Filters.Filters };
-            customFilters.View.Filter = c =>
-            {
-                if (c is IStandardDebuggingFilter) return false;
-                return true;
-            };
+            standardFilters.View.Filter = c => c is IStandardDebuggingFilter;
 
-            StandardFiltersRibbonGroup.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = standardFilters               
-            });
-            
-            StandardFiltersRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = standardFilters
-            });
-            
-            StandardFiltersRibbonGroupOnTab.SetBinding(RibbonGroup.VisibilityProperty, new Binding()
-            {
-                Source = standardFilters,
-                Path = new PropertyPath("Count"),
-                Converter = collapseIfZero
-            });
-            CustomFiltersRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = customFilters
-            });
-            CustomFiltersRibbonGroupOnTab.SetBinding(RibbonGroup.VisibilityProperty, new Binding()
-            {
-                Source = customFilters,
-                Path = new PropertyPath("Count"),
-                Converter = collapseIfZero
-            });
+            var customFilters = new CollectionViewSource() { Source = Filters.Filters };
+            customFilters.View.Filter = c => !(c is IStandardDebuggingFilter);
+
+            StandardFiltersRibbonGroup.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding() { Source = standardFilters });
+
+            StandardFiltersRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding() { Source = standardFilters });
+
+            StandardFiltersRibbonGroupOnTab.SetBinding(
+                VisibilityProperty,
+                new Binding() { Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
+            CustomFiltersRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding() { Source = customFilters });
+            CustomFiltersRibbonGroupOnTab.SetBinding(
+                VisibilityProperty,
+                new Binding() { Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
 
             var customExtractors = Extractors.Extractors;
-            CustomExtractorsRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = customExtractors
-            });
+            CustomExtractorsRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding() { Source = customExtractors });
 
             var customClassifyiers = ClassifyingService.Classifiers;
-            CustomClassifiersRibbonGroupOnTab.SetBinding(RibbonGroup.ItemsSourceProperty, new Binding()
-            {
-                Source = customClassifyiers
-            });
+            CustomClassifiersRibbonGroupOnTab.SetBinding(
+                ItemsControl.ItemsSourceProperty,
+                new Binding() { Source = customClassifyiers });
 
-            //Bind search
-            HighlightToggleButton.SetBinding(RibbonToggleButton.IsCheckedProperty, new Binding()
-            {
-                Source = Search,
-                Path = new PropertyPath("Enabled"),
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            FilterToggleButton.SetBinding(RibbonToggleButton.IsCheckedProperty, new Binding()
-            {
-                Source = SearchFilter,
-                Path = new PropertyPath("Enabled"),
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            ExtractToggleButton.SetBinding(RibbonToggleButton.IsCheckedProperty, new Binding()
-            {
-                Source = SearchExtractor,
-                Path = new PropertyPath("Enabled"),
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+            // Bind search
+            HighlightToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding()
+                    {
+                        Source = Search,
+                        Path = new PropertyPath("Enabled"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
+            FilterToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding()
+                    {
+                        Source = SearchFilter,
+                        Path = new PropertyPath("Enabled"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
+            ExtractToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding()
+                    {
+                        Source = SearchExtractor,
+                        Path = new PropertyPath("Enabled"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
 
-            if (Search.Enabled) BindSearchToSearchHighlighter();
-            else if (SearchFilter.Enabled) BindSearchToSearchFilter();
-            else if (SearchExtractor.Enabled) BindSearchToSearchExtractor();
+            if (Search.Enabled)
+            {
+                BindSearchToSearchHighlighter();
+            }
+            else if (SearchFilter.Enabled)
+            {
+                BindSearchToSearchFilter();
+            }
+            else if (SearchExtractor.Enabled)
+            {
+                BindSearchToSearchExtractor();
+            }
 
-            //Column view buttons
-            ExceptionRibbonToggleButton.SetBinding(RibbonToggleButton.IsCheckedProperty, new Binding()
+            // Column view buttons
+            ExceptionRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding() { Source = Preferences, Path = new PropertyPath("ShowExceptionColumn") });
+            ThreadRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding() { Source = Preferences, Path = new PropertyPath("ShowThreadColumn") });
+        }
+
+        private void GetRecentlyOpenedFiles()
+        {
+            if (string.IsNullOrWhiteSpace(persistingRecentFileName))
             {
-                Source = Preferences,
-                 Path = new PropertyPath("ShowExceptionColumn")
-            });
-            ThreadRibbonToggleButton.SetBinding(RibbonToggleButton.IsCheckedProperty, new Binding()
-            {
-                Source = Preferences,
-                Path = new PropertyPath("ShowThreadColumn")
-            });
-        }       
+                return;
+            }
+
+            var fileName = Path.ChangeExtension(persistingRecentFileName, ".json");
+            var recentFileInfo = JsonHelper.DeserializeFromFile<RecentFileInfo>(fileName);
+
+            recentFilePathList = recentFileInfo != null ? recentFileInfo.RecentFilePaths.ToList() : new List<string>();
+        }
     }
 }

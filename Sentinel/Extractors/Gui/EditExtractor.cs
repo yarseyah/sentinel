@@ -1,17 +1,13 @@
-﻿using Sentinel.Extractors.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Support.Converters;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-
-namespace Sentinel.Extractors.Gui
+﻿namespace Sentinel.Extractors.Gui
 {
+    using System.Diagnostics;
+    using System.Windows;
+
+    using Sentinel.Extractors.Interfaces;
+
     public class EditExtractor
         : IEditExtractorService
     {
-        #region IEditExtractorService Members
-
         public void Edit(IExtractor extractor)
         {
             Debug.Assert(extractor != null, "Extractor must be supplied to allow editing.");
@@ -26,7 +22,7 @@ namespace Sentinel.Extractors.Gui
             data.Pattern = extractor.Pattern;
             data.Mode = extractor.Mode;
 
-            bool? dialogResult = window.ShowDialog();
+            var dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)
             {
@@ -36,7 +32,5 @@ namespace Sentinel.Extractors.Gui
                 extractor.Field = data.Field;
             }
         }
-
-        #endregion IEditExtractorService Members
     }
 }

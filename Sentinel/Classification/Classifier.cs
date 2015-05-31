@@ -1,24 +1,16 @@
-﻿using Sentinel.Classification.Interfaces;
-using Sentinel.Images;
-using Sentinel.Images.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Sentinel.Classification
+﻿namespace Sentinel.Classification
 {
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
+
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     [DataContract]
     public class Classifier : ViewModelBase, IClassifier
     {
-        #region Backing stores
         private bool enabled = true;
 
         private LogEntryField field;
@@ -33,18 +25,20 @@ namespace Sentinel.Classification
 
         private Regex regex;
 
-        #endregion
-
         public Classifier()
         {
             PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
-                }
-            };
+                    if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                    {
+                        if (Mode == MatchMode.RegularExpression && Pattern != null)
+                        {
+                            regex = new Regex(Pattern);
+                        }
+
+                        OnPropertyChanged("Description");
+                    }
+                };
         }
 
         public Classifier(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, string type)
@@ -58,20 +52,25 @@ namespace Sentinel.Classification
             regex = new Regex(pattern);
 
             PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
-                }
-            };
+                    if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                    {
+                        if (Mode == MatchMode.RegularExpression && Pattern != null)
+                        {
+                            regex = new Regex(Pattern);
+                        }
+
+                        OnPropertyChanged("Description");
+                    }
+                };
         }
 
         public string Description
         {
             get
             {
-                string modeDescription = "Exact";
+                var modeDescription = "Exact";
+                
                 switch (Mode)
                 {
                     case MatchMode.RegularExpression:
@@ -161,6 +160,7 @@ namespace Sentinel.Classification
                 }
             }
         }
+
         public string Pattern
         {
             get
@@ -184,6 +184,7 @@ namespace Sentinel.Classification
             {
                 return type;
             }
+
             set
             {
                 if (type != value)
@@ -194,28 +195,34 @@ namespace Sentinel.Classification
             }
         }
 
-        public ILogEntry Classify(ILogEntry entry)
+        public ILogEntry Classify(ILogEntry logEntry)
         {
-            if (IsMatch(entry))
+            Debug.Assert(logEntry != null, "logEntry can not be null.");
+
+            if (IsMatch(logEntry))
             {
-                entry.MetaData["Classification"] = Type;
-                entry.Type = Type;
+                logEntry.MetaData["Classification"] = Type;
+                logEntry.Type = Type;
             }
-            return entry;
+
+            return logEntry;
         }
 
         public bool IsMatch(ILogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "logEntry can not be null.");
 
-            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+            if (string.IsNullOrWhiteSpace(Pattern))
+            {
+                return false;
+            }
 
             string target;
 
             switch (Field)
             {
                 case LogEntryField.None:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Type:
                     target = logEntry.Type;
@@ -224,23 +231,23 @@ namespace Sentinel.Classification
                     target = logEntry.System;
                     break;
                 case LogEntryField.Classification:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Thread:
                     target = logEntry.Thread;
                     break;
-                //case LogEntryField.Source:
-                //    target = logEntry.Source;
-                //    break;
+                case LogEntryField.Source:
+                    target = logEntry.Source;
+                    break;
                 case LogEntryField.Description:
                     target = logEntry.Description;
                     break;
-                //case LogEntryField.Host:
-                //    target = "";
-                //    break;
+                case LogEntryField.Host:
+                    target = string.Empty;
+                    break;
                 default:
-                target = "";
-                break;
+                    target = string.Empty;
+                    break;
             }
 
             switch (Mode)

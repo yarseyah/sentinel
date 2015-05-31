@@ -1,17 +1,13 @@
-﻿using Sentinel.Extractors.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Support.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Sentinel.Extractors
+﻿namespace Sentinel.Extractors
 {
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
+
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     [DataContract]
     public class Extractor : ViewModelBase, IExtractor
     {
@@ -45,8 +41,6 @@ namespace Sentinel.Extractors
             Pattern = pattern;
             Field = field;
         }
-
-        #region IExtractor Members
 
         public string Name
         {
@@ -155,18 +149,22 @@ namespace Sentinel.Extractors
             }
         }
 
+        /// <exception cref="ArgumentException">A regular expression parsing error occurred. </exception>
         public bool IsMatch(ILogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "LogEntry can not be null.");
 
-            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+            if (string.IsNullOrWhiteSpace(Pattern))
+            {
+                return false;
+            }
 
             string target;
 
             switch (Field)
             {
                 case LogEntryField.None:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Type:
                     target = logEntry.Type;
@@ -175,22 +173,22 @@ namespace Sentinel.Extractors
                     target = logEntry.System;
                     break;
                 case LogEntryField.Classification:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Thread:
                     target = logEntry.Thread;
                     break;
-                //case LogEntryField.Source:
-                //    target = logEntry.Source;
-                //    break;
+                case LogEntryField.Source:
+                    target = logEntry.Source;
+                    break;
                 case LogEntryField.Description:
                     target = logEntry.Description;
                     break;
-                //case LogEntryField.Host:
-                //    target = "";
-                //    break;
+                case LogEntryField.Host:
+                    target = string.Empty;
+                    break;
                 default:
-                    target = "";
+                    target = string.Empty;
                     break;
             }
 
@@ -204,19 +202,18 @@ namespace Sentinel.Extractors
                     return !target.ToLower().Contains(Pattern.ToLower());
                 case MatchMode.RegularExpression:
                     var regex = new Regex(Pattern);
-                    return regex != null && !regex.IsMatch(target);
+                    return !regex.IsMatch(target);
                 default:
                     return false;
             }
         }
-        #endregion
 
 #if DEBUG
         public override string ToString()
         {
             return Description;
         }
-#endif
 
+#endif
     }
 }
