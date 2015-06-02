@@ -220,8 +220,7 @@
                                    FilterIndex = 0
                                };
 
-            var result = savefile.ShowDialog(this);
-            if (result == true)
+            if (savefile.ShowDialog(this) == true)
             {
                 var logFileExporter = ServiceLocator.Instance.Get<ILogFileExporter>();
                 logFileExporter.SaveLogViewerToFile(frame, savefile.FileName);
@@ -243,8 +242,7 @@
                                    FilterIndex = 0
                                };
 
-            var result = savefile.ShowDialog(this);
-            if (result == true)
+            if (savefile.ShowDialog(this) == true)
             {                
                 sessionManager.SaveSession(savefile.FileName);
                 AddToRecentFiles(savefile.FileName);
@@ -349,8 +347,7 @@
                                        FilterIndex = 0
                                    };
 
-                var result = openFile.ShowDialog(this);
-                if (result == true)
+                if (openFile.ShowDialog(this) == true)
                 {
                     fileNameToLoad = openFile.FileName;
                 }
@@ -562,6 +559,7 @@
             {
                 RecentFilePaths = RecentFiles.ToList(), 
             };
+
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
         }
 
@@ -610,21 +608,18 @@
         {
             Debug.Assert(sender.GetType() == typeof(RibbonToggleButton), string.Format("A {0} accessed the wrong method", sender.GetType()));
 
-            var button = sender as RibbonToggleButton;
-            if (button != null)
+            var button = (RibbonToggleButton)sender;
+            switch (button.Label)
             {
-                switch (button.Label)
-                {
-                    case "Highlight":
-                        BindSearchToSearchHighlighter();
-                        break;
-                    case "Filter":
-                        BindSearchToSearchFilter();
-                        break;
-                    case "Extract":
-                        BindSearchToSearchExtractor();
-                        break;
-                }
+                case "Highlight":
+                    BindSearchToSearchHighlighter();
+                    break;
+                case "Filter":
+                    BindSearchToSearchFilter();
+                    break;
+                case "Extract":
+                    BindSearchToSearchExtractor();
+                    break;
             }
         }
 
@@ -632,30 +627,31 @@
         {
             SearchRibbonTextBox.SetBinding(
                 TextBox.TextProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchExtractor, 
-                Path = new PropertyPath("Pattern"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                        Source = SearchExtractor,
+                        Path = new PropertyPath("Pattern"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
 
             SearchModeListBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchExtractor, 
-                Path = new PropertyPath("Mode"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                        Source = SearchExtractor,
+                        Path = new PropertyPath("Mode"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
 
             SearchTargetComboBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchExtractor, 
-                Path = new PropertyPath("Field"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                        Source = SearchExtractor,
+                        Path = new PropertyPath("Field"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
+
             HighlightToggleButton.IsChecked = false;
             FilterToggleButton.IsChecked = false;
         }
@@ -664,28 +660,28 @@
         {
             SearchRibbonTextBox.SetBinding(
                 TextBox.TextProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchFilter, 
-                Path = new PropertyPath("Pattern"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                        Source = SearchFilter,
+                        Path = new PropertyPath("Pattern"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                     });
             SearchModeListBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchFilter, 
-                Path = new PropertyPath("Mode"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                        Source = SearchFilter,
+                        Path = new PropertyPath("Mode"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                     });
             SearchTargetComboBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = SearchFilter, 
-                Path = new PropertyPath("Field"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                        Source = SearchFilter,
+                        Path = new PropertyPath("Field"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
             HighlightToggleButton.IsChecked = false;
             ExtractToggleButton.IsChecked = false;
         }
@@ -694,28 +690,28 @@
         {
             SearchRibbonTextBox.SetBinding(
                 TextBox.TextProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = Search, 
-                Path = new PropertyPath("Search"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                        Source = Search,
+                        Path = new PropertyPath("Search"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                     });
             SearchModeListBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = Search, 
-                Path = new PropertyPath("Mode"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                        Source = Search,
+                        Path = new PropertyPath("Mode"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                     });
             SearchTargetComboBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding()
+                new Binding
                     {
-                        Source = Search, 
-                Path = new PropertyPath("Field"), 
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+                        Source = Search,
+                        Path = new PropertyPath("Field"),
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    });
             FilterToggleButton.IsChecked = false;
             ExtractToggleButton.IsChecked = false;
         }

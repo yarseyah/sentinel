@@ -1,46 +1,49 @@
-﻿using Newtonsoft.Json.Linq;
-using Sentinel.Classification;
-using Sentinel.Classification.Interfaces;
-using Sentinel.Extractors;
-using Sentinel.Extractors.Interfaces;
-using Sentinel.Filters;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Highlighters;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Images;
-using Sentinel.Images.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Interfaces.Providers;
-using Sentinel.Logger;
-using Sentinel.Logs;
-using Sentinel.Logs.Gui;
-using Sentinel.Logs.Interfaces;
-using Sentinel.NLog;
-using Sentinel.Preferences;
-using Sentinel.Providers;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services.Interfaces;
-using Sentinel.Support;
-using Sentinel.Support.Mvvm;
-using Sentinel.Views;
-using Sentinel.Views.Gui;
-using Sentinel.Views.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Windows;
-
-namespace Sentinel.Services
+﻿namespace Sentinel.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Windows;
+
+    using Newtonsoft.Json.Linq;
+
+    using Sentinel.Classification;
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Extractors;
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Filters;
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Highlighters;
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Images;
+    using Sentinel.Images.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Interfaces.Providers;
+    using Sentinel.Logger;
+    using Sentinel.Logs;
+    using Sentinel.Logs.Gui;
+    using Sentinel.Logs.Interfaces;
+    using Sentinel.NLog;
+    using Sentinel.Preferences;
+    using Sentinel.Providers;
+    using Sentinel.Providers.Interfaces;
+    using Sentinel.Services.Interfaces;
+    using Sentinel.Support;
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Views;
+    using Sentinel.Views.Gui;
+    using Sentinel.Views.Interfaces;
+
     [DataContract]
     public class SessionManager : ISessionManager
     {
-        private static char OBJECT_SEPARATOR = '~';
-        private bool _serviceLocatorIsFresh;
+        private const char ObjectSeparator = '~';
+
+        private bool serviceLocatorIsFresh;
 
         public SessionManager()
         {
@@ -65,7 +68,7 @@ namespace Sentinel.Services
 
         public void LoadNewSession(Window parent)
         {
-            if (!_serviceLocatorIsFresh)
+            if (!serviceLocatorIsFresh)
             {
                 CleanUpResources();
                 Name = "Untitled";
@@ -75,7 +78,7 @@ namespace Sentinel.Services
             var wizard = new NewLoggerWizard();
 
             if (!wizard.Display(parent))
-            {                
+            {
                 return;
             }
 
@@ -87,39 +90,18 @@ namespace Sentinel.Services
             ConfigureLoggerServices(settings.LogName, settings.Views, settings.Providers);
 
             IsSaved = false;
-            _serviceLocatorIsFresh = false;
+            serviceLocatorIsFresh = false;
         }
 
         public void LoadSession(string fileName)
         {
-            try
-            {
-                var fi = new FileInfo(fileName);
+            var fileText = File.ReadAllText(fileName);
+            var jsonObjects = fileText.Split(ObjectSeparator);
 
-                if (!fi.Exists) throw new FileNotFoundException();
+            CleanUpResources();
+            LoadServiceLocator(jsonObjects);
 
-                string asString;
-
-                using (var fs = fi.OpenRead())
-                {
-                    using (var sr = new StreamReader(fs))
-                    {
-                        asString = sr.ReadToEnd();
-                    }
-                }
-
-                var jsonObjects = asString.Split(OBJECT_SEPARATOR);
-
-                CleanUpResources();
-                LoadServiceLocator(jsonObjects);
-
-                IsSaved = false;
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(string.Format("Exception when trying to load session from {0}", fileName));
-                Trace.WriteLine(e.Message);
-            }
+            IsSaved = false;
         }
 
         public void SaveSession(string filePath)
@@ -137,36 +119,23 @@ namespace Sentinel.Services
                 if (value.HasAttribute<DataContractAttribute>())
                 {
                     stringToSave.AppendLine(JsonHelper.SerializeToString(value));
-                    stringToSave.AppendLine(OBJECT_SEPARATOR.ToString()); //Object separator?
+                    stringToSave.AppendLine(ObjectSeparator.ToString()); 
                 }
             }
 
             using (FileStream fs = File.Create(filePath))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(stringToSave.ToString());
+                var info = new UTF8Encoding(true).GetBytes(stringToSave.ToString());
                 fs.Write(info, 0, info.Length);
             }
 
             IsSaved = true;
         }
 
-        private void CleanUpResources()
-        {
-            // Close all open providers
-            var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-            foreach (var provider in providerManager.GetInstances())
-            {
-                provider.Close();
-            }
-
-            // Unregister changing viewmodelbases
-            foreach (var viewmodel in ChangingViewModelBases)
-            {
-                viewmodel.PropertyChanged -= ViewModelProperty_Changed;
-            }
-        }
-
-        private void ConfigureLoggerServices(string logName, IEnumerable<string> viewIdentifiers, IEnumerable<PendingProviderRecord> pendingProviderRecords)
+        private static void ConfigureLoggerServices(
+            string logName,
+            IEnumerable<string> viewIdentifiers,
+            IEnumerable<PendingProviderRecord> pendingProviderRecords)
         {
             // Create the logger.
             var logManager = ServiceLocator.Instance.Get<ILogManager>();
@@ -193,6 +162,22 @@ namespace Sentinel.Services
             }
         }
 
+        private void CleanUpResources()
+        {
+            // Close all open providers
+            var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
+            foreach (var provider in providerManager.GetInstances())
+            {
+                provider.Close();
+            }
+
+            // Unregister changing viewmodelbases
+            foreach (var viewmodel in ChangingViewModelBases)
+            {
+                viewmodel.PropertyChanged -= ViewModelProperty_Changed;
+            }
+        }
+
         private void LoadChangingViewModelBases()
         {
             var viewModelBases = new List<ViewModelBase>();
@@ -212,9 +197,12 @@ namespace Sentinel.Services
             }
         }
 
-        private void LoadServiceLocator(string[] jsonObjectStrings)
+        private void LoadServiceLocator(IEnumerable<string> jsonObjectStrings)
         {
-            if (jsonObjectStrings == null) return;
+            if (jsonObjectStrings == null)
+            {
+                return;
+            }
 
             var locator = ServiceLocator.Instance;
             var pendingProviderRecords = new List<PendingProviderRecord>();
@@ -226,38 +214,74 @@ namespace Sentinel.Services
                     var deserializedObj = JObject.Parse(objString);
                     var typeString = deserializedObj["$type"].ToString();
 
-                    if (typeString.Contains(typeof(UserPreferences).ToString())) locator.Register<IUserPreferences>(JsonHelper.DeserializeFromString<UserPreferences>(objString));
-                    else if (typeString.Contains(typeof(SearchFilter).Name)) locator.Register<ISearchFilter>(JsonHelper.DeserializeFromString<SearchFilter>(objString));
-                    else if (typeString.Contains(typeof(SearchExtractor).Name)) locator.Register<ISearchExtractor>(JsonHelper.DeserializeFromString<SearchExtractor>(objString));
-                    else if (typeString.Contains(typeof(FilteringService<>).Name)) locator.Register<IFilteringService<IFilter>>(JsonHelper.DeserializeFromString<FilteringService<IFilter>>(objString));
-                    else if (typeString.Contains(typeof(ExtractingService<>).Name)) locator.Register<IExtractingService<IExtractor>>(JsonHelper.DeserializeFromString<ExtractingService<IExtractor>>(objString));
-                    else if (typeString.Contains(typeof(HighlightingService<>).Name)) locator.Register<IHighlightingService<IHighlighter>>(JsonHelper.DeserializeFromString<HighlightingService<IHighlighter>>(objString));
-                    else if (typeString.Contains(typeof(SearchHighlighter).Name)) locator.Register<ISearchHighlighter>(JsonHelper.DeserializeFromString<SearchHighlighter>(objString));
-                    else if (typeString.Contains(typeof(ClassifyingService<>).Name)) locator.Register<IClassifyingService<IClassifier>>(JsonHelper.DeserializeFromString<ClassifyingService<IClassifier>>(objString));
-                    else if (typeString.Contains(typeof(TypeToImageService).Name)) locator.Register<ITypeImageService>(JsonHelper.DeserializeFromString<TypeToImageService>(objString));
+                    if (typeString.Contains(typeof(UserPreferences).ToString()))
+                    {
+                        locator.Register<IUserPreferences>(JsonHelper.DeserializeFromString<UserPreferences>(objString));
+                    }
+                    else if (typeString.Contains(typeof(SearchFilter).Name))
+                    {
+                        locator.Register<ISearchFilter>(JsonHelper.DeserializeFromString<SearchFilter>(objString));
+                    }
+                    else if (typeString.Contains(typeof(SearchExtractor).Name))
+                    {
+                        locator.Register<ISearchExtractor>(JsonHelper.DeserializeFromString<SearchExtractor>(objString));
+                    }
+                    else if (typeString.Contains(typeof(FilteringService<>).Name))
+                    {
+                        locator.Register<IFilteringService<IFilter>>(
+                            JsonHelper.DeserializeFromString<FilteringService<IFilter>>(objString));
+                    }
+                    else if (typeString.Contains(typeof(ExtractingService<>).Name))
+                    {
+                        locator.Register<IExtractingService<IExtractor>>(
+                            JsonHelper.DeserializeFromString<ExtractingService<IExtractor>>(objString));
+                    }
+                    else if (typeString.Contains(typeof(HighlightingService<>).Name))
+                    {
+                        locator.Register<IHighlightingService<IHighlighter>>(
+                            JsonHelper.DeserializeFromString<HighlightingService<IHighlighter>>(objString));
+                    }
+                    else if (typeString.Contains(typeof(SearchHighlighter).Name))
+                    {
+                        locator.Register<ISearchHighlighter>(
+                            JsonHelper.DeserializeFromString<SearchHighlighter>(objString));
+                    }
+                    else if (typeString.Contains(typeof(ClassifyingService<>).Name))
+                    {
+                        locator.Register<IClassifyingService<IClassifier>>(
+                            JsonHelper.DeserializeFromString<ClassifyingService<IClassifier>>(objString));
+                    }
+                    else if (typeString.Contains(typeof(TypeToImageService).Name))
+                    {
+                        locator.Register<ITypeImageService>(
+                            JsonHelper.DeserializeFromString<TypeToImageService>(objString));
+                    }
                     else if (typeString.Contains(typeof(SessionManager).Name))
                     {
                         Name = deserializedObj["Name"].ToString();
 
                         LoadChangingViewModelBases();
 
-                        var providerSettingsObj = deserializedObj["ProviderSettings"].HasValues ? deserializedObj["ProviderSettings"].Values() : null;
+                        var providerSettingsObj = deserializedObj["ProviderSettings"].HasValues
+                                                      ? deserializedObj["ProviderSettings"].Values()
+                                                      : null;
 
-                        if (providerSettingsObj != null)
+                        if (providerSettingsObj == null)
                         {
-                            var providerInstances = providerSettingsObj.Last();
-                            foreach (var providerSetting in providerInstances)
+                            continue;
+                        }
+
+                        var providerInstances = providerSettingsObj.Last();
+                        foreach (var providerSetting in providerInstances)
+                        {
+                            if (providerSetting["$type"].ToString().Contains(typeof(NetworkSettings).Name))
                             {
-                                var test = providerSetting.ToString();
-                                if (providerSetting["$type"].ToString().Contains(typeof(NetworkSettings).Name))
+                                var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(providerSetting.ToString());
+                                pendingProviderRecords.Add(new PendingProviderRecord()
                                 {
-                                    var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(providerSetting.ToString());
-                                    pendingProviderRecords.Add(new PendingProviderRecord()
-                                    {
-                                        Info = thisSetting.Info,
-                                        Settings = thisSetting
-                                    });
-                                }
+                                    Info = thisSetting.Info,
+                                    Settings = thisSetting
+                                });
                             }
                         }
                     }
@@ -278,16 +302,22 @@ namespace Sentinel.Services
             // TypeImageService is called by some classifiers!);););
             if (!locator.IsRegistered<IClassifyingService<IClassifier>>())
             {
-                locator.Register(typeof(IClassifyingService<IClassifier>), typeof(ClassifyingService<IClassifier>), true);
+                locator.Register(
+                    typeof(IClassifyingService<IClassifier>),
+                    typeof(ClassifyingService<IClassifier>),
+                    true);
             }
 
-            var viewIDs = new List<String>() { locator.Get<IViewManager>().GetRegistered().FirstOrDefault().Identifier };
+            var viewIDs = new List<String>
+                              {
+                                  locator.Get<IViewManager>().GetRegistered().First().Identifier
+                              };
 
             ConfigureLoggerServices(Name, viewIDs, pendingProviderRecords);
 
             GC.Collect(); //collect all things without a reference
 
-            _serviceLocatorIsFresh = false;
+            serviceLocatorIsFresh = false;
         }
 
         private void RefreshServiceLocator()
@@ -299,7 +329,10 @@ namespace Sentinel.Services
             locator.Register(typeof(ISearchExtractor), typeof(SearchExtractor), true);
             locator.Register(typeof(IFilteringService<IFilter>), typeof(FilteringService<IFilter>), true);
             locator.Register(typeof(IExtractingService<IExtractor>), typeof(ExtractingService<IExtractor>), true);
-            locator.Register(typeof(IHighlightingService<IHighlighter>), typeof(HighlightingService<IHighlighter>), true);
+            locator.Register(
+                typeof(IHighlightingService<IHighlighter>),
+                typeof(HighlightingService<IHighlighter>),
+                true);
             locator.Register(typeof(ISearchHighlighter), typeof(SearchHighlighter), true);
             locator.Register(typeof(IClassifyingService<IClassifier>), typeof(ClassifyingService<IClassifier>), true);
 
@@ -317,13 +350,13 @@ namespace Sentinel.Services
 
             GC.Collect(); //collect all things without a reference
 
-            _serviceLocatorIsFresh = true;
+            serviceLocatorIsFresh = true;
         }
 
         private void ViewModelProperty_Changed(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             IsSaved = false;
-            _serviceLocatorIsFresh = false;
+            serviceLocatorIsFresh = false;
         }
     }
 }

@@ -59,7 +59,10 @@ namespace Sentinel.Filters
             var searchFilter = ServiceLocator.Instance.Get<ISearchFilter>();
             Debug.Assert(searchFilter != null, "The search filter is null.");
 
-            if (searchFilter != null) SearchFilters.Add(searchFilter as T);
+            if (searchFilter != null)
+            {
+                SearchFilters.Add(searchFilter as T);
+            }
         }
 
         public override string DisplayName
@@ -68,6 +71,7 @@ namespace Sentinel.Filters
             {
                 return displayName;
             }
+
             set
             {
                 displayName = value;
@@ -97,19 +101,15 @@ namespace Sentinel.Filters
             }
         }
 
-        #region IFilteringService Members
-    
         public ObservableCollection<T> Filters { get; set; }
 
         public ObservableCollection<T> SearchFilters { get; set; }
 
         public bool IsFiltered(ILogEntry entry)
         {
-            return (Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||                
-                SearchFilters.Any(filter => filter.Enabled && filter.IsMatch(entry)));
+            return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||                
+                SearchFilters.Any(filter => filter.Enabled && filter.IsMatch(entry));
         }
-
-        #endregion
 
         private void AddFilter(object obj)
         {
@@ -118,9 +118,9 @@ namespace Sentinel.Filters
 
         private void CustomFilterPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Filter)
+            var filter = sender as Filter;
+            if (filter != null)
             {
-                var filter = sender as Filter;
                 Trace.WriteLine(
                     string.Format(
                         "FilteringService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));

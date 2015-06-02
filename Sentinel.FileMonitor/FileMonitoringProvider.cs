@@ -15,7 +15,8 @@
 
     public class FileMonitoringProvider : ILogProvider
     {
-        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation = new ProviderRegistrationInformation(new ProviderInfo());
+        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
+            new ProviderRegistrationInformation(new ProviderInfo());
 
         private readonly bool loadExistingContent;
 
@@ -27,9 +28,9 @@
 
         private readonly List<string> usedGroupNames = new List<string>();
 
-        private long bytesRead;
+        private readonly BackgroundWorker purgeWorker;
 
-        protected BackgroundWorker purgeWorker;
+        private long bytesRead;
 
         private BackgroundWorker worker;
 
@@ -37,7 +38,8 @@
         {
             Debug.Assert(
                 settings is IFileMonitoringProviderSettings,
-                "The FileMonitoringProvider class expects configuration information " + "to be of IFileMonitoringProviderSettings type");
+                "The FileMonitoringProvider class expects configuration information "
+                + "to be of IFileMonitoringProviderSettings type");
 
             var fileSettings = (IFileMonitoringProviderSettings)settings;
             ProviderSettings = fileSettings;
@@ -57,15 +59,24 @@
             purgeWorker.DoWork += PurgeWorkerDoWork;
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global used from view
         public string FileName { get; private set; }
-
-        #region Implementation of ILogProvider
 
         public IProviderInfo Information { get; private set; }
 
         public IProviderSettings ProviderSettings { get; private set; }
 
         public ILogger Logger { get; set; }
+
+        public string Name { get; set; }
+
+        public bool IsActive
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public void Start()
         {
@@ -92,18 +103,6 @@
             }
         }
 
-        public string Name { get; set; }
-
-        public bool IsActive
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        #endregion
-
         private void PurgeWorkerDoWork(object sender, DoWorkEventArgs e)
         {
             while (!e.Cancel)
@@ -114,7 +113,8 @@
                 {
                     if (pendingQueue.Any())
                     {
-                        Trace.WriteLine(string.Format("Adding a batch of {0} entries to the logger", pendingQueue.Count()));
+                        Trace.WriteLine(
+                            string.Format("Adding a batch of {0} entries to the logger", pendingQueue.Count()));
                         Logger.AddBatch(pendingQueue);
                         Trace.WriteLine("Done adding the batch");
                     }
@@ -125,10 +125,25 @@
         private void PredetermineGroupNames(string messageDecoder)
         {
             string decoder = messageDecoder.ToLower();
-            if (decoder.Contains("(?<description>")) usedGroupNames.Add("Description");
-            if (decoder.Contains("(?<datetime>")) usedGroupNames.Add("DateTime");
-            if (decoder.Contains("(?<type>")) usedGroupNames.Add("Type");
-            if (decoder.Contains("(?<logger>")) usedGroupNames.Add("Logger");
+            if (decoder.Contains("(?<description>"))
+            {
+                usedGroupNames.Add("Description");
+            }
+
+            if (decoder.Contains("(?<datetime>"))
+            {
+                usedGroupNames.Add("DateTime");
+            }
+
+            if (decoder.Contains("(?<type>"))
+            {
+                usedGroupNames.Add("Type");
+            }
+
+            if (decoder.Contains("(?<logger>"))
+            {
+                usedGroupNames.Add("Logger");
+            }
         }
 
         private void DoWork(object sender, DoWorkEventArgs e)
@@ -147,12 +162,14 @@
 
             while (!e.Cancel)
             {
+                fi.Refresh();
+
                 if (fi.Exists)
                 {
                     fi.Refresh();
 
                     var length = fi.Length;
-                    if (length > bytesRead)
+                    if (length < bytesRead)
                     {
                         using (var fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
                         {
@@ -161,7 +178,7 @@
 
                             // Calculate length of file.
                             var bytesToRead = length - position;
-                            Debug.Assert(bytesToRead < Int32.MaxValue, "Too much data to read using this method!");
+                            Debug.Assert(bytesToRead < int.MaxValue, "Too much data to read using this method!");
 
                             var buffer = new byte[bytesToRead];
 
@@ -178,7 +195,7 @@
                                 while (sr.Peek() != -1)
                                 {
                                     var line = sr.ReadLine();
-                                    
+
                                     // Trace.WriteLine("Read: " + line);
                                     DecodeAndQueueMessage(line);
                                 }

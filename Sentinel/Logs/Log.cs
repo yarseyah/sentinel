@@ -1,28 +1,14 @@
-#region License
-
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-
-#endregion License
-
-#region Using directives
-
-using Sentinel.Classification.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-#endregion Using directives
-
 namespace Sentinel.Logs
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Mvvm;
+
     public class Log : ViewModelBase, ILogger
     {
         private readonly IClassifyingService<IClassifier> classifier;
@@ -46,8 +32,6 @@ namespace Sentinel.Logs
             PropertyChanged += OnPropertyChanged;
         }
 
-        #region ILogger Members
-
         public IEnumerable<ILogEntry> Entries { get; private set; }
 
         public bool Enabled
@@ -56,6 +40,7 @@ namespace Sentinel.Logs
             {
                 return enabled;
             }
+
             set
             {
                 if (enabled != value)
@@ -72,6 +57,7 @@ namespace Sentinel.Logs
             {
                 return name;
             }
+
             set
             {
                 if (value != name)
@@ -102,8 +88,11 @@ namespace Sentinel.Logs
         }
 
         public void AddBatch(Queue<ILogEntry> entries)
-        {            
-            if (!enabled || entries.Count <= 0) return;
+        {
+            if (!enabled || entries.Count <= 0)
+            {
+                return;
+            }
 
             var processed = new Queue<ILogEntry>();
             while (entries.Count > 0)
@@ -123,8 +112,6 @@ namespace Sentinel.Logs
 
             OnPropertyChanged("NewEntries");
         }
-
-        #endregion ILogger Members
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

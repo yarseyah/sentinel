@@ -1,35 +1,27 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Mvvm;
-using Sentinel.Views.Interfaces;
-
-#endregion
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
-    using Sentinel.Filters;
-    using Sentinel.Extractors.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows.Controls;
+    using System.Windows.Threading;
 
-    public class LogMessages
-        : ViewModelBase
-          , ILogViewer
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Views.Interfaces;
+
+    public class LogMessages : ViewModelBase, ILogViewer
     {
         private const string ID = "f4d8c068-bf72-4b83-9d4a-1cd8a89fea11";
         
         private const string NAME = "Log viewer";
-        
+
         private const string DESCRIPTION = "Traditional row based log view with highlighting and incremental search.";
 
         public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
@@ -89,32 +81,32 @@ namespace Sentinel.Views.Gui
         private void InitialiseToolbar()
         {
             var autoscrollButton = new LogViewerToolbarButton(
-                "Auto-Scroll",
-                "Automatically scroll to show the newest entry",
-                true,
+                "Auto-Scroll", 
+                "Automatically scroll to show the newest entry", 
+                true, 
                 new DelegateCommand(e => autoscroll = !autoscroll));
             autoscrollButton.IsChecked = autoscroll;
             autoscrollButton.ImageIdentifier = "ScrollDown";
 
             var clearButton = new LogViewerToolbarButton(
-                "Clear",
-                "Clear the log messages from the display",
-                false,
+                "Clear", 
+                "Clear the log messages from the display", 
+                false, 
                 new DelegateCommand(e => clearPending = true));
             clearButton.ImageIdentifier = "Clear";
 
             var pauseButton = new LogViewerToolbarButton(
-                "Pause",
-                "Pause the addition of messages to the display",
-                true,
+                "Pause", 
+                "Pause the addition of messages to the display", 
+                true, 
                 new DelegateCommand(PauseMessagesHandler));
             pauseButton.IsChecked = false;
             pauseButton.ImageIdentifier = "Pause";
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
-                                  autoscrollButton,
-                                  clearButton,
+                                  autoscrollButton, 
+                                  clearButton, 
                                   pauseButton
                               };
 
@@ -158,6 +150,7 @@ namespace Sentinel.Views.Gui
             {
                 return extractedCount;
             }
+
             private set
             {
                 if (extractedCount != value)
@@ -188,25 +181,25 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        #region ILogViewer Members
-
         public string Status
         {
             get
             {
                 return status;
             }
+
             private set
             {
-                if (status == value) return;
+                if (status == value)
+                {
+                    return;
+                }
+
                 status = value;
                 OnPropertyChanged("Status");
             }
         }
 
-        #endregion
-
-        
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Logger")
@@ -242,7 +235,7 @@ namespace Sentinel.Views.Gui
                     }
                 }
             }
-            else if (e.PropertyName =="Enabled")
+            else if (e.PropertyName == "Enabled")
             {
                 var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
                 pauseButton.IsChecked = !logger.Enabled;
@@ -259,7 +252,10 @@ namespace Sentinel.Views.Gui
         /// <param name="e">Argument for the timer callback.</param>
         private void UpdateTick(object sender, EventArgs e)
         {
-            if (Logger == null) return;
+            if (Logger == null)
+            {
+                return;
+            }
 
             if (clearPending || rebuildList)
             {
@@ -380,8 +376,6 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        #region Implementation of ILogViewer
-
         /// <summary>
         /// Gets or sets the name of a LogViewer.
         /// </summary>
@@ -399,6 +393,7 @@ namespace Sentinel.Views.Gui
             {
                 return logger;
             }
+
             private set
             {
                 if (logger == value) return;
@@ -424,7 +419,5 @@ namespace Sentinel.Views.Gui
         }
 
         public IEnumerable<ILogViewerToolbarButton> ToolbarItems { get; private set; }
-
-        #endregion
     }
 }
