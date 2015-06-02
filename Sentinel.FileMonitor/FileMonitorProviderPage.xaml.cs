@@ -25,13 +25,13 @@
 
         private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
 
-        private string fileName;
+        private string fileName = string.Empty;
 
         private bool loadExisting;
         
         private double refresh;
         
-        private bool warnFileNotFound = true;
+        private bool warnFileNotFound;
         
         private bool isValid;
 
@@ -245,16 +245,26 @@
         {
             get
             {
-                if (columnName == "FileName")
+                if (columnName != "FileName")
                 {
-                    if (String.IsNullOrEmpty(FileName))
-                    {
-                        return "File name not specified";
-                    }
+                    return null;
+                }
 
+                if (string.IsNullOrWhiteSpace(FileName))
+                {
+                    return "File name not specified";
+                }
+
+                {
                     try
                     {
-                        FileInfo fi = new FileInfo(FileName);
+                        // ReSharper disable once UnusedVariable
+                        var fi = new FileInfo(FileName);
+                        return null;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        return "The file name specified is in a location unauthorised";
                     }
                     catch (NotSupportedException)
                     {
@@ -273,8 +283,6 @@
                         return "You do not have permission to work with that file/location.";
                     }
                 }
-
-                return null;
             }
         }
 
@@ -335,7 +343,6 @@
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            FileName = string.Empty;
             Refresh = 250;
         }
     }
