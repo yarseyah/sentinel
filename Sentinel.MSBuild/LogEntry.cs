@@ -44,6 +44,11 @@ namespace Sentinel.MSBuild
             Source = (string)content["SenderName"];
             System = msbuildEventType;
 
+            if (Description.ToUpper().Contains("EXCEPTION"))
+            {
+                MetaData.Add("Exception", true);
+            }
+
             MetaData = new Dictionary<string, object> { { "Original", content } };
         }
 

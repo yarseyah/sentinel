@@ -275,6 +275,11 @@
                             MetaData = metaData
                         };
 
+                    if (logEntry.Description.ToUpper().Contains("EXCEPTION"))
+                    {
+                        logEntry.MetaData.Add("Exception", true);
+                    }
+
                     return logEntry;
                 }
             }

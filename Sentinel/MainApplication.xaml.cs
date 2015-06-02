@@ -39,6 +39,11 @@
                 return;
             }
 
+            if (!string.IsNullOrWhiteSpace(e.Exception.Source) && e.Exception.Source.ToLower() == "mscorlib")
+            {
+                return;
+            }
+
             var errorString =
                 string.Format(
                     "Sender: {0} FirstChanceException raised in {1} : Message -- {2} :: InnerException -- {3} :: TargetSite -- {4} :: StackTrace -- {5} :: HelpLink -- {6} ",

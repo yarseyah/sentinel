@@ -220,10 +220,7 @@
         private LogEntry DecodeEntry(string m)
         {
             XNamespace log4j = "unique";
-            string message = string.Format(
-                @"<entry xmlns:log4j=""{0}"">{1}</entry>",
-                log4j,
-                m);
+            string message = string.Format(@"<entry xmlns:log4j=""{0}"">{1}</entry>", log4j, m);
 
             XElement element = XElement.Parse(message);
             XElement record = element.Element(log4j + "event");
@@ -238,8 +235,7 @@
 
             foreach (XElement propertyElement in record.Element(log4j + "properties").Elements())
             {
-                if (propertyElement.Name == log4j + "data"
-                    && propertyElement.Attribute("name") != null
+                if (propertyElement.Name == log4j + "data" && propertyElement.Attribute("name") != null
                     && propertyElement.Attribute("name").Value == "log4jmachinename")
                 {
                     host = propertyElement.Attribute("value").Value;
@@ -250,19 +246,26 @@
 
             DateTime date = Log4jDateBase + TimeSpan.FromMilliseconds(Double.Parse(record.Attribute("timestamp").Value));
 
-            return new LogEntry
-                       {
-                           DateTime = date,
-                           System = system,
-                           Thread = record.Attribute("thread").Value,
-                           Description = description,
-                           Type = type,                           
-                           MetaData = new Dictionary<string, object>
-                                          {
-                                              { "Classification", classification },
-                                              { "Host", host }
-                                          }
-                       };
+            var entry = new LogEntry
+                            {
+                                DateTime = date,
+                                System = system,
+                                Thread = record.Attribute("thread").Value,
+                                Description = description,
+                                Type = type,
+                                MetaData =
+                                    new Dictionary<string, object>
+                                        {
+                                            { "Classification", classification },
+                                            { "Host", host }
+                                        }
+                            };
+            if (entry.Description.ToUpper().Contains("EXCEPTION"))
+            {
+                entry.MetaData.Add("Exception", true);
+            }
+
+            return entry;
         }
     }
 }

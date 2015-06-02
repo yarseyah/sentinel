@@ -213,7 +213,12 @@
             }
             else if (e.PropertyName == "FilteredCount" || e.PropertyName == "UnfilteredCount")
             {
-                bool filtered = FilteredCount < UnfilteredCount;
+                if (!Logger.Entries.Any())
+                {
+                    Messages.Clear();
+                }
+
+                var filtered = FilteredCount < UnfilteredCount;
                 Status = filtered
                              ? string.Format("{0} of {1} Messages [Filters Applied]", FilteredCount, UnfilteredCount)
                              : string.Format("{0} Messages", UnfilteredCount);
