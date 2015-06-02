@@ -1,30 +1,21 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Windows.Data;
-using Sentinel.Highlighters;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support;
-using Sentinel.Support.Wpf;
-
-#endregion
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Input;
+
+    using Sentinel.Highlighters;
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Support;
+    using Sentinel.Support.Wpf;
+
     /// <summary>
     /// Interaction logic for LogMessagesControl.xaml
     /// </summary>
@@ -33,6 +24,8 @@ namespace Sentinel.Views.Gui
         public LogMessagesControl()
         {
             InitializeComponent();
+
+            AddCopyCommandBinding();
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
             
@@ -62,6 +55,50 @@ namespace Sentinel.Views.Gui
             UpdateStyles();
             SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
             SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
+        }
+
+        private void AddCopyCommandBinding()
+        {
+            ExecutedRoutedEventHandler handler = (s, a) => { CopySelectedLogEntries(); };
+
+            var command = new RoutedCommand("Copy", typeof(GridView));
+            command.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control, "Copy"));
+            messages.CommandBindings.Add(new CommandBinding(command, handler));
+
+            try
+            {
+                Clipboard.SetData(DataFormats.Text, string.Empty);
+            }
+            catch (COMException)
+            {
+            }
+        }
+
+        private void CopySelectedLogEntries()
+        {
+            if (messages.SelectedItems.Count != 0)
+            {
+                var sb = new StringBuilder();
+                foreach (ILogEntry item in messages.SelectedItems)
+                {
+                    sb.AppendLine(
+                        string.Format(
+                            "{0}|{1}|{2}|{3}",
+                            item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff"),
+                            item.Type,
+                            item.System,
+                            item.Description));
+                }
+
+                try
+                {
+                    Clipboard.SetData(DataFormats.Text, sb.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Sentinel could not copy to the clipboard", ex);
+                }
+            }
         }
 
         private IHighlightingService<IHighlighter> Highlight { get; set; }
