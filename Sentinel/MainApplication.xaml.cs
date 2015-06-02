@@ -1,43 +1,14 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Windows;
-using Sentinel.Classification;
-using Sentinel.Classification.Interfaces;
-using Sentinel.Filters;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Highlighters;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Images;
-using Sentinel.Images.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Logger;
-using Sentinel.Logs;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Preferences;
-using Sentinel.Properties;
-using Sentinel.Providers;
-using Sentinel.Providers.Interfaces;
-using Sentinel.Services;
-using Sentinel.Views;
-using Sentinel.Views.Gui;
-using Sentinel.Views.Interfaces;
-using Sentinel.Extractors.Interfaces;
-using Sentinel.Extractors;
-using Sentinel.Services.Interfaces;
-
-#endregion
-
-namespace Sentinel
+﻿namespace Sentinel
 {
+    using System;
+    using System.Net.Sockets;
+    using System.Runtime.ExceptionServices;
+    using System.Windows;
+
+    using Sentinel.Properties;
+    using Sentinel.Services;
+    using Sentinel.Services.Interfaces;
+
     /// <summary>
     /// Interaction logic for MainApplication.xaml
     /// </summary>
@@ -48,6 +19,8 @@ namespace Sentinel
         /// </summary>
         public MainApplication()
         {
+            AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler;
+
             Settings.Default.Upgrade();
 
             ServiceLocator locator = ServiceLocator.Instance;
@@ -59,13 +32,30 @@ namespace Sentinel
             ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
-        /// <summary>
-        /// Override of the <c>Application.OnExit</c> method.
-        /// </summary>
-        /// <param name="e">Exit event arguments.</param>
-        protected override void OnExit(ExitEventArgs e)
-        {          
-            base.OnExit(e);
+        private void FirstChanceExceptionHandler(object sender, FirstChanceExceptionEventArgs e)
+        {
+            if (e.Exception is SocketException)
+            {
+                return;
+            }
+
+            var errorString =
+                string.Format(
+                    "Sender: {0} FirstChanceException raised in {1} : Message -- {2} :: InnerException -- {3} :: TargetSite -- {4} :: StackTrace -- {5} :: HelpLink -- {6} ",
+                    sender,
+                    AppDomain.CurrentDomain.FriendlyName,
+                    e.Exception.Message,
+                    (e.Exception.InnerException != null) ? e.Exception.InnerException.Message : string.Empty,
+                    (e.Exception.TargetSite != null) ? e.Exception.TargetSite.Name : string.Empty,
+                    e.Exception.StackTrace ?? string.Empty,
+                    e.Exception.HelpLink ?? string.Empty);
+
+            MessageBox.Show(
+                errorString,
+                "Error " + e.Exception.GetType(),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error,
+                MessageBoxResult.OK);
         }
     }
 }
