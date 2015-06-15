@@ -1,11 +1,12 @@
-﻿using Sentinel.Interfaces.Providers;
-using Sentinel.Support.Mvvm;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Windows;
-
-namespace Sentinel.Services.Interfaces
+﻿namespace Sentinel.Services.Interfaces
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using System.Windows;
+
+    using Sentinel.Interfaces.Providers;
+    using Sentinel.Support.Mvvm;
+
     public interface ISessionManager
     {
         [DataMember]

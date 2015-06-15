@@ -1,27 +1,15 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-
-#endregion
-
-namespace Sentinel.Support
+﻿namespace Sentinel.Support
 {
+    using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+
     public class GridViewSort
     {
         public static readonly DependencyProperty AutoSortProperty;
@@ -184,13 +172,13 @@ namespace Sentinel.Support
             Justification = "The generic style registration is desired, despite this rule.")]
         public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
         {
-            DependencyObject parent = VisualTreeHelper.GetParent(reference);
+            var parent = VisualTreeHelper.GetParent(reference);
             while (!(parent is T))
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }
 
-            return parent != null ? (T) parent : null;
+            return (T)parent;
         }
 
         // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
@@ -273,13 +261,13 @@ namespace Sentinel.Support
 
         private static void ColumnHeaderClick(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
             if (headerClicked != null && headerClicked.Column != null)
             {
                 string propertyName = GetPropertyName(headerClicked.Column);
                 if (!string.IsNullOrEmpty(propertyName))
                 {
-                    ListView listView = GetAncestor<ListView>(headerClicked);
+                    var listView = GetAncestor<ListView>(headerClicked);
                     if (listView != null)
                     {
                         ICommand command = GetCommand(listView);
@@ -309,16 +297,13 @@ namespace Sentinel.Support
 
         private static void RemoveSortGlyph(GridViewColumnHeader columnHeader)
         {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            Adorner[] adorners = adornerLayer.GetAdorners(columnHeader);
+            var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
+            var adorners = adornerLayer.GetAdorners(columnHeader);
             if (adorners != null)
             {
-                foreach (Adorner adorner in adorners)
+                foreach (SortGlyphAdorner adorner in adorners.OfType<SortGlyphAdorner>())
                 {
-                    if (adorner is SortGlyphAdorner)
-                    {
-                        adornerLayer.Remove(adorner);
-                    }
+                    adornerLayer.Remove(adorner);
                 }
             }
         }
@@ -327,8 +312,6 @@ namespace Sentinel.Support
         {
             obj.SetValue(SortedColumnHeaderProperty, value);
         }
-
-        #region Nested type: SortGlyphAdorner
 
         private class SortGlyphAdorner : Adorner
         {
@@ -356,7 +339,7 @@ namespace Sentinel.Support
                 if (sortGlyph != null)
                 {
                     double x = columnHeader.ActualWidth - 13;
-                    double y = (columnHeader.ActualHeight/2) - 5;
+                    double y = (columnHeader.ActualHeight / 2) - 5;
                     Rect rect = new Rect(x, y, 10, 10);
                     drawingContext.DrawImage(sortGlyph, rect);
                 }
@@ -371,12 +354,12 @@ namespace Sentinel.Support
                 double x1 = columnHeader.ActualWidth - 13;
                 double x2 = x1 + 10;
                 double x3 = x1 + 5;
-                double y1 = (columnHeader.ActualHeight/2) - 3;
+                double y1 = (columnHeader.ActualHeight / 2) - 3;
                 double y2 = y1 + 5;
 
                 if (direction == ListSortDirection.Ascending)
                 {
-                    double tmp = y1;
+                    var tmp = y1;
                     y1 = y2;
                     y2 = tmp;
                 }
@@ -388,16 +371,14 @@ namespace Sentinel.Support
                             new LineSegment(new Point(x3, y2), true)
                         };
 
-                PathFigure pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);
+                var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);
 
-                PathFigureCollection pathFigureCollection = new PathFigureCollection();
+                var pathFigureCollection = new PathFigureCollection();
                 pathFigureCollection.Add(pathFigure);
 
-                PathGeometry pathGeometry = new PathGeometry(pathFigureCollection);
+                var pathGeometry = new PathGeometry(pathFigureCollection);
                 return pathGeometry;
             }
         }
-
-        #endregion
     }
 }

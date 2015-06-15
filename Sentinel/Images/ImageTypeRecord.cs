@@ -1,32 +1,34 @@
-using Sentinel.Support.Mvvm;
-
 namespace Sentinel.Images
 {
+    using Sentinel.Support.Mvvm;
+
     public class ImageTypeRecord : ViewModelBase
     {
-        private string _name;
-        private ImageQuality _quality;
-        private string _image;
+        private string name;
+
+        private ImageQuality quality;
+
+        private string image;
 
         public ImageTypeRecord(string name, ImageQuality quality, string image)
         {
-            _name = name;
-            _quality = quality;
-            _image = image;
+            this.name = name;
+            this.quality = quality;
+            this.image = image;
         }
 
         public string Name
         {
             get
             {
-                return _name;
+                return name;
             }
 
             set
             {
-                if (_name != value)
+                if (name != value)
                 {
-                    _name = value;
+                    name = value;
                     OnPropertyChanged("Name");
                 }
             }
@@ -36,13 +38,14 @@ namespace Sentinel.Images
         {
             get
             {
-                return _quality;
+                return quality;
             }
+
             set
             {
-                if (_quality != value)
+                if (quality != value)
                 {
-                    _quality = value;
+                    quality = value;
                     OnPropertyChanged("Quality");
                 }
             }
@@ -52,13 +55,14 @@ namespace Sentinel.Images
         {
             get
             {
-                return _image;
+                return image;
             }
+
             set
             {
-                if (_image != value)
+                if (image != value)
                 {
-                    _image = value;
+                    image = value;
                     OnPropertyChanged("Image");
                 }
             }

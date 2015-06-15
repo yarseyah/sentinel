@@ -139,7 +139,7 @@
         {
             // Create the logger.
             var logManager = ServiceLocator.Instance.Get<ILogManager>();
-            ILogger log = logManager.Add(logName);
+            var log = logManager.Add(logName);
 
             // Create the frame view
             var viewManager = ServiceLocator.Instance.Get<IViewManager>();
@@ -288,12 +288,12 @@
                 }
             }
 
-            //Load new objects for the rest.            
+            // Load new objects for the rest.            
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);
             locator.Register<IProviderManager>(new ProviderManager());
-            locator.Register<IWindowFrame>(new MultipleViewFrame()); //needs IUserPreferences, IViewManager
+            locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
 
             locator.Register<INewProviderWizard>(new NewProviderWizard());
@@ -308,14 +308,14 @@
                     true);
             }
 
-            var viewIDs = new List<String>
+            var viewIDs = new List<string>
                               {
                                   locator.Get<IViewManager>().GetRegistered().First().Identifier
                               };
 
             ConfigureLoggerServices(Name, viewIDs, pendingProviderRecords);
 
-            GC.Collect(); //collect all things without a reference
+            GC.Collect();
 
             serviceLocatorIsFresh = false;
         }
@@ -341,14 +341,14 @@
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);
             locator.Register<IProviderManager>(new ProviderManager());
-            locator.Register<IWindowFrame>(new MultipleViewFrame()); //needs IUserPreferences, IViewManager
+            locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
 
             locator.Register<INewProviderWizard>(new NewProviderWizard());
 
             LoadChangingViewModelBases();
 
-            GC.Collect(); //collect all things without a reference
+            GC.Collect(); // collect all things without a reference
 
             serviceLocatorIsFresh = true;
         }

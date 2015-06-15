@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace Sentinel.Services
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class DictionaryHelper
     {
         /// <summary>

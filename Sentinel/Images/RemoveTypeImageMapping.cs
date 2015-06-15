@@ -1,10 +1,10 @@
-using Sentinel.Images.Interfaces;
-using Sentinel.Services;
-using System.Windows;
-
 namespace Sentinel.Images
 {
-    //[Export(typeof(IRemoveTypeImage))]
+    using System.Windows;
+
+    using Sentinel.Images.Interfaces;
+    using Sentinel.Services;
+
     public class RemoveTypeImageMapping : IRemoveTypeImage
     {
         public void Remove(ImageTypeRecord typeImageRecord)
@@ -13,12 +13,12 @@ namespace Sentinel.Images
 
             if (service != null)
             {
-                string prompt = string.Format(
+                var prompt = string.Format(
                     "Are you sure you want to remove the selected image?\r\n\r\n" +
                     "Image Name = \"{0}\"",
                     typeImageRecord.Name);
 
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     prompt,
                     "Remove Image",
                     MessageBoxButton.YesNo,

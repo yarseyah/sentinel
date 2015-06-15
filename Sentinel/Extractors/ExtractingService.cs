@@ -69,12 +69,16 @@
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Edit { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Remove { get; private set; }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public int SelectedIndex
         {
             get

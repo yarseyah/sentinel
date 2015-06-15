@@ -1,26 +1,13 @@
-﻿#region License
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-#endregion
-
-namespace Sentinel.Highlighters.Gui
+﻿namespace Sentinel.Highlighters.Gui
 {
-    using System.Diagnostics;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Media;
 
     using Sentinel.Highlighters.Interfaces;
-    using Sentinel.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Converters;
 
     public class AddNewHighlighterService : IAddHighlighterService
     {
-        #region IAddHighlighterService Members
-
         public void Add()
         {
             var window = new AddEditHighlighterWindow();
@@ -44,8 +31,6 @@ namespace Sentinel.Highlighters.Gui
             }
         }
 
-        #endregion
-
         public Highlighter Construct(AddEditHighlighter data)
         {
             Color? background = null;
@@ -53,10 +38,10 @@ namespace Sentinel.Highlighters.Gui
 
             var highlighter = new Highlighter
                               {
-                                  Name = data.Name,
-                                  Field = data.Field,
-                                  Pattern = data.Pattern,
-                                  Mode = data.Mode,
+                                  Name = data.Name, 
+                                  Field = data.Field, 
+                                  Pattern = data.Pattern, 
+                                  Mode = data.Mode, 
                                   Enabled = true
                               };
 
@@ -72,7 +57,7 @@ namespace Sentinel.Highlighters.Gui
 
             highlighter.Style = new HighlighterStyle
                                     {
-                                        Background = background,
+                                        Background = background, 
                                         Foreground = foreground
                                     };
             return highlighter;

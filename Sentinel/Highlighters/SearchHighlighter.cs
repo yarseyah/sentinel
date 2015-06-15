@@ -1,14 +1,5 @@
-#region License
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-#endregion
-
 namespace Sentinel.Highlighters
 {
-    #region Using directives
-
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -19,15 +10,11 @@ namespace Sentinel.Highlighters
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
-    #endregion
-
     [DataContract]
     public class SearchHighlighter 
         : IDefaultInitialisation, ISearchHighlighter
     {
         private IHighlighter highlighter;
-
-        #region ISearchHighlighter Members
 
         [DataMember]
         public IHighlighter Highlighter
@@ -73,6 +60,7 @@ namespace Sentinel.Highlighters
             {
                 return highlighter.Enabled;
             }
+
             set
             {
                 highlighter.Enabled = value;
@@ -86,6 +74,7 @@ namespace Sentinel.Highlighters
             {
                 return highlighter.Mode;
             }
+
             set
             {
                 highlighter.Mode = value;
@@ -106,8 +95,6 @@ namespace Sentinel.Highlighters
                 highlighter.Pattern = value;
             }
         }
-
-        #endregion
 
         public void Initialise()
         {

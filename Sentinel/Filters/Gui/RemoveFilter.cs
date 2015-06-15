@@ -1,30 +1,12 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Windows;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Services;
-
-#endregion
-
 namespace Sentinel.Filters.Gui
 {
-    #region Using directives
+    using System.Windows;
 
-    #endregion
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Services;
 
     public class RemoveFilter : IRemoveFilterService
     {
-        #region IRemoveFilterService Members
-
         public void Remove(IFilter filter)
         {
             var service = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
@@ -49,7 +31,5 @@ namespace Sentinel.Filters.Gui
                 }
             }
         }
-
-        #endregion
     }
 }

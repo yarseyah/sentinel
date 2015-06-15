@@ -1,21 +1,8 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Windows.Controls;
-using System.Windows.Threading;
-
-#endregion
-
-namespace Sentinel.Support.Wpf
+﻿namespace Sentinel.Support.Wpf
 {
+    using System.Windows.Controls;
+    using System.Windows.Threading;
+
     public class DataBoundToolbar : ToolBar
     {
         public override void OnApplyTemplate()
@@ -27,10 +14,6 @@ namespace Sentinel.Support.Wpf
             base.OnApplyTemplate();
         }
 
-        #region Nested type: InvalidateMeasurementDelegate
-
         private delegate void InvalidateMeasurementDelegate();
-
-        #endregion
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Controls;
-using WpfExtras;
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Controls;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for NewLoggerSummaryPage.xaml
     /// </summary>
@@ -23,8 +23,6 @@ namespace Sentinel.Logs.Gui
             DataContext = this;
         }
 
-        #region Implementation of INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -36,10 +34,6 @@ namespace Sentinel.Logs.Gui
                 handler(this, e);
             }
         }
-
-        #endregion
-
-        #region Implementation of IWizardPage
 
         public string Title
         {
@@ -96,6 +90,5 @@ namespace Sentinel.Logs.Gui
                 return readonlyChildren;
             }
         }
-        #endregion
     }
 }

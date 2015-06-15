@@ -1,24 +1,29 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-
-#endregion
-
-namespace Sentinel.Support.Mvvm
+﻿namespace Sentinel.Support.Mvvm
 {
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+
     public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
+        /// <summary>
+        /// Finalizes an instance of the ViewModelBase class.
+        /// </summary>
+        ~ViewModelBase()
+        {
+            Debug.WriteLine(
+                string.Format(
+                    "{0} ({1}) ({2}) Finalized",
+                    GetType().Name,
+                    DisplayName,
+                    GetHashCode()));
+        }
+
+        /// <summary>
+        /// Raised when a property on this object has a new value.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Gets or sets the display name for the view model, used for debug output.
         /// </summary>
@@ -32,8 +37,6 @@ namespace Sentinel.Support.Mvvm
         /// </summary>
         protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
 
-        #region IDisposable Members
-
         /// <summary>
         /// Invoked when this object is being removed from the application
         /// and will be subject to garbage collection.
@@ -41,30 +44,6 @@ namespace Sentinel.Support.Mvvm
         public void Dispose()
         {
             OnDispose();
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        /// <summary>
-        /// Raised when a property on this object has a new value.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
-        /// <summary>
-        /// Finalizes an instance of the ViewModelBase class.
-        /// </summary>
-        ~ViewModelBase()
-        {
-            Debug.WriteLine(
-                string.Format(
-                    "{0} ({1}) ({2}) Finalized",
-                    GetType().Name,
-                    DisplayName,
-                    GetHashCode()));
         }
 
         /// <summary>

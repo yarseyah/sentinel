@@ -1,11 +1,8 @@
-﻿using System.Windows;
-
-namespace Sentinel.Providers.Interfaces
+﻿namespace Sentinel.Providers.Interfaces
 {
-    using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
+    using System.Windows;
 
-    using IProviderInfo = Sentinel.Interfaces.Providers.IProviderInfo;
+    using Sentinel.Interfaces.Providers;
 
     public interface INewProviderWizard
     {

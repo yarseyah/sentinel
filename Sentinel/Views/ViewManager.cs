@@ -1,27 +1,15 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using Sentinel.Views.Gui;
-using Sentinel.Views.Heartbeat;
-using Sentinel.Views.Interfaces;
-
-#endregion
-
-namespace Sentinel.Views
+﻿namespace Sentinel.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Linq;
+
+    using Sentinel.Views.Gui;
+    using Sentinel.Views.Heartbeat;
+    using Sentinel.Views.Interfaces;
+
     public class ViewManager : IViewManager
     {
         private readonly Dictionary<IViewInformation, Type> registeredTypes = new Dictionary<IViewInformation, Type>();
@@ -33,8 +21,6 @@ namespace Sentinel.Views
             Register(LogMessages.Info, typeof(LogMessages));
             Register(MessageHeatbeat.Info, typeof(MessageHeatbeat));
         }
-
-        #region IViewManager Members
 
         /// <summary>
         /// Observerable collection of the instances of a viewer main frame.
@@ -88,7 +74,5 @@ namespace Sentinel.Views
 
             return null;
         }
-
-        #endregion
     }
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using Sentinel.Views.Interfaces;
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
+    using Sentinel.Views.Interfaces;
+
     public class ViewInformation : IViewInformation
     {
         public ViewInformation(string identifier, string name)
@@ -11,12 +10,10 @@ namespace Sentinel.Views.Gui
             Name = name;
         }
 
-        #region Implementation of IViewInformation
-
         public string Identifier { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; set; }
 
-        #endregion
+        public string Name { get; private set; }
+
+        public string Description { get; set; }
     }
 }

@@ -198,13 +198,13 @@
 
         public object Save(object saveData)
         {
-            if (saveData == null || !(saveData is ProviderSettings))
+            if (!(saveData is ProviderSettings))
             {
                 saveData = new ProviderSettings();
             }
 
-            (saveData as ProviderSettings).Info = providers[SelectedProvider];
-            (saveData as ProviderSettings).Name = name;
+            ((ProviderSettings)saveData).Info = providers[SelectedProvider];
+            ((ProviderSettings)saveData).Name = name;
 
             return saveData;
         }

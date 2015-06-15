@@ -1,23 +1,10 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-
-#endregion
-
-namespace Sentinel.Support.Wpf
+﻿namespace Sentinel.Support.Wpf
 {
+    using System;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
     public static class ThemeInfo
     {
         internal const int MaxPath = 260;
@@ -42,10 +29,10 @@ namespace Sentinel.Support.Wpf
                     {
                         if (!IsEnabledByUser)
                         {
-                            currentTheme = String.Empty;
+                            currentTheme = string.Empty;
                         }
 
-                        StringBuilder name = new StringBuilder(MaxPath, MaxPath);
+                        var name = new StringBuilder(MaxPath, MaxPath);
                         SafeNativeMethods.GetCurrentThemeName(name, MaxPath, IntPtr.Zero, 0, IntPtr.Zero, 0);
 
                         currentTheme = Path.GetFileNameWithoutExtension(name.ToString());
@@ -63,7 +50,7 @@ namespace Sentinel.Support.Wpf
         {
             get
             {
-                return IsSupportedByOS ? SafeNativeMethods.IsThemeActive() : false;
+                return IsSupportedByOS && SafeNativeMethods.IsThemeActive();
             }
         }
 
@@ -74,12 +61,10 @@ namespace Sentinel.Support.Wpf
         {
             get
             {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                       Environment.OSVersion.Version >= new Version(5, 1);
+                return Environment.OSVersion.Platform == PlatformID.Win32NT
+                       && Environment.OSVersion.Version >= new Version(5, 1);
             }
         }
-
-        #region Nested type: SafeNativeMethods
 
         internal abstract class SafeNativeMethods
         {
@@ -93,8 +78,7 @@ namespace Sentinel.Support.Wpf
             /// <param name="buffer">Pointer to a string that receives the size name. This parameter may be set to NULL.</param>
             /// <param name="maxBufferSize">Value of type int that contains the maximum number of characters allowed in the size name.</param>
             /// <returns>Returns S_OK if successful, otherwise an error code.</returns>
-            [DllImport("UxTheme.dll", CharSet = CharSet.Unicode, EntryPoint = "GetCurrentThemeName", SetLastError = true
-                )]
+            [DllImport("UxTheme.dll", CharSet = CharSet.Unicode, EntryPoint = "GetCurrentThemeName", SetLastError = true)]
             internal static extern int GetCurrentThemeName(
                 [MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszThemeFileName,
                 int maxNameChars,
@@ -110,7 +94,5 @@ namespace Sentinel.Support.Wpf
             [DllImport("UxTheme.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             internal static extern bool IsThemeActive();
         }
-
-        #endregion
     }
 }

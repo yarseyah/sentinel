@@ -1,18 +1,14 @@
-﻿#region Using directives
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-
-#endregion
-
-namespace Sentinel.Support.Wpf
+﻿namespace Sentinel.Support.Wpf
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+    using System.Runtime.Serialization;
+
     [Serializable]
     public class ObservableDictionary<TKey, TValue>
         :
@@ -23,10 +19,6 @@ namespace Sentinel.Support.Wpf
             INotifyCollectionChanged,
             INotifyPropertyChanged
     {
-        #region constructors
-
-        #region public
-
         public ObservableDictionary()
         {
             keyedEntryCollection = new KeyedDictionaryEntryCollection();
@@ -37,7 +29,9 @@ namespace Sentinel.Support.Wpf
             keyedEntryCollection = new KeyedDictionaryEntryCollection();
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
-                DoAddEntry((TKey) entry.Key, (TValue) entry.Value);
+            {
+                DoAddEntry(entry.Key, entry.Value);
+            }
         }
 
         public ObservableDictionary(IEqualityComparer<TKey> comparer)
@@ -50,25 +44,15 @@ namespace Sentinel.Support.Wpf
             keyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
-                DoAddEntry((TKey) entry.Key, (TValue) entry.Value);
+            {
+                DoAddEntry(entry.Key, entry.Value);
+            }
         }
-
-        #endregion public
-
-        #region protected
 
         protected ObservableDictionary(SerializationInfo info, StreamingContext context)
         {
             siInfo = info;
         }
-
-        #endregion protected
-
-        #endregion constructors
-
-        #region properties
-
-        #region public
 
         public IEqualityComparer<TKey> Comparer
         {
@@ -114,10 +98,6 @@ namespace Sentinel.Support.Wpf
             }
         }
 
-        #endregion public
-
-        #region private
-
         private Dictionary<TKey, TValue> TrueDictionary
         {
             get
@@ -125,21 +105,15 @@ namespace Sentinel.Support.Wpf
                 if (dictionaryCacheVersion != version)
                 {
                     dictionaryCache.Clear();
-                    foreach (DictionaryEntry entry in keyedEntryCollection)
-                        dictionaryCache.Add((TKey) entry.Key, (TValue) entry.Value);
+                    foreach (var entry in keyedEntryCollection)
+                    {
+                        dictionaryCache.Add((TKey)entry.Key, (TValue)entry.Value);
+                    }
                     dictionaryCacheVersion = version;
                 }
                 return dictionaryCache;
             }
         }
-
-        #endregion private
-
-        #endregion properties
-
-        #region methods
-
-        #region public
 
         public void Add(TKey key, TValue value)
         {
@@ -178,10 +152,6 @@ namespace Sentinel.Support.Wpf
             return result;
         }
 
-        #endregion public
-
-        #region protected
-
         protected virtual bool AddEntry(TKey key, TValue value)
         {
             keyedEntryCollection.Add(new DictionaryEntry(key, value));
@@ -191,37 +161,43 @@ namespace Sentinel.Support.Wpf
         protected virtual bool ClearEntries()
         {
             // check whether there are entries to clear
-            bool result = (Count > 0);
+            bool result = Count > 0;
             if (result)
             {
                 // if so, clear the dictionary
                 keyedEntryCollection.Clear();
             }
+
             return result;
         }
 
         protected int GetIndexAndEntryForKey(TKey key, out DictionaryEntry entry)
         {
             entry = new DictionaryEntry();
-            int index = -1;
+            var index = -1;
             if (keyedEntryCollection.Contains(key))
             {
                 entry = keyedEntryCollection[key];
                 index = keyedEntryCollection.IndexOf(entry);
             }
+
             return index;
         }
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
             if (CollectionChanged != null)
+            {
                 CollectionChanged(this, args);
+            }
         }
 
         protected virtual void OnPropertyChanged(string name)
         {
             if (PropertyChanged != null)
+            {
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
+            }
         }
 
         protected virtual bool RemoveEntry(TKey key)
@@ -235,22 +211,22 @@ namespace Sentinel.Support.Wpf
             bool keyExists = keyedEntryCollection.Contains(key);
 
             // if identical key/value pair already exists, nothing to do
-            if (keyExists && value.Equals((TValue) keyedEntryCollection[key].Value))
+            if (keyExists && value.Equals((TValue)keyedEntryCollection[key].Value))
+            {
                 return false;
+            }
 
             // otherwise, remove the existing entry
             if (keyExists)
+            {
                 keyedEntryCollection.Remove(key);
+            }
 
             // add the new entry
             keyedEntryCollection.Add(new DictionaryEntry(key, value));
 
             return true;
         }
-
-        #endregion protected
-
-        #region private
 
         private void DoAddEntry(TKey key, TValue value)
         {
@@ -259,7 +235,7 @@ namespace Sentinel.Support.Wpf
                 version++;
 
                 DictionaryEntry entry;
-                int index = GetIndexAndEntryForKey(key, out entry);
+                var index = GetIndexAndEntryForKey(key, out entry);
                 FireEntryAddedNotifications(entry, index);
             }
         }
@@ -283,7 +259,9 @@ namespace Sentinel.Support.Wpf
             {
                 version++;
                 if (index > -1)
+                {
                     FireEntryRemovedNotifications(entry, index);
+                }
             }
 
             return result;
@@ -320,12 +298,17 @@ namespace Sentinel.Support.Wpf
 
             // fire CollectionChanged notification
             if (index > -1)
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
-                                                                         new KeyValuePair<TKey, TValue>(
-                                                                             (TKey) entry.Key, (TValue) entry.Value),
-                                                                         index));
+            {
+                OnCollectionChanged(
+                    new NotifyCollectionChangedEventArgs(
+                        NotifyCollectionChangedAction.Add,
+                        new KeyValuePair<TKey, TValue>((TKey)entry.Key, (TValue)entry.Value),
+                        index));
+            }
             else
+            {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
         }
 
         private void FireEntryRemovedNotifications(DictionaryEntry entry, int index)
@@ -335,12 +318,17 @@ namespace Sentinel.Support.Wpf
 
             // fire CollectionChanged notification
             if (index > -1)
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
-                                                                         new KeyValuePair<TKey, TValue>(
-                                                                             (TKey) entry.Key, (TValue) entry.Value),
-                                                                         index));
+            {
+                OnCollectionChanged(
+                    new NotifyCollectionChangedEventArgs(
+                        NotifyCollectionChangedAction.Remove,
+                        new KeyValuePair<TKey, TValue>((TKey)entry.Key, (TValue)entry.Value),
+                        index));
+            }
             else
+            {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
         }
 
         private void FirePropertyChangedNotifications()
@@ -363,14 +351,6 @@ namespace Sentinel.Support.Wpf
             // fire CollectionChanged notification
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-
-        #endregion private
-
-        #endregion methods
-
-        #region interfaces
-
-        #region IDictionary<TKey, TValue>
 
         void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
         {
@@ -419,10 +399,6 @@ namespace Sentinel.Support.Wpf
                 DoSetEntry(key, value);
             }
         }
-
-        #endregion IDictionary<TKey, TValue>
-
-        #region IDictionary
 
         void IDictionary.Add(object key, object value)
         {
@@ -493,10 +469,6 @@ namespace Sentinel.Support.Wpf
             }
         }
 
-        #endregion IDictionary
-
-        #region ICollection<KeyValuePair<TKey, TValue>>
-
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> kvp)
         {
             DoAddEntry(kvp.Key, kvp.Value);
@@ -555,10 +527,6 @@ namespace Sentinel.Support.Wpf
             return DoRemoveEntry(kvp.Key);
         }
 
-        #endregion ICollection<KeyValuePair<TKey, TValue>>
-
-        #region ICollection
-
         void ICollection.CopyTo(Array array, int index)
         {
             ((ICollection) keyedEntryCollection).CopyTo(array, index);
@@ -588,27 +556,15 @@ namespace Sentinel.Support.Wpf
             }
         }
 
-        #endregion ICollection
-
-        #region IEnumerable<KeyValuePair<TKey, TValue>>
-
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
             return new Enumerator(this, false);
         }
 
-        #endregion IEnumerable<KeyValuePair<TKey, TValue>>
-
-        #region IEnumerable
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
-        #endregion IEnumerable
-
-        #region ISerializable
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -623,10 +579,6 @@ namespace Sentinel.Support.Wpf
             info.AddValue("entries", entries);
         }
 
-        #endregion ISerializable
-
-        #region IDeserializationCallback
-
         public virtual void OnDeserialization(object sender)
         {
             if (siInfo == null) return;
@@ -639,16 +591,13 @@ namespace Sentinel.Support.Wpf
             }
         }
 
-        #endregion IDeserializationCallback
-
-        #region INotifyCollectionChanged
-
         event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
         {
             add
             {
                 CollectionChanged += value;
             }
+
             remove
             {
                 CollectionChanged -= value;
@@ -657,16 +606,13 @@ namespace Sentinel.Support.Wpf
 
         protected virtual event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        #endregion INotifyCollectionChanged
-
-        #region INotifyPropertyChanged
-
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
             add
             {
                 PropertyChanged += value;
             }
+
             remove
             {
                 PropertyChanged -= value;
@@ -675,20 +621,8 @@ namespace Sentinel.Support.Wpf
 
         protected virtual event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion INotifyPropertyChanged
-
-        #endregion interfaces
-
-        #region protected classes
-
-        #region KeyedDictionaryEntryCollection<TKey>
-
         protected class KeyedDictionaryEntryCollection : KeyedCollection<TKey, DictionaryEntry>
         {
-            #region constructors
-
-            #region public
-
             public KeyedDictionaryEntryCollection()
             {
             }
@@ -698,37 +632,15 @@ namespace Sentinel.Support.Wpf
             {
             }
 
-            #endregion public
-
-            #endregion constructors
-
-            #region methods
-
-            #region protected
-
             protected override TKey GetKeyForItem(DictionaryEntry entry)
             {
                 return (TKey) entry.Key;
             }
-
-            #endregion protected
-
-            #endregion methods
         }
-
-        #endregion KeyedDictionaryEntryCollection<TKey>
-
-        #endregion protected classes
-
-        #region public structures
-
-        #region Enumerator
 
         [Serializable, StructLayout(LayoutKind.Sequential)]
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {
-            #region constructors
-
             internal Enumerator(ObservableDictionary<TKey, TValue> dictionary, bool isDictionaryEntryEnumerator)
             {
                 this.dictionary = dictionary;
@@ -738,12 +650,6 @@ namespace Sentinel.Support.Wpf
                 current = new KeyValuePair<TKey, TValue>();
             }
 
-            #endregion constructors
-
-            #region properties
-
-            #region public
-
             public KeyValuePair<TKey, TValue> Current
             {
                 get
@@ -752,14 +658,6 @@ namespace Sentinel.Support.Wpf
                     return current;
                 }
             }
-
-            #endregion public
-
-            #endregion properties
-
-            #region methods
-
-            #region public
 
             public void Dispose()
             {
@@ -771,18 +669,16 @@ namespace Sentinel.Support.Wpf
                 index++;
                 if (index < dictionary.keyedEntryCollection.Count)
                 {
-                    current = new KeyValuePair<TKey, TValue>((TKey) dictionary.keyedEntryCollection[index].Key,
-                                                             (TValue) dictionary.keyedEntryCollection[index].Value);
+                    current = new KeyValuePair<TKey, TValue>(
+                        (TKey)dictionary.keyedEntryCollection[index].Key,
+                        (TValue)dictionary.keyedEntryCollection[index].Value);
                     return true;
                 }
+
                 index = -2;
                 current = new KeyValuePair<TKey, TValue>();
                 return false;
             }
-
-            #endregion public
-
-            #region private
 
             private void ValidateCurrent()
             {
@@ -790,6 +686,7 @@ namespace Sentinel.Support.Wpf
                 {
                     throw new InvalidOperationException("The enumerator has not been started.");
                 }
+
                 if (index == -2)
                 {
                     throw new InvalidOperationException("The enumerator has reached the end of the collection.");
@@ -803,12 +700,6 @@ namespace Sentinel.Support.Wpf
                     throw new InvalidOperationException("The enumerator is not valid because the dictionary changed.");
                 }
             }
-
-            #endregion private
-
-            #endregion methods
-
-            #region IEnumerator implementation
 
             object IEnumerator.Current
             {
@@ -829,10 +720,6 @@ namespace Sentinel.Support.Wpf
                 index = -1;
                 current = new KeyValuePair<TKey, TValue>();
             }
-
-            #endregion IEnumerator implemenation
-
-            #region IDictionaryEnumerator implemenation
 
             DictionaryEntry IDictionaryEnumerator.Entry
             {
@@ -861,35 +748,28 @@ namespace Sentinel.Support.Wpf
                 }
             }
 
-            #endregion
-
-            #region fields
-
             private ObservableDictionary<TKey, TValue> dictionary;
+            
             private int version;
+            
             private int index;
+            
             private KeyValuePair<TKey, TValue> current;
+            
             private bool isDictionaryEntryEnumerator;
-
-            #endregion fields
         }
 
-        #endregion Enumerator
-
-        #endregion public structures
-
-        #region fields
-
         private int countCache;
+
         private Dictionary<TKey, TValue> dictionaryCache = new Dictionary<TKey, TValue>();
+        
         private int dictionaryCacheVersion;
+        
         protected KeyedDictionaryEntryCollection keyedEntryCollection;
 
         [NonSerialized]
         private SerializationInfo siInfo;
 
         private int version;
-
-        #endregion fields
     }
 }

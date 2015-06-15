@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using WpfExtras;
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System.Diagnostics;
+    using System.Windows;
+
+    using WpfExtras;
+
     public class NewLoggerWizard
     {
         public NewLoggerWizard()
@@ -11,23 +12,24 @@ namespace Sentinel.Logs.Gui
             Settings = new NewLoggerSettings();
         }
 
+        public NewLoggerSettings Settings { get; private set; }
+
         public bool Display(Window parent)
         {
-            Wizard wizard = new Wizard
-                                {
-                                    Owner = parent,
-                                    ShowNavigationTree = false,
-                                    Title = "Sentinel - Add new logger",
-                                    SavedData = Settings
-                                };
+            var wizard = new Wizard
+                             {
+                                 Owner = parent,
+                                 ShowNavigationTree = false,
+                                 Title = "Sentinel - Add new logger",
+                                 SavedData = Settings
+                             };
 
             wizard.AddPage(new AddNewLoggerWelcomePage());
             wizard.AddPage(new SetLoggerNamePage());
             wizard.AddPage(new ProvidersPage());
             wizard.AddPage(new ViewSelectionPage());
-            // wizard.AddPage(new NewLoggerSummaryPage());
 
-            bool? dialogResult = wizard.ShowDialog();
+            var dialogResult = wizard.ShowDialog();
             if (dialogResult == true)
             {
                 Settings = wizard.SavedData as NewLoggerSettings;
@@ -36,7 +38,5 @@ namespace Sentinel.Logs.Gui
 
             return dialogResult ?? false;
         }
-
-        public NewLoggerSettings Settings { get; private set; }
     }
 }

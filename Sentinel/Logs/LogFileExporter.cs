@@ -1,10 +1,11 @@
-﻿using Sentinel.Logs.Interfaces;
-using Sentinel.Views.Interfaces;
-using System.IO;
-using System.Text;
-
-namespace Sentinel.Logs
+﻿namespace Sentinel.Logs
 {
+    using System.IO;
+    using System.Text;
+
+    using Sentinel.Logs.Interfaces;
+    using Sentinel.Views.Interfaces;
+
     public class LogFileExporter : ILogFileExporter
     {
         public LogFileExporter()
@@ -13,7 +14,7 @@ namespace Sentinel.Logs
 
         public void SaveLogViewerToFile(IWindowFrame windowFrame, string filePath)
         {
-            //Check if file exists; delete it
+            // Check if file exists; delete it
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);

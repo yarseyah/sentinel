@@ -1,26 +1,18 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Support.Mvvm;
-using Sentinel.Support.Wpf;
-using Sentinel.Views.Interfaces;
-
-#endregion
-
-namespace Sentinel.Views.Heartbeat
+﻿namespace Sentinel.Views.Heartbeat
 {
-    //[Export(typeof(ILogViewer))]
-    //[ExportMetadata("Identifier", "f1da010a-bd8f-4957-a16d-2f3ada1e40f6")]
-    //[ExportMetadata("Name", "Message Heartbeat")]
-    //[ExportMetadata("Description", "Displays a heartbeat graph based upon the incoming message type.")]
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows.Controls;
+    using System.Windows.Threading;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+    using Sentinel.Support.Wpf;
+    using Sentinel.Views.Interfaces;
+
     public class MessageHeatbeat
         : ViewModelBase
           , ILogViewer
@@ -33,13 +25,9 @@ namespace Sentinel.Views.Heartbeat
                 Name = name;
             }
 
-            #region Implementation of IViewInformation
-
             public string Identifier { get; private set; }
             public string Name { get; private set; }
             public string Description { get; set; }
-
-            #endregion
         }
 
         private const int MAX_HISTORY = 200;
@@ -134,6 +122,7 @@ namespace Sentinel.Views.Heartbeat
                                 Data[dataPoint.Key].Add(0);
                             }
                         }
+
                         Data[dataPoint.Key].Add(dataPoint.Value);
                     }
                 }
@@ -144,8 +133,6 @@ namespace Sentinel.Views.Heartbeat
                 OnPropertyChanged("Data");
             }
         }
-
-        #region Implementation of ILogViewer
 
         public ObservableCollection<ILogEntry> Messages { get; private set; }
 
@@ -163,6 +150,7 @@ namespace Sentinel.Views.Heartbeat
             {
                 return logger;
             }
+
             private set
             {
                 if (logger == value) return;
@@ -199,7 +187,7 @@ namespace Sentinel.Views.Heartbeat
         {
             get
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -223,8 +211,6 @@ namespace Sentinel.Views.Heartbeat
                 return historicalData;
             }
         }
-
-        #endregion
 
         private void LoggerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

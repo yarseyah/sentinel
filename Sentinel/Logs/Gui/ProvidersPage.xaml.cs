@@ -1,5 +1,4 @@
-﻿
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
@@ -14,7 +13,6 @@ namespace Sentinel.Logs.Gui
 
     using Sentinel.Interfaces.Providers;
     using Sentinel.NLog;
-    using Sentinel.Providers;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
 
@@ -93,8 +91,6 @@ namespace Sentinel.Logs.Gui
             }
         }
 
-        #region Implementation of IWizardPage
-
         public string Title
         {
             get
@@ -125,6 +121,7 @@ namespace Sentinel.Logs.Gui
             {
                 return isValid;
             }
+
             private set
             {
                 if (isValid == value) return;
@@ -163,8 +160,6 @@ namespace Sentinel.Logs.Gui
             return saveData;
         }
 
-        #endregion
-
         private void AddNewProvider(object obj)
         {
             var services = ServiceLocator.Instance;
@@ -191,7 +186,6 @@ namespace Sentinel.Logs.Gui
         private void RemoveSelectedProvider(object obj)
         {
             // TODO: confirmation of deletion.
-
             var index = SelectedProviderIndex;
             if (index != -1 && index < Providers.Count)
             {
@@ -203,16 +197,13 @@ namespace Sentinel.Logs.Gui
             }
         }
 
-        #region Implementation of IDataErrorInfo
-
         /// <summary>
         /// Gets the error message for the property with the given name.
         /// </summary>
         /// <returns>
         /// The error message for the property. The default is an empty string ("").
         /// </returns>
-        /// <param name="columnName">The name of the property whose error message to get. 
-        ///                 </param>
+        /// <param name="columnName">The name of the property whose error message to get.</param>
         public string this[string columnName]
         {
             get
@@ -240,8 +231,6 @@ namespace Sentinel.Logs.Gui
                 return this["Providers"];
             }
         }
-
-        #endregion
 
         private string ValidateProviders()
         {

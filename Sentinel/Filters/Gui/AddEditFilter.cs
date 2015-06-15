@@ -1,25 +1,12 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-using Sentinel.Support.Mvvm;
-using Sentinel.Interfaces;
-
-#endregion
-
 namespace Sentinel.Filters.Gui
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Input;
+
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     public class AddEditFilter : ViewModelBase
     {
         private readonly Window window;

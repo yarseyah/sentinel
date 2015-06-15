@@ -105,6 +105,17 @@ namespace Sentinel.Filters
 
         public ObservableCollection<T> SearchFilters { get; set; }
 
+        public void Initialise()
+        {
+            // Add the standard debugging filters
+            Filters.Add(new StandardFilter("Trace", LogEntryField.Type, "TRACE") as T);
+            Filters.Add(new StandardFilter("Debug", LogEntryField.Type, "DEBUG") as T);
+            Filters.Add(new StandardFilter("Info", LogEntryField.Type, "INFO") as T);
+            Filters.Add(new StandardFilter("Warn", LogEntryField.Type, "WARN") as T);
+            Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
+            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);            
+        }
+
         public bool IsFiltered(ILogEntry entry)
         {
             return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||                
@@ -142,17 +153,6 @@ namespace Sentinel.Filters
         {
             var filter = Filters.ElementAt(SelectedIndex);
             removeFilterService.Remove(filter);
-        }
-
-        public void Initialise()
-        {
-            // Add the standard debugging filters
-            Filters.Add(new StandardFilter("Trace", LogEntryField.Type, "TRACE") as T);
-            Filters.Add(new StandardFilter("Debug", LogEntryField.Type, "DEBUG") as T);
-            Filters.Add(new StandardFilter("Info", LogEntryField.Type, "INFO") as T);
-            Filters.Add(new StandardFilter("Warn", LogEntryField.Type, "WARN") as T);
-            Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
-            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);            
         }
     }
 }

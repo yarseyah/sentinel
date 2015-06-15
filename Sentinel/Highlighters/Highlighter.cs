@@ -1,10 +1,3 @@
-#region License
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-#endregion
-
 namespace Sentinel.Highlighters
 {
     using System.Diagnostics;
@@ -18,7 +11,6 @@ namespace Sentinel.Highlighters
     [DataContract]
     public class Highlighter : ViewModelBase, IHighlighter
     {
-        #region Backing stores
         private bool enabled = true;
 
         private LogEntryField field;
@@ -32,8 +24,6 @@ namespace Sentinel.Highlighters
         private string pattern;
 
         private Regex regex;
-
-        #endregion
 
         public Highlighter()
         {
@@ -203,39 +193,41 @@ namespace Sentinel.Highlighters
         {
             Debug.Assert(logEntry != null, "logEntry can not be null.");
 
-            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+            if (logEntry == null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Pattern))
+            {
+                return false;
+            }
 
             string target;
 
             switch (Field)
             {
-                case LogEntryField.None:
-                    target = "";
-                    break;
                 case LogEntryField.Type:
                     target = logEntry.Type;
                     break;
                 case LogEntryField.System:
                     target = logEntry.System;
                     break;
-                case LogEntryField.Classification:
-                    target = "";
-                    break;
                 case LogEntryField.Thread:
                     target = logEntry.Thread;
                     break;
-                //case LogEntryField.Source:
-                //    target = logEntry.Source;
-                //    break;
+                case LogEntryField.Source:
+                    target = logEntry.Source;
+                    break;
                 case LogEntryField.Description:
                     target = logEntry.Description;
                     break;
-                //case LogEntryField.Host:
-                //    target = "";
-                //    break;
+                ////case LogEntryField.Classification:
+                ////case LogEntryField.None:
+                ////case LogEntryField.Host:
                 default:
-                target = "";
-                break;
+                    target = string.Empty;
+                    break;
             }
 
             switch (Mode)

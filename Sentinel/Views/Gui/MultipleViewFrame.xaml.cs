@@ -1,38 +1,16 @@
-﻿#region License
-
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Wpf;
-using Sentinel.Views.Interfaces;
-
-#endregion
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
-    using System.Diagnostics;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
 
-    using Sentinel.Filters;
+    using Sentinel.Interfaces;
+    using Sentinel.Services;
+    using Sentinel.Views.Interfaces;
 
     /// <summary>
     /// Interaction logic for MultipleViewFrame.xaml
@@ -41,7 +19,7 @@ namespace Sentinel.Views.Gui
     {
         private readonly IUserPreferences preferences = ServiceLocator.Instance.Get<IUserPreferences>();
 
-        //private readonly ISearchHighlighter searchHighlighter;
+        // private readonly ISearchHighlighter searchHighlighter;
         private readonly IViewManager viewManager = ServiceLocator.Instance.Get<IViewManager>();
         private ILogger log;
         private string primaryTitle;
@@ -59,9 +37,8 @@ namespace Sentinel.Views.Gui
                 (preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
             }
 
-            //Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
-            //searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
-
+            // Filters = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
+            // searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
             SetupSplitter();
 
             DataContext = this;
@@ -73,7 +50,7 @@ namespace Sentinel.Views.Gui
 
         public ICommand Save { get; private set; }
 
-        //public IFilteringService<IFilter> Filters { get; private set; }
+        // public IFilteringService<IFilter> Filters { get; private set; }
         
         public ILogViewer PrimaryView
         {
@@ -81,6 +58,7 @@ namespace Sentinel.Views.Gui
             {
                 return primaryView;
             }
+
             set
             {
                 if (primaryView == value) return;
@@ -96,6 +74,7 @@ namespace Sentinel.Views.Gui
             {
                 return primaryTitle;
             }
+
             set
             {
                 if (primaryTitle == value) return;
@@ -111,6 +90,7 @@ namespace Sentinel.Views.Gui
             {
                 return secondaryTitle;
             }
+
             set
             {
                 if (secondaryTitle == value) return;
@@ -125,6 +105,7 @@ namespace Sentinel.Views.Gui
             {
                 return secondaryView;
             }
+
             set
             {
                 if (secondaryView == value) return;
@@ -141,33 +122,20 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        //public string Search
-        //{
-        //    get
-        //    {
-        //        Debug.Assert(searchHighlighter != null, "Should always have a search highlighter");
-        //        return searchHighlighter.Search;
-        //    }
-
-        //    set
-        //    {
-        //        searchHighlighter.Search = value;
-        //    }
-        //}
-
-        #region IWindowFrame Members
-
         public ILogger Log
         {
             get
             {
                 return log;
             }
+
             set
             {
-                if (log == value) return;
-                log = value;
-                OnPropertyChanged("Log");
+                if (log != value)
+                {
+                    log = value;
+                    OnPropertyChanged("Log");
+                }
             }
         }
 
@@ -180,6 +148,7 @@ namespace Sentinel.Views.Gui
                 PrimaryView.SetLogger(log);
                 PrimaryTitle = viewManager.Get(guid).Name;
             }
+
             if (viewIdentifiers != null && viewIdentifiers.Count() >= 2)
             {
                 string guid = viewIdentifiers.ElementAt(1);
@@ -188,13 +157,11 @@ namespace Sentinel.Views.Gui
                 SecondaryTitle = viewManager.Get(guid).Name;
             }
 
-            if ( viewIdentifiers != null && viewIdentifiers.Count()  ==1)
+            if (viewIdentifiers != null && viewIdentifiers.Count() == 1)
             {
                 CollapseSecondaryView();
             }
         }
-
-        #endregion
 
         ~MultipleViewFrame()
         {
@@ -229,8 +196,8 @@ namespace Sentinel.Views.Gui
                 Grid.SetColumnSpan(splitter, colSpan);
                 Grid.SetColumnSpan(second, colSpan);
 
-                splitter.Width = vertical ? Int32.MaxValue : 5;
-                splitter.Height = vertical ? 5 : Int32.MaxValue;
+                splitter.Width = vertical ? int.MaxValue : 5;
+                splitter.Height = vertical ? 5 : int.MaxValue;
                 splitter.HorizontalAlignment = vertical
                                                    ? HorizontalAlignment.Stretch
                                                    : HorizontalAlignment.Left;
@@ -260,21 +227,17 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        #region Implementation of INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
 
         private void CollapseSecondaryView()
         {

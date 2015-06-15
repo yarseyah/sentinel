@@ -1,32 +1,17 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Sentinel.Logs.Interfaces;
-using Sentinel.Support.Mvvm;
-
-#endregion
-
-namespace Sentinel.Logs
+﻿namespace Sentinel.Logs
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     using Sentinel.Interfaces;
+    using Sentinel.Logs.Interfaces;
+    using Sentinel.Support.Mvvm;
 
     public class LogManager : ViewModelBase, ILogManager
     {
         private readonly Dictionary<string, ILogger> loggers = new Dictionary<string, ILogger>();
-
-        #region ILogManager Members
 
         public ILogger Add(string logName)
         {
@@ -65,10 +50,6 @@ namespace Sentinel.Logs
             }
         }
 
-        #endregion
-
-        #region Implementation of IEnumerable
-
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
@@ -94,7 +75,5 @@ namespace Sentinel.Logs
         {
             return GetEnumerator();
         }
-
-        #endregion
     }
 }

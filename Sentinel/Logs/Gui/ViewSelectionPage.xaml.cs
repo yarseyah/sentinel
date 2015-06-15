@@ -1,20 +1,17 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls;
-using Sentinel.Services;
-using Sentinel.Views.Interfaces;
-using WpfExtras;
-
-#endregion
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows.Controls;
+
+    using Sentinel.Services;
+    using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for ViewSelectionPage.xaml
     /// </summary>
@@ -67,6 +64,7 @@ namespace Sentinel.Logs.Gui
             {
                 return horizontal;
             }
+
             set
             {
                 if (horizontal == value) return;
@@ -81,11 +79,14 @@ namespace Sentinel.Logs.Gui
             {
                 return vertical;
             }
+
             set
             {
-                if (vertical == value) return;
-                vertical = value;
-                OnPropertyChanged("Vertical");
+                if (vertical != value)
+                {
+                    vertical = value;
+                    OnPropertyChanged("Vertical");
+                }
             }
         }
 
@@ -95,11 +96,14 @@ namespace Sentinel.Logs.Gui
             {
                 return multipleViewsSupported;
             }
+
             private set
             {
-                if (multipleViewsSupported == value) return;
-                multipleViewsSupported = value;
-                OnPropertyChanged("MultipleViewsSupported");
+                if (multipleViewsSupported != value)
+                {
+                    multipleViewsSupported = value;
+                    OnPropertyChanged("MultipleViewsSupported");
+                }
             }
         }
 
@@ -109,11 +113,14 @@ namespace Sentinel.Logs.Gui
             {
                 return multipleView;
             }
+
             set
             {
-                if (multipleView == value) return;
-                multipleView = value;
-                OnPropertyChanged("MultipleView");
+                if (multipleView != value)
+                {
+                    multipleView = value;
+                    OnPropertyChanged("MultipleView");
+                }
             }
         }
 
@@ -123,11 +130,14 @@ namespace Sentinel.Logs.Gui
             {
                 return singleView;
             }
+
             set
             {
-                if (singleView == value) return;
-                singleView = value;
-                OnPropertyChanged("SingleView");
+                if (singleView != value)
+                {
+                    singleView = value;
+                    OnPropertyChanged("SingleView");
+                }
             }
         }
 
@@ -137,11 +147,14 @@ namespace Sentinel.Logs.Gui
             {
                 return registeredViews;
             }
+
             private set
             {
-                if (registeredViews == value) return;
-                registeredViews = value;
-                OnPropertyChanged("RegisteredViews");
+                if (registeredViews != value)
+                {
+                    registeredViews = value;
+                    OnPropertyChanged("RegisteredViews");
+                }
             }
         }
 
@@ -151,11 +164,14 @@ namespace Sentinel.Logs.Gui
             {
                 return primaryIndex;
             }
+
             set
             {
-                if (primaryIndex == value) return;
-                primaryIndex = value;
-                OnPropertyChanged("PrimaryIndex");
+                if (primaryIndex != value)
+                {
+                    primaryIndex = value;
+                    OnPropertyChanged("PrimaryIndex");
+                }
             }
         }
 
@@ -165,15 +181,16 @@ namespace Sentinel.Logs.Gui
             {
                 return secondaryIndex;
             }
+
             set
             {
-                if (secondaryIndex == value) return;
-                secondaryIndex = value;
-                OnPropertyChanged("SecondaryIndex");
+                if (secondaryIndex != value)
+                {
+                    secondaryIndex = value;
+                    OnPropertyChanged("SecondaryIndex");
+                }
             }
         }
-
-        #region Implementation of IWizardPage
 
         public string Title
         {
@@ -247,29 +264,24 @@ namespace Sentinel.Logs.Gui
             return saveData;
         }
 
-        #endregion
-
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Horizontal")
+            switch (e.PropertyName)
             {
-                Vertical = !Horizontal;
-            }
-            else if (e.PropertyName == "Vertical")
-            {
-                Horizontal = !Vertical;
-            }
-            else if (e.PropertyName == "SingleView")
-            {
-                MultipleView = !SingleView;
-            }
-            else if (e.PropertyName == "MultipleView")
-            {
-                SingleView = !MultipleView;
+                case "Horizontal":
+                    Vertical = !Horizontal;
+                    break;
+                case "Vertical":
+                    Horizontal = !Vertical;
+                    break;
+                case "SingleView":
+                    MultipleView = !SingleView;
+                    break;
+                case "MultipleView":
+                    SingleView = !MultipleView;
+                    break;
             }
         }
-
-        #region Implementation of INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -278,11 +290,9 @@ namespace Sentinel.Logs.Gui
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
     }
 }

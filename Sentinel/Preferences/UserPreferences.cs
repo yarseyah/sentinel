@@ -1,11 +1,4 @@
-﻿#region License
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-#endregion
-
-namespace Sentinel.Preferences
+﻿namespace Sentinel.Preferences
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
@@ -55,8 +48,6 @@ namespace Sentinel.Preferences
         private bool useStackedLayout = true;
 
         private bool useTighterRows;
-
-        #region IUserPreferences Members
 
         /// <summary>
         /// Gets the name of the current Windows theme.
@@ -177,7 +168,7 @@ namespace Sentinel.Preferences
                 if (showExceptionColumn != value)
                 {
                     showExceptionColumn = value;
-                    this.OnPropertyChanged("ShowExceptionColumn");
+                    OnPropertyChanged("ShowExceptionColumn");
                 }
             }
         }
@@ -262,7 +253,5 @@ namespace Sentinel.Preferences
                 }
             }
         }
-
-        #endregion
     }
 }

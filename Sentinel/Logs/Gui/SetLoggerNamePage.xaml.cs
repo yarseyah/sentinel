@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls;
-using Sentinel.Logs.Interfaces;
-using WpfExtras;
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows.Controls;
+
+    using Sentinel.Logs.Interfaces;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for SetLoggerNamePage.xaml
     /// </summary>
@@ -40,8 +42,6 @@ namespace Sentinel.Logs.Gui
             }
         }
 
-        #region Implementation of INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -53,8 +53,6 @@ namespace Sentinel.Logs.Gui
                 handler(this, e);
             }
         }
-
-        #endregion
 
         public string LogName
         {
@@ -69,8 +67,6 @@ namespace Sentinel.Logs.Gui
                 OnPropertyChanged("LogName");
             }
         }
-
-        #region Implementation of IWizardPage
 
         public string Title { get { return "Log Name"; } }
 
@@ -138,10 +134,6 @@ namespace Sentinel.Logs.Gui
             OnPropertyChanged("Children");
         }
 
-        #endregion
-
-        #region Implementation of IDataErrorInfo
-
         /// <summary>
         /// Gets the error message for the property with the given name.
         /// </summary>
@@ -183,8 +175,6 @@ namespace Sentinel.Logs.Gui
                 return this["LogName"];
             }
         }
-
-        #endregion
 
         private void PageLoaded(object sender, System.Windows.RoutedEventArgs e)
         {

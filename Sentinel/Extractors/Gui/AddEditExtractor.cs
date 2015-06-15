@@ -1,6 +1,5 @@
 ﻿namespace Sentinel.Extractors.Gui
 {
-    using System;
     using System.Windows;
     using System.Windows.Input;
 
@@ -53,6 +52,7 @@
             {
                 return mode;
             }
+
             set
             {
                 mode = value;

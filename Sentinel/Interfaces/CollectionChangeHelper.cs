@@ -1,42 +1,24 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-
-#endregion
-
-namespace Sentinel.Interfaces
+﻿namespace Sentinel.Interfaces
 {
-
-    #region Using directives
-
-    #endregion
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Diagnostics;
 
     public delegate string GetFriendlyNameDelegate<T>(T obj);
 
     public class CollectionChangeHelper<T>
     {
-        public string ManagerName { get; set; }
-
         public event GetFriendlyNameDelegate<T> NameLookup;
 
         public event PropertyChangedEventHandler OnPropertyChanged;
+
+        public string ManagerName { get; set; }
 
         public void AttachDetach(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (object newItem in e.NewItems)
+                foreach (var newItem in e.NewItems)
                 {
                     Debug.Assert(newItem != null, "New item to insert can not be null.");
                     Debug.Assert(newItem is T, "New item to insert must be a " + typeof(T));

@@ -1,36 +1,20 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using Sentinel.Highlighters.Interfaces;
-using Sentinel.Interfaces;
-
-#endregion
-
 namespace Sentinel.Highlighters.Gui
 {
-    //[Export(typeof(IEditHighlighterService))]
+    using System.Diagnostics;
+    using System.Windows;
+    using System.Windows.Media;
+
+    using Sentinel.Highlighters.Interfaces;
+
+    // [Export(typeof(IEditHighlighterService))]
     public class EditHighlighterService : IEditHighlighterService
     {
-        #region IEditHighlighterService Members
-
         public void Edit(IHighlighter highlighter)
         {
             Debug.Assert(highlighter != null, "Highligher must be supplied for editing.");
 
-            AddEditHighlighterWindow window = new AddEditHighlighterWindow();
-            AddEditHighlighter data = new AddEditHighlighter(window, false);
+            var window = new AddEditHighlighterWindow();
+            var data = new AddEditHighlighter(window, false);
             window.DataContext = data;
             window.Owner = Application.Current.MainWindow;
 
@@ -61,7 +45,7 @@ namespace Sentinel.Highlighters.Gui
                 data.ForegroundColourIndex = 0;
             }
 
-            bool? dialogResult = window.ShowDialog();
+            var dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)
             {
@@ -86,7 +70,5 @@ namespace Sentinel.Highlighters.Gui
                 }
             }
         }
-
-        #endregion
     }
 }

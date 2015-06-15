@@ -1,16 +1,6 @@
-#region License
-
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-
-#endregion
-
 namespace Sentinel.Filters
 {
+    using System;
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
@@ -180,14 +170,22 @@ namespace Sentinel.Filters
         {
             Debug.Assert(logEntry != null, "LogEntry can not be null.");
 
-            if (string.IsNullOrWhiteSpace(Pattern)) return false;
+            if (logEntry == null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Pattern))
+            {
+                return false;
+            }
 
             string target;
 
             switch (Field)
             {
                 case LogEntryField.None:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Type:
                     target = logEntry.Type;
@@ -196,22 +194,22 @@ namespace Sentinel.Filters
                     target = logEntry.System;
                     break;
                 case LogEntryField.Classification:
-                    target = "";
+                    target = string.Empty;
                     break;
                 case LogEntryField.Thread:
                     target = logEntry.Thread;
                     break;
-                //case LogEntryField.Source:
-                //    target = logEntry.Source;
-                //    break;
+                case LogEntryField.Source:
+                    target = logEntry.Source;
+                    break;
                 case LogEntryField.Description:
                     target = logEntry.Description;
                     break;
-                //case LogEntryField.Host:
-                //    target = "";
-                //    break;
+                case LogEntryField.Host:
+                    target = string.Empty;
+                    break;
                 default:
-                    target = "";
+                    target = string.Empty;
                     break;
             }
 

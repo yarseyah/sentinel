@@ -1,43 +1,31 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using Microsoft.Win32;
-using Sentinel.Images.Interfaces;
-using Sentinel.Support.Mvvm;
-
-#endregion
-
 namespace Sentinel.Images
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Input;
+    using System.Windows.Media.Imaging;
+
+    using Microsoft.Win32;
+
+    using Sentinel.Images.Interfaces;
+    using Sentinel.Support.Mvvm;
+
     public class AddEditTypeImageViewModel
         : ViewModelBase, IDataErrorInfo
     {
         private readonly Dictionary<ImageError, string> imageErrorMessages =
             new Dictionary<ImageError, string>
                 {
-                    {ImageError.NotSpecified, "No image selected."},
-                    {ImageError.NotFound, "Image not found."},
+                    {ImageError.NotSpecified, "No image selected."}, 
+                    {ImageError.NotFound, "Image not found."}, 
                     {
-                        ImageError.TooLarge,
+                        ImageError.TooLarge, 
                         "Image must be less than 128x128. [Note: images are most often used at 64x64]"
-                        },
-                    {ImageError.Unknown, "Problem with reading image."},
+                        }, 
+                    {ImageError.Unknown, "Problem with reading image."}, 
                     {ImageError.NoError, null}
                 };
 
@@ -46,8 +34,8 @@ namespace Sentinel.Images
         private readonly Dictionary<TypeError, string> typeErrorMessages =
             new Dictionary<TypeError, string>
                 {
-                    {TypeError.NotSpecified, "Type name must be specified."},
-                    {TypeError.Duplicate, "There is already an entry for this type name and size combination."},
+                    {TypeError.NotSpecified, "Type name must be specified."}, 
+                    {TypeError.Duplicate, "There is already an entry for this type name and size combination."}, 
                     {TypeError.NoError, null}
                 };
 
@@ -74,8 +62,9 @@ namespace Sentinel.Images
             this.window = window;
             if (window != null)
             {
-                window.Title = String.Format("{0} Image", (isAddMode ? "Edit" : "Add"));
+                window.Title = string.Format("{0} Image", isAddMode ? "Edit" : "Add");
             }
+
             this.window.DataContext = this;
 
             _isAddMode = isAddMode;
@@ -202,6 +191,7 @@ namespace Sentinel.Images
             {
                 return _isAddMode;
             }
+
             set
             {
                 if (_isAddMode != value)
@@ -211,8 +201,6 @@ namespace Sentinel.Images
                 }
             }
         }
-
-        #region IDataErrorInfo Members
 
         /// <summary>
         /// Gets or sets an error message indicating what is wrong with this object.
@@ -257,7 +245,7 @@ namespace Sentinel.Images
                     var oldTypeError = typeError;
 
                     // TODO: need to be aware of the different qualities of images, using best available
-                    ImageQuality selectedSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size);
+                    var selectedSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size);
                     if (!string.IsNullOrEmpty(Type)
                         && ImageService != null
                         && ImageService.Get(Type, selectedSize, false, false) != null)
@@ -285,17 +273,15 @@ namespace Sentinel.Images
             }
         }
 
-        #endregion
-
         private void BrowseForImageFiles(object obj)
         {
             var openFileDialog = new OpenFileDialog
                 {
-                    Title = "Select image",
-                    ValidateNames = true,
-                    CheckFileExists = true,
-                    Multiselect = false,
-                    Filter = "Images files|*.png;*.bmp|All Files|*.*",
+                    Title = "Select image", 
+                    ValidateNames = true, 
+                    CheckFileExists = true, 
+                    Multiselect = false, 
+                    Filter = "Images files|*.png;*.bmp|All Files|*.*", 
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
                 };
 
@@ -304,13 +290,11 @@ namespace Sentinel.Images
 
             if (dialogResult == true)
             {
-
-                //LoadImageFromFileName(openFileDialog.FileName);
+                // LoadImageFromFileName(openFileDialog.FileName);
 
                 // In all cases, keep the filename entered or it is confusing for the user.
                 // Plus, we need to raise the PropertyChanged event for the FileName property.
                 FileName = openFileDialog.FileName;
-                
             }
         }
 
@@ -331,8 +315,8 @@ namespace Sentinel.Images
 
                     Image = i;
 
-                    // Some santity checking.
-                    this.imageError = i.Width <= 128 && i.Height <= 128 ? ImageError.NoError : ImageError.TooLarge;
+                    // Some sanity checking.
+                    imageError = i.Width <= 128 && i.Height <= 128 ? ImageError.NoError : ImageError.TooLarge;
                 }
                 else
                 {
@@ -374,8 +358,6 @@ namespace Sentinel.Images
             }
         }
 
-        #region Nested type: ImageError
-
         /// <summary>
         /// Error messages corresponding to the image field.
         /// </summary>
@@ -384,32 +366,28 @@ namespace Sentinel.Images
             /// <summary>
             /// No image yet specified.
             /// </summary>
-            NotSpecified,
+            NotSpecified, 
 
             /// <summary>
             /// Image can not be found.
             /// </summary>
-            NotFound,
+            NotFound, 
 
             /// <summary>
             /// Image is too large for the purposes.
             /// </summary>
-            TooLarge,
+            TooLarge, 
 
             /// <summary>
             /// Some unknown error.
             /// </summary>
-            Unknown,
+            Unknown, 
 
             /// <summary>
             /// No error condition encountered.
             /// </summary>
             NoError
         }
-
-        #endregion
-
-        #region Nested type: TypeError
 
         /// <summary>
         /// Errors corresponding to the data validation of the Type field.
@@ -419,19 +397,17 @@ namespace Sentinel.Images
             /// <summary>
             /// Type name has not been specified.
             /// </summary>
-            NotSpecified,
+            NotSpecified, 
 
             /// <summary>
             /// Type name duplicates another.
             /// </summary>
-            Duplicate,
+            Duplicate, 
 
             /// <summary>
             /// No error encountered.
             /// </summary>
             NoError
         }
-
-        #endregion
     }
 }

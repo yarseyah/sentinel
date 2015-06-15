@@ -1,19 +1,7 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
 namespace Sentinel.Interfaces
 {
-    #region Using directives
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-
-    #endregion
 
     public interface IUserPreferences
     {

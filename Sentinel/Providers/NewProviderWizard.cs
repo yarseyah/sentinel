@@ -1,14 +1,19 @@
-﻿using System;
-using System.Windows;
-using Sentinel.Providers.Interfaces;
-using WpfExtras;
-
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
+    using System;
+    using System.Windows;
+
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Providers.Interfaces;
+
+    using WpfExtras;
 
     public class NewProviderWizard : INewProviderWizard
     {
+        public IProviderInfo Provider { get; private set; }
+
+        public IProviderSettings Settings { get; private set; }
+
         public bool Display(Window parent)
         {
             IProviderSettings settings = new ProviderSettings();
@@ -39,9 +44,5 @@ namespace Sentinel.Providers
 
             return dialogResult ?? false;
         }
-
-        public IProviderInfo Provider { get; private set; }
-
-        public IProviderSettings Settings { get; private set; }
     }
 }

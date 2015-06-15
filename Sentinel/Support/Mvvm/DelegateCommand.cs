@@ -1,21 +1,8 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System;
-using System.Windows.Input;
-
-#endregion
-
-namespace Sentinel.Support.Mvvm
+﻿namespace Sentinel.Support.Mvvm
 {
+    using System;
+    using System.Windows.Input;
+
     public class DelegateCommand : ICommand
     {
         private readonly Predicate<object> canExecute;
@@ -32,8 +19,6 @@ namespace Sentinel.Support.Mvvm
             this.executeAction = executeAction;
             this.canExecute = canExecute;
         }
-
-        #region ICommand Members
 
         public event EventHandler CanExecuteChanged
         {
@@ -57,7 +42,5 @@ namespace Sentinel.Support.Mvvm
         {
             executeAction.Invoke(parameter);
         }
-
-        #endregion
     }
 }

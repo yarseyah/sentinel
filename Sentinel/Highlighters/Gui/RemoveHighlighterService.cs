@@ -1,14 +1,4 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-
-namespace Sentinel.Highlighters.Gui
+﻿namespace Sentinel.Highlighters.Gui
 {
     using System.Windows;
 
@@ -17,8 +7,6 @@ namespace Sentinel.Highlighters.Gui
 
     public class RemoveHighlighterService : IRemoveHighlighterService
     {
-        #region IRemoveHighlighterService Members
-
         public void Remove(IHighlighter highlighter)
         {
             var service = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
@@ -44,7 +32,5 @@ namespace Sentinel.Highlighters.Gui
                 service.Highlighters.Remove(highlighter);
             }
         }
-
-        #endregion
     }
 }

@@ -217,7 +217,6 @@
     <Compile Include="Interfaces\LinqHelpers.cs" />
     <Compile Include="Interfaces\LogEntry.cs" />
     <Compile Include="Interfaces\LogEntryField.cs" />
-    <Compile Include="Interfaces\LogEntryFieldHelper.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
     <Compile Include="Logs\Interfaces\ILogFileExporter.cs" />
     <Compile Include="Logs\Interfaces\ILogManager.cs" />
@@ -465,7 +464,6 @@
   <ItemGroup>
     <Compile Include="Logger\ILogViewerDetails.cs" />
     <Compile Include="Logger\IUdpLogViewer.cs" />
-    <Compile Include="Logger\LogEntryFieldHelper.cs" />
     <Compile Include="Controls\ImageTypesControl.xaml.cs">
       <DependentUpon>ImageTypesControl.xaml</DependentUpon>
     </Compile>

@@ -1,11 +1,4 @@
-﻿#region License
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-#endregion
-
-namespace Sentinel.Highlighters
+﻿namespace Sentinel.Highlighters
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -67,8 +60,6 @@ namespace Sentinel.Highlighters
             }
         }
 
-        #region IHighlightingService Members
-
         /// <summary>
         /// Gets the <c>ICommand</c> providing the functionality for the adding of a new highlighter.
         /// </summary>
@@ -113,8 +104,6 @@ namespace Sentinel.Highlighters
         {
             return Highlighters.Where(h => h.IsMatch(logEntry)).Select(h => h.Style).FirstOrDefault();
         }
-
-        #endregion
 
         public void Initialise()
         {

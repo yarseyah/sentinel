@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Controls;
-using WpfExtras;
-
-namespace Sentinel.Logs.Gui
+﻿namespace Sentinel.Logs.Gui
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Controls;
+
+    using WpfExtras;
+
     /// <summary>
     /// Interaction logic for AddNewLoggerPage.xaml
     /// </summary>
@@ -28,7 +29,7 @@ namespace Sentinel.Logs.Gui
             Description = "Information about how Sentinel works with loggers, providers and views";
         }
 
-        #region Implementation of IWizardPage
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Title
         {
@@ -36,11 +37,14 @@ namespace Sentinel.Logs.Gui
             {
                 return title;
             }
+
             private set
             {
-                if (title == value) return;
-                title = value;
-                OnPropertyChanged("Title");
+                if (title != value)
+                {
+                    title = value;
+                    OnPropertyChanged("Title");
+                }
             }
         }
 
@@ -50,11 +54,14 @@ namespace Sentinel.Logs.Gui
             {
                 return description;
             }
+
             private set
             {
-                if (description == value) return;
-                description = value;
-                OnPropertyChanged("Description");
+                if (description != value)
+                {
+                    description = value;
+                    OnPropertyChanged("Description");
+                }
             }
         }
 
@@ -99,26 +106,18 @@ namespace Sentinel.Logs.Gui
             return saveData;
         }
 
-        #endregion
-
-        #region Implementation of INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
         ///   Raises this object's PropertyChanged event.
         /// </summary>
         /// <param name = "propertyName">The property that has a new value.</param>
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
     }
 }

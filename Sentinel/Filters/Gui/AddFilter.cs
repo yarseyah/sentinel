@@ -1,30 +1,13 @@
-#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-#region Using directives
-
-using System.Linq;
-using System.Windows;
-using Sentinel.Filters.Interfaces;
-using Sentinel.Interfaces;
-using Sentinel.Services;
-using Sentinel.Support.Converters;
-
-#endregion
-
 namespace Sentinel.Filters.Gui
 {
+    using System.Windows;
+
+    using Sentinel.Filters.Interfaces;
+    using Sentinel.Services;
+
     public class AddFilter
         : IAddFilterService
     {
-        #region IAddFilterService Members
-
         public void Add()
         {
             AddEditFilterWindow filterWindow = new AddEditFilterWindow();
@@ -48,16 +31,14 @@ namespace Sentinel.Filters.Gui
             }
         }
 
-        #endregion
-
         private static Filter Construct(AddEditFilter data)
         {
             return new Filter
             {
-                Name = data.Name,
-                Field = data.Field,
-                Mode = data.Mode,
-                Pattern = data.Pattern,
+                Name = data.Name, 
+                Field = data.Field, 
+                Mode = data.Mode, 
+                Pattern = data.Pattern, 
                 Enabled = true
             };
         }

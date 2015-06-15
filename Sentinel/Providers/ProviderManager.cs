@@ -36,6 +36,7 @@
             throw new NotImplementedException("Dynamic registration is not yet supported");
         }
 
+        /// <exception cref="ArgumentException">Settings can not be null</exception>
         public ILogProvider Create(Guid providerGuid, IProviderSettings settings)
         {
             if (settings == null)
