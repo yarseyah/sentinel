@@ -462,32 +462,74 @@
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
-            var filePath = commandLine.FirstOrDefault();
-            if (File.Exists(filePath) && Path.GetExtension(filePath).ToUpper() == ".SNTL")
+            if (commandLine == null)
             {
-                var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
+                throw new ArgumentNullException("commandLine");
+            }
 
-                RemoveBindingReferences();
+            var commandLineArguments = commandLine as string[] ?? commandLine.ToArray();
+            if (!commandLineArguments.Any())
+            {
+                throw new ArgumentException("Collection must have at least one element", "commandLine");
+            }
 
-                sessionManager.LoadSession(filePath);
+            var invokedVerb = String.Empty;
+            object invokedVerbInstance;
 
-                BindViewToViewModel();
-
-                if (!sessionManager.ProviderSettings.Any())
+            var options = new Options();
+            if (!CommandLine.Parser.Default.ParseArguments(
+                commandLineArguments.ToArray(),
+                options,
+                (v, s) =>
                 {
-                    return;
-                }
+                    invokedVerb = v;
+                    invokedVerbInstance = s;
+                }))
+            {
+                // TODO: work out what went wrong
+            }
 
-                var frame = ServiceLocator.Instance.Get<IWindowFrame>();
-
-                // Add to the tab control.
-                var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-                tabControl.Items.Add(newTab);
-                tabControl.SelectedItem = newTab;
+            if (invokedVerb == "nlog")
+            {
+                // TODO: handle command line request for nlog listener (defaults to UDP on 9999, but can be overridden)
+            }
+            else if (invokedVerb == "log4net")
+            {
+                // TODO: handle command line request for log4net listener (defaults to UDP on 9998, but can be overridden)
             }
             else
             {
-                MessageBox.Show("File does not exist or is not a Sentinel session file.", "Sentinel", MessageBoxButton.OK, MessageBoxImage.Error);
+                var filePath = commandLineArguments.FirstOrDefault();
+                if (File.Exists(filePath) && Path.GetExtension(filePath).ToUpper() == ".SNTL")
+                {
+                    var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
+
+                    RemoveBindingReferences();
+
+                    sessionManager.LoadSession(filePath);
+
+                    BindViewToViewModel();
+
+                    if (!sessionManager.ProviderSettings.Any())
+                    {
+                        return;
+                    }
+
+                    var frame = ServiceLocator.Instance.Get<IWindowFrame>();
+
+                    // Add to the tab control.
+                    var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
+                    tabControl.Items.Add(newTab);
+                    tabControl.SelectedItem = newTab;
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "File does not exist or is not a Sentinel session file.",
+                        "Sentinel",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             }
         }
 
