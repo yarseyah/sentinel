@@ -7,8 +7,6 @@ namespace WpfExtras.Converters
 
     public class CollapseIfZeroConverter : IValueConverter
     {
-        #region Implementation of IValueConverter
-
         /// <summary>
         /// Converts a value. 
         /// </summary>
@@ -32,7 +30,5 @@ namespace WpfExtras.Converters
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

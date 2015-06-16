@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Controls;
-
-namespace WpfExtras
+﻿namespace WpfExtras
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Controls;
+
     public interface IWizardPage  
         : INotifyPropertyChanged
     {

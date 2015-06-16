@@ -6,8 +6,6 @@
 
     public class BooleanInvertingValueConverter : IValueConverter
     {
-        #region Implementation of IValueConverter
-
         /// <summary>
         /// Converts a value. 
         /// </summary>
@@ -43,7 +41,5 @@
             var original = (bool)value;
             return !original;
         }
-
-        #endregion
     }
 }

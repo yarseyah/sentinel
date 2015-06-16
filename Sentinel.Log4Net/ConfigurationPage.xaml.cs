@@ -1,6 +1,5 @@
 ﻿namespace Sentinel.Log4Net
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -120,11 +119,11 @@
         {
             Debug.Assert(saveData != null, "Expecting the save-data component to have details from the previous pages.");
             Debug.Assert(
-                saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
+                saveData is IProviderSettings,
+                "Expecting the save-data component to be of an IProviderSettings type.");
 
             var providerInfo = (IProviderSettings)saveData;
-            return new UdpAppenderSettings(providerInfo)
-                { Port = Port };
+            return new UdpAppenderSettings(providerInfo) { Port = Port };
         }
 
         protected void OnPropertyChanged(string propertyName)

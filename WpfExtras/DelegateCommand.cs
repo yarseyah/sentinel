@@ -1,26 +1,15 @@
-﻿using System;
-using System.Windows.Input;
-
-namespace WpfExtras
+﻿namespace WpfExtras
 {
+    using System;
+    using System.Windows.Input;
+
     public class DelegateCommand : ICommand
     {
-        private readonly Predicate<object> canExecute;
-
-        private readonly Action<object> executeAction;
-
-        public DelegateCommand(Action<object> executeAction)
-            : this(executeAction, null)
+        public DelegateCommand(Action<object> executeAction, Predicate<object> canExecute = null)
         {
+            ExecuteAction = executeAction;
+            CanExecutePredicate = canExecute;
         }
-
-        public DelegateCommand(Action<object> executeAction, Predicate<object> canExecute)
-        {
-            this.executeAction = executeAction;
-            this.canExecute = canExecute;
-        }
-
-        #region ICommand Members
 
         public event EventHandler CanExecuteChanged
         {
@@ -35,16 +24,20 @@ namespace WpfExtras
             }
         }
 
+        private Predicate<object> CanExecutePredicate { get; set; }
+
+        private Action<object> ExecuteAction { get; set; }
+
+        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public bool CanExecute(object parameter)
         {
-            return canExecute == null ? true : canExecute.Invoke(parameter);
+            return CanExecutePredicate == null || CanExecutePredicate.Invoke(parameter);
         }
 
+        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public void Execute(object parameter)
         {
-            executeAction.Invoke(parameter);
+            ExecuteAction.Invoke(parameter);
         }
-
-        #endregion
     }
 }

@@ -50,11 +50,7 @@
             AddChild(new MessageFormatPage());
         }
 
-        public ICommand Browse
-        {
-            get;
-            private set;
-        }
+        public ICommand Browse { get; private set; }
 
         public string FileName
         {
@@ -62,11 +58,14 @@
             {
                 return fileName;
             }
+
             set
             {
-                if (fileName == value) return;
-                fileName = value;
-                OnPropertyChanged("FileName");
+                if (fileName != value)
+                {
+                    fileName = value;
+                    OnPropertyChanged("FileName");
+                }
             }
         }
 
@@ -78,10 +77,12 @@
             }
             set
             {
-                if (warnFileNotFound == value) return;
-                Trace.WriteLine("Setting WarnFileNotFound to " + value);
-                warnFileNotFound = value;
-                OnPropertyChanged("WarnFileNotFound");
+                if (warnFileNotFound != value)
+                {
+                    Trace.WriteLine("Setting WarnFileNotFound to " + value);
+                    warnFileNotFound = value;
+                    OnPropertyChanged("WarnFileNotFound");
+                }
             }
         }
 
@@ -94,7 +95,7 @@
 
             set
             {
-                if (refresh != value)
+                if (Math.Abs(refresh - value) > 0.01)
                 {
                     refresh = value;
                     OnPropertyChanged("Refresh");
@@ -140,10 +141,10 @@
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
@@ -178,11 +179,14 @@
             {
                 return isValid;
             }
+
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
             }
         }
 
@@ -211,15 +215,15 @@
             Debug.Assert(saveData != null, "Expecting a non-null instance of a class to save settings into");
             Debug.Assert(saveData is IProviderSettings, "Expecting save object to be an IProviderSettings");
 
-            IProviderSettings settings = saveData as IProviderSettings;
+            var settings = saveData as IProviderSettings;
 
-            if ( settings != null )
+            if (settings != null)
             {
-                IFileMonitoringProviderSettings fileSettings = settings as IFileMonitoringProviderSettings;
+                var fileSettings = settings as IFileMonitoringProviderSettings;
 
-                if ( fileSettings != null )
+                if (fileSettings != null)
                 {
-                    fileSettings.Update(fileName, (int) Refresh, LoadExisting);
+                    fileSettings.Update(fileName, (int)Refresh, LoadExisting);
                     return fileSettings;
                 }
 
@@ -227,13 +231,13 @@
                     settings.Info,
                     settings.Name,
                     fileName,
-                    (int) Refresh,
+                    (int)Refresh,
                     LoadExisting);
             }
 
             return saveData;
         }
-        
+
         /// <summary>
         ///   Gets the error message for the property with the given name.
         /// </summary>
@@ -302,27 +306,29 @@
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "FileName")
+            if (e.PropertyName != "FileName")
             {
-                try
-                {
-                    FileInfo fi = new FileInfo(FileName);
-                    WarnFileNotFound = !fi.Exists;
-                    IsValid = this["FileName"] == null;
-                }
-                catch (Exception)
-                {
-                    // For exceptions, let the validation handler show the error.
-                    WarnFileNotFound = false;
-                    IsValid = false;
-                }
+                return;
+            }
+
+            try
+            {
+                FileInfo fi = new FileInfo(FileName);
+                WarnFileNotFound = !fi.Exists;
+                IsValid = this["FileName"] == null;
+            }
+            catch (Exception)
+            {
+                // For exceptions, let the validation handler show the error.
+                WarnFileNotFound = false;
+                IsValid = false;
             }
         }
 
         private void BrowseForFile(object obj)
         {
             // Display the File Open Dialog.
-            OpenFileDialog dlg =
+            var dlg =
                 new OpenFileDialog
                     {
                         FileName = "logFile",
@@ -334,7 +340,7 @@
                             + "|All files|*.*"
                     };
 
-            bool? result = dlg.ShowDialog();
+            var result = dlg.ShowDialog();
             if (result == true)
             {
                 FileName = dlg.FileName;

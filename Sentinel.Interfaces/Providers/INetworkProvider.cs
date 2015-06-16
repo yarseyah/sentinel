@@ -1,6 +1,7 @@
-﻿using System.Runtime.Serialization;
-namespace Sentinel.Interfaces.Providers
+﻿namespace Sentinel.Interfaces.Providers
 {
+    using System.Runtime.Serialization;
+
     public interface INetworkProvider : ILogProvider
     {
         [DataMember]

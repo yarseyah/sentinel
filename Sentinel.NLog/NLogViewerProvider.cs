@@ -127,7 +127,7 @@
                     {
                         var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
-                        listener.SetRecieveTimeout(1000);
+                        listener.SetReceiveTimeout(1000);
 
                         try
                         {
@@ -228,7 +228,7 @@
             // Establish whether a sub-system seems to be defined.
             string description = record.Element(log4j + "message").Value;
 
-            string classification = String.Empty;
+            string classification = string.Empty;
             string system = record.Attribute("logger").Value;
             string type = record.Attribute("level").Value;
             string host = "???";
@@ -242,9 +242,7 @@
                 }
             }
 
-            // description = ClassifyMessage(description, ref system, ref classification, ref type);
-
-            DateTime date = Log4jDateBase + TimeSpan.FromMilliseconds(Double.Parse(record.Attribute("timestamp").Value));
+            var date = Log4jDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
 
             var entry = new LogEntry
                             {

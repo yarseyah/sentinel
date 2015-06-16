@@ -1,15 +1,11 @@
-﻿#region Using directives
-
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-
-#endregion
-
-namespace WpfExtras
+﻿namespace WpfExtras
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Linq;
+
     public class PageNavigationTreeEntry : INotifyPropertyChanged
     {
         private readonly ObservableCollection<PageNavigationTreeEntry> children;
@@ -43,14 +39,16 @@ namespace WpfExtras
             {
                 return isCurrent;
             }
+
             private set
             {
-                if (isCurrent == value) return;
-                isCurrent = value;
-                OnPropertyChanged("IsCurrent");
+                if (isCurrent != value)
+                {
+                    isCurrent = value;
+                    OnPropertyChanged("IsCurrent");
+                }
             }
         }
-
 
         public IWizardPage Page { get; private set; }
 
@@ -65,7 +63,7 @@ namespace WpfExtras
 
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
@@ -83,19 +81,16 @@ namespace WpfExtras
                     children.Add(new PageNavigationTreeEntry(newItem as IWizardPage));
                 }
             }
-            else if (e.Action
-                     == NotifyCollectionChangedAction.Remove)
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                List<PageNavigationTreeEntry> itemsToRemove = Children
-                    .Join(e.OldItems.OfType<IWizardPage>(), n => n.Page, p => p, (n, p) => n)
-                    .ToList();
+                var itemsToRemove =
+                    Children.Join(e.OldItems.OfType<IWizardPage>(), n => n.Page, p => p, (n, p) => n).ToList();
                 foreach (var c in itemsToRemove)
                 {
                     children.Remove(c);
                 }
             }
-            else if (e.Action
-                     == NotifyCollectionChangedAction.Reset)
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 children.Clear();
             }

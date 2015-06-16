@@ -1,13 +1,12 @@
 ﻿namespace Sentinel.NLog
 {
-    using Sentinel.Interfaces.Providers;
     using System.Runtime.Serialization;
+
+    using Sentinel.Interfaces.Providers;
 
     [DataContract]
     public class ProviderSettings : IProviderSettings
     {
-        #region Implementation of IProviderSettings
-
         public string Name { get; set; }
 
         public virtual string Summary
@@ -22,7 +21,5 @@
         /// Reference back to the provider this setting is appropriate to.
         /// </summary>
         public IProviderInfo Info { get; set; }
-
-        #endregion
     }
 }

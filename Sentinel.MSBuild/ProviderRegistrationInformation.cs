@@ -1,7 +1,6 @@
 namespace Sentinel.MSBuild
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
 
     using Sentinel.Interfaces.Providers;
 

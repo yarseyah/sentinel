@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿namespace WpfExtras
+{
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
 
-namespace WpfExtras
-{    
     /// <summary>
     ///   Interaction logic for Wizard.xaml
     /// </summary>
@@ -68,6 +68,7 @@ namespace WpfExtras
             {
                 return (Control) GetValue(CurrentPageContentProperty);
             }
+
             set
             {
                 SetValue(CurrentPageContentProperty, value);
@@ -94,6 +95,7 @@ namespace WpfExtras
             {
                 return (bool) GetValue(ShowNavigationTreeProperty);
             }
+
             set
             {
                 SetValue(ShowNavigationTreeProperty, value);
@@ -106,6 +108,7 @@ namespace WpfExtras
             {
                 return (INotifyPropertyChanged) GetValue(ViewModelProperty);
             }
+
             set
             {
                 SetValue(ViewModelProperty, value);
@@ -365,10 +368,10 @@ namespace WpfExtras
             /// <param name = "propertyName">The property that has a new value.</param>
             private void OnPropertyChanged(string propertyName)
             {
-                PropertyChangedEventHandler handler = PropertyChanged;
+                var handler = PropertyChanged;
                 if (handler != null)
                 {
-                    PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                    var e = new PropertyChangedEventArgs(propertyName);
                     handler(this, e);
                 }
             }

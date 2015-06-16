@@ -59,7 +59,6 @@
     <Compile Include="Wizard.xaml.cs">
       <DependentUpon>Wizard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WizardPageControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Wizard.xaml">

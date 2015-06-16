@@ -28,12 +28,12 @@
         public IWizardPage Last { get; private set; }
 
         /// <summary>
-        /// Node immedately after found item.
+        /// Node immediately after found item.
         /// </summary>
         public IWizardPage Next { get; private set; }
 
         /// <summary>
-        /// Node immedately before found item.
+        /// Node immediately before found item.
         /// </summary>
         public IWizardPage Previous
         {
@@ -87,7 +87,7 @@
                 }
             }
 
-            foreach (IWizardPage child in node.Children)
+            foreach (var child in node.Children)
             {
                 Visit(child);
             }

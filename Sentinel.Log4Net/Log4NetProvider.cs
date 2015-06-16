@@ -141,7 +141,8 @@
                         {
                             var bytes = listener.Receive(ref remoteEndPoint);
 
-                            Log.Debug(string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
+                            Log.Debug(
+                                string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
                             lock (PendingQueue)
@@ -155,7 +156,7 @@
                             {
                                 Log.Debug("SocketException", socketException);
                                 Log.DebugFormat(
-                                    "SocketException.SocketErrorCode = {0}", 
+                                    "SocketException.SocketErrorCode = {0}",
                                     socketException.SocketErrorCode);
 
                                 // Break out of the 'using socket' loop and try to establish a new socket.
@@ -223,7 +224,7 @@
 
         private ILogEntry DeserializeMessage(string message)
         {
-            
+
             try
             {
                 var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
@@ -266,14 +267,14 @@
                     AddExceptionIfFound(entryEvent, metaData);
 
                     var logEntry = new LogEntry
-                        {
-                            DateTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now),
-                            System = system,
-                            Thread = entryEvent.GetAttribute("thread", string.Empty),
-                            Description = description,
-                            Type = type,
-                            MetaData = metaData
-                        };
+                                       {
+                                           DateTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now),
+                                           System = system,
+                                           Thread = entryEvent.GetAttribute("thread", string.Empty),
+                                           Description = description,
+                                           Type = type,
+                                           MetaData = metaData
+                                       };
 
                     if (logEntry.Description.ToUpper().Contains("EXCEPTION"))
                     {
