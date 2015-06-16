@@ -29,7 +29,18 @@
         public bool IsUdp { get; set; }
 
         [Option('t', "tcp", MutuallyExclusiveSet = "protocols")]
-        public bool IsTcp { get; set; }
+        public bool IsTcp
+        {
+            get
+            {
+                return !IsUdp;
+            }
+
+            set
+            {
+                IsUdp = !IsUdp;
+            }
+        }
 
         [Option('p', "port")]
         public int Port { get; set; }
