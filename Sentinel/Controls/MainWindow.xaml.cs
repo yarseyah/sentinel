@@ -474,7 +474,7 @@
             }
 
             var invokedVerb = String.Empty;
-            object invokedVerbInstance;
+            object invokedVerbInstance = null;
 
             var options = new Options();
             if (!CommandLine.Parser.Default.ParseArguments(
@@ -492,10 +492,19 @@
             if (invokedVerb == "nlog")
             {
                 // TODO: handle command line request for nlog listener (defaults to UDP on 9999, but can be overridden)
+                var verbOptions = (NLogOptions)invokedVerbInstance;
+                log.DebugFormat(
+                    "Using nlog listener on {0} port {1}",
+                    verbOptions.IsUdp ? "Udp" : "Tcp",
+                    verbOptions.Port);
             }
             else if (invokedVerb == "log4net")
             {
                 // TODO: handle command line request for log4net listener (defaults to UDP on 9998, but can be overridden)
+                var verbOptions = (Log4NetOptions)invokedVerbInstance;
+                log.DebugFormat(
+                    "Using log4net listener on Udp port {0}",
+                    verbOptions.Port);
             }
             else
             {
