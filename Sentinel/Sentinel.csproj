@@ -71,10 +71,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>26A52CB1A1714DBFA0C40483BEEA6C5541BBC269</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>2B031259D32018360D0076567E75953A7563AA0C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Sentinel_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -511,6 +511,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Sentinel_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Info.png" />
