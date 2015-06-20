@@ -71,7 +71,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>2B031259D32018360D0076567E75953A7563AA0C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>D9B920AF30C4F1E4866D99E104EF4F32AC65D2CC</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
@@ -222,10 +222,12 @@
     <Compile Include="Interfaces\LogEntry.cs" />
     <Compile Include="Interfaces\LogEntryField.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
+    <Compile Include="StartUp\Log4NetOptions.cs" />
     <Compile Include="Logs\Interfaces\ILogFileExporter.cs" />
     <Compile Include="Logs\Interfaces\ILogManager.cs" />
     <Compile Include="Logs\LogFileExporter.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="StartUp\NLogOptions.cs" />
+    <Compile Include="StartUp\Options.cs" />
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
     <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />

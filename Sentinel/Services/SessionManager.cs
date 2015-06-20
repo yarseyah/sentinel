@@ -93,6 +93,23 @@
             serviceLocatorIsFresh = false;
         }
 
+        public void LoadProviders(IEnumerable<PendingProviderRecord> providers)
+        {
+            CleanUpResources();
+
+            var views = new List<string>
+                            {
+                                ServiceLocator.Instance.Get<IViewManager>()
+                                    .GetRegistered()
+                                    .First()
+                                    .Identifier
+                            };
+
+            ConfigureLoggerServices("Untitled", views, providers);
+
+            IsSaved = false;
+        }
+
         public void LoadSession(string fileName)
         {
             var fileText = File.ReadAllText(fileName);

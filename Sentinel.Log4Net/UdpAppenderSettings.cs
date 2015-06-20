@@ -14,12 +14,17 @@ namespace Sentinel.Log4Net
         {
             Name = providerInfo.Name;
             Info = providerInfo.Info;
-            Summary = providerInfo.Summary;
         }
 
         public string Name { get; set; }
 
-        public string Summary { get; set; }
+        public string Summary
+        {
+            get
+            {
+                return string.Format("{0}: Listens on port {1}", Name, Port);
+            }
+        }
 
         public IProviderInfo Info { get; set; }
 

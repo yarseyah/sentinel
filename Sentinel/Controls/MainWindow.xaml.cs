@@ -25,10 +25,13 @@
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Log4Net;
     using Sentinel.Logs.Interfaces;
+    using Sentinel.NLog;
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
     using Sentinel.Services.Interfaces;
+    using Sentinel.StartUp;
     using Sentinel.Support;
     using Sentinel.Support.Mvvm;
     using Sentinel.Views.Interfaces;
@@ -473,73 +476,112 @@
                 throw new ArgumentException("Collection must have at least one element", "commandLine");
             }
 
-            var invokedVerb = String.Empty;
+            var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
+
+            var invokedVerb = string.Empty;
             object invokedVerbInstance = null;
 
             var options = new Options();
+            var unknownCommandLine = false;
+
             if (!CommandLine.Parser.Default.ParseArguments(
                 commandLineArguments.ToArray(),
                 options,
                 (v, s) =>
-                {
-                    invokedVerb = v;
-                    invokedVerbInstance = s;
-                }))
+                    {
+                        invokedVerb = v;
+                        invokedVerbInstance = s;
+                    }))
             {
-                // TODO: work out what went wrong
+                var filePath = commandLineArguments.FirstOrDefault();
+                if (!File.Exists(filePath) || Path.GetExtension(filePath).ToUpper() != ".SNTL")
+                {
+                    unknownCommandLine = true;
+                }
             }
+
+            if (unknownCommandLine)
+            {
+                // TODO: command line usage dialog
+                MessageBox.Show(
+                    "File does not exist or is not a Sentinel session file.",
+                    "Sentinel",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            RemoveBindingReferences();
 
             if (invokedVerb == "nlog")
             {
-                // TODO: handle command line request for nlog listener (defaults to UDP on 9999, but can be overridden)
-                var verbOptions = (NLogOptions)invokedVerbInstance;
-                log.DebugFormat(
-                    "Using nlog listener on {0} port {1}",
-                    verbOptions.IsUdp ? "Udp" : "Tcp",
-                    verbOptions.Port);
+                CreateDefaultNLogListener((NLogOptions)invokedVerbInstance, sessionManager);
             }
             else if (invokedVerb == "log4net")
             {
-                // TODO: handle command line request for log4net listener (defaults to UDP on 9998, but can be overridden)
-                var verbOptions = (Log4NetOptions)invokedVerbInstance;
-                log.DebugFormat(
-                    "Using log4net listener on Udp port {0}",
-                    verbOptions.Port);
+                CreateDefaultLog4NetListener((Log4NetOptions)invokedVerbInstance, sessionManager);
             }
             else
             {
-                var filePath = commandLineArguments.FirstOrDefault();
-                if (File.Exists(filePath) && Path.GetExtension(filePath).ToUpper() == ".SNTL")
-                {
-                    var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
-
-                    RemoveBindingReferences();
-
-                    sessionManager.LoadSession(filePath);
-
-                    BindViewToViewModel();
-
-                    if (!sessionManager.ProviderSettings.Any())
-                    {
-                        return;
-                    }
-
-                    var frame = ServiceLocator.Instance.Get<IWindowFrame>();
-
-                    // Add to the tab control.
-                    var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-                    tabControl.Items.Add(newTab);
-                    tabControl.SelectedItem = newTab;
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "File does not exist or is not a Sentinel session file.",
-                        "Sentinel",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+                sessionManager.LoadSession(commandLineArguments.FirstOrDefault());
             }
+
+            BindViewToViewModel();
+
+            var frame = ServiceLocator.Instance.Get<IWindowFrame>();
+
+            // Add to the tab control.
+            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
+            tabControl.Items.Add(newTab);
+            tabControl.SelectedItem = newTab;
+        }
+
+        private void CreateDefaultLog4NetListener(Log4NetOptions log4NetOptions, ISessionManager sessionManager)
+        {
+            var info = string.Format("Using log4net listener on Udp port {0}", log4NetOptions.Port);
+            log.Debug(info);
+
+            var providerSettings = new UdpAppenderSettings
+                                       {
+                                           Port = log4NetOptions.Port,
+                                           Name = info,
+                                           Info = Log4NetProvider.ProviderRegistrationInformation.Info
+                                       };
+
+            var providers =
+                Enumerable.Repeat(
+                    new PendingProviderRecord
+                        {
+                            Info = Log4NetProvider.ProviderRegistrationInformation.Info,
+                            Settings = providerSettings
+                        },
+                    1);
+
+            sessionManager.LoadProviders(providers);
+        }
+
+        private void CreateDefaultNLogListener(NLogOptions verbOptions, ISessionManager sessionManager)
+        {
+            var name = string.Format(
+                "Using nlog listener on {0} port {1}",
+                verbOptions.IsUdp ? "Udp" : "Tcp",
+                verbOptions.Port);
+            var info = NLogViewerProvider.ProviderRegistrationInformation.Info;
+            log.Debug(name);
+
+            var providerSettings = new NetworkSettings
+                                       {
+                                           Protocol =
+                                               verbOptions.IsUdp
+                                                   ? NetworkProtocol.Udp
+                                                   : NetworkProtocol.Tcp,
+                                           Port = verbOptions.Port,
+                                           Name = name,
+                                           Info = info
+                                       };
+            var providers = Enumerable.Repeat(new PendingProviderRecord { Info = info, Settings = providerSettings }, 1);
+
+            sessionManager.LoadProviders(providers);
         }
 
         private void RestoreWindowPosition()

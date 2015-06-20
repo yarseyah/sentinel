@@ -20,7 +20,8 @@
             get
             {
                 return string.Format(
-                    "Listens on {0} port {1}",
+                    "{0}: Listens on {1} port {2}",
+                    Name,
                     Protocol,
                     Port);
             }
