@@ -34,8 +34,6 @@ namespace Sentinel.Filters
 
         private readonly IRemoveFilterService removeFilterService = new RemoveFilter();
 
-        private string displayName = "FilteringService";
-
         private int selectedIndex = -1;
 
         public FilteringService()
@@ -62,19 +60,6 @@ namespace Sentinel.Filters
             if (searchFilter != null)
             {
                 SearchFilters.Add(searchFilter as T);
-            }
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-
-            set
-            {
-                displayName = value;
             }
         }
 

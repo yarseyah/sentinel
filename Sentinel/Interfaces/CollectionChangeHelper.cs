@@ -4,6 +4,8 @@
     using System.ComponentModel;
     using System.Diagnostics;
 
+    using Common.Logging;
+
     public delegate string GetFriendlyNameDelegate<T>(T obj);
 
     public class CollectionChangeHelper<T>
@@ -28,15 +30,15 @@
                         && newItem is INotifyPropertyChanged)
                     {
                         // Register on OnPropertyChanged.
-                        INotifyPropertyChanged notifyPropertyChanged = newItem as INotifyPropertyChanged;
-                        T t = (T) newItem;
-                        string name = NameLookup != null ? NameLookup(t) : "<Unknown>";
+                        var notifyPropertyChanged = newItem as INotifyPropertyChanged;
+                        var t = (T) newItem;
+                        var name = NameLookup != null ? NameLookup(t) : "<Unknown>";
 
-                        Trace.WriteLine(
-                            string.Format(
-                                "{0} detected {1} added to collection and binding to its PropertyChanged event",
-                                ManagerName,
-                                name));
+                        var log = LogManager.GetLogger("ObservableCollection:" + ManagerName);
+                        log.DebugFormat(
+                            "{0} detected {1} added to collection and binding to its PropertyChanged event",
+                            ManagerName,
+                            name);
 
                         notifyPropertyChanged.PropertyChanged += OnPropertyChanged;
                     }
@@ -54,15 +56,15 @@
                         && oldItem is INotifyPropertyChanged)
                     {
                         // Unregister on OnPropertyChanged.
-                        INotifyPropertyChanged notifyPropertyChanged = oldItem as INotifyPropertyChanged;
-                        T t = (T) oldItem;
-                        string name = NameLookup != null ? NameLookup(t) : "<Unknown>";
+                        var notifyPropertyChanged = oldItem as INotifyPropertyChanged;
+                        var t = (T)oldItem;
+                        var name = NameLookup != null ? NameLookup(t) : "<Unknown>";
 
-                        Trace.WriteLine(
-                            string.Format(
-                                "{0} detected {1} removed from collection and unbinding from its PropertyChanged event",
-                                ManagerName,
-                                name));
+                        var log = LogManager.GetLogger("ObservableCollection:" + ManagerName);
+                        log.DebugFormat(
+                            "{0} detected {1} removed from collection and unbinding from its PropertyChanged event",
+                            ManagerName,
+                            name);
 
                         notifyPropertyChanged.PropertyChanged -= OnPropertyChanged;
                     }

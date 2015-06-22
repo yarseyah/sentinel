@@ -7,32 +7,42 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-    using System.Runtime.Serialization;
     using System.Windows;
 
+    using Common.Logging;
+
     using Sentinel.Interfaces;
-    using Sentinel.Support;
 
     public class ServiceLocator
     {
-        private static readonly ServiceLocator instance = new ServiceLocator();
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+        private static readonly ServiceLocator ActualInstance = new ServiceLocator();
 
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
-
-        private readonly Dictionary<Type, string> fileNames = new Dictionary<Type, string>();
-
-        public string SaveLocation { get; private set; }
 
         private ServiceLocator()
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            Log.DebugFormat("App Data folder {0}", appData);
+
             SaveLocation = Path.Combine(appData, "Sentinel");
+            Log.DebugFormat("Save location for internal files: {0}", SaveLocation);
 
             // Check the folder exists, otherwise create it
             var di = new DirectoryInfo(SaveLocation);
             if (!di.Exists)
             {
-                di.Create();
+                Log.TraceFormat("Creating folder {0}", SaveLocation);
+                try
+                {
+                    di.Create();
+                }
+                // ReSharper disable once CatchAllClause
+                catch (Exception e)
+                {
+                    Log.Error("Unable to create directory", e);
+                }
             }
         }
 
@@ -40,14 +50,17 @@
         {
             get
             {
-                return instance;
+                return ActualInstance;
             }
         }
+
+        public string SaveLocation { get; private set; }
 
         public ReadOnlyCollection<object> RegisteredServices
         {
             get
             {
+                Debug.Assert(services.Values != null, "Values collection should always exist");
                 return new ReadOnlyCollection<object>(services.Values.ToList());
             }
         }
@@ -66,6 +79,7 @@
             if (ReportErrors)
             {
                 var errorMessage = string.Format("No registered service supporting {0}", typeof(T));
+                Log.Error(errorMessage);
                 MessageBox.Show(errorMessage, "Service location error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
@@ -88,6 +102,11 @@
 
         public void Register(Type keyType, Type instanceType, bool replace)
         {
+            Log.TraceFormat(
+                "Registering Type instance of '{0}' to signature of '{1}'",
+                instanceType.Name,
+                keyType.Name);
+
             if (!services.Keys.Contains(keyType) || replace)
             {
                 services[keyType] = Activator.CreateInstance(instanceType);
@@ -96,57 +115,6 @@
                 if (defaultInitialisation != null)
                 {
                     defaultInitialisation.Initialise();
-                }
-            }
-        }
-
-        public void Save()
-        {
-            foreach (var valuePair in services)
-            {
-                if (valuePair.Value == null)
-                {
-                    Trace.TraceError("Unexpected null");
-                    continue;
-                }
-
-                if (valuePair.Value.HasAttribute<DataContractAttribute>())
-                {
-                    var saveFileName = fileNames.Get(valuePair.Key) ?? valuePair.Key.Name;
-                    var fn = Path.Combine(SaveLocation, saveFileName);
-                    JsonHelper.SerializeToFile(valuePair.Value, fn);
-                }
-            }
-        }
-
-        public void RegisterOrLoad<T>(Type interfaceType, string fileName)
-        {
-            fileNames[interfaceType] = fileName;
-
-            var hasContract = typeof(T).HasAttribute<DataContractAttribute>();
-            if (hasContract)
-            {
-                fileName = Path.ChangeExtension(fileName, ".json");
-                fileNames[interfaceType] = fileName;
-                var fullName = Path.Combine(SaveLocation, fileName);
-                var filterService = JsonHelper.DeserializeFromFile<T>(fullName);
-                services[interfaceType] = filterService;
-            }
-
-            if (!(services.Keys.Contains(interfaceType) && services[interfaceType] != null))
-            {
-                try
-                {
-                    services[interfaceType] = Activator.CreateInstance(typeof(T));
-                    var defaultInitialisation = services[interfaceType] as IDefaultInitialisation;
-                    if (defaultInitialisation != null)
-                    {
-                        defaultInitialisation.Initialise();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
                 }
             }
         }

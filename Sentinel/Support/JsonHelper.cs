@@ -1,13 +1,16 @@
 namespace Sentinel.Support
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
+
+    using Common.Logging;
 
     using Newtonsoft.Json;
 
     public static class JsonHelper
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
                                                                       {
                                                                           TypeNameHandling = TypeNameHandling.All
@@ -30,22 +33,20 @@ namespace Sentinel.Support
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Exception caught in serialization:");
-                Trace.WriteLine(e.Message);
+                Log.Error("Exception caught in serialization:", e);
                 throw;
             }            
         }
 
-        public static string SerializeToString<T>(T objectToSerilaize)
+        public static string SerializeToString<T>(T objectToSerialize)
         {
             try
             {
-                return JsonConvert.SerializeObject(objectToSerilaize, Formatting.Indented, Settings);
+                return JsonConvert.SerializeObject(objectToSerialize, Formatting.Indented, Settings);
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Exception caught in serialization:");
-                Trace.WriteLine(e.Message);
+                Log.Error("Exception caught in serialization:", e);
                 throw;
             }
         }
@@ -67,12 +68,10 @@ namespace Sentinel.Support
                         }
                     }
                 }
-                
             }
             catch (Exception e)
             {
-                Trace.WriteLine(string.Format("Exception when trying to de-serialize from {0}", filename));
-                Trace.WriteLine(e.Message);
+                Log.Error(string.Format("Exception when trying to de-serialize from {0}", filename), e);
             }
 
             return default(T);
@@ -86,8 +85,7 @@ namespace Sentinel.Support
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Exception when trying to de-serialize from given string");
-                Trace.WriteLine(e.Message);
+                Log.Error("Exception when trying to de-serialize from given string", e);
             }
 
             return default(T);

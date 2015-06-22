@@ -4,19 +4,23 @@
     using System.ComponentModel;
     using System.Diagnostics;
 
+    using Common.Logging;
+
     public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
+        private readonly ILog log;
+
+        protected ViewModelBase()
+        {
+            log = LogManager.GetLogger(this.GetType().Name);
+        }
+
         /// <summary>
         /// Finalizes an instance of the ViewModelBase class.
         /// </summary>
         ~ViewModelBase()
         {
-            Debug.WriteLine(
-                string.Format(
-                    "{0} ({1}) ({2}) Finalized",
-                    GetType().Name,
-                    DisplayName,
-                    GetHashCode()));
+            log.DebugFormat("{0} ({1}) ({2}) Finalized", GetType().Name, DisplayName, GetHashCode());
         }
 
         /// <summary>
@@ -27,7 +31,7 @@
         /// <summary>
         /// Gets or sets the display name for the view model, used for debug output.
         /// </summary>
-        public virtual string DisplayName { get; set; }
+        protected string DisplayName { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether an exception is thrown, or if a Debug.Fail() 
@@ -62,7 +66,7 @@
                 // public, instance property on this object.
                 if (TypeDescriptor.GetProperties(this)[propertyName] == null)
                 {
-                    string msg = "Invalid property name: " + propertyName;
+                    var msg = "Invalid property name: " + propertyName;
 
                     if (ThrowOnInvalidPropertyName)
                     {
@@ -82,10 +86,10 @@
         {
             VerifyPropertyName(propertyName);
 
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }

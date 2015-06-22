@@ -25,8 +25,6 @@
 
         private readonly IRemoveExtractorService removeExtractorService = new RemoveExtractor();
 
-        private string displayName = "ExtractingService";
-
         private int selectedIndex = -1;
 
         public ExtractingService()
@@ -53,19 +51,6 @@
             if (searchExtractor != null)
             {
                 SearchExtractors.Add(searchExtractor as T);
-            }
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-
-            set
-            {
-                displayName = value;
             }
         }
 

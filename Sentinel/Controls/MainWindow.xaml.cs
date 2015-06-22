@@ -43,7 +43,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private readonly ILog log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         private readonly string persistingFilename;
 
@@ -172,13 +172,22 @@
                 return null;
             }
             
-            var virtualScreen = new Rect(
-                SystemParameters.VirtualScreenLeft, 
-                SystemParameters.VirtualScreenTop, 
-                SystemParameters.VirtualScreenWidth, 
-                SystemParameters.VirtualScreenHeight);
-            var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
-            return virtualScreen.IntersectsWith(window) ? wp : null;
+            try
+            {
+                var virtualScreen = new Rect(
+                    SystemParameters.VirtualScreenLeft,
+                    SystemParameters.VirtualScreenTop,
+                    SystemParameters.VirtualScreenWidth,
+                    SystemParameters.VirtualScreenHeight);
+                var window = new Rect(wp.Left, wp.Top, wp.Width, wp.Height);
+                return virtualScreen.IntersectsWith(window) ? wp : null;
+            }
+            catch (Exception e)
+            {
+                log.Error("Unable to calculate rectangle or perform intersection with window", e);
+            }
+
+            return null;
         }
 
         private void ShowPreferencesAction(object obj)
@@ -594,14 +603,25 @@
             var fileName = Path.ChangeExtension(persistingFilename, ".json");
             var wp = JsonHelper.DeserializeFromFile<WindowPlacementInfo>(fileName);
 
+            // Validation routine will cope with Null being passed and if it finds an error, it returns null.
+            wp = ValidateScreenPosition(wp);
+
             if (wp != null)
             {
-                wp = ValidateScreenPosition(wp);
+                log.TraceFormat(
+                    "Window position being restored to ({0},{1})-({2},{3}) {4}",
+                    wp.Top,
+                    wp.Left,
+                    wp.Top + wp.Height,
+                    wp.Left + wp.Width,
+                    wp.WindowState);
 
                 Top = wp.Top;
                 Left = wp.Left;
                 Width = wp.Width;
                 Height = wp.Height;
+
+                // TODO: would it make sense to start up minimized if that was how it was terminated?
                 WindowState = wp.WindowState;
             }
         }

@@ -29,8 +29,6 @@
 
         private readonly IRemoveClassifyingService removeClassifyingService = new RemoveClassifier();
 
-        private string displayName = "ClassifyingService";
-
         private int selectedIndex = -1;
 
         /// <summary>
@@ -53,19 +51,6 @@
             collectionHelper.OnPropertyChanged += CustomClassifierPropertyChanged;
             collectionHelper.NameLookup += e => e.Name;
             Classifiers.CollectionChanged += collectionHelper.AttachDetach;
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-
-            set
-            {
-                displayName = value;
-            }
         }
 
         /// <summary>

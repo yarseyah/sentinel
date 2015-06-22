@@ -15,6 +15,8 @@ namespace Sentinel.Images
             this.name = name;
             this.quality = quality;
             this.image = image;
+
+            DisplayName = name;
         }
 
         public string Name

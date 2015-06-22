@@ -19,8 +19,6 @@
     {
         private readonly CollectionChangeHelper<T> collectionHelper = new CollectionChangeHelper<T>();
 
-        private string displayName = "HighlightingService";
-
         private int selectedIndex = -1;
 
         /// <summary>
@@ -42,22 +40,6 @@
             collectionHelper.OnPropertyChanged += CustomHighlighterPropertyChanged;
             collectionHelper.NameLookup += e => e.Name;
             Highlighters.CollectionChanged += collectionHelper.AttachDetach;
-        }
-
-        /// <summary>
-        /// Gets or sets the display name for the view-model.
-        /// </summary>
-        public override string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-
-            set
-            {
-                displayName = value;
-            }
         }
 
         /// <summary>
