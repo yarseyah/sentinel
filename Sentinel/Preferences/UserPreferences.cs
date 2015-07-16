@@ -47,7 +47,7 @@
 
         private bool useStackedLayout = true;
 
-        private bool useTighterRows;
+        private bool useTighterRows = true;
 
         /// <summary>
         /// Gets the name of the current Windows theme.
