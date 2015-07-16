@@ -9,6 +9,8 @@
     using System.Windows.Data;
     using System.Windows.Input;
 
+    using Common.Logging;
+
     using Sentinel.Highlighters;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
@@ -21,6 +23,8 @@
     /// </summary>
     public partial class LogMessagesControl : UserControl
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         public LogMessagesControl()
         {
             InitializeComponent();
@@ -203,6 +207,30 @@
         {
             messages.ItemContainerStyleSelector = null;
             messages.ItemContainerStyleSelector = new HighlightingSelector();
+        }
+
+        private void Messages_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender == null)
+            {
+                throw new ArgumentNullException("sender");
+            }
+
+            var item = sender as ListViewItem;
+            if (item != null)
+            {
+                Log.Trace("Double click performed on entry");
+
+                if (item.HasContent)
+                {
+                    var entry = item.Content as ILogEntry;
+                    if (entry != null)
+                    {
+                        Log.Trace(entry.Type);
+                        Log.Trace(entry.Description);
+                    }
+                }
+            }
         }
     }
 }
