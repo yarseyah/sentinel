@@ -33,5 +33,8 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         bool UseTighterRows { get; set; }
+
+        [DataMember]
+        bool DoubleClickToShowExceptions { get; set; }
     }
 }

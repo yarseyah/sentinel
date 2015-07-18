@@ -88,6 +88,12 @@
                                       ToolTip="Orientate the two windows as stacked rather than side-by-side."
                                       IsChecked="{Binding Preferences.UseStackedLayout}" />
                         </GroupBox>
+                        <GroupBox Header="Interactions">
+                            <CheckBox Margin="5"
+                                      Content="Show exceptions panel on double-click"
+                                      ToolTip="When a log entry has additional exception information, double-clicking will show the exception detail panel."
+                                      IsChecked="{Binding Preferences.DoubleClickToShowExceptions}" />
+                        </GroupBox>
                     </StackPanel>
                 </DockPanel>
             </TabItem>

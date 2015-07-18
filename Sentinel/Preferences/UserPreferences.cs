@@ -49,6 +49,8 @@
 
         private bool useTighterRows = true;
 
+        private bool doubleClickToShowExceptions = true;
+
         /// <summary>
         /// Gets the name of the current Windows theme.
         /// </summary>
@@ -250,6 +252,22 @@
                 {
                     useTighterRows = value;
                     OnPropertyChanged("UseTighterRows");
+                }
+            }
+        }
+
+        public bool DoubleClickToShowExceptions
+        {
+            get
+            {
+                return doubleClickToShowExceptions;
+            }
+            set
+            {
+                if (doubleClickToShowExceptions != value)
+                {
+                    doubleClickToShowExceptions = value;
+                    OnPropertyChanged("DoubleClickToShowExceptions");
                 }
             }
         }

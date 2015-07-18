@@ -59,6 +59,7 @@
             UpdateStyles();
             SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
             SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
+            DoubleClickToShowExceptions = Preferences != null && Preferences.DoubleClickToShowExceptions;
         }
 
         private void AddCopyCommandBinding()
@@ -128,7 +129,13 @@
             {
                 SetDateFormat(Preferences.SelectedDateOption);
             }
+            else if (e.PropertyName == "DoubleClickToShowExceptions")
+            {
+                DoubleClickToShowExceptions = Preferences.DoubleClickToShowExceptions;
+            }
         }
+
+        private bool DoubleClickToShowExceptions { get; set; }
 
         private void SetTypeColumnPreferences(int selectedTypeOption)
         {
@@ -216,18 +223,21 @@
                 throw new ArgumentNullException("sender");
             }
 
-            var item = sender as ListViewItem;
-            if (item != null)
+            if (DoubleClickToShowExceptions)
             {
-                Log.Trace("Double click performed on entry");
-
-                if (item.HasContent)
+                var item = sender as ListViewItem;
+                if (item != null)
                 {
-                    var entry = item.Content as ILogEntry;
-                    if (entry != null)
+                    Log.Trace("Double click performed on entry");
+
+                    if (item.HasContent)
                     {
-                        Log.Trace(entry.Type);
-                        Log.Trace(entry.Description);
+                        var entry = item.Content as ILogEntry;
+                        if (entry != null)
+                        {
+                            Log.Trace(entry.Type);
+                            Log.Trace(entry.Description);
+                        }
                     }
                 }
             }
