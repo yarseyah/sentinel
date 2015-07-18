@@ -112,11 +112,6 @@
 									DisplayMemberBinding="{Binding Description}" />
 				</GridView>
 			</ListView.View>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="Messages_OnMouseDoubleClick" />
-                </Style>
-            </ListView.ItemContainerStyle>
 		</ListView>
 	</Grid>
 </UserControl>

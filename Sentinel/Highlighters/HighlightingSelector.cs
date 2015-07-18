@@ -1,11 +1,13 @@
 namespace Sentinel.Highlighters
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Input;
     using System.Windows.Media;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
@@ -20,13 +22,17 @@ namespace Sentinel.Highlighters
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
+        private readonly Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick;
+
         private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
 
         /// <summary>
         /// Initializes a new instance of the HighlightingSelector class.
         /// </summary>
-        public HighlightingSelector()
+        /// <param name="messagesOnMouseDoubleClick"></param>
+        public HighlightingSelector(Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick)
         {
+            this.messagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
             var oldState = ServiceLocator.Instance.ReportErrors;
             ServiceLocator.Instance.ReportErrors = false;
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
@@ -37,6 +43,7 @@ namespace Sentinel.Highlighters
                 var highlighter = searchHighlighter.Highlighter;
 
                 var style = new Style(typeof(ListViewItem));
+
                 var trigger = new DataTrigger
                                           {
                                               Binding = new Binding
@@ -67,6 +74,10 @@ namespace Sentinel.Highlighters
 
                 style.Triggers.Add(trigger);
                 SetStyleSpacing(style);
+
+                // TODO: make this optional based upon the settings (but will need to rebuild highlighters when the setting changes.
+                RegisterDoubleClickEvent(style, messagesOnMouseDoubleClick);
+
                 styles[highlighter] = style;
             }
 
@@ -122,12 +133,27 @@ namespace Sentinel.Highlighters
                                     VerticalAlignment.Top));
 
                             style.Triggers.Add(trigger);
+
                             SetStyleSpacing(style);
+
+                            // TODO: make this optional based upon the settings (but will need to rebuild highlighters when the setting changes.
+                            RegisterDoubleClickEvent(style, messagesOnMouseDoubleClick);
+                            
                             styles[highlighter] = style;
                         }
                     }
                 }
             }
+        }
+
+        private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
+        {
+            if (style == null)
+            {
+                throw new ArgumentNullException("style");
+            }
+
+            style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
         }
 
         /// <summary>
@@ -152,6 +178,7 @@ namespace Sentinel.Highlighters
 
             Debug.Assert(defaultStyle != null, "Should always get a default style");
             SetStyleSpacing(defaultStyle);
+            RegisterDoubleClickEvent(defaultStyle, messagesOnMouseDoubleClick);
             defaultStyle.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Top));
 
             return defaultStyle;

@@ -46,7 +46,7 @@
                 (searchHighlighter.Highlighter as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
-            messages.ItemContainerStyleSelector = new HighlightingSelector();
+            messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
 
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
             if (Preferences != null && Preferences is INotifyPropertyChanged)
@@ -213,7 +213,7 @@
         private void UpdateStyles()
         {
             messages.ItemContainerStyleSelector = null;
-            messages.ItemContainerStyleSelector = new HighlightingSelector();
+            messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
         }
 
         private void Messages_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
