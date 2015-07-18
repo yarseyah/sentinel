@@ -178,6 +178,7 @@ namespace Sentinel.Highlighters
 
             Debug.Assert(defaultStyle != null, "Should always get a default style");
             SetStyleSpacing(defaultStyle);
+            RegisterDoubleClickEvent(defaultStyle, messagesOnMouseDoubleClick);
             defaultStyle.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Top));
 
             return defaultStyle;
