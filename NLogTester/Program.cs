@@ -41,7 +41,7 @@
 
         private static void LogMessage(string text)
         {
-            var randomType = Random.Next(0, 6);
+            var randomType = Random.Next(0, 7);
 
             switch (randomType)
             {
@@ -59,6 +59,11 @@
                     break;
                 case 4:
                     Log.Trace(text);
+                    break;
+                case 5:
+                    var embeddedException = new NotSupportedException();
+                    var keyNotFoundException = new KeyNotFoundException("Something is embedded", embeddedException);
+                    Log.Error(text,keyNotFoundException);
                     break;
                 default:
                     Log.Debug(text);
