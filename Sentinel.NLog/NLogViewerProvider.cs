@@ -219,27 +219,47 @@
 
         private LogEntry DecodeEntry(string m)
         {
-            XNamespace log4j = "unique";
-            string message = string.Format(@"<entry xmlns:log4j=""{0}"">{1}</entry>", log4j, m);
+            XNamespace log4J = "unique";
+            XNamespace nlogNamespace = "nlogUnique";
+            var message = string.Format(
+                @"<entry xmlns:log4j=""{0}"" xmlns:nlog=""{1}"">{2}</entry>",
+                log4J,
+                nlogNamespace,
+                m);
 
-            XElement element = XElement.Parse(message);
-            XElement record = element.Element(log4j + "event");
+            var element = XElement.Parse(message);
+            var record = element.Element(log4J + "event");
 
             // Establish whether a sub-system seems to be defined.
-            string description = record.Element(log4j + "message").Value;
+            var description = record.Element(log4J + "message").Value;
 
-            string classification = string.Empty;
-            string system = record.Attribute("logger").Value;
-            string type = record.Attribute("level").Value;
-            string host = "???";
+            var classification = string.Empty;
+            var system = record.Attribute("logger").Value;
+            var type = record.Attribute("level").Value;
+            var host = "???";
 
-            foreach (XElement propertyElement in record.Element(log4j + "properties").Elements())
+            foreach (var propertyElement in record.Element(log4J + "properties").Elements())
             {
-                if (propertyElement.Name == log4j + "data" && propertyElement.Attribute("name") != null
+                if (propertyElement.Name == log4J + "data" && propertyElement.Attribute("name") != null
                     && propertyElement.Attribute("name").Value == "log4jmachinename")
                 {
                     host = propertyElement.Attribute("value").Value;
                 }
+            }
+
+            var className = string.Empty;
+            var methodName = string.Empty;
+            var sourceFile = string.Empty;
+            var line = string.Empty;
+
+            // Any source information
+            var source = record.Element(log4J + "locationInfo");
+            if (source != null)
+            {
+                className = source.Attribute("class").Value;
+                methodName = source.Attribute("method").Value;
+                sourceFile = source.Attribute("file").Value;
+                line = source.Attribute("line").Value;
             }
 
             var date = Log4jDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
@@ -261,6 +281,15 @@
             if (entry.Description.ToUpper().Contains("EXCEPTION"))
             {
                 entry.MetaData.Add("Exception", true);
+            }
+
+            if (!string.IsNullOrWhiteSpace(className))
+            {
+                // TODO: use an object for these?
+                entry.MetaData.Add("ClassName", className);
+                entry.MetaData.Add("MethodName", methodName);
+                entry.MetaData.Add("SourceFile", sourceFile);
+                entry.MetaData.Add("SourceLine", line);
             }
 
             return entry;
