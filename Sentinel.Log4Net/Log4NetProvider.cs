@@ -260,6 +260,21 @@
                         }
                     }
 
+                    var className = string.Empty;
+                    var methodName = string.Empty;
+                    var sourceFile = string.Empty;
+                    var line = string.Empty;
+
+                    // Any source information
+                    var source = entryEvent.Element(log4Net + "locationInfo");
+                    if (source != null)
+                    {
+                        className = source.Attribute("class").Value;
+                        methodName = source.Attribute("method").Value;
+                        sourceFile = source.Attribute("file").Value;
+                        line = source.Attribute("line").Value;
+                    }
+
                     var metaData = new Dictionary<string, object>();
                     metaData["Classification"] = classification;
                     metaData["Host"] = host;
@@ -279,6 +294,15 @@
                     if (logEntry.Description.ToUpper().Contains("EXCEPTION"))
                     {
                         logEntry.MetaData.Add("Exception", true);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(className))
+                    {
+                        // TODO: use an object for these?
+                        logEntry.MetaData.Add("ClassName", className);
+                        logEntry.MetaData.Add("MethodName", methodName);
+                        logEntry.MetaData.Add("SourceFile", sourceFile);
+                        logEntry.MetaData.Add("SourceLine", line);
                     }
 
                     return logEntry;
