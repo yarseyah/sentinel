@@ -294,8 +294,7 @@
                                           LargeImageSource="../Resources/Large/Exception.png"
                                           ToolTipTitle="Show Exceptions"
                                           ToolTipDescription="Shows the Exception column when enabled."
-                                          ToolTipImageSource="../Resources/Small/Exception.png">
-                    </RibbonToggleButton>                    
+                                          ToolTipImageSource="../Resources/Small/Exception.png" />
                     <RibbonToggleButton Name="ThreadRibbonToggleButton" Label="Thread"
                                           HorizontalContentAlignment="Center"
                                           VerticalContentAlignment="Bottom"
@@ -303,8 +302,16 @@
                                           LargeImageSource="../Resources/Large/Thread.png"
                                           ToolTipTitle="Show Threads"
                                           ToolTipDescription="Shows the Thread column when enabled."
-                                          ToolTipImageSource="../Resources/Small/Thread.png">
-                    </RibbonToggleButton>
+                                          ToolTipImageSource="../Resources/Small/Thread.png" />
+                    <RibbonToggleButton Name="DebugSourceRibbonToggleButton"
+                                        Label="Debug Sources"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Bottom"
+                                        SmallImageSource="../Resources/Small/DebugSource.png"
+                                        LargeImageSource="../Resources/Large/DebugSource.png"
+                                        ToolTipTitle="Show source code debug information"
+                                        ToolTipDescription="Shows the debugging columns when enabled. Currently only supports nLog."
+                                        ToolTipImageSource="../Resources/Small/DebugSource.png" />
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Classifiers">

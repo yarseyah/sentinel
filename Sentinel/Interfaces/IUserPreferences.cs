@@ -36,5 +36,8 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         bool DoubleClickToShowExceptions { get; set; }
+
+        [DataMember]
+        bool ShowSourceInformationColumns { get; set; }
     }
 }

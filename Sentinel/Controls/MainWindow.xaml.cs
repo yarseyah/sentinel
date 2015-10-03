@@ -980,6 +980,9 @@
             ThreadRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
                 new Binding() { Source = Preferences, Path = new PropertyPath("ShowThreadColumn") });
+            DebugSourceRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns") });
         }
 
         private void GetRecentlyOpenedFiles()

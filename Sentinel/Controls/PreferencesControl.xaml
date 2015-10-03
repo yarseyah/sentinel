@@ -69,6 +69,10 @@
                                               Margin="0,0,0,5"
                                               ToolTip="Showing the originating thread may not always be useful.  The thread identifer (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
                                               Content="Show the Thread column" />
+                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceInformationColumns}"
+                                              HorizontalAlignment="Left"
+                                              ToolTip="Shows/hides the columns with the source-code information (nLog only)"
+                                              Content="Show source debugging information" />
                                     <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
                                               HorizontalAlignment="Left"
                                               ToolTip="Enables/disables live resorting of sortable columns"

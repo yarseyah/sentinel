@@ -51,6 +51,8 @@
 
         private bool doubleClickToShowExceptions = true;
 
+        private bool showSourceInformationColumns;
+
         /// <summary>
         /// Gets the name of the current Windows theme.
         /// </summary>
@@ -268,6 +270,22 @@
                 {
                     doubleClickToShowExceptions = value;
                     OnPropertyChanged("DoubleClickToShowExceptions");
+                }
+            }
+        }
+
+        public bool ShowSourceInformationColumns
+        {
+            get
+            {
+                return showSourceInformationColumns;
+            }
+            set
+            {
+                if (showSourceInformationColumns != value)
+                {
+                    showSourceInformationColumns = value;
+                    OnPropertyChanged("ShowSourceInformationColumns");
                 }
             }
         }

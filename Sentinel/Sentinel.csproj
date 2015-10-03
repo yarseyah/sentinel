@@ -71,16 +71,16 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>210E130F82DDA3D0FA78068429C1C2E8A6971804</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>8A90274FC7E59D487F5F6BC8CFCE0444E0C5988D</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -234,6 +234,7 @@
     <Compile Include="Support\Converters\LongPathToShortPathConverter.cs" />
     <Compile Include="Support\Converters\MatchModeConverter.cs" />
     <Compile Include="Support\Converters\MessageHasExceptionMetadataConverter.cs" />
+    <Compile Include="Support\Converters\MetaDataConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
     <Compile Include="Support\Converters\TypeToImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToLargeImageConverter.cs" />
@@ -495,6 +496,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Sentinel_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Info.png" />
@@ -692,6 +694,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Thread.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\DebugSource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\DebugSource.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

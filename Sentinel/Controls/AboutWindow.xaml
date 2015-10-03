@@ -19,7 +19,7 @@
                 </TextBlock>
                 <TextBlock Margin="5" FontSize="14" TextWrapping="WrapWithOverflow">
                     <Run Text="Version - " />
-                    <Run Name="VersionNumberLabel" Text="0.11.0.2" />
+                    <Run Name="VersionNumberLabel" Text="0.12.0.0" />
                 </TextBlock>
                 <TextBlock Margin="5"
                            FontSize="14"
