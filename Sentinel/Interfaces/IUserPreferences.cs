@@ -9,8 +9,13 @@ namespace Sentinel.Interfaces
 
         IEnumerable<string> DateFormatOptions { get; }
 
+        IEnumerable<string> DateSourceOptions { get; }
+            
         [DataMember]
         int SelectedDateOption { get; set; }
+
+        [DataMember]
+        int DateSourceOption { get; set; }
 
         [DataMember]
         int SelectedTypeOption { get; set; }

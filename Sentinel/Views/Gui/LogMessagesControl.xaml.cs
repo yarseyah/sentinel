@@ -57,7 +57,10 @@
 
             // Read defaulted values from preferences
             UpdateStyles();
+
             SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
+            SetDateSource(Preferences != null ? Preferences.DateSourceOption : 0);
+
             SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
             DoubleClickToShowExceptions = Preferences != null && Preferences.DoubleClickToShowExceptions;
         }
@@ -110,6 +113,10 @@
 
         private IUserPreferences Preferences { get; set; }
 
+        private string DateFormat { get; set; } = "r";
+
+        private string DateSource { get; set; } = "DateTime";
+
         public void ScrollToEnd()
         {
             ScrollingHelper.ScrollToEnd(Dispatcher, messages);
@@ -128,6 +135,10 @@
             else if (e.PropertyName == "SelectedDateOption")
             {
                 SetDateFormat(Preferences.SelectedDateOption);
+            }
+            else if (e.PropertyName == "DateSourceOption")
+            {
+                SetDateSource(Preferences.DateSourceOption);
             }
             else if (e.PropertyName == "DoubleClickToShowExceptions")
             {
@@ -178,34 +189,62 @@
                     // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
                     var column = view.Columns[1];
 
-                    var dateFormat = "r";
                     switch (selectedDateOption)
                     {
                         case 0:
-                            dateFormat = "r";
+                            DateFormat = "r";
                             column.Width = 175;
                             break;
                         case 1:
-                            dateFormat = "dd/MM/yyyy HH:mm:ss";
+                            DateFormat = "dd/MM/yyyy HH:mm:ss";
                             column.Width = 120;
                             break;
                         case 2:
-                            dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
+                            DateFormat = "dddd, d MMM yyyy, HH:mm:ss";
                             column.Width = 170;
                             break;
                         case 3:
-                            dateFormat = "HH:mm:ss";
+                            DateFormat = "HH:mm:ss";
                             column.Width = 60;
                             break;
                         case 4:
-                            dateFormat = "HH:mm:ss,fff";
+                            DateFormat = "HH:mm:ss,fff";
                             column.Width = 80;
                             break;
                         default:
                             break;
                     }
 
-                    column.DisplayMemberBinding = new Binding("DateTime") { StringFormat = dateFormat };
+                    column.DisplayMemberBinding = new Binding(DateSource) { StringFormat = DateFormat };
+                }
+            }
+        }
+
+        private void SetDateSource(int selectedDateSource)
+        {
+            if (messages != null)
+            {
+                var view = messages.View as GridView;
+                if (view != null)
+                {
+                    // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
+                    var column = view.Columns[1];
+
+                    if (selectedDateSource == 0)
+                    {
+                        DateSource = "DateTime";
+                    }
+                    else if (selectedDateSource == 1)
+                    {
+                        DateSource = "LocalDateTime";
+                    }
+                    else if (selectedDateSource == 2)
+                    {
+                        DateSource = "OriginDateTime";
+                    }
+
+                    Log.DebugFormat("Date time source changed to {0}", DateSource);
+                    column.DisplayMemberBinding = new Binding(DateSource) { StringFormat = DateFormat };
                 }
             }
         }

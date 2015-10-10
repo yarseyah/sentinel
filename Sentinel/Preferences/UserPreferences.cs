@@ -25,6 +25,13 @@
                                                                    "Time with Milliseconds"
                                                                };
 
+        private readonly IList<string> dateSourceOptions = new List<string>
+                                                               {
+                                                                   "Received time (GMT)",
+                                                                   "Received time (local)",
+                                                                   "Source time"
+                                                               };
+
         private readonly IList<string> typeColumnOptions = new List<string>
                                                                {
                                                                    "Hidden",
@@ -34,6 +41,8 @@
                                                                };
 
         private int selectedDateOption;
+
+        private int dateSourceOption;
 
         private int selectedTypeOption = 1;
 
@@ -75,6 +84,14 @@
             }
         }
 
+        public IEnumerable<string> DateSourceOptions
+        {
+            get
+            {
+                return dateSourceOptions;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the selected date option, as a index of the available options.
         /// </summary>
@@ -92,6 +109,26 @@
                 {
                     selectedDateOption = value;
                     OnPropertyChanged("SelectedDateOption");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected date option, as a index of the available options.
+        /// </summary>
+        public int DateSourceOption
+        {
+            get
+            {
+                return dateSourceOption;
+            }
+
+            set
+            {
+                if (dateSourceOption != value)
+                {
+                    dateSourceOption = value;
+                    OnPropertyChanged("DateSourceOption");
                 }
             }
         }
