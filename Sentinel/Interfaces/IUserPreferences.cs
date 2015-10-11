@@ -9,10 +9,18 @@ namespace Sentinel.Interfaces
 
         IEnumerable<string> DateFormatOptions { get; }
 
+        IEnumerable<string> TimeFormatOptions { get; }
+
         IEnumerable<string> DateSourceOptions { get; }
             
         [DataMember]
         int SelectedDateOption { get; set; }
+
+        [DataMember]
+        int SelectedTimeFormatOption { get; set; }
+
+        [DataMember]
+        bool ConvertUtcTimesToLocalTimezone { get; set; }
 
         [DataMember]
         int DateSourceOption { get; set; }

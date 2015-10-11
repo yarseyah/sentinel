@@ -1,4 +1,9 @@
-﻿namespace Sentinel.Views.Gui
+﻿using System;
+using System.Windows.Data;
+
+using Sentinel.Properties;
+
+namespace Sentinel.Views.Gui
 {
     using System;
     using System.ComponentModel;
@@ -179,25 +184,43 @@
             if (view != null)
             {
                 // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
-                var column = view.Columns[1];
-                BindDateTimeColumn(column);
+                BindDateColumn(view.Columns[1]);
+                BindTimeColumn(view.Columns[2]);
 
                 // TODO: need to invalidate all existing ones!
             }
         }
 
-        private void BindDateTimeColumn(GridViewColumn column)
+        private void BindTimeColumn(GridViewColumn column)
         {
             if (column == null)
             {
                 throw new ArgumentNullException(nameof(column));
             }
+
             column.DisplayMemberBinding = new Binding(".")
                                               {
                                                   StringFormat = DateFormat,
                                                   Converter =
                                                       (IValueConverter)
-                                                      Resources["DateTimePreferenceConverter"],
+                                                      Resources["TimePreferenceConverter"],
+                                                  ConverterParameter = Preferences
+                                              };
+        }
+    
+        private void BindDateColumn(GridViewColumn column)
+        {
+            if (column == null)
+            {
+                throw new ArgumentNullException(nameof(column));
+            }
+
+            column.DisplayMemberBinding = new Binding(".")
+                                              {
+                                                  StringFormat = DateFormat,
+                                                  Converter  =
+                                                      (IValueConverter)
+                                                      Resources["DatePreferenceConverter"],
                                                   ConverterParameter = Preferences
                                               };
         }

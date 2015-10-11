@@ -24,6 +24,7 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -46,7 +47,7 @@
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
                                            VerticalAlignment="Center"
-                                           Text="Date Formatting :" />
+                                           Text="Date Format :" />
                                 <ComboBox Grid.Row="1"
                                           Grid.Column="2"
                                           SelectedIndex="{Binding Preferences.SelectedDateOption}"
@@ -56,9 +57,25 @@
                                           MinWidth="100" />
                                 <TextBlock Grid.Row="2"
                                            Grid.Column="0"
+                                           Margin="0,8"
+                                           VerticalAlignment="Top"
+                                           Text="Time Format :" />
+                                <StackPanel Grid.Row="2"
+                                            Grid.Column="2"
+                                            Orientation="Vertical">
+                                    <ComboBox SelectedIndex="{Binding Preferences.SelectedTimeFormatOption}"
+                                              Margin="0,5,0,5"
+                                              HorizontalAlignment="Left"
+                                          ItemsSource="{Binding Preferences.TimeFormatOptions}"
+                                          MinWidth="100" />
+                                    <CheckBox Margin="0,5,0,5"
+                                              IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimezone}">Convert UTC times to local timezone</CheckBox>
+                                </StackPanel>
+                                <TextBlock Grid.Row="3"
+                                           Grid.Column="0"
                                            VerticalAlignment="Center"
                                            Text="Date source :" />
-                                <ComboBox Grid.Row="2"
+                                <ComboBox Grid.Row="3"
                                           Grid.Column="2"
                                           SelectedIndex="{Binding Preferences.DateSourceOption}"
                                           HorizontalAlignment="Left"
@@ -66,7 +83,7 @@
                                           ItemsSource="{Binding Preferences.DateSourceOptions}"
                                           MinWidth="100" />
                                 <StackPanel Orientation="Vertical"
-                                            Grid.Row="3"
+                                            Grid.Row="4"
                                             Margin="0,5,0,5"
                                             Grid.ColumnSpan="3">
                                     <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"

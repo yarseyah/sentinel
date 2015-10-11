@@ -16,19 +16,25 @@
     [DataContract]
     public class UserPreferences : ViewModelBase, IUserPreferences
     {
-        private readonly IList<string> dateFormatOptions = new List<string>
+        private static readonly IList<string> dateFormatOptions = new List<string>
                                                                {
-                                                                   "Default",
-                                                                   "Short Date",
-                                                                   "Long Date",
-                                                                   "Time",
-                                                                   "Time with Milliseconds"
+                                                                   "yyyy-MM-dd",
+                                                                   "MM-dd",
+                                                                   "dd-MM-yyyy",
+                                                                   "ddd"
                                                                };
 
-        private readonly IList<string> dateSourceOptions = new List<string>
+        private static readonly IList<string> timeFormatOptions = new List<string>
                                                                {
-                                                                   "Received time (GMT)",
-                                                                   "Received time (local)",
+                                                                   "HH:mm:ss;FFFF",
+                                                                   "HH:mm:ss",
+                                                                   "HH:mm"
+                                                               };
+
+        private static readonly IList<string> dateSourceOptions = new List<string>
+                                                               {
+                                                                   "Received UTC time",
+                                                                   "Received local time",
                                                                    "Source time"
                                                                };
 
@@ -42,7 +48,11 @@
 
         private int selectedDateOption;
 
+        private int selectedTimeFormatOption;
+
         private int dateSourceOption;
+
+        private bool convertUtcTimesToLocalTimezone = true;
 
         private int selectedTypeOption = 1;
 
@@ -76,21 +86,11 @@
         /// <summary>
         /// Gets an enumerable list of the available date formatting options.
         /// </summary>
-        public IEnumerable<string> DateFormatOptions
-        {
-            get
-            {
-                return dateFormatOptions;
-            }
-        }
+        public IEnumerable<string> DateFormatOptions { get; } = dateFormatOptions;
 
-        public IEnumerable<string> DateSourceOptions
-        {
-            get
-            {
-                return dateSourceOptions;
-            }
-        }
+        public IEnumerable<string> TimeFormatOptions { get; } = timeFormatOptions;
+
+        public IEnumerable<string> DateSourceOptions { get; } = dateSourceOptions;
 
         /// <summary>
         /// Gets or sets the selected date option, as a index of the available options.
@@ -108,7 +108,44 @@
                 if (selectedDateOption != value)
                 {
                     selectedDateOption = value;
-                    OnPropertyChanged("SelectedDateOption");
+                    OnPropertyChanged(nameof(SelectedDateOption));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected time format, as a index of the available options.
+        /// </summary>
+        /// <see cref="DateFormatOptions"/>
+        public int SelectedTimeFormatOption
+        {
+            get
+            {
+                return selectedTimeFormatOption;
+            }
+
+            set
+            {
+                if (selectedTimeFormatOption != value)
+                {
+                    selectedTimeFormatOption = value;
+                    OnPropertyChanged(nameof(SelectedTimeFormatOption));
+                }
+            }
+        }
+
+        public bool ConvertUtcTimesToLocalTimezone
+        {
+            get
+            {
+                return convertUtcTimesToLocalTimezone;
+            }
+            set
+            {
+                if (value != convertUtcTimesToLocalTimezone)
+                {
+                    convertUtcTimesToLocalTimezone = value;
+                    OnPropertyChanged(nameof(ConvertUtcTimesToLocalTimezone));
                 }
             }
         }
@@ -128,7 +165,7 @@
                 if (dateSourceOption != value)
                 {
                     dateSourceOption = value;
-                    OnPropertyChanged("DateSourceOption");
+                    OnPropertyChanged(nameof(DateSourceOption));
                 }
             }
         }
@@ -149,7 +186,7 @@
                 if (selectedTypeOption != value)
                 {
                     selectedTypeOption = value;
-                    OnPropertyChanged("SelectedTypeOption");
+                    OnPropertyChanged(nameof(SelectedTypeOption));
                 }
             }
         }

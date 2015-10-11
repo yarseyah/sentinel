@@ -10,11 +10,11 @@ namespace Sentinel.Support.Converters
 
     using Sentinel.Interfaces;
 
-    public class DateTimePreferenceConverter : IValueConverter
+    public class DatePreferenceConverter : IValueConverter
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        public IUserPreferences Preferences { get; set; }
+        private IUserPreferences Preferences { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -47,7 +47,8 @@ namespace Sentinel.Support.Converters
             // Fallback if message does not contain meta-data.
             var dt = (DateTime)(displayDateTime ?? message.DateTime);
 
-            if (dt.Kind == DateTimeKind.Utc)
+            // TODO: make a time selection option....
+            if (dt.Kind == DateTimeKind.Utc && Preferences.ConvertUtcTimesToLocalTimezone)
             {
                 var defaultTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
                 var global = new ZonedDateTime(Instant.FromDateTimeUtc(dt), defaultTimeZone);
@@ -57,7 +58,9 @@ namespace Sentinel.Support.Converters
             }
 
             var local = LocalDateTime.FromDateTime(dt);
-            return local.ToString(GetDateDisplayFormat(Preferences.SelectedDateOption), CultureInfo.CurrentCulture);
+            return local.ToString(
+                GetDateDisplayFormat(Preferences.SelectedDateOption, false),
+                CultureInfo.CurrentCulture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -65,24 +68,26 @@ namespace Sentinel.Support.Converters
             throw new NotImplementedException();
         }
 
-        private static string GetDateDisplayFormat(int setting, bool withTimeZone = false)
+        private static string GetDateDisplayFormat(int setting, bool convertToLocalIfUtc)
         {
-            var dateFormat = withTimeZone ? "yyyy'-'MM'-'dd'T'HH':'mm':'ss;FFFFFFF x" : "yyyy'-'MM'-'dd'T'HH':'mm':'ss;FFFFFFF";
-            switch (setting)
-            {
-                case 1:
-                    dateFormat = withTimeZone ? "dd/MM/yyyy HH:mm:ss x" : "dd/MM/yyyy HH:mm:ss";
-                    break;
-                case 2:
-                    dateFormat = withTimeZone ? "dddd, d MMM yyyy, HH:mm:ss x" : "dddd, d MMM yyyy, HH:mm:ss";
-                    break;
-                case 3:
-                    dateFormat = withTimeZone ? "HH:mm:ss x" : "HH:mm:ss";
-                    break;
-                case 4:
-                    dateFormat = withTimeZone ? "HH:mm:ss,fff x" : "HH:mm:ss,fff";
-                    break;
-            }
+            var dateFormat = "yyyy'-'MM'-'dd";
+
+            //switch (setting)
+            //{
+            //    case 1:
+            //        dateFormat = withTimeZone ? "dd/MM/yyyy HH:mm:ss x" : "dd/MM/yyyy HH:mm:ss";
+            //        break;
+            //    case 2:
+            //        dateFormat = withTimeZone ? "dddd, d MMM yyyy, HH:mm:ss x" : "dddd, d MMM yyyy, HH:mm:ss";
+            //        break;
+            //    case 3:
+            //        dateFormat = withTimeZone ? "HH:mm:ss x" : "HH:mm:ss";
+            //        break;
+            //    case 4:
+            //        dateFormat = withTimeZone ? "HH:mm:ss,fff x" : "HH:mm:ss,fff";
+            //        break;
+            //}
+
             return dateFormat;
         }
     }

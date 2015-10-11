@@ -20,7 +20,8 @@
             <Setter Property="HorizontalContentAlignment"
                     Value="Stretch" />
         </Style>
-        <Converters:DateTimePreferenceConverter x:Key="DateTimePreferenceConverter" />
+        <Converters:TimePreferenceConverter x:Key="TimePreferenceConverter" />
+        <Converters:DatePreferenceConverter x:Key="DatePreferenceConverter" />
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
@@ -74,7 +75,8 @@
                             </DataTemplate>
                         </Controls:FixedWidthColumn.CellTemplate>
                     </Controls:FixedWidthColumn>
-                    <GridViewColumn Header="Date/Time" /> 
+                    <GridViewColumn Header="Date" x:Name="DateColumn"/>
+                    <GridViewColumn Header="Time" x:Name="TimeColumn"/>
                     <Controls:FixedWidthColumn Header="Thread"
                                                FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=50}"
                                                DisplayMemberBinding="{Binding Thread}" />
