@@ -227,6 +227,10 @@
 
             try
             {
+                // Record the current date/time 
+                var receivedTimeUtc = DateTime.UtcNow;
+                var receivedTimeLocal = DateTime.Now;
+
                 var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
                 var element = XElement.Parse(payload);
                 var entryEvent = element.Element(log4Net + "event");
@@ -281,9 +285,15 @@
 
                     AddExceptionIfFound(entryEvent, metaData);
 
+                    // Extract from the source the originating date/time
+                    var sourceTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now);
+
+                    Log.TraceFormat("Message time (r): GMT={0:r}, LOCAL={1:r}, Source={2:r}", receivedTimeUtc, receivedTimeLocal, sourceTime);
+                    Log.TraceFormat("Message time (u): GMT={0:u}, LOCAL={1:u}, Source={2:u}", receivedTimeUtc, receivedTimeLocal, sourceTime);
+
                     var logEntry = new LogEntry
                                        {
-                                           DateTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now),
+                                           DateTime = sourceTime,
                                            System = system,
                                            Thread = entryEvent.GetAttribute("thread", string.Empty),
                                            Description = description,
@@ -304,6 +314,9 @@
                         logEntry.MetaData.Add("SourceFile", sourceFile);
                         logEntry.MetaData.Add("SourceLine", line);
                     }
+
+                    logEntry.MetaData.Add("ReceivedUtcTime", receivedTimeUtc);
+                    logEntry.MetaData.Add("ReceivedLocalTime", receivedTimeLocal);
 
                     return logEntry;
                 }
