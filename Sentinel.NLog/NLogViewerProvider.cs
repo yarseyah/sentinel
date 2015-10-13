@@ -22,7 +22,7 @@
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
-        private static readonly DateTime Log4jDateBase = new DateTime(1970, 1, 1);
+        private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
@@ -38,7 +38,7 @@
         {
             if (settings == null)
             {
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             }
 
             networkSettings = settings as INLogAppenderSettings;
@@ -219,14 +219,12 @@
 
         private LogEntry DecodeEntry(string m)
         {
+            // Record the current date/time 
+            var receivedTime = DateTime.UtcNow;
+
             XNamespace log4J = "unique";
             XNamespace nlogNamespace = "nlogUnique";
-            var message = string.Format(
-                @"<entry xmlns:log4j=""{0}"" xmlns:nlog=""{1}"">{2}</entry>",
-                log4J,
-                nlogNamespace,
-                m);
-
+            var message = $@"<entry xmlns:log4j=""{log4J}"" xmlns:nlog=""{nlogNamespace}"">{m}</entry>";
             var element = XElement.Parse(message);
             var record = element.Element(log4J + "event");
 
@@ -262,7 +260,8 @@
                 line = source.Attribute("line").Value;
             }
 
-            var date = Log4jDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
+            var timestamp = double.Parse(record.Attribute("timestamp").Value);
+            var date = Log4JDateBase + TimeSpan.FromMilliseconds(timestamp);
 
             var entry = new LogEntry
                             {
@@ -291,6 +290,8 @@
                 entry.MetaData.Add("SourceFile", sourceFile);
                 entry.MetaData.Add("SourceLine", line);
             }
+
+            entry.MetaData.Add("ReceivedTime", receivedTime);
 
             return entry;
         }

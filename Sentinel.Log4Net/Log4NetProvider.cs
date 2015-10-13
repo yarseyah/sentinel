@@ -228,10 +228,9 @@
             try
             {
                 // Record the current date/time 
-                var receivedTimeUtc = DateTime.UtcNow;
-                var receivedTimeLocal = DateTime.Now;
+                var receivedTime = DateTime.UtcNow;
 
-                var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
+                var payload = $@"<entry xmlns:log4net=""{log4Net}"">{message}</entry>";
                 var element = XElement.Parse(payload);
                 var entryEvent = element.Element(log4Net + "event");
 
@@ -279,17 +278,16 @@
                         line = source.Attribute("line").Value;
                     }
 
-                    var metaData = new Dictionary<string, object>();
-                    metaData["Classification"] = classification;
-                    metaData["Host"] = host;
+                    var metaData = new Dictionary<string, object>
+                                       {
+                                           ["Classification"] = classification,
+                                           ["Host"] = host
+                                       };
 
                     AddExceptionIfFound(entryEvent, metaData);
 
                     // Extract from the source the originating date/time
                     var sourceTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now);
-
-                    Log.TraceFormat("Message time (r): GMT={0:r}, LOCAL={1:r}, Source={2:r}", receivedTimeUtc, receivedTimeLocal, sourceTime);
-                    Log.TraceFormat("Message time (u): GMT={0:u}, LOCAL={1:u}, Source={2:u}", receivedTimeUtc, receivedTimeLocal, sourceTime);
 
                     var logEntry = new LogEntry
                                        {
@@ -315,8 +313,7 @@
                         logEntry.MetaData.Add("SourceLine", line);
                     }
 
-                    logEntry.MetaData.Add("ReceivedUtcTime", receivedTimeUtc);
-                    logEntry.MetaData.Add("ReceivedLocalTime", receivedTimeLocal);
+                    logEntry.MetaData.Add("ReceivedTime", receivedTime);
 
                     return logEntry;
                 }

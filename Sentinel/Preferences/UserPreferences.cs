@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Runtime.Serialization;
 
-    using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
-    using Sentinel.Support.Wpf;
+    using Interfaces;
+    using Support.Mvvm;
+    using Support.Wpf;
 
     /// <summary>
     /// An implementation of the IUserPreferences which holds all of the user
@@ -16,41 +16,11 @@
     [DataContract]
     public class UserPreferences : ViewModelBase, IUserPreferences
     {
-        private static readonly IList<string> dateFormatOptions = new List<string>
-                                                               {
-                                                                   "yyyy-MM-dd",
-                                                                   "MM-dd",
-                                                                   "dd-MM-yyyy",
-                                                                   "ddd"
-                                                               };
-
-        private static readonly IList<string> timeFormatOptions = new List<string>
-                                                               {
-                                                                   "HH:mm:ss;FFFF",
-                                                                   "HH:mm:ss",
-                                                                   "HH:mm"
-                                                               };
-
-        private static readonly IList<string> dateSourceOptions = new List<string>
-                                                               {
-                                                                   "Received UTC time",
-                                                                   "Received local time",
-                                                                   "Source time"
-                                                               };
-
-        private readonly IList<string> typeColumnOptions = new List<string>
-                                                               {
-                                                                   "Hidden",
-                                                                   "Icons",
-                                                                   "Text",
-                                                                   "Icon and text"
-                                                               };
-
         private int selectedDateOption;
 
         private int selectedTimeFormatOption;
 
-        private int dateSourceOption;
+        private bool useArrivalDateTime;
 
         private bool convertUtcTimesToLocalTimezone = true;
 
@@ -75,22 +45,18 @@
         /// <summary>
         /// Gets the name of the current Windows theme.
         /// </summary>
-        public string CurrentThemeName
-        {
-            get
-            {
-                return ThemeInfo.CurrentThemeFileName;
-            }
-        }
+        public string CurrentThemeName => ThemeInfo.CurrentThemeFileName;
 
         /// <summary>
         /// Gets an enumerable list of the available date formatting options.
         /// </summary>
-        public IEnumerable<string> DateFormatOptions { get; } = dateFormatOptions;
+        public IEnumerable<string> DateFormatOptions { get; } = new[]
+                                                                    {
+                                                                        "yyyy-MM-dd", "MMM-dd", "dd-MM-yyyy", "dd-MMM",
+                                                                        "MM-dd-yyyy", "dddd"
+                                                                    };
 
-        public IEnumerable<string> TimeFormatOptions { get; } = timeFormatOptions;
-
-        public IEnumerable<string> DateSourceOptions { get; } = dateSourceOptions;
+        public IEnumerable<string> TimeFormatOptions { get; } = new[] { "HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm" };
 
         /// <summary>
         /// Gets or sets the selected date option, as a index of the available options.
@@ -151,21 +117,22 @@
         }
 
         /// <summary>
-        /// Gets or sets the selected date option, as a index of the available options.
+        /// Gets or sets whether the display should be of the parsed date/time or of the one made upon
+        /// message receipt.
         /// </summary>
-        public int DateSourceOption
+        public bool UseArrivalDateTime
         {
             get
             {
-                return dateSourceOption;
+                return useArrivalDateTime;
             }
 
             set
             {
-                if (dateSourceOption != value)
+                if (useArrivalDateTime != value)
                 {
-                    dateSourceOption = value;
-                    OnPropertyChanged(nameof(DateSourceOption));
+                    useArrivalDateTime = value;
+                    OnPropertyChanged(nameof(UseArrivalDateTime));
                 }
             }
         }
@@ -254,13 +221,7 @@
         /// <summary>
         /// Gets a list of the available type column options, such as hidden, icons, text, etc.
         /// </summary>
-        public IEnumerable<string> TypeOptions
-        {
-            get
-            {
-                return typeColumnOptions;
-            }
-        }
+        public IEnumerable<string> TypeOptions => new[] { "Hidden", "Icons", "Text", "Icon and text" };
 
         /// <summary>
         /// Gets or sets a value indicating whether the lazy rebuilding option should be used

@@ -10,8 +10,6 @@ namespace Sentinel.Interfaces
         IEnumerable<string> DateFormatOptions { get; }
 
         IEnumerable<string> TimeFormatOptions { get; }
-
-        IEnumerable<string> DateSourceOptions { get; }
             
         [DataMember]
         int SelectedDateOption { get; set; }
@@ -23,7 +21,7 @@ namespace Sentinel.Interfaces
         bool ConvertUtcTimesToLocalTimezone { get; set; }
 
         [DataMember]
-        int DateSourceOption { get; set; }
+        bool UseArrivalDateTime { get; set; }
 
         [DataMember]
         int SelectedTypeOption { get; set; }

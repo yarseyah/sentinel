@@ -7,11 +7,16 @@
              xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Gui"
              xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
              xmlns:Extractors="clr-namespace:Sentinel.Extractors.Gui"
+             xmlns:converters="clr-namespace:Sentinel.Support.Converters"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
+    <UserControl.Resources>
+        <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
+    </UserControl.Resources>
+    
     <Grid x:Name="LayoutRoot">
         <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="General">
@@ -73,19 +78,21 @@
                                 </StackPanel>
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="0"
-                                           VerticalAlignment="Center"
-                                           Text="Date source :" />
-                                <ComboBox Grid.Row="3"
-                                          Grid.Column="2"
-                                          SelectedIndex="{Binding Preferences.DateSourceOption}"
-                                          HorizontalAlignment="Left"
-                                          Margin="0,5,0,5"
-                                          ItemsSource="{Binding Preferences.DateSourceOptions}"
-                                          MinWidth="100" />
+                                           Margin="0,4"
+                                           VerticalAlignment="Top"
+                                           Text="Message Date/Time value :" />
+                                <StackPanel Grid.Row="3"
+                                            Grid.Column="2">
+                                    <RadioButton Margin="0,5,0,5"
+                                                 IsChecked="{Binding Preferences.UseArrivalDateTime}">Use time of message receipt by Sentinel</RadioButton>
+                                    <RadioButton Margin="0,0,0,5"
+                                                 IsChecked="{Binding Preferences.UseArrivalDateTime, Converter={StaticResource BooleanInverterConverter}}">Use sender's time</RadioButton>
+                                </StackPanel>
                                 <StackPanel Orientation="Vertical"
                                             Grid.Row="4"
                                             Margin="0,5,0,5"
-                                            Grid.ColumnSpan="3">
+                                            Grid.ColumnSpan="3"
+                                            Grid.Column="0">
                                     <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"
                                               HorizontalAlignment="Left"
                                               MinWidth="100"

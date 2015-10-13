@@ -1,9 +1,4 @@
-﻿using System;
-using System.Windows.Data;
-
-using Sentinel.Properties;
-
-namespace Sentinel.Views.Gui
+﻿namespace Sentinel.Views.Gui
 {
     using System;
     using System.ComponentModel;
@@ -16,13 +11,12 @@ namespace Sentinel.Views.Gui
 
     using Common.Logging;
 
-    using Sentinel.Highlighters;
-    using Sentinel.Highlighters.Interfaces;
+    using Highlighters;
+    using Highlighters.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Services;
-    using Sentinel.Support;
-    using Sentinel.Support.Converters;
-    using Sentinel.Support.Wpf;
+    using Services;
+    using Support;
+    using Support.Wpf;
 
     /// <summary>
     /// Interaction logic for LogMessagesControl.xaml
@@ -45,28 +39,36 @@ namespace Sentinel.Views.Gui
             }
 
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
-            if (searchHighlighter != null
-                && searchHighlighter.Highlighter != null 
-                && searchHighlighter.Highlighter is INotifyPropertyChanged )
+            if (searchHighlighter?.Highlighter is INotifyPropertyChanged )
             {
-                (searchHighlighter.Highlighter as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
+                ((INotifyPropertyChanged)searchHighlighter.Highlighter).PropertyChanged += (s, e) => UpdateStyles();
             }
 
             messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
 
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
-            if (Preferences != null && Preferences is INotifyPropertyChanged)
+            var preferenceChanged = Preferences as INotifyPropertyChanged;
+            if (preferenceChanged != null)
             {
-                (Preferences as INotifyPropertyChanged).PropertyChanged
-                    += PreferencesChanged;
+                preferenceChanged.PropertyChanged += PreferencesChanged;
             }
 
             // Read defaulted values from preferences
             UpdateStyles();
 
-            SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
-            SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
+            UpdateDateFormat();
+            SetTypeColumnPreferences(Preferences?.SelectedTypeOption ?? 1);
             DoubleClickToShowExceptions = Preferences != null && Preferences.DoubleClickToShowExceptions;
+        }
+
+        ~LogMessagesControl()
+        {
+            // Unregister observer of Preferences changing.
+            var preferences = Preferences as INotifyPropertyChanged;
+            if (preferences != null)
+            {
+                preferences.PropertyChanged -= PreferencesChanged;
+            }
         }
 
         private void AddCopyCommandBinding()
@@ -113,11 +115,9 @@ namespace Sentinel.Views.Gui
             }
         }
 
-        private IHighlightingService<IHighlighter> Highlight { get; set; }
+        private IHighlightingService<IHighlighter> Highlight { get; }
 
-        private IUserPreferences Preferences { get; set; }
-
-        private string DateFormat { get; set; } = "r";
+        private IUserPreferences Preferences { get; }
 
         public void ScrollToEnd()
         {
@@ -136,7 +136,7 @@ namespace Sentinel.Views.Gui
             }
             else if (e.PropertyName == "SelectedDateOption")
             {
-                SetDateFormat(Preferences.SelectedDateOption);
+                UpdateDateFormat();
             }
             else if (e.PropertyName == "DoubleClickToShowExceptions")
             {
@@ -148,36 +148,34 @@ namespace Sentinel.Views.Gui
 
         private void SetTypeColumnPreferences(int selectedTypeOption)
         {
-            if (messages != null)
+            // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
+            // Get the first column in logDetails and check it is a fixed-width column.
+            var view = messages?.View as GridView;
+
+            if (view?.Columns[0] is FixedWidthColumn)
             {
-                // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
-                // Get the first column in logDetails and check it is a fixed-width column.
-                var view = messages.View as GridView;
-                if (view != null && view.Columns[0] is FixedWidthColumn)
+                var fixedColumn = (FixedWidthColumn)view.Columns[0];
+                switch (selectedTypeOption)
                 {
-                    var fixedColumn = (FixedWidthColumn)view.Columns[0];
-                    switch (selectedTypeOption)
-                    {
-                        case 0:
-                            fixedColumn.FixedWidth = 0;
-                            break;
-                        case 1:
-                            fixedColumn.FixedWidth = 30;
-                            break;
-                        case 2:
-                            fixedColumn.FixedWidth = 60;
-                            break;
-                        case 3:
-                            fixedColumn.FixedWidth = 90;
-                            break;
-                        default:
-                            break;
-                    }
+                    case 0:
+                        fixedColumn.FixedWidth = 0;
+                        break;
+                    case 1:
+                        fixedColumn.FixedWidth = 30;
+                        break;
+                    case 2:
+                        fixedColumn.FixedWidth = 60;
+                        break;
+                    case 3:
+                        fixedColumn.FixedWidth = 90;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
-        private void SetDateFormat(int selectedDateOption)
+        private void UpdateDateFormat()
         {
             var view = messages?.View as GridView;
 
@@ -198,14 +196,8 @@ namespace Sentinel.Views.Gui
                 throw new ArgumentNullException(nameof(column));
             }
 
-            column.DisplayMemberBinding = new Binding(".")
-                                              {
-                                                  StringFormat = DateFormat,
-                                                  Converter =
-                                                      (IValueConverter)
-                                                      Resources["TimePreferenceConverter"],
-                                                  ConverterParameter = Preferences
-                                              };
+            var converter = (IValueConverter)Resources["TimePreferenceConverter"];
+            column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
         }
     
         private void BindDateColumn(GridViewColumn column)
@@ -215,14 +207,8 @@ namespace Sentinel.Views.Gui
                 throw new ArgumentNullException(nameof(column));
             }
 
-            column.DisplayMemberBinding = new Binding(".")
-                                              {
-                                                  StringFormat = DateFormat,
-                                                  Converter  =
-                                                      (IValueConverter)
-                                                      Resources["DatePreferenceConverter"],
-                                                  ConverterParameter = Preferences
-                                              };
+            var converter = (IValueConverter)Resources["DatePreferenceConverter"];
+            column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
         }
 
         private void UpdateStyles()
@@ -235,7 +221,7 @@ namespace Sentinel.Views.Gui
         {
             if (sender == null)
             {
-                throw new ArgumentNullException("sender");
+                throw new ArgumentNullException(nameof(sender));
             }
 
             if (DoubleClickToShowExceptions)

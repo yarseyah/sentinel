@@ -10,9 +10,9 @@ namespace Sentinel.Support.Converters
 
     using NodaTime;
 
-    using Sentinel.Interfaces;
+    using Interfaces;
 
-    public class DatePreferenceConverter : IValueConverter
+    public class TimePreferenceConverter : IValueConverter
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
@@ -43,25 +43,25 @@ namespace Sentinel.Support.Converters
             }
 
             // Fallback if message does not contain meta-data.
-            // TODO: safely handle the meta-data dateTime not being a date-time!
-            var dt = displayDateTime != null ? (DateTime)displayDateTime : message.DateTime;
-
-            // TODO: make a time selection option....
-            if (dt.Kind == DateTimeKind.Utc && Preferences.ConvertUtcTimesToLocalTimezone)
+            var dt = (DateTime)(displayDateTime ?? message.DateTime);
+            var isUtc = dt.Kind == DateTimeKind.Utc;
+            if (isUtc && Preferences.ConvertUtcTimesToLocalTimezone)
             {
                 var defaultTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
                 var global = new ZonedDateTime(Instant.FromDateTimeUtc(dt), defaultTimeZone);
                 return
                     global.ToString(
-                        GetDateDisplayFormat(Preferences.SelectedDateOption, Preferences.DateFormatOptions),
+                        GetDateDisplayFormat(Preferences.SelectedTimeFormatOption, Preferences.TimeFormatOptions, true),
                         CultureInfo.CurrentCulture);
             }
 
             var local = LocalDateTime.FromDateTime(dt);
-            return
+            var time =
                 local.ToString(
-                    GetDateDisplayFormat(Preferences.SelectedDateOption, Preferences.DateFormatOptions),
+                    GetDateDisplayFormat(Preferences.SelectedTimeFormatOption, Preferences.TimeFormatOptions, false),
                     CultureInfo.CurrentCulture);
+
+            return isUtc ? time + " [UTC]" : time;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -69,7 +69,7 @@ namespace Sentinel.Support.Converters
             throw new NotImplementedException();
         }
 
-        private static string GetDateDisplayFormat(int setting, IEnumerable<string> settings)
+        private static string GetDateDisplayFormat(int setting, IEnumerable<string> settings, bool convertToLocalIfUtc)
         {
             if (settings == null)
             {
@@ -77,9 +77,10 @@ namespace Sentinel.Support.Converters
             }
 
             var dateFormatSource = settings.ElementAt(setting);
+            var dateFormat = dateFormatSource.Replace("-", "'-'").Replace(":", "':'");
             
             // Need to quote special characters, this will only happen when changing formats, so don't need to be too clever.
-            return dateFormatSource.Replace("-", "'-'").Replace(":", "':'");
+            return convertToLocalIfUtc ? dateFormat + " x" : dateFormat;
         }
     }
 }
