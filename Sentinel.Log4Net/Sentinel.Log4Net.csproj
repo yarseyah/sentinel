@@ -53,6 +53,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="IUdpAppenderListenerSettings.cs" />
     <Compile Include="ConfigurationPage.xaml.cs">
       <DependentUpon>ConfigurationPage.xaml</DependentUpon>

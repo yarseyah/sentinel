@@ -57,6 +57,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="INLogAppenderSettings.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="NetworkClientWrapper.cs" />
