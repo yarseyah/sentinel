@@ -42,7 +42,7 @@
             OrderEarlier = new DelegateCommand(MoveItemUp, e => SelectedIndex > 0);
             OrderLater = new DelegateCommand(
                 MoveItemDown, 
-                e => SelectedIndex < Classifiers.Count - 1 && SelectedIndex != -1);
+                e => SelectedIndex < (Classifiers.Count - 1) && SelectedIndex != -1);
 
             Classifiers = new ObservableCollection<T>();
 
