@@ -71,6 +71,26 @@
                 }
             }
 
+            var preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            if (preferences != null)
+            {
+                var notify = preferences as INotifyPropertyChanged;
+                if (notify != null)
+                {
+                    notify.PropertyChanged += (sender, args) =>
+                    {
+                        var prop = args.PropertyName;
+                        switch (prop)
+                        {
+                            case "SelectedTimeFormatOption":
+                            case "ConvertUtcTimesToLocalTimezone":
+                            case "SelectedDateOption":
+                                rebuildList = true;
+                                break;
+                        }
+                    };
+                }
+            }
 
             InitialiseToolbar();
         }
