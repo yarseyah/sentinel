@@ -7,14 +7,14 @@
              xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Gui"
              xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
              xmlns:Extractors="clr-namespace:Sentinel.Extractors.Gui"
-             xmlns:converters="clr-namespace:Sentinel.Support.Converters"
+             xmlns:wpfExtras="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
     <UserControl.Resources>
-        <converters:BooleanInverterConverter x:Key="BooleanInverterConverter" />
+        <wpfExtras:BooleanInvertingValueConverter x:Key="BooleanInverterConverter" />
     </UserControl.Resources>
     
     <Grid x:Name="LayoutRoot">

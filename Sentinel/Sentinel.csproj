@@ -77,7 +77,7 @@
     <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
@@ -233,7 +233,6 @@
     <Compile Include="Services\Interfaces\ISessionManager.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\SessionManager.cs" />
-    <Compile Include="Support\Converters\BooleanInverterConverter.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
     <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
     <Compile Include="Support\Converters\ColourConverter.cs" />
