@@ -4,9 +4,9 @@ namespace Sentinel.Highlighters
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Sentinel.Highlighters.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Support.Mvvm;
 
     [DataContract]
     public class Highlighter : ViewModelBase, IHighlighter
@@ -40,7 +40,7 @@ namespace Sentinel.Highlighters
             };
         }
 
-        public Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, HighlighterStyle style)
+        protected Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, IHighlighterStyle style)
         {
             Name = name;
             Enabled = enabled;
@@ -151,7 +151,7 @@ namespace Sentinel.Highlighters
                         break;
                 }
 
-                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+                return $"{modeDescription} match of {Pattern} in the {Field} field";
             }
         }
 

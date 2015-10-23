@@ -22,7 +22,7 @@ namespace Sentinel.Highlighters
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
-        private readonly Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick;
+        private Action<object, MouseButtonEventArgs> MessagesOnMouseDoubleClick { get; }
 
         private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
 
@@ -32,7 +32,7 @@ namespace Sentinel.Highlighters
         /// <param name="messagesOnMouseDoubleClick"></param>
         public HighlightingSelector(Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick)
         {
-            this.messagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
+            MessagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
             var oldState = ServiceLocator.Instance.ReportErrors;
             ServiceLocator.Instance.ReportErrors = false;
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
@@ -150,7 +150,7 @@ namespace Sentinel.Highlighters
         {
             if (style == null)
             {
-                throw new ArgumentNullException("style");
+                throw new ArgumentNullException(nameof(style));
             }
 
             style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
@@ -178,7 +178,7 @@ namespace Sentinel.Highlighters
 
             Debug.Assert(defaultStyle != null, "Should always get a default style");
             SetStyleSpacing(defaultStyle);
-            RegisterDoubleClickEvent(defaultStyle, messagesOnMouseDoubleClick);
+            RegisterDoubleClickEvent(defaultStyle, MessagesOnMouseDoubleClick);
             defaultStyle.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Top));
 
             return defaultStyle;

@@ -14,21 +14,8 @@ namespace Sentinel.Highlighters
     public class SearchHighlighter 
         : IDefaultInitialisation, ISearchHighlighter
     {
-        private IHighlighter highlighter;
-
         [DataMember]
-        public IHighlighter Highlighter
-        {
-            get
-            {
-                return highlighter;
-            }
-
-            set
-            {
-                highlighter = value;
-            }
-        }
+        public IHighlighter Highlighter { get; set; }
 
         public IEnumerable<LogEntryField> Fields
         {
@@ -44,12 +31,12 @@ namespace Sentinel.Highlighters
         {
             get
             {
-                return highlighter.Field;
+                return Highlighter.Field;
             }
 
             set
             {
-                highlighter.Field = value;
+                Highlighter.Field = value;
             }
         }
 
@@ -58,12 +45,12 @@ namespace Sentinel.Highlighters
         {
             get
             {
-                return highlighter.Enabled;
+                return Highlighter.Enabled;
             }
 
             set
             {
-                highlighter.Enabled = value;
+                Highlighter.Enabled = value;
             }
         }
 
@@ -72,12 +59,12 @@ namespace Sentinel.Highlighters
         {
             get
             {
-                return highlighter.Mode;
+                return Highlighter.Mode;
             }
 
             set
             {
-                highlighter.Mode = value;
+                Highlighter.Mode = value;
             }
         }
 
@@ -86,13 +73,13 @@ namespace Sentinel.Highlighters
         {
             get
             {
-                Debug.Assert(highlighter != null, "Must have a highlighter");
-                return highlighter.Pattern;
+                Debug.Assert(Highlighter != null, "Must have a highlighter");
+                return Highlighter.Pattern;
             }
 
             set
             {                
-                highlighter.Pattern = value;
+                Highlighter.Pattern = value;
             }
         }
 

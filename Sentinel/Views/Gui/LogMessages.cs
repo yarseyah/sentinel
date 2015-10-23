@@ -33,7 +33,6 @@
 
         private bool clearPending;        
         private int filteredCount;
-        private int extractedCount;
         private ILogger logger;
         private bool rebuildList;
         private string status;
@@ -48,10 +47,7 @@
             Messages = new ObservableCollection<ILogEntry>();
             PropertyChanged += PropertyChangedHandler;
 
-            DispatcherTimer dt = new DispatcherTimer(DispatcherPriority.Normal)
-                                     {
-                                         Interval = TimeSpan.FromMilliseconds(200)
-                                     };
+            var dt = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(200) };
             dt.Tick += UpdateTick;
             dt.Start();
 
@@ -75,33 +71,33 @@
                 }
             }
 
+
             InitialiseToolbar();
         }
 
         private void InitialiseToolbar()
         {
             var autoscrollButton = new LogViewerToolbarButton(
-                "Auto-Scroll", 
-                "Automatically scroll to show the newest entry", 
-                true, 
-                new DelegateCommand(e => autoscroll = !autoscroll));
-            autoscrollButton.IsChecked = autoscroll;
-            autoscrollButton.ImageIdentifier = "ScrollDown";
+                "Auto-Scroll",
+                "Automatically scroll to show the newest entry",
+                true,
+                new DelegateCommand(e => autoscroll = !autoscroll))
+                                       {
+                                           IsChecked = autoscroll,
+                                           ImageIdentifier = "ScrollDown"
+                                       };
 
             var clearButton = new LogViewerToolbarButton(
-                "Clear", 
-                "Clear the log messages from the display", 
-                false, 
-                new DelegateCommand(e => clearPending = true));
-            clearButton.ImageIdentifier = "Clear";
+                "Clear",
+                "Clear the log messages from the display",
+                false,
+                new DelegateCommand(e => clearPending = true)) { ImageIdentifier = "Clear" };
 
             var pauseButton = new LogViewerToolbarButton(
-                "Pause", 
-                "Pause the addition of messages to the display", 
-                true, 
-                new DelegateCommand(PauseMessagesHandler));
-            pauseButton.IsChecked = false;
-            pauseButton.ImageIdentifier = "Pause";
+                "Pause",
+                "Pause the addition of messages to the display",
+                true,
+                new DelegateCommand(PauseMessagesHandler)) { IsChecked = false, ImageIdentifier = "Pause" };
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
@@ -131,32 +127,12 @@
                 return filteredCount;
             }
 
-            private set
+            set
             {
                 if (filteredCount != value)
                 {
                     filteredCount = value;
-                    OnPropertyChanged("FilteredCount");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the count of extracted entries.
-        /// </summary>
-        public int ExtractedCount
-        {
-            get
-            {
-                return extractedCount;
-            }
-
-            private set
-            {
-                if (extractedCount != value)
-                {
-                    extractedCount = value;
-                    OnPropertyChanged("ExtractedCount");
+                    OnPropertyChanged(nameof(FilteredCount));
                 }
             }
         }
@@ -164,6 +140,7 @@
         /// <summary>
         /// Gets the count of unfiltered entries.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global - used in view model
         public int UnfilteredCount
         {
             get
@@ -171,7 +148,7 @@
                 return unfilteredCount;
             }
 
-            private set
+            set
             {
                 if (unfilteredCount != value)
                 {
@@ -220,8 +197,8 @@
 
                 var filtered = FilteredCount < UnfilteredCount;
                 Status = filtered
-                             ? string.Format("{0} of {1} Messages [Filters Applied]", FilteredCount, UnfilteredCount)
-                             : string.Format("{0} Messages", UnfilteredCount);
+                             ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]"
+                             : $"{UnfilteredCount} Messages";
             }
         }
 
@@ -233,7 +210,7 @@
                 {
                     lock (pendingAdditions)
                     {
-                        foreach (ILogEntry entry in Logger.NewEntries)
+                        foreach (var entry in Logger.NewEntries)
                         {
                             pendingAdditions.Enqueue(entry);
                         }
@@ -384,13 +361,7 @@
         /// <summary>
         /// Gets or sets the name of a LogViewer.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return Info.Name;
-            }
-        }
+        public string Name => Info.Name;
 
         public ILogger Logger
         {
@@ -403,20 +374,14 @@
             {
                 if (logger == value) return;
                 logger = value;
-                OnPropertyChanged("Logger");
+                OnPropertyChanged(nameof(Logger));
             }
         }
 
         /// <summary>
         /// Gets or sets the Presenter control for a log viewer.
         /// </summary>
-        public Control Presenter
-        {
-            get
-            {
-                return presenter;
-            }
-        }
+        public Control Presenter => presenter;
 
         public void SetLogger(ILogger newLogger)
         {
