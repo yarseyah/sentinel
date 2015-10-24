@@ -466,7 +466,6 @@
     <Compile Include="Controls\ImageTypesControl.xaml.cs">
       <DependentUpon>ImageTypesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImageView.cs" />
     <Compile Include="Preferences\UserPreferences.cs" />
     <Compile Include="Controls\PreferencesWindow.xaml.cs">
       <DependentUpon>PreferencesWindow.xaml</DependentUpon>
