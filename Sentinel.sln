@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog3Tester", "NLog3Tester\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nLog4Tester", "nLog4Tester\nLog4Tester.csproj", "{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.EventLogMonitor", "Sentinel.EventLogMonitor\Sentinel.EventLogMonitor.csproj", "{3F2AF0E8-2B22-45C5-AB62-27C42C506325}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.EventLogMonitor.Interfaces", "Sentinel.EventLogMonitor.Interfaces\Sentinel.EventLogMonitor.Interfaces.csproj", "{43D710A0-7805-4B0A-B38F-4A4D772800F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2AF0E8-2B22-45C5-AB62-27C42C506325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2AF0E8-2B22-45C5-AB62-27C42C506325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2AF0E8-2B22-45C5-AB62-27C42C506325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2AF0E8-2B22-45C5-AB62-27C42C506325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
