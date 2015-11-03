@@ -10,13 +10,13 @@ namespace Sentinel.Support.Wpf
                 "FixedWidth",
                 typeof(double),
                 typeof(FixedWidthColumn),
-                new FrameworkPropertyMetadata(double.NaN, new PropertyChangedCallback(OnFixedWidthChanged)));
+                new FrameworkPropertyMetadata(double.NaN, OnFixedWidthChanged));
 
         static FixedWidthColumn()
         {
             WidthProperty.OverrideMetadata(
                 typeof(FixedWidthColumn),
-                new FrameworkPropertyMetadata(null, new CoerceValueCallback(OnCoerceWidth)));
+                new FrameworkPropertyMetadata(null, OnCoerceWidth));
         }
 
         public double FixedWidth
@@ -35,21 +35,13 @@ namespace Sentinel.Support.Wpf
         private static object OnCoerceWidth(DependencyObject o, object baseValue)
         {
             var fwc = o as FixedWidthColumn;
-            if (fwc != null)
-            {
-                return fwc.FixedWidth;
-            }
-
-            return baseValue;
+            return fwc?.FixedWidth ?? baseValue;
         }
 
         private static void OnFixedWidthChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             var fwc = o as FixedWidthColumn;
-            if (fwc != null)
-            {
-                fwc.CoerceValue(WidthProperty);
-            }
+            fwc?.CoerceValue(WidthProperty);
         }
     }
 }

@@ -19,7 +19,7 @@
             IProviderSettings settings = new ProviderSettings();
 
             // Construct the wizard
-            Wizard wizard = new Wizard
+            var wizard = new Wizard
                                 {
                                     Owner = parent, 
                                     ShowNavigationTree = false,

@@ -18,7 +18,7 @@ namespace Sentinel.Services
         {
             if (dict == null)
             {
-                throw new ArgumentNullException("dict");
+                throw new ArgumentNullException(nameof(dict));
             }
 
             return dict.ContainsKey(key) ? dict[key] : default(TValue);

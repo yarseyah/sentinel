@@ -9,7 +9,7 @@ namespace Sentinel.Services
         {
             if (type == null)
             {
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             }
 
             var attributes = type.GetCustomAttributes(typeof(T), true);
@@ -21,7 +21,7 @@ namespace Sentinel.Services
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             return obj.GetType().HasAttribute<T>();

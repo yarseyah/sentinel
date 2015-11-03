@@ -20,14 +20,15 @@
                 File.Delete(filePath);
             }
 
-            using (FileStream fs = File.Create(filePath))
+            using (var fs = File.Create(filePath))
             {
                 var messages = windowFrame.PrimaryView.Messages;
                 lock (messages)
                 {
                     foreach (var msg in messages)
                     {
-                        AddText(fs, string.Format("{0}|{1}|{2}|{3}\r\n", msg.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ffff"), msg.Type, msg.System, msg.Description));
+                        AddText(fs,
+                            $"{msg.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{msg.Type}|{msg.System}|{msg.Description}\r\n");
                     }
                 }
             }

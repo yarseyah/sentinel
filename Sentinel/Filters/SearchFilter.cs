@@ -1,13 +1,9 @@
 ﻿namespace Sentinel.Filters
 {
-    #region Using directives
-
     using System.Runtime.Serialization;
 
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
-
-    #endregion Using directives
 
     [DataContract]
     public class SearchFilter

@@ -20,7 +20,7 @@
             {
                 throw new ArgumentException(
                     "Log name can not be null or empty for LogManager.Add(...)",
-                    logName);
+                    nameof(logName));
             }
 
             Debug.Assert(!loggers.ContainsKey(logName), "Log name has already been used.");
@@ -28,10 +28,10 @@
             {
                 throw new ArgumentException(
                     "LogManager does not support duplicate log names.",
-                    "logName");
+                    nameof(logName));
             }
 
-            Log log = new Log {Name = logName};
+            var log = new Log {Name = logName};
 
             loggers[logName] = log;
             return log;

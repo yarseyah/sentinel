@@ -250,7 +250,11 @@ namespace Sentinel.Highlighters.Gui
             var colours = new Dictionary<string, Color>();
             foreach (var propertyInfo in typeof(Colors).GetProperties())
             {
-                colours.Add(propertyInfo.Name, (Color) ColorConverter.ConvertFromString(propertyInfo.Name));
+                var colour = ColorConverter.ConvertFromString(propertyInfo.Name);
+                if (colour != null)
+                {
+                    colours.Add(propertyInfo.Name, (Color) colour);
+                }
             }
 
             return colours;

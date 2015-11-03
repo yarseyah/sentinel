@@ -17,8 +17,6 @@
     {
         private static readonly ILog Log = LogManager.GetLogger<ServiceLocator>();
 
-        private static readonly ServiceLocator ActualInstance = new ServiceLocator();
-
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         private ServiceLocator()
@@ -46,13 +44,7 @@
             }
         }
 
-        public static ServiceLocator Instance
-        {
-            get
-            {
-                return ActualInstance;
-            }
-        }
+        public static ServiceLocator Instance { get; } = new ServiceLocator();
 
         public string SaveLocation { get; private set; }
 
@@ -78,7 +70,7 @@
 
             if (ReportErrors)
             {
-                var errorMessage = string.Format("No registered service supporting {0}", typeof(T));
+                var errorMessage = $"No registered service supporting {typeof(T)}";
                 Log.Error(errorMessage);
                 MessageBox.Show(errorMessage, "Service location error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -112,10 +104,7 @@
                 services[keyType] = Activator.CreateInstance(instanceType);
 
                 var defaultInitialisation = services[keyType] as IDefaultInitialisation;
-                if (defaultInitialisation != null)
-                {
-                    defaultInitialisation.Initialise();
-                }
+                defaultInitialisation?.Initialise();
             }
         }
     }

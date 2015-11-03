@@ -21,6 +21,6 @@ namespace Sentinel.Highlighters.Interfaces
 
         int SelectedIndex { get; set; }
 
-        IHighlighterStyle IsHighlighted(LogEntry entry);
+        IHighlighterStyle IsHighlighted(ILogEntry entry);
     }
 }

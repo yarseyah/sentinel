@@ -35,7 +35,7 @@ namespace Sentinel.Logger
             {
                 using (TextWriter tw = File.CreateText("log"))
                 {
-                    foreach (ILogEntry entry in entries)
+                    foreach (var entry in entries)
                     {
                         tw.WriteLine(
                             "{0} {1} [{2}] {3}",

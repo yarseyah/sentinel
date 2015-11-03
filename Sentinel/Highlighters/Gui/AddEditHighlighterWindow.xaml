@@ -52,7 +52,7 @@
             </Setter>
         </Style>
 
-        <Converters:BoolToDisableConverter x:Key="checkboxToDisableConverter" />
+        <Converters:BooleanToDisabledConverter x:Key="checkboxToDisableConverter" />
         <Converters:VisibilityToCollapsedConverter x:Key="collapsedVisibilityConverter" />
     </Window.Resources>
 

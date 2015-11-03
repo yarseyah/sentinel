@@ -24,8 +24,6 @@
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private readonly List<IProviderInfo> providers = new List<IProviderInfo>();
 
         private readonly IProviderManager providerManager;
@@ -52,7 +50,7 @@
             InitializeComponent();
             DataContext = this;
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             // Register to self so that we can handler user interactions.
             PropertyChanged += PropertyChangedHandler;
@@ -127,21 +125,9 @@
             }
         }
 
-        public string Description
-        {
-            get
-            {
-                return "Select a log provider from the registered providers";
-            }
-        }
+        public string Description => "Select a log provider from the registered providers";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
         public string SelectedProviderDescription
         {
@@ -178,13 +164,7 @@
             }
         }
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {

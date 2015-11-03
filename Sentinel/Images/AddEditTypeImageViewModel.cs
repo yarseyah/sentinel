@@ -39,7 +39,7 @@ namespace Sentinel.Images
                     {TypeError.NoError, null}
                 };
 
-        private readonly Window window;
+        public Window Window { get; }
 
         private string errorMessage = "No image selected.";
 
@@ -53,21 +53,21 @@ namespace Sentinel.Images
 
         private string size = "Small";
 
-        private bool _isAddMode;
-
         private TypeError typeError;
 
+        private bool isAddMode;
+
         public AddEditTypeImageViewModel(Window window, ITypeImageService images, bool isAddMode)
-        {            
-            this.window = window;
+        {
+            Window = window;
             if (window != null)
             {
-                window.Title = string.Format("{0} Image", isAddMode ? "Edit" : "Add");
+                window.Title = $"{(isAddMode ? "Edit" : "Add")} Image";
             }
 
-            this.window.DataContext = this;
+            Window.DataContext = this;
 
-            _isAddMode = isAddMode;
+            IsAddMode = isAddMode;
             imageError = isAddMode ? ImageError.NotSpecified : ImageError.NoError;
             typeError = isAddMode ? TypeError.NotSpecified : TypeError.NoError;
 
@@ -130,21 +130,15 @@ namespace Sentinel.Images
 
             set
             {
-                if (image != value)
+                if (!Equals(image, value))
                 {
                     image = value;
-                    OnPropertyChanged("Image");
+                    OnPropertyChanged(nameof(Image));
                 }
             }
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                return typeError == TypeError.NoError && imageError == ImageError.NoError;
-            }
-        }
+        public bool IsValid => typeError == TypeError.NoError && imageError == ImageError.NoError;
 
         public ICommand Reject { get; private set; }
 
@@ -163,7 +157,7 @@ namespace Sentinel.Images
                 if (type != value)
                 {
                     type = value;
-                    OnPropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }
@@ -180,7 +174,7 @@ namespace Sentinel.Images
                 if (size != value)
                 {
                     size = value;
-                    OnPropertyChanged("Size");
+                    OnPropertyChanged(nameof(Size));
                 }
             }
         }
@@ -189,15 +183,15 @@ namespace Sentinel.Images
         {
             get
             {
-                return _isAddMode;
+                return isAddMode;
             }
 
             set
             {
-                if (_isAddMode != value)
+                if (isAddMode != value)
                 {
-                    _isAddMode = value;
-                    OnPropertyChanged("IsAddMode");
+                    isAddMode = value;
+                    OnPropertyChanged(nameof(IsAddMode));
                 }
             }
         }
@@ -215,7 +209,7 @@ namespace Sentinel.Images
                 return errorMessage;
             }
 
-            set
+            private set
             {
                 if (errorMessage != value)
                 {
@@ -240,15 +234,13 @@ namespace Sentinel.Images
             {
                 string error = null;
 
-                if (_isAddMode && (fieldName == "Type" || fieldName == "Size"))
+                if (IsAddMode && (fieldName == "Type" || fieldName == "Size"))
                 {
                     var oldTypeError = typeError;
 
                     // TODO: need to be aware of the different qualities of images, using best available
                     var selectedSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size);
-                    if (!string.IsNullOrEmpty(Type)
-                        && ImageService != null
-                        && ImageService.Get(Type, selectedSize, false, false) != null)
+                    if (!string.IsNullOrEmpty(Type) && ImageService?.Get(Type, selectedSize, false) != null)
                     {
                         typeError = TypeError.Duplicate;
                     }
@@ -285,7 +277,7 @@ namespace Sentinel.Images
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
                 };
 
-            var dialogResult = openFileDialog.ShowDialog(window);
+            var dialogResult = openFileDialog.ShowDialog(Window);
             
 
             if (dialogResult == true)
@@ -338,8 +330,8 @@ namespace Sentinel.Images
 
         private void CloseDialog(bool dialogResult)
         {
-            window.DialogResult = dialogResult;
-            window.Close();
+            Window.DialogResult = dialogResult;
+            Window.Close();
         }
 
         private void UpdateErrorMessage(bool imageChangedMostRecently)

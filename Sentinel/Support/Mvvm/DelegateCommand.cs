@@ -5,19 +5,14 @@
 
     public class DelegateCommand : ICommand
     {
-        private readonly Predicate<object> canExecute;
+        private Predicate<object> CanExecutePredicate { get; }
 
-        private readonly Action<object> executeAction;
+        private Action<object> ExecuteAction { get; }
 
-        public DelegateCommand(Action<object> executeAction)
-            : this(executeAction, null)
+        public DelegateCommand(Action<object> executeAction, Predicate<object> canExecute = null)
         {
-        }
-
-        public DelegateCommand(Action<object> executeAction, Predicate<object> canExecute)
-        {
-            this.executeAction = executeAction;
-            this.canExecute = canExecute;
+            ExecuteAction = executeAction;
+            CanExecutePredicate = canExecute;
         }
 
         public event EventHandler CanExecuteChanged
@@ -35,12 +30,12 @@
 
         public bool CanExecute(object parameter)
         {
-            return canExecute == null ? true : canExecute.Invoke(parameter);
+            return CanExecutePredicate?.Invoke(parameter) ?? true;
         }
 
         public void Execute(object parameter)
         {
-            executeAction.Invoke(parameter);
+            ExecuteAction.Invoke(parameter);
         }
     }
 }

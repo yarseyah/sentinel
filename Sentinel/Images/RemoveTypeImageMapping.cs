@@ -13,10 +13,8 @@ namespace Sentinel.Images
 
             if (service != null)
             {
-                var prompt = string.Format(
-                    "Are you sure you want to remove the selected image?\r\n\r\n" +
-                    "Image Name = \"{0}\"",
-                    typeImageRecord.Name);
+                var prompt = "Are you sure you want to remove the selected image?\r\n\r\n"
+                             + $"Image Name = \"{typeImageRecord.Name}\"";
 
                 var result = MessageBox.Show(
                     prompt,

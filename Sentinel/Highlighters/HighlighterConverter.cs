@@ -13,11 +13,11 @@ namespace Sentinel.Highlighters
     {
         private static readonly ILog Log = LogManager.GetLogger<HighlighterConverter>();
 
-        private readonly IHighlighter highlighter;
+        private IHighlighter Highlighter { get; }
 
         public HighlighterConverter(IHighlighter highlighter)
         {
-            this.highlighter = highlighter;
+            Highlighter = highlighter;
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -32,7 +32,7 @@ namespace Sentinel.Highlighters
                 }
                 else
                 {
-                    match = highlighter.Enabled && highlighter.IsMatch(entry);
+                    match = Highlighter.Enabled && Highlighter.IsMatch(entry);
                 }
             }
 

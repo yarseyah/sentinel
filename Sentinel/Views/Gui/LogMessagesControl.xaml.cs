@@ -96,12 +96,7 @@
                 foreach (ILogEntry item in messages.SelectedItems)
                 {
                     sb.AppendLine(
-                        string.Format(
-                            "{0}|{1}|{2}|{3}",
-                            item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff"),
-                            item.Type,
-                            item.System,
-                            item.Description));
+                        $"{item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{item.Type}|{item.System}|{item.Description}");
                 }
 
                 try

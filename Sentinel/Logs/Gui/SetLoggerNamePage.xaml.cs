@@ -18,8 +18,6 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private string logName = "Untitled";
         private bool isValid;
         
@@ -29,7 +27,7 @@
         {
             InitializeComponent();
             DataContext = this;
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
             PropertyChanged += PropertyChangedHandler;
         }
 
@@ -46,10 +44,10 @@
 
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
@@ -62,29 +60,19 @@
             }
             set
             {
-                if (logName == value) return;
-                logName = value;
-                OnPropertyChanged("LogName");
+                if (logName != value)
+                {
+                    logName = value;
+                    OnPropertyChanged("LogName");
+                }
             }
         }
 
-        public string Title { get { return "Log Name"; } }
+        public string Title => "Log Name";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Description
-        {
-            get
-            {
-                return "Define a name for the log to be created.";
-            }
-        }
+        public string Description => "Define a name for the log to be created.";
 
         public bool IsValid
         {
@@ -94,26 +82,22 @@
             }
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
             }
         }
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
 
         public object Save(object saveData)
         {
             Debug.Assert(saveData is NewLoggerSettings, "Expecting to have a NewLoggerSettings instance");
             Debug.Assert(saveData as NewLoggerSettings != null, "Not expecting a null");
 
-            NewLoggerSettings settings = saveData as NewLoggerSettings;
+            var settings = saveData as NewLoggerSettings;
             if (settings != null)
             {
                 settings.LogName = LogName;
@@ -168,13 +152,7 @@
         /// <returns>
         /// An error message indicating what is wrong with this object. The default is an empty string ("").
         /// </returns>
-        public string Error
-        {
-            get
-            {
-                return this["LogName"];
-            }
-        }
+        public string Error => this["LogName"];
 
         private void PageLoaded(object sender, System.Windows.RoutedEventArgs e)
         {

@@ -38,7 +38,7 @@
                 if (IsVertical != value)
                 {
                     settings.IsVertical = value;
-                    OnPropertyChanged("IsVertical");
+                    OnPropertyChanged(nameof(IsVertical));
                 }
             }
         }
@@ -55,7 +55,7 @@
                 if (Layout != value)
                 {
                     settings.Layout = value;
-                    OnPropertyChanged("Layout");
+                    OnPropertyChanged(nameof(Layout));
                 }
             }
         }
@@ -72,7 +72,7 @@
                 if (LogName != value)
                 {
                     settings.LogName = value;
-                    OnPropertyChanged("LogName");
+                    OnPropertyChanged(nameof(LogName));
                 }
             }
         }
@@ -89,7 +89,7 @@
                 if (providers != value)
                 {
                     providers = value;
-                    OnPropertyChanged("Providers");
+                    OnPropertyChanged(nameof(Providers));
                 }
             }
         }
@@ -106,7 +106,7 @@
                 if (PrimaryView != value)
                 {
                     settings.PrimaryView = value;
-                    OnPropertyChanged("PrimaryView");
+                    OnPropertyChanged(nameof(PrimaryView));
                 }
             }
         }
@@ -123,7 +123,7 @@
                 if (secondaryView != value)
                 {
                     secondaryView = value;
-                    OnPropertyChanged("SecondaryView");
+                    OnPropertyChanged(nameof(SecondaryView));
                 }
             }
         }
@@ -141,9 +141,9 @@
                     for (var index = 0; index < Providers.Count; index++)
                     {
                         var p = Providers[index];
-                        sb.AppendFormat("{0} - {1} - {2}", p.Settings.Name, p.Settings.Info.Name, p.Settings.Summary);
+                        sb.Append($"{p.Settings.Name} - {p.Settings.Info.Name} - {p.Settings.Summary}");
 
-                        if (index < providers.Count - 1)
+                        if (index < (providers.Count - 1))
                         {
                             sb.AppendLine();
                         }

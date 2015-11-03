@@ -32,10 +32,14 @@ namespace Sentinel.Highlighters
 
             PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) || e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
@@ -55,8 +59,12 @@ namespace Sentinel.Highlighters
                 if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) ||
                     e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }

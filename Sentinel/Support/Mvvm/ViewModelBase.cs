@@ -12,7 +12,7 @@
 
         protected ViewModelBase()
         {
-            log = LogManager.GetLogger(this.GetType().Name);
+            log = LogManager.GetLogger(GetType().Name);
         }
 
         /// <summary>

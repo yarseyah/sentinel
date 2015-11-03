@@ -211,7 +211,6 @@
     <Compile Include="Interfaces\IHighlighterStyle.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
     <Compile Include="Interfaces\LinqHelpers.cs" />
-    <Compile Include="Interfaces\LogEntry.cs" />
     <Compile Include="Interfaces\LogEntryField.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
     <Compile Include="StartUp\Log4NetOptions.cs" />
@@ -242,9 +241,7 @@
     <Compile Include="Support\Converters\DatePreferenceConverter.cs" />
     <Compile Include="Support\Converters\TimePreferenceConverter.cs" />
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
-    <Compile Include="Support\Converters\IsTimingMessageValueConverter.cs" />
     <Compile Include="Support\Converters\LongPathToShortPathConverter.cs" />
-    <Compile Include="Support\Converters\MatchModeConverter.cs" />
     <Compile Include="Support\Converters\MessageHasExceptionMetadataConverter.cs" />
     <Compile Include="Support\Converters\MetaDataConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
@@ -256,9 +253,8 @@
     <Compile Include="Support\JsonHelper.cs" />
     <Compile Include="Support\Mvvm\DelegateCommand.cs" />
     <Compile Include="Support\Mvvm\ViewModelBase.cs" />
-    <Compile Include="Support\RegexExtensions.cs" />
     <Compile Include="Support\Wpf\DataBoundToolbar.cs" />
-    <Compile Include="Support\Wpf\FixedWidthColumn.xaml.cs" />
+    <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />
     <Compile Include="Support\Wpf\ThemeInfo.cs" />
     <Compile Include="Views\Gui\LogMessages.cs" />

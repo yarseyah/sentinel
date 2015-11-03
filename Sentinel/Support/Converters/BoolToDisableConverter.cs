@@ -4,11 +4,11 @@ namespace Sentinel.Support.Converters
     using System.Globalization;
     using System.Windows.Data;
 
-    public class BoolToDisableConverter : IValueConverter
+    public class BooleanToDisabledConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null || (value is bool && !((bool) value));
+            return value == null || value is bool && !(bool) value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

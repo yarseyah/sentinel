@@ -13,10 +13,10 @@ namespace Sentinel.Filters.Gui
 
             if (service != null)
             {
-                string prompt = "Are you sure you want to remove the selected filter?\r\n\r\n" +
+                var prompt = "Are you sure you want to remove the selected filter?\r\n\r\n" +
                                 $"Filter Name = \"{filter.Name}\"";
 
-                MessageBoxResult result = MessageBox.Show(
+                var result = MessageBox.Show(
                     prompt,
                     "Remove Filter",
                     MessageBoxButton.YesNo,

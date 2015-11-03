@@ -156,9 +156,9 @@
                 view.SortDescriptions.Add(new SortDescription(propertyName, direction));
                 if (GetShowSortGlyph(listView))
                 {
-                    ImageSource glyph = direction == ListSortDirection.Ascending
-                                            ? GetSortGlyphAscending(listView)
-                                            : GetSortGlyphDescending(listView);
+                    var glyph = direction == ListSortDirection.Ascending
+                                    ? GetSortGlyphAscending(listView)
+                                    : GetSortGlyphDescending(listView);
                     AddSortGlyph(sortedColumnHeader, direction, glyph);
                 }
 
@@ -251,7 +251,7 @@
             ListSortDirection direction,
             ImageSource sortGlyph)
         {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
+            var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
             adornerLayer.Add(
                 new SortGlyphAdorner(
                     columnHeader,
@@ -270,7 +270,7 @@
                     var listView = GetAncestor<ListView>(headerClicked);
                     if (listView != null)
                     {
-                        ICommand command = GetCommand(listView);
+                        var command = GetCommand(listView);
                         if (command != null)
                         {
                             if (command.CanExecute(propertyName))
@@ -298,10 +298,10 @@
         private static void RemoveSortGlyph(GridViewColumnHeader columnHeader)
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            var adorners = adornerLayer.GetAdorners(columnHeader);
-            if (adorners != null)
+            var adornerCollection = adornerLayer.GetAdorners(columnHeader);
+            if (adornerCollection != null)
             {
-                foreach (SortGlyphAdorner adorner in adorners.OfType<SortGlyphAdorner>())
+                foreach (var adorner in adornerCollection.OfType<SortGlyphAdorner>())
                 {
                     adornerLayer.Remove(adorner);
                 }
@@ -351,11 +351,11 @@
 
             private Geometry GetDefaultGlyph()
             {
-                double x1 = columnHeader.ActualWidth - 13;
-                double x2 = x1 + 10;
-                double x3 = x1 + 5;
-                double y1 = (columnHeader.ActualHeight / 2) - 3;
-                double y2 = y1 + 5;
+                var x1 = columnHeader.ActualWidth - 13;
+                var x2 = x1 + 10;
+                var x3 = x1 + 5;
+                var y1 = (columnHeader.ActualHeight / 2) - 3;
+                var y2 = y1 + 5;
 
                 if (direction == ListSortDirection.Ascending)
                 {
@@ -364,7 +364,7 @@
                     y2 = tmp;
                 }
 
-                PathSegmentCollection pathSegmentCollection =
+                var pathSegmentCollection =
                     new PathSegmentCollection
                         {
                             new LineSegment(new Point(x2, y1), true),
@@ -373,8 +373,7 @@
 
                 var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);
 
-                var pathFigureCollection = new PathFigureCollection();
-                pathFigureCollection.Add(pathFigure);
+                var pathFigureCollection = new PathFigureCollection { pathFigure };
 
                 var pathGeometry = new PathGeometry(pathFigureCollection);
                 return pathGeometry;

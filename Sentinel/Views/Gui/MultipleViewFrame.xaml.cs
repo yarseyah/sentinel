@@ -114,13 +114,7 @@
             }
         }
 
-        public IUserPreferences Preferences
-        {
-            get
-            {
-                return preferences;
-            }
-        }
+        public IUserPreferences Preferences => preferences;
 
         public ILogger Log
         {
@@ -141,23 +135,24 @@
 
         public void SetViews(IEnumerable<string> viewIdentifiers)
         {
-            if (viewIdentifiers != null && viewIdentifiers.Count() >= 1)
+            var identifiers = viewIdentifiers as string[] ?? viewIdentifiers.ToArray();
+            if (identifiers.Any())
             {
-                string guid = viewIdentifiers.ElementAt(0);
+                var guid = identifiers.ElementAt(0);
                 PrimaryView = viewManager.GetInstance(guid);
                 PrimaryView.SetLogger(log);
                 PrimaryTitle = viewManager.Get(guid).Name;
             }
 
-            if (viewIdentifiers != null && viewIdentifiers.Count() >= 2)
+            if (identifiers.Length >= 2)
             {
-                string guid = viewIdentifiers.ElementAt(1);
+                var guid = identifiers.ElementAt(1);
                 SecondaryView = viewManager.GetInstance(guid);
                 SecondaryView.SetLogger(log);
                 SecondaryTitle = viewManager.Get(guid).Name;
             }
 
-            if (viewIdentifiers != null && viewIdentifiers.Count() == 1)
+            if (identifiers.Length == 1)
             {
                 CollapseSecondaryView();
             }
@@ -165,9 +160,10 @@
 
         ~MultipleViewFrame()
         {
-            if (preferences is INotifyPropertyChanged)
+            var changed = preferences as INotifyPropertyChanged;
+            if (changed != null)
             {
-                (preferences as INotifyPropertyChanged).PropertyChanged -= PreferencesChanged;
+                changed.PropertyChanged -= PreferencesChanged;
             }
         }
 
@@ -183,10 +179,10 @@
         {
             if (!collapseSecondaryView)
             {
-                bool vertical = preferences.UseStackedLayout;
+                var vertical = preferences.UseStackedLayout;
 
-                int rowSpan = vertical ? 1 : 3;
-                int colSpan = vertical ? 3 : 1;
+                var rowSpan = vertical ? 1 : 3;
+                var colSpan = vertical ? 3 : 1;
 
                 Grid.SetRowSpan(first, rowSpan);
                 Grid.SetRowSpan(splitter, rowSpan);

@@ -16,7 +16,7 @@ namespace Sentinel.Interfaces
             var found = list
                 .Select((a, i) => new {a, i})
                 .FirstOrDefault(x => comparer.Equals(x.a, value));
-            return found == null ? -1 : found.i;
+            return found?.i ?? -1;
         }
     }
 }

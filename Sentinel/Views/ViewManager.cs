@@ -62,7 +62,7 @@
 
             Debug.Assert(
                 registered.Concat(registered).Any(i => i.Identifier == identifier),
-                "Identifier must be registered in the collection of views, either explicity or by auto discovery");
+                "Identifier must be registered in the collection of views, either explicitly or by auto discovery");
             
             if (registered.Any(i => i.Identifier == identifier))
             {

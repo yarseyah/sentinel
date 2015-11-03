@@ -13,7 +13,7 @@ namespace Sentinel.Support.Converters
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class TypeToImageConverter : IValueConverter
     {
-        protected ImageQuality quality = ImageQuality.BestAvailable;
+        protected ImageQuality Quality = ImageQuality.BestAvailable;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -24,7 +24,7 @@ namespace Sentinel.Support.Converters
             {
                 if (imageService != null)
                 {
-                    var record = imageService.Get(valueAsString, quality, true, true);
+                    var record = imageService.Get(valueAsString, Quality, true, true);
 
                     if (record != null && !string.IsNullOrEmpty(record.Image))
                     {

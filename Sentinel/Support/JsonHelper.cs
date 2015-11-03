@@ -71,7 +71,7 @@ namespace Sentinel.Support
             }
             catch (Exception e)
             {
-                Log.Error(string.Format("Exception when trying to de-serialize from {0}", filename), e);
+                Log.Error($"Exception when trying to de-serialize from {filename}", e);
             }
 
             return default(T);

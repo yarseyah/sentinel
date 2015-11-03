@@ -140,7 +140,7 @@
                 }
             }
 
-            using (FileStream fs = File.Create(filePath))
+            using (var fs = File.Create(filePath))
             {
                 var info = new UTF8Encoding(true).GetBytes(stringToSave.ToString());
                 fs.Write(info, 0, info.Length);

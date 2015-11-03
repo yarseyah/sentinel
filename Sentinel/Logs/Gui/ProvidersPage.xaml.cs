@@ -29,8 +29,6 @@
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private int selectedProviderIndex = -1;
         private bool isValid;
 
@@ -47,7 +45,7 @@
 
             Providers = new ObservableCollection<PendingProviderRecord>();
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             Add = new DelegateCommand(AddNewProvider);
             Remove = new DelegateCommand(RemoveSelectedProvider, e => SelectedProviderIndex != -1);
@@ -91,29 +89,11 @@
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return "Provider Registration";
-            }
-        }
+        public string Title => "Provider Registration";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Description
-        {
-            get
-            {
-                return "Specify the source-providers for the new logger.";
-            }
-        }
+        public string Description => "Specify the source-providers for the new logger.";
 
         public bool IsValid
         {
@@ -124,13 +104,15 @@
 
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
             }
         }
 
-        public Control PageContent { get { return this; } }
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -147,7 +129,7 @@
             Debug.Assert(saveData != null, "Expecting an instance to save data into");
             Debug.Assert(saveData is NewLoggerSettings, "Expecting a NewLoggerSettings instance");
 
-            NewLoggerSettings settings = saveData as NewLoggerSettings;
+            var settings = saveData as NewLoggerSettings;
             if (settings != null)
             {
                 settings.Providers.Clear();
@@ -259,7 +241,8 @@
             {
                 // Duplicate port #
                 var duplicatePort = providersGroupedByPort.First(g => g.Count() > 1).Key;
-                return string.Format("Duplicate network ports are not permitted, you have specified port number {0} more than once", duplicatePort);
+                return
+                    $"Duplicate network ports are not permitted, you have specified port number {duplicatePort} more than once";
             }
 
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
@@ -268,7 +251,7 @@
                 && Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name)).Any())
             {
                 var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name));
-                return string.Format("Providers should be uniquely named, there is already one called {0}", duplicates.First());
+                return $"Providers should be uniquely named, there is already one called {duplicates.First()}";
             }
 
             if (providerManager != null
@@ -283,7 +266,7 @@
 
                 if (intersection.Any())
                 {
-                    return string.Format("Network port numbers must be unique, port number {0} is already in use.", intersection.First());
+                    return $"Network port numbers must be unique, port number {intersection.First()} is already in use.";
                 }
             }
 

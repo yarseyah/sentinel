@@ -54,29 +54,11 @@
             siInfo = info;
         }
 
-        public IEqualityComparer<TKey> Comparer
-        {
-            get
-            {
-                return keyedEntryCollection.Comparer;
-            }
-        }
+        public IEqualityComparer<TKey> Comparer => keyedEntryCollection.Comparer;
 
-        public int Count
-        {
-            get
-            {
-                return keyedEntryCollection.Count;
-            }
-        }
+        public int Count => keyedEntryCollection.Count;
 
-        public Dictionary<TKey, TValue>.KeyCollection Keys
-        {
-            get
-            {
-                return TrueDictionary.Keys;
-            }
-        }
+        public Dictionary<TKey, TValue>.KeyCollection Keys => TrueDictionary.Keys;
 
         public TValue this[TKey key]
         {
@@ -84,19 +66,14 @@
             {
                 return (TValue) keyedEntryCollection[key].Value;
             }
+
             set
             {
                 DoSetEntry(key, value);
             }
         }
 
-        public Dictionary<TKey, TValue>.ValueCollection Values
-        {
-            get
-            {
-                return TrueDictionary.Values;
-            }
-        }
+        public Dictionary<TKey, TValue>.ValueCollection Values => TrueDictionary.Values;
 
         private Dictionary<TKey, TValue> TrueDictionary
         {
@@ -147,7 +124,7 @@
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            bool result = keyedEntryCollection.Contains(key);
+            var result = keyedEntryCollection.Contains(key);
             value = result ? (TValue) keyedEntryCollection[key].Value : default(TValue);
             return result;
         }
@@ -161,7 +138,7 @@
         protected virtual bool ClearEntries()
         {
             // check whether there are entries to clear
-            bool result = Count > 0;
+            var result = Count > 0;
             if (result)
             {
                 // if so, clear the dictionary
@@ -186,18 +163,12 @@
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
-            if (CollectionChanged != null)
-            {
-                CollectionChanged(this, args);
-            }
+            CollectionChanged?.Invoke(this, args);
         }
 
         protected virtual void OnPropertyChanged(string name)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         protected virtual bool RemoveEntry(TKey key)
@@ -208,7 +179,7 @@
 
         protected virtual bool SetEntry(TKey key, TValue value)
         {
-            bool keyExists = keyedEntryCollection.Contains(key);
+            var keyExists = keyedEntryCollection.Contains(key);
 
             // if identical key/value pair already exists, nothing to do
             if (keyExists && value.Equals((TValue)keyedEntryCollection[key].Value))
@@ -252,7 +223,7 @@
         private bool DoRemoveEntry(TKey key)
         {
             DictionaryEntry entry;
-            int index = GetIndexAndEntryForKey(key, out entry);
+            var index = GetIndexAndEntryForKey(key, out entry);
 
             bool result = RemoveEntry(key);
             if (result)
@@ -270,7 +241,7 @@
         private void DoSetEntry(TKey key, TValue value)
         {
             DictionaryEntry entry;
-            int index = GetIndexAndEntryForKey(key, out entry);
+            var index = GetIndexAndEntryForKey(key, out entry);
 
             if (SetEntry(key, value))
             {
@@ -372,21 +343,9 @@
             return TryGetValue(key, out value);
         }
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys
-        {
-            get
-            {
-                return Keys;
-            }
-        }
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values
-        {
-            get
-            {
-                return Values;
-            }
-        }
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
 
         TValue IDictionary<TKey, TValue>.this[TKey key]
         {
@@ -420,21 +379,9 @@
             return new Enumerator(this, true);
         }
 
-        bool IDictionary.IsFixedSize
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool IDictionary.IsFixedSize => false;
 
-        bool IDictionary.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool IDictionary.IsReadOnly => false;
 
         object IDictionary.this[object key]
         {
@@ -442,32 +389,21 @@
             {
                 return keyedEntryCollection[(TKey) key].Value;
             }
+
             set
             {
                 DoSetEntry((TKey) key, (TValue) value);
             }
         }
 
-        ICollection IDictionary.Keys
-        {
-            get
-            {
-                return Keys;
-            }
-        }
+        ICollection IDictionary.Keys => Keys;
 
         void IDictionary.Remove(object key)
         {
             DoRemoveEntry((TKey) key);
         }
 
-        ICollection IDictionary.Values
-        {
-            get
-            {
-                return Values;
-            }
-        }
+        ICollection IDictionary.Values => Values;
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> kvp)
         {
@@ -488,39 +424,27 @@
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array", "CopyTo() failed:  array parameter was null");
+                throw new ArgumentNullException(nameof(array), "CopyTo() failed:  array parameter was null");
             }
-            if ((index < 0) || (index > array.Length))
+            if (index < 0 || index > array.Length)
             {
-                throw new ArgumentOutOfRangeException("index",
+                throw new ArgumentOutOfRangeException(nameof(index),
                                                       "CopyTo() failed:  index parameter was outside the bounds of the supplied array");
             }
             if ((array.Length - index) < keyedEntryCollection.Count)
             {
-                throw new ArgumentException("CopyTo() failed:  supplied array was too small", "array");
+                throw new ArgumentException("CopyTo() failed:  supplied array was too small", nameof(array));
             }
 
-            foreach (DictionaryEntry entry in keyedEntryCollection)
+            foreach (var entry in keyedEntryCollection)
             {
                 array[index++] = new KeyValuePair<TKey, TValue>((TKey) entry.Key, (TValue) entry.Value);
             }
         }
 
-        int ICollection<KeyValuePair<TKey, TValue>>.Count
-        {
-            get
-            {
-                return keyedEntryCollection.Count;
-            }
-        }
+        int ICollection<KeyValuePair<TKey, TValue>>.Count => keyedEntryCollection.Count;
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> kvp)
         {
@@ -532,29 +456,11 @@
             ((ICollection) keyedEntryCollection).CopyTo(array, index);
         }
 
-        int ICollection.Count
-        {
-            get
-            {
-                return keyedEntryCollection.Count;
-            }
-        }
+        int ICollection.Count => keyedEntryCollection.Count;
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return ((ICollection) keyedEntryCollection).IsSynchronized;
-            }
-        }
+        bool ICollection.IsSynchronized => ((ICollection) keyedEntryCollection).IsSynchronized;
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                return ((ICollection) keyedEntryCollection).SyncRoot;
-            }
-        }
+        object ICollection.SyncRoot => ((ICollection) keyedEntryCollection).SyncRoot;
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
@@ -573,7 +479,7 @@
                 throw new ArgumentNullException("info");
             }
 
-            Collection<DictionaryEntry> entries = new Collection<DictionaryEntry>();
+            var entries = new Collection<DictionaryEntry>();
             foreach (DictionaryEntry entry in keyedEntryCollection)
                 entries.Add(entry);
             info.AddValue("entries", entries);
@@ -585,7 +491,7 @@
 
             Collection<DictionaryEntry> entries = (Collection<DictionaryEntry>)
                                                   siInfo.GetValue("entries", typeof(Collection<DictionaryEntry>));
-            foreach (DictionaryEntry entry in entries)
+            foreach (var entry in entries)
             {
                 AddEntry((TKey) entry.Key, (TValue) entry.Value);
             }
@@ -638,7 +544,8 @@
             }
         }
 
-        [Serializable, StructLayout(LayoutKind.Sequential)]
+        [Serializable]
+        [StructLayout(LayoutKind.Sequential)]
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {
             internal Enumerator(ObservableDictionary<TKey, TValue> dictionary, bool isDictionaryEntryEnumerator)

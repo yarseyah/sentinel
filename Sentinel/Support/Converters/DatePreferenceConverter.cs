@@ -44,7 +44,7 @@ namespace Sentinel.Support.Converters
 
             // Fallback if message does not contain meta-data.
             // TODO: safely handle the meta-data dateTime not being a date-time!
-            var dt = displayDateTime != null ? (DateTime)displayDateTime : message.DateTime;
+            var dt = (DateTime?)displayDateTime ?? message.DateTime;
 
             // TODO: make a time selection option....
             if (dt.Kind == DateTimeKind.Utc && Preferences.ConvertUtcTimesToLocalTimezone)

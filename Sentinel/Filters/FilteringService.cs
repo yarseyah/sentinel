@@ -1,13 +1,4 @@
-﻿#region License
-//
-// © Copyright Ray Hayes
-// This source is subject to the Microsoft Public License (Ms-PL).
-// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
-// All other rights reserved.
-//
-#endregion
-
-namespace Sentinel.Filters
+﻿namespace Sentinel.Filters
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -55,8 +46,8 @@ namespace Sentinel.Filters
             SearchFilters.CollectionChanged += collectionHelper.AttachDetach;
 
             var searchFilter = ServiceLocator.Instance.Get<ISearchFilter>();
-            Debug.Assert(searchFilter != null, "The search filter is null.");
 
+            Debug.Assert(searchFilter != null, "The search filter is null.");
             if (searchFilter != null)
             {
                 SearchFilters.Add(searchFilter as T);

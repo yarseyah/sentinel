@@ -41,14 +41,14 @@
         {
             if (settings == null)
             {
-                throw new ArgumentException("Settings can not be null", "Settings");
+                throw new ArgumentException("Settings can not be null", nameof(settings));
             }
 
             // Make sure we don't have any instances of that providerGuid.
             if (providerInstances.Any(p => p.Key == settings.Name && p.Value.Information.Identifier == providerGuid))
             {
                 throw new ArgumentException(
-                    "Already an instance of that ILoggerProvider with that name specified", "settings");
+                    "Already an instance of that ILoggerProvider with that name specified", nameof(settings));
             }
 
             // Make sure that the type is supported.))
@@ -86,7 +86,7 @@
             Debug.Assert(providerInstances.Any(p => p.Key == name), "There is no instance with the identifier " + name);
             if (providerInstances.All(p => p.Key != name))
             {
-                throw new ArgumentException("There is no instance with the identifier " + name, "name");
+                throw new ArgumentException("There is no instance with the identifier " + name, nameof(name));
             }
 
             return providerInstances.FirstOrDefault(p => p.Key == name).Value;
@@ -105,10 +105,10 @@
         public IProviderInfo GetInformation(Guid providerGuid)
         {
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
-            if (!providers.Any(p => p.Identifier == providerGuid))
+            if (providers.All(p => p.Identifier != providerGuid))
             {
                 throw new ArgumentException("Specified guid does not correspond to a registered provider",
-                                            "providerGuid");
+                                            nameof(providerGuid));
             }
 
             return providers.First(p => p.Identifier == providerGuid).Info;
@@ -134,8 +134,7 @@
             if (matchesType > 1)
             {
                 throw new NotSupportedException(
-                    string.Format(
-                        "There should only be one registered {0} handler for the provider {1}", typeof(T), providerGuid));
+                    $"There should only be one registered {typeof(T)} handler for the provider {providerGuid}");
             }
 
             var matches =
@@ -156,8 +155,6 @@
             return providerInstances.Select(i => i.Value);
         }
 
-        #region Implementation of IEnumerable
-
         public IEnumerator<Guid> GetEnumerator()
         {
             return providers.Select(p => p.Identifier).GetEnumerator();
@@ -167,7 +164,5 @@
         {
             return GetEnumerator();
         }
-
-        #endregion
     }
 }

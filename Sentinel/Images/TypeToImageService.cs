@@ -107,7 +107,7 @@ namespace Sentinel.Images
             // Don't have explicit size or have not asked for best available.
             if (acceptLower)
             {
-                Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit quality");
+                Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit Quality");
                 var newQuality = quality == ImageQuality.Large ? ImageQuality.Medium : ImageQuality.Small;
                 if (newQuality != quality)
                 {
