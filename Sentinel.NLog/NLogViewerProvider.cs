@@ -24,7 +24,7 @@
 
         private static readonly DateTime Log4jDateBase = new DateTime(1970, 1, 1);
 
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
 

@@ -12,7 +12,7 @@ namespace Sentinel.Highlighters
 
     public class HighlighterConverter : IValueConverter
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<HighlighterConverter>();
 
         private readonly IHighlighter highlighter;
 

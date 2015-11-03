@@ -43,7 +43,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog log = LogManager.GetLogger<MainWindow>();
 
         private readonly string persistingFilename;
 
@@ -457,7 +457,7 @@
             }
 
             // Debug the available loggers.
-            var logManager = ServiceLocator.Instance.Get<ILogManager>();
+            var logManager = ServiceLocator.Instance.Get<Logs.Interfaces.ILogManager>();
             foreach (var logger in logManager)
             {
                 log.DebugFormat("Log: {0}", logger.Name);

@@ -27,7 +27,7 @@
 
         private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
 
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<Log4NetProvider>();
 
         private readonly IUdpAppenderListenerSettings udpSettings;
 

@@ -20,7 +20,7 @@
     /// </summary>
     public partial class SelectProviderPage : IWizardPage
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<SelectProviderPage>();
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 

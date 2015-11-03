@@ -9,7 +9,7 @@ namespace Sentinel.Support
 
     public static class JsonHelper
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger(nameof(JsonHelper));
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
                                                                       {

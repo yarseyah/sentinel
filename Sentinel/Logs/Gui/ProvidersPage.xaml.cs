@@ -25,7 +25,7 @@
     /// </summary>
     public partial class ProvidersPage : IWizardPage, IDataErrorInfo
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<ProvidersPage>();
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
