@@ -107,12 +107,11 @@
 
         private void CustomHighlighterPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is IHighlighter)
+            var highlighter = sender as IHighlighter;
+            if (highlighter != null)
             {
-                var filter = sender as IHighlighter;
                 Trace.WriteLine(
-                    string.Format(
-                        "HighlightingService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
+                    $"HighlightingService saw some activity on {highlighter.Name} (IsEnabled = {highlighter.Enabled})");
             }
 
             OnPropertyChanged(string.Empty);
@@ -121,7 +120,7 @@
         private void EditHighligter(object obj)
         {
             IEditHighlighterService editService = new EditHighlighterService();
-            var highlighter = this.Highlighters.ElementAt(this.SelectedIndex);
+            var highlighter = Highlighters.ElementAt(SelectedIndex);
             if (highlighter != null)
             {
                 editService.Edit(highlighter);
@@ -179,7 +178,7 @@
         private void RemoveHighlighter(object obj)
         {
             IRemoveHighlighterService service = new RemoveHighlighterService();
-            var highlighter = this.Highlighters.ElementAt(this.SelectedIndex);
+            var highlighter = Highlighters.ElementAt(SelectedIndex);
 
             Debug.Assert(highlighter != null, "Should not be able to run this if no highlighter is selected!");
 

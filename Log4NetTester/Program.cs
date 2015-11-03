@@ -91,13 +91,13 @@
             switch (randomNumber)
             {
                 case 0:
-                    return string.Format("Message {0}", i);
+                    return $"Message {i}";
                 case 1:
-                    return string.Format("Src:'{0}', Msg:'{1} - {2}'", RandomSrc(), RandomReason(), i);
+                    return $"Src:'{RandomSrc()}', Msg:'{RandomReason()} - {i}'";
                 case 2:
-                    return string.Format("[{0}] {1} - {2}", RandomSrc(), RandomReason(), i);
+                    return $"[{RandomSrc()}] {RandomReason()} - {i}";
                 case 3:
-                    return string.Format("[SimulationTime] {0} ({1})", RandomReason(), i);
+                    return $"[SimulationTime] {RandomReason()} ({i})";
                 default:
                     return i.ToString();
             }

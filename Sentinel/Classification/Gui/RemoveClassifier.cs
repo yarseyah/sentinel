@@ -2,8 +2,8 @@
 {
     using System.Windows;
 
-    using Sentinel.Classification.Interfaces;
-    using Sentinel.Services;
+    using Interfaces;
+    using Services;
 
     public class RemoveClassifier : IRemoveClassifyingService
     {
@@ -14,9 +14,8 @@
             if (service != null)
             {
                 var prompt =
-                    string.Format(
-                        "Are you sure you want to remove the selected classifier?\r\n\r\n" + "Classifier Name = \"{0}\"",
-                        classifier.Name);
+                    "Are you sure you want to remove the selected classifier?\r\n\r\n" +
+                    $"Classifier Name = \"{classifier.Name}\"";
 
                 var result = MessageBox.Show(
                     prompt,

@@ -14,10 +14,8 @@
 
             if (service != null)
             {
-                string prompt = string.Format(
-                    "Are you sure you want to remove the selected extractor?\r\n\r\n" +
-                    "Extractor Name = \"{0}\"",
-                    extractor.Name);
+                var prompt = "Are you sure you want to remove the selected extractor?\r\n\r\n" +
+                             $"Extractor Name = \"{extractor.Name}\"";
 
                 var result = MessageBox.Show(
                     prompt,

@@ -5,20 +5,8 @@
 
     public class ImageView : ViewBase
     {
-        protected override object DefaultStyleKey
-        {
-            get
-            {
-                return new ComponentResourceKey(GetType(), "ImageView");
-            }
-        }
+        protected override object DefaultStyleKey => new ComponentResourceKey(GetType(), "ImageView");
 
-        protected override object ItemContainerDefaultStyleKey
-        {
-            get
-            {
-                return new ComponentResourceKey(GetType(), "ImageViewItem");
-            }
-        }
+        protected override object ItemContainerDefaultStyleKey => new ComponentResourceKey(GetType(), "ImageViewItem");
     }
 }

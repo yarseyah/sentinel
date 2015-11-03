@@ -1,4 +1,6 @@
-﻿namespace Sentinel.Extractors
+﻿using System;
+
+namespace Sentinel.Extractors
 {
     using System.Diagnostics;
     using System.Runtime.Serialization;
@@ -145,11 +147,10 @@
                         break;
                 }
 
-                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+                return $"{modeDescription} match of {Pattern} in the {Field} field";
             }
         }
 
-        /// <exception cref="ArgumentException">A regular expression parsing error occurred. </exception>
         public bool IsMatch(ILogEntry logEntry)
         {
             Debug.Assert(logEntry != null, "LogEntry can not be null.");

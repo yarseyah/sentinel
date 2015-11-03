@@ -150,7 +150,7 @@ namespace Sentinel.Highlighters
         {
             if (style == null)
             {
-                throw new ArgumentNullException("style");
+                throw new ArgumentNullException(nameof(style));
             }
 
             style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));

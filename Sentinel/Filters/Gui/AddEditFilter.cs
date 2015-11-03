@@ -24,7 +24,7 @@ namespace Sentinel.Filters.Gui
             this.window = window;
             if (window != null)
             {
-                window.Title = String.Format("{0} Filter", (editMode ? "Edit" : "Register"));
+                window.Title = $"{(editMode ? "Edit" : "Register")} Filter";
             }
 
             Accept = new DelegateCommand(AcceptDialog, Validates);

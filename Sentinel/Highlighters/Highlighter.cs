@@ -52,7 +52,8 @@ namespace Sentinel.Highlighters
 
             PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) ||
+                    e.PropertyName == nameof(Pattern))
                 {
                     if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
                     OnPropertyChanged("Description");
@@ -72,7 +73,7 @@ namespace Sentinel.Highlighters
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -89,7 +90,7 @@ namespace Sentinel.Highlighters
                 if (enabled != value)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -104,17 +105,11 @@ namespace Sentinel.Highlighters
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
-        public string HighlighterType
-        {
-            get
-            {
-                return "Basic Highlighter";
-            }
-        }
+        public string HighlighterType => "Basic Highlighter";
 
         public MatchMode Mode
         {
@@ -128,7 +123,7 @@ namespace Sentinel.Highlighters
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }
@@ -151,7 +146,7 @@ namespace Sentinel.Highlighters
                         break;
                 }
 
-                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+                return $"{modeDescription} match of {Pattern} in the {Field} field";
             }
         }
 

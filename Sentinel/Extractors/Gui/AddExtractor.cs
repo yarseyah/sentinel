@@ -29,10 +29,7 @@
                 }
                 
                 var service = ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
-                if (service != null)
-                {
-                    service.Extractors.Add(extractor);
-                }
+                service?.Extractors.Add(extractor);
             }
         }
 

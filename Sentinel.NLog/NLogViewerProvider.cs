@@ -12,8 +12,8 @@
 
     using Common.Logging;
 
-    using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
+    using Interfaces;
+    using Interfaces.Providers;
 
     public class NLogViewerProvider : INetworkProvider
     {
@@ -22,7 +22,7 @@
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
-        private static readonly DateTime Log4jDateBase = new DateTime(1970, 1, 1);
+        private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1);
 
         private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
 
@@ -38,13 +38,13 @@
         {
             if (settings == null)
             {
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             }
 
             networkSettings = settings as INLogAppenderSettings;
             if (networkSettings == null)
             {
-                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", "settings");
+                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", nameof(settings));
             }
 
             Information = ProviderRegistrationInformation.Info;
@@ -59,13 +59,7 @@
 
         public string Name { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                return listenerTask != null && listenerTask.Status == TaskStatus.Running;
-            }
-        }
+        public bool IsActive => listenerTask != null && listenerTask.Status == TaskStatus.Running;
 
         public int Port { get; private set; }
 
@@ -219,30 +213,30 @@
 
         private LogEntry DecodeEntry(string m)
         {
-            XNamespace log4j = "unique";
-            string message = string.Format(@"<entry xmlns:log4j=""{0}"">{1}</entry>", log4j, m);
+            XNamespace log4J = "unique";
+            string message = $@"<entry xmlns:log4j=""{log4J}"">{m}</entry>";
 
             XElement element = XElement.Parse(message);
-            XElement record = element.Element(log4j + "event");
+            XElement record = element.Element(log4J + "event");
 
             // Establish whether a sub-system seems to be defined.
-            string description = record.Element(log4j + "message").Value;
+            string description = record.Element(log4J + "message").Value;
 
             string classification = string.Empty;
             string system = record.Attribute("logger").Value;
             string type = record.Attribute("level").Value;
             string host = "???";
 
-            foreach (XElement propertyElement in record.Element(log4j + "properties").Elements())
+            foreach (XElement propertyElement in record.Element(log4J + "properties").Elements())
             {
-                if (propertyElement.Name == log4j + "data" && propertyElement.Attribute("name") != null
+                if (propertyElement.Name == log4J + "data" && propertyElement.Attribute("name") != null
                     && propertyElement.Attribute("name").Value == "log4jmachinename")
                 {
                     host = propertyElement.Attribute("value").Value;
                 }
             }
 
-            var date = Log4jDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
+            var date = Log4JDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
 
             var entry = new LogEntry
                             {

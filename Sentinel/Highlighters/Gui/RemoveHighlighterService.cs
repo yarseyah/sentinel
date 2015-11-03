@@ -15,10 +15,8 @@
                 return;
             }
 
-            var prompt = string.Format(
-                "Are you sure you want to remove the selected highlighter?\r\n\r\n" +
-                "Highlighter Name = \"{0}\"",
-                highlighter.Name);
+            var prompt = "Are you sure you want to remove the selected highlighter?\r\n\r\n" +
+                         $"Highlighter Name = \"{highlighter.Name}\"";
 
             var result = MessageBox.Show(
                 prompt,

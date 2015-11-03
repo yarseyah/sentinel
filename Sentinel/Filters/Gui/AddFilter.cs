@@ -10,22 +10,19 @@ namespace Sentinel.Filters.Gui
     {
         public void Add()
         {
-            AddEditFilterWindow filterWindow = new AddEditFilterWindow();
-            using (AddEditFilter data = new AddEditFilter(filterWindow, false))
+            var filterWindow = new AddEditFilterWindow();
+            using (var data = new AddEditFilter(filterWindow, false))
             {
                 filterWindow.DataContext = data;
                 filterWindow.Owner = Application.Current.MainWindow;
-                bool? dialogResult = filterWindow.ShowDialog();
+                var dialogResult = filterWindow.ShowDialog();
                 if (dialogResult != null && (bool)dialogResult)
                 {
-                    Filter filter = Construct(data);
+                    var filter = Construct(data);
                     if (filter != null)
                     {
                         var service = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
-                        if (service != null)
-                        {
-                            service.Filters.Add(filter);
-                        }
+                        service?.Filters.Add(filter);
                     }
                 }
             }

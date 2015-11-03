@@ -14,7 +14,7 @@
         {
             InitializeComponent();
 
-            this.Owner = parent;            
+            Owner = parent;            
 
             try
             {
