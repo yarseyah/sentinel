@@ -8,7 +8,7 @@ namespace Sentinel.Log4Net
 
     public static class XElementHelpers
     {
-        private static ILog Log = LogManager.GetCurrentClassLogger();
+        private static ILog Log = LogManager.GetLogger("XElementHelpers");
 
         public static string GetAttribute(this XElement element, string attributeName, string defaultValue)
         {

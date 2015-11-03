@@ -23,10 +23,7 @@
                 if (highlighter != null)
                 {
                     var service = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
-                    if (service != null)
-                    {
-                        service.Highlighters.Add(highlighter);
-                    }
+                    service?.Highlighters.Add(highlighter);
                 }
             }
         }

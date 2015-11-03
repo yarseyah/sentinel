@@ -23,7 +23,7 @@ namespace Sentinel.Highlighters.Gui
             data.Mode = highlighter.Mode;
             data.Field = highlighter.Field;         
 
-            if (highlighter.Style != null && highlighter.Style.Background != null)
+            if (highlighter.Style?.Background != null)
             {
                 data.OverrideBackgroundColour = true;
                 data.BackgroundColour = (Color)highlighter.Style.Background;
@@ -34,7 +34,7 @@ namespace Sentinel.Highlighters.Gui
                 data.BackgroundColourIndex = 1;
             }
 
-            if (highlighter.Style != null && highlighter.Style.Foreground != null)
+            if (highlighter.Style?.Foreground != null)
             {
                 data.OverrideForegroundColour = true;
                 data.ForegroundColour = (Color)highlighter.Style.Foreground;

@@ -4,7 +4,7 @@
     using System.Windows.Input;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Support.Mvvm;
 
     public class AddEditClassifier : ViewModelBase
     {
@@ -25,7 +25,7 @@
             this.window = window;
             if (window != null)
             {
-                window.Title = string.Format("{0} Classifier", editMode ? "Edit" : "Register");
+                window.Title = $"{(editMode ? "Edit" : "Register")} Classifier";
             }
 
             Accept = new DelegateCommand(AcceptDialog, Validates);

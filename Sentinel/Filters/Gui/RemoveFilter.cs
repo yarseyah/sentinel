@@ -13,10 +13,8 @@ namespace Sentinel.Filters.Gui
 
             if (service != null)
             {
-                string prompt = string.Format(
-                    "Are you sure you want to remove the selected filter?\r\n\r\n" +
-                    "Filter Name = \"{0}\"",
-                    filter.Name);
+                string prompt = "Are you sure you want to remove the selected filter?\r\n\r\n" +
+                                $"Filter Name = \"{filter.Name}\"";
 
                 MessageBoxResult result = MessageBox.Show(
                     prompt,

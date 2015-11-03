@@ -148,7 +148,7 @@ namespace Sentinel.Filters
         {
             get
             {
-                string modeDescription = "Exact";
+                var modeDescription = "Exact";
                 switch (Mode)
                 {
                     case MatchMode.RegularExpression:

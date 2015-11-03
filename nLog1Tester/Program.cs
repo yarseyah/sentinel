@@ -11,7 +11,6 @@
 
         private static readonly Random Random = new Random();
 
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxValue" /> is less than zero. </exception>
         public static void Main()
         {
             for (int i = 0; i < 1000; i++)

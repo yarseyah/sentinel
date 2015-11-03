@@ -2,8 +2,8 @@
 {
     using System.Windows;
 
-    using Sentinel.Classification.Interfaces;
-    using Sentinel.Services;
+    using Interfaces;
+    using Services;
 
     public class AddClassifier : IAddClassifyingService
     {
@@ -22,10 +22,7 @@
                     if (classifier != null)
                     {
                         var service = ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
-                        if (service != null)
-                        {
-                            service.Classifiers.Add(classifier);
-                        }
+                        service?.Classifiers.Add(classifier);
                     }
                 }
             }

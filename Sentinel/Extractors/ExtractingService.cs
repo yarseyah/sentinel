@@ -107,8 +107,7 @@
             {
                 var extractor = sender as Extractor;
                 Trace.WriteLine(
-                    string.Format(
-                        "ExtractingService saw some activity on {0} (IsEnabled = {1})", extractor.Name, extractor.Enabled));
+                    $"ExtractingService saw some activity on {extractor.Name} (IsEnabled = {extractor.Enabled})");
             }
 
             OnPropertyChanged(string.Empty);

@@ -23,7 +23,7 @@
             this.window = window;
             if (window != null)
             {
-                window.Title = string.Format("{0} Extractor", editMode ? "Edit" : "Register");
+                window.Title = $"{(editMode ? "Edit" : "Register")} Extractor";
             }
 
             Accept = new DelegateCommand(AcceptDialog, Validates);

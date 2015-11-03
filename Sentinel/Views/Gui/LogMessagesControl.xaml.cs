@@ -23,7 +23,7 @@
     /// </summary>
     public partial class LogMessagesControl : UserControl
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<LogMessagesControl>();
 
         public LogMessagesControl()
         {

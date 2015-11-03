@@ -18,7 +18,7 @@ namespace Sentinel.Highlighters.Gui
 
         private int backgroundColourIndex = 1;
 
-        private Dictionary<string, Color> colours = GetColours();
+        private readonly Dictionary<string, Color> colours = GetColours();
 
         private bool coloursAreClose;
 
@@ -62,13 +62,13 @@ namespace Sentinel.Highlighters.Gui
 
             set
             {
-                KeyValuePair<string, Color> find = colours.Where(r => r.Value == value).FirstOrDefault();
+                var find = colours.FirstOrDefault(r => r.Value == value);
                 if (find.Key == null)
-                { 
-                    throw new NotSupportedException(string.Format("Match for {0} not found in system colours", value));
+                {
+                    throw new NotSupportedException($"Match for {value} not found in system colours");
                 }
 
-                int index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
+                var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 BackgroundColourIndex = index;
             }
         }
@@ -90,13 +90,7 @@ namespace Sentinel.Highlighters.Gui
             }
         }
 
-        public IEnumerable<string> BackgroundColours
-        {
-            get
-            {
-                return colours.Keys;
-            }
-        }
+        public IEnumerable<string> BackgroundColours => colours.Keys;
 
         public bool ColoursClose
         {
@@ -125,13 +119,13 @@ namespace Sentinel.Highlighters.Gui
 
             set
             {
-                KeyValuePair<string, Color> find = colours.Where(r => r.Value == value).FirstOrDefault();
+                var find = colours.FirstOrDefault(r => r.Value == value);
                 if (find.Key == null)
                 {
-                    throw new NotSupportedException(string.Format("Match for {0} not found in system colours", value));
+                    throw new NotSupportedException($"Match for {value} not found in system colours");
                 }
 
-                int index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
+                var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 ForegroundColourIndex = index;
             }
         }
@@ -153,13 +147,7 @@ namespace Sentinel.Highlighters.Gui
             }
         }
 
-        public IEnumerable<string> ForegroundColours
-        {
-            get
-            {
-                return colours.Keys;
-            }
-        }
+        public IEnumerable<string> ForegroundColours => colours.Keys;
 
         public LogEntryField Field
         {
@@ -259,8 +247,8 @@ namespace Sentinel.Highlighters.Gui
 
         private static Dictionary<string, Color> GetColours()
         {
-            Dictionary<string, Color> colours = new Dictionary<string, Color>();
-            foreach (PropertyInfo propertyInfo in typeof(Colors).GetProperties())
+            var colours = new Dictionary<string, Color>();
+            foreach (var propertyInfo in typeof(Colors).GetProperties())
             {
                 colours.Add(propertyInfo.Name, (Color) ColorConverter.ConvertFromString(propertyInfo.Name));
             }
@@ -282,9 +270,7 @@ namespace Sentinel.Highlighters.Gui
                 case "OverrideBackgroundColour":
                 case "BackgroundColourIndex":
                 case "ForegroundColourIndex":
-                    ColoursClose = !OverrideBackgroundColour || !OverrideForegroundColour
-                                       ? false
-                                       : Color.AreClose(ForegroundColour, BackgroundColour);
+                    ColoursClose = OverrideBackgroundColour && OverrideForegroundColour && Color.AreClose(ForegroundColour, BackgroundColour);
                     break;
             }
         }

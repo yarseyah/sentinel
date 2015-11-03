@@ -14,7 +14,7 @@ namespace Sentinel.Support.Converters
 
     public class DatePreferenceConverter : IValueConverter
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<DatePreferenceConverter>();
 
         private IUserPreferences Preferences { get; set; }
 

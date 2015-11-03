@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Sentinel.Classification.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Support.Mvvm;
 
@@ -84,7 +84,7 @@
                         break;
                 }
 
-                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+                return $"{modeDescription} match of {Pattern} in the {Field} field";
             }
         }
 
@@ -119,13 +119,7 @@
             }
         }
 
-        public string HighlighterType
-        {
-            get
-            {
-                return "Basic Highlighter";
-            }
-        }
+        public string HighlighterType => "Basic Highlighter";
 
         public MatchMode Mode
         {

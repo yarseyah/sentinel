@@ -2,8 +2,8 @@
 {
     using System.Windows;
 
-    using Interfaces;
-    using Services;
+    using Sentinel.Highlighters.Interfaces;
+    using Sentinel.Services;
 
     public class RemoveHighlighterService : IRemoveHighlighterService
     {
@@ -15,10 +15,8 @@
                 return;
             }
 
-            var prompt =
-                $@"Are you sure you want to remove the selected highlighter?
-
-Highlighter Name = ""{highlighter.Name}""";
+            var prompt = "Are you sure you want to remove the selected highlighter?\r\n\r\n" +
+                         $"Highlighter Name = \"{highlighter.Name}\"";
 
             var result = MessageBox.Show(
                 prompt,

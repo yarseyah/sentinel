@@ -14,7 +14,7 @@ namespace Sentinel.Support.Converters
 
     public class TimePreferenceConverter : IValueConverter
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<TimePreferenceConverter>();
 
         private IUserPreferences Preferences { get; set; }
 

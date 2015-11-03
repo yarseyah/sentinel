@@ -118,8 +118,7 @@ namespace Sentinel.Filters
             if (filter != null)
             {
                 Trace.WriteLine(
-                    string.Format(
-                        "FilteringService saw some activity on {0} (IsEnabled = {1})", filter.Name, filter.Enabled));
+                    $"FilteringService saw some activity on {filter.Name} (IsEnabled = {filter.Enabled})");
             }
 
             OnPropertyChanged(string.Empty);

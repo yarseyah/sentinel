@@ -10,7 +10,7 @@ namespace Sentinel.Support.Converters
 
     public class MessageHasExceptionMetadataConverter : IValueConverter
     {
-        private readonly ILog log = LogManager.GetCurrentClassLogger();
+        private readonly ILog log = LogManager.GetLogger<MessageHasExceptionMetadataConverter>();
 
         /// <summary>
         /// Converts a value. 

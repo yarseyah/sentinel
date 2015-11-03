@@ -12,8 +12,8 @@
 
     using Common.Logging;
 
-    using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
+    using Interfaces;
+    using Interfaces.Providers;
 
     public class NLogViewerProvider : INetworkProvider
     {
@@ -24,7 +24,7 @@
 
         private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
 
@@ -44,7 +44,7 @@
             networkSettings = settings as INLogAppenderSettings;
             if (networkSettings == null)
             {
-                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", "settings");
+                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", nameof(settings));
             }
 
             Information = ProviderRegistrationInformation.Info;
@@ -59,13 +59,7 @@
 
         public string Name { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                return listenerTask != null && listenerTask.Status == TaskStatus.Running;
-            }
-        }
+        public bool IsActive => listenerTask != null && listenerTask.Status == TaskStatus.Running;
 
         public int Port { get; private set; }
 

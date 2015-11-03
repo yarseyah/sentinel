@@ -15,7 +15,7 @@
 
     public class ServiceLocator
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<ServiceLocator>();
 
         private static readonly ServiceLocator ActualInstance = new ServiceLocator();
 

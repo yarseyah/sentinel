@@ -25,7 +25,7 @@ namespace Sentinel.MSBuild
 
         protected readonly Queue<string> PendingQueue = new Queue<string>();
 
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetLogger<MSBuildProvider>();
 
         private CancellationTokenSource cancellationTokenSource;
 
