@@ -303,6 +303,15 @@
                                           ToolTipTitle="Show Threads"
                                           ToolTipDescription="Shows the Thread column when enabled."
                                           ToolTipImageSource="../Resources/Small/Thread.png" />
+                    <RibbonToggleButton Name="SourceHostRibbonToggleButton"
+                                        Label="Source Host"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Bottom"
+                                        SmallImageSource="../Resources/Small/Network.png"
+                                        LargeImageSource="../Resources/Large/Network.png"
+                                        ToolTipTitle="Show source machine name"
+                                        ToolTipDescription="Shows the host name of the machine originating the message."
+                                        ToolTipImageSource="../Resources/Medium/Network.png" />
                     <RibbonToggleButton Name="DebugSourceRibbonToggleButton"
                                         Label="Debug Sources"
                                         HorizontalContentAlignment="Center"
@@ -310,7 +319,7 @@
                                         SmallImageSource="../Resources/Small/DebugSource.png"
                                         LargeImageSource="../Resources/Large/DebugSource.png"
                                         ToolTipTitle="Show source code debug information"
-                                        ToolTipDescription="Shows the debugging columns when enabled. Currently only supports nLog."
+                                        ToolTipDescription="Shows the debugging columns when enabled."
                                         ToolTipImageSource="../Resources/Small/DebugSource.png" />
                 </RibbonGroup>
             </RibbonTab>

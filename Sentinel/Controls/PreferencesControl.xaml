@@ -103,8 +103,14 @@
                                               HorizontalAlignment="Left"
                                               MinWidth="100"
                                               Margin="0,0,0,5"
-                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifer (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
+                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifier (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
                                               Content="Show the Thread column" />
+                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceColumn}" 
+                                              HorizontalAlignment="Left"
+                                              MinWidth="100"
+                                              Margin="0,0,0,5"
+                                              ToolTip="Show the name of the machine from which the message was sourced"
+                                              Content="Show the message source host-name column"/>
                                     <CheckBox IsChecked="{Binding Preferences.ShowSourceInformationColumns}"
                                               HorizontalAlignment="Left"
                                               Margin="0,0,0,5"

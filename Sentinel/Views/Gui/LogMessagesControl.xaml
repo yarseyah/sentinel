@@ -80,6 +80,9 @@
                     <Controls:FixedWidthColumn Header="Thread"
                                                FixedWidth="{Binding Preferences.ShowThreadColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=50}"
                                                DisplayMemberBinding="{Binding Thread}" />
+                    <GridViewColumn Header="Host"
+                                    Width="{Binding Preferences.ShowSourceColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=100}"
+                                    DisplayMemberBinding="{Binding MetaData, Converter={StaticResource MetaDataConverter}, ConverterParameter='Host'}" />
                     <GridViewColumn Header="System"
                                     DisplayMemberBinding="{Binding System}" />
                     <Controls:FixedWidthColumn FixedWidth="{Binding Preferences.ShowExceptionColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=30}">

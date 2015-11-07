@@ -34,6 +34,9 @@ namespace Sentinel.Interfaces
         [DataMember]
         bool ShowExceptionColumn { get; set; }
 
+        [DataMember]
+        bool ShowSourceColumn { get; set; }
+
         IEnumerable<string> TypeOptions { get; }
 
         [DataMember]

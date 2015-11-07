@@ -32,6 +32,8 @@
 
         private bool showExceptionColumn;
 
+        private bool showSourceColumn;
+
         private bool useLazyRebuild;
 
         private bool useStackedLayout = true;
@@ -194,6 +196,26 @@
                 {
                     showThreadColumn = value;
                     OnPropertyChanged("ShowThreadColumn");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the thread column should be shown or not.
+        /// </summary>
+        public bool ShowSourceColumn
+        {
+            get
+            {
+                return showSourceColumn;
+            }
+
+            set
+            {
+                if (showSourceColumn != value)
+                {
+                    showSourceColumn = value;
+                    OnPropertyChanged(nameof(ShowSourceColumn));
                 }
             }
         }
