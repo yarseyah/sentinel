@@ -19,8 +19,7 @@ namespace Sentinel.NLog
             isUdp = protocol == NetworkProtocol.Udp;
             if (isUdp)
             {
-                udpClient = new UdpClient();
-                udpClient.ExclusiveAddressUse = false;
+                udpClient = new UdpClient { ExclusiveAddressUse = false };
                 udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 udpClient.Client.Bind(endPoint);
             }
@@ -52,8 +51,8 @@ namespace Sentinel.NLog
 
         public void Dispose()
         {
-            if (udpClient != null) udpClient.Close();
-            if (tcpClient != null) tcpClient.Close();
+            udpClient?.Close();
+            tcpClient?.Close();
         }
 
         public void SetReceiveTimeout(int timeout)

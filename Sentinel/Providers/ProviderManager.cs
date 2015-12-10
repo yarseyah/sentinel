@@ -27,7 +27,7 @@
                                 NLogViewerProvider.ProviderRegistrationInformation,
                                 Log4NetProvider.ProviderRegistrationInformation,
                                 FileMonitoringProvider.ProviderRegistrationInformation,
-                                MSBuildProvider.ProviderRegistrationRecord
+                                MsBuildProvider.ProviderRegistrationRecord
                             };
         }
 

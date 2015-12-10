@@ -17,12 +17,12 @@ namespace Sentinel.MSBuild
         {
             if (string.IsNullOrWhiteSpace(msbuildEventType))
             {
-                throw new ArgumentNullException("msbuildEventType");
+                throw new ArgumentNullException(nameof(msbuildEventType));
             }
 
             if (content == null)
             {
-                throw new ArgumentNullException("content");
+                throw new ArgumentNullException(nameof(content));
             }
 
             switch (msbuildEventType)

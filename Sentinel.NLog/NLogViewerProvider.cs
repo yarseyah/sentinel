@@ -107,7 +107,7 @@
 
             if (networkSettings == null)
             {
-                Log.Error("Network settings has not been initialised");
+                Log.Error("Network settings has not been initialized");
                 throw new NullReferenceException();
             }
 

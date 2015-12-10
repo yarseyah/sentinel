@@ -6,28 +6,10 @@ namespace Sentinel.MSBuild
 
     public class ProviderInfo : IProviderInfo
     {
-        public Guid Identifier
-        {
-            get
-            {
-                return new Guid("87270254-9EB6-4AF3-9008-0147DE849168");
-            }
-        }
+        public Guid Identifier => new Guid("87270254-9EB6-4AF3-9008-0147DE849168");
 
-        public string Name
-        {
-            get
-            {
-                return "MSBuild UDP Listener";
-            }
-        }
+        public string Name => "MSBuild UDP Listener";
 
-        public string Description
-        {
-            get
-            {
-                return "Listens for JSON serialized MSBuild logging events passed via UDP";
-            }
-        }
+        public string Description => "Listens for JSON serialized MSBuild logging events passed via UDP";
     }
 }

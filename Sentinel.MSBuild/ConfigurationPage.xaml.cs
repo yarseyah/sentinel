@@ -16,8 +16,6 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private bool isValid;
 
         private int port;
@@ -27,7 +25,7 @@
             InitializeComponent();
             DataContext = this;
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             // Register to self so that we can handler user interactions.
             PropertyChanged += SelectProviderPagePropertyChanged;
@@ -43,6 +41,7 @@
             {
                 return port;
             }
+
             set
             {
                 if (port != value)
@@ -53,29 +52,11 @@
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return "Configure Provider";
-            }
-        }
+        public string Title => "Configure Provider";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Description
-        {
-            get
-            {
-                return "Network settings to be used by new provider";
-            }
-        }
+        public string Description => "Network settings to be used by new provider";
 
         public bool IsValid
         {
@@ -93,13 +74,7 @@
             }
         }
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -120,7 +95,7 @@
                 saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
 
             var previousInfo = (IProviderSettings)saveData;
-            return new MSBuildListenerSettings(previousInfo);
+            return new MsBuildListenerSettings(previousInfo);
         }
 
         protected void OnPropertyChanged(string propertyName)
@@ -142,7 +117,7 @@
             if (e.PropertyName == "Port")
             {
                 var state = port > 2000;
-                Trace.WriteLine(string.Format("Setting PageValidates to {0}", state));
+                Trace.WriteLine($"Setting PageValidates to {state}");
                 IsValid = state;
             }
         }

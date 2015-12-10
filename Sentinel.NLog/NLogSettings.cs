@@ -19,11 +19,7 @@
         {
             get
             {
-                return string.Format(
-                    "{0}: Listens on {1} port {2}",
-                    Name,
-                    Protocol,
-                    Port);
+                return $"{Name}: Listens on {Protocol} port {Port}";
             }
         }
     }

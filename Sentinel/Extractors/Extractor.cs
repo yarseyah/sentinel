@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace Sentinel.Extractors
+﻿namespace Sentinel.Extractors
 {
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Sentinel.Extractors.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Support.Mvvm;
 
     [DataContract]
     public class Extractor : ViewModelBase, IExtractor

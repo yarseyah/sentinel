@@ -11,39 +11,37 @@ namespace Sentinel.MSBuild
 
     using Common.Logging;
 
+    using Interfaces;
+    using Interfaces.Providers;
+
     using Newtonsoft.Json.Linq;
 
-    using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
-
-    public class MSBuildProvider : INetworkProvider
+    public class MsBuildProvider : INetworkProvider
     {
-        private const int PumpFrequency = 100;
-
         public static readonly IProviderRegistrationRecord ProviderRegistrationRecord =
             new ProviderRegistrationInformation(new ProviderInfo());
 
         protected readonly Queue<string> PendingQueue = new Queue<string>();
 
-        private static readonly ILog Log = LogManager.GetLogger<MSBuildProvider>();
+        private const int PumpFrequency = 100;
+
+        private static readonly ILog Log = LogManager.GetLogger<MsBuildProvider>();
 
         private CancellationTokenSource cancellationTokenSource;
 
         private Task listenerTask;
 
-        private Task messagePumpTask;
-
-        public MSBuildProvider(IProviderSettings settings)
+        public MsBuildProvider(IProviderSettings settings)
         {
             if (settings == null)
             {
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             }
 
-            Settings = settings as IMSBuildListenerSettings;
-            if ( Settings == null)
+            Settings = settings as IMsBuildListenerSettings;
+            if (Settings == null)
             {
-                throw new ArgumentException("settings should be assignable to IMSBuildListenerSettings", "settings");
+                throw new ArgumentException("settings should be assignable to IMsBuildListenerSettings", "settings");
             }
 
             ProviderSettings = settings; 
@@ -57,17 +55,11 @@ namespace Sentinel.MSBuild
 
         public string Name { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                return listenerTask != null && listenerTask.Status == TaskStatus.Running;
-            }
-        }
+        public bool IsActive => listenerTask != null && listenerTask.Status == TaskStatus.Running;
 
         public int Port { get; private set; }
 
-        protected IMSBuildListenerSettings Settings { get; set; }
+        protected IMsBuildListenerSettings Settings { get; set; }
 
         public void Start()
         {
@@ -79,7 +71,7 @@ namespace Sentinel.MSBuild
                 var token = cancellationTokenSource.Token;
 
                 listenerTask = Task.Factory.StartNew(SocketListener, token);
-                messagePumpTask = Task.Factory.StartNew(MessagePump, token);
+                Task.Factory.StartNew(MessagePump, token);
             }
             else
             {
@@ -125,7 +117,7 @@ namespace Sentinel.MSBuild
                         {
                             var bytes = listener.Receive(ref remoteEndPoint);
 
-                            Log.Debug(string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
+                            Log.Debug($"Received {bytes.Length} bytes from {remoteEndPoint.Address}");
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
                             lock (PendingQueue)
@@ -138,9 +130,7 @@ namespace Sentinel.MSBuild
                             if (socketException.SocketErrorCode != SocketError.TimedOut)
                             {
                                 Log.Debug("SocketException", socketException);
-                                Log.DebugFormat(
-                                    "SocketException.SocketErrorCode = {0}",
-                                    socketException.SocketErrorCode);
+                                Log.Debug($"SocketException.SocketErrorCode = {socketException.SocketErrorCode}");
 
                                 // Break out of the 'using socket' loop and try to establish a new socket.
                                 break;
@@ -211,33 +201,30 @@ namespace Sentinel.MSBuild
             {
                 var json = JToken.Parse(message);
 
-                if (json != null)
+                var jsonObject = json as JObject;
+
+                if (jsonObject != null && jsonObject.Children().Count() == 1)
                 {
-                    var jsonObject = json as JObject;
+                    var property = jsonObject.Children().First() as JProperty;
 
-                    if (jsonObject != null && jsonObject.Children().Count() == 1)
+                    if (property == null)
                     {
-                        var property = jsonObject.Children().First() as JProperty;
+                        Log.Error("First item in JObject should be a property");
+                    }
+                    else
+                    {
+                        var msbuildEventType = property.Name;
+                        var content = property.Value as JObject;
 
-                        if (property == null)
+                        if ( string.IsNullOrWhiteSpace(msbuildEventType) || content == null)
                         {
-                            Log.Error("First item in JObject should be a property");
+                            Log.ErrorFormat(
+                                "Expected payload to consist of a property corresponding to the MSBuild event type name, "
+                                + "and a value which is the serialized object corresponding to the type.");
                         }
                         else
                         {
-                            var msbuildEventType = property.Name;
-                            var content = property.Value as JObject;
-
-                            if ( string.IsNullOrWhiteSpace(msbuildEventType) || content == null)
-                            {
-                                Log.ErrorFormat(
-                                    "Expected payload to consist of a property corresponding to the MSBuild event type name, "
-                                    + "and a value which is the serialized object corresponding to the type.");
-                            }
-                            else
-                            {
-                                return new LogEntry(msbuildEventType, content);
-                            }
+                            return new LogEntry(msbuildEventType, content);
                         }
                     }
                 }

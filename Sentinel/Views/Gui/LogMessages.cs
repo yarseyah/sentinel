@@ -9,12 +9,12 @@
     using System.Windows.Controls;
     using System.Windows.Threading;
 
-    using Sentinel.Extractors.Interfaces;
-    using Sentinel.Filters.Interfaces;
+    using Extractors.Interfaces;
+    using Filters.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
-    using Sentinel.Views.Interfaces;
+    using Services;
+    using Support.Mvvm;
+    using Interfaces;
 
     public class LogMessages : ViewModelBase, ILogViewer
     {
@@ -240,7 +240,10 @@
             else if (e.PropertyName == "Enabled")
             {
                 var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
-                pauseButton.IsChecked = !logger.Enabled;
+                if (pauseButton != null)
+                {
+                    pauseButton.IsChecked = !logger.Enabled;
+                }
             }
         }
 
@@ -313,7 +316,7 @@
                 }
             }
 
-            FilteredCount = Messages.Count();
+            FilteredCount = Messages.Count;
             UnfilteredCount = Logger.Entries.Count();
         }
 

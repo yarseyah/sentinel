@@ -35,13 +35,7 @@
         /// <summary>
         /// Node immediately before found item.
         /// </summary>
-        public IWizardPage Previous
-        {
-            get
-            {
-                return found ? previous : null;
-            }
-        }
+        public IWizardPage Previous => found ? previous : null;
 
         public void Execute()
         {
@@ -50,8 +44,7 @@
 
         private void Visit(IWizardPage node)
         {
-            if (First == null
-                && node != rootNode)
+            if (First == null && node != rootNode)
             {
                 First = node;
             }

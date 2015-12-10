@@ -21,7 +21,7 @@ namespace WpfExtras.Converters
         {
             if (value is bool && targetType == typeof(Visibility))
             {
-                return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
+                return (bool)value ? Visibility.Visible : Visibility.Collapsed;
             }
 
             var valueAsBool = bool.Parse((string)value);

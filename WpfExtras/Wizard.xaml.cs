@@ -15,17 +15,23 @@
     /// </summary>
     public partial class Wizard
     {
-        public static readonly DependencyProperty CurrentPageContentProperty =
-            DependencyProperty.Register(
-                "CurrentPageContent", typeof(Control), typeof(Wizard), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty CurrentPageContentProperty = DependencyProperty.Register(
+            "CurrentPageContent",
+            typeof(Control),
+            typeof(Wizard),
+            new UIPropertyMetadata(null));
 
-        public static readonly DependencyProperty ShowNavigationTreeProperty =
-            DependencyProperty.Register(
-                "ShowNavigationTree", typeof(bool), typeof(Wizard), new UIPropertyMetadata(false));
+        public static readonly DependencyProperty ShowNavigationTreeProperty = DependencyProperty.Register(
+            "ShowNavigationTree",
+            typeof(bool),
+            typeof(Wizard),
+            new UIPropertyMetadata(false));
 
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(
-                "ViewModel", typeof(INotifyPropertyChanged), typeof(Wizard), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+            "ViewModel",
+            typeof(INotifyPropertyChanged),
+            typeof(Wizard),
+            new UIPropertyMetadata(null));
 
         private readonly PageNavigationTreeEntry navigationTree;
 
@@ -66,7 +72,7 @@
         {
             get
             {
-                return (Control) GetValue(CurrentPageContentProperty);
+                return (Control)GetValue(CurrentPageContentProperty);
             }
 
             set
@@ -79,13 +85,7 @@
 
         public ICommand Forward { get; private set; }
 
-        public ReadOnlyObservableCollection<PageNavigationTreeEntry> NavigationTree
-        {
-            get
-            {
-                return navigationTree.Children;
-            }
-        }
+        public ReadOnlyObservableCollection<PageNavigationTreeEntry> NavigationTree => navigationTree.Children;
 
         public object SavedData { get; set; }
 
@@ -93,7 +93,7 @@
         {
             get
             {
-                return (bool) GetValue(ShowNavigationTreeProperty);
+                return (bool)GetValue(ShowNavigationTreeProperty);
             }
 
             set
@@ -106,7 +106,7 @@
         {
             get
             {
-                return (INotifyPropertyChanged) GetValue(ViewModelProperty);
+                return (INotifyPropertyChanged)GetValue(ViewModelProperty);
             }
 
             set
@@ -115,29 +115,11 @@
             }
         }
 
-        private bool CanFinish
-        {
-            get
-            {
-                return currentPage != null && currentPage.IsValid && currentPage == last;
-            }
-        }
+        private bool CanFinish => currentPage != null && currentPage.IsValid && currentPage == last;
 
-        private bool CanGoBack
-        {
-            get
-            {
-                return currentPage != null && previous != null;
-            }
-        }
+        private bool CanGoBack => currentPage != null && previous != null;
 
-        private bool CanGoForward
-        {
-            get
-            {
-                return currentPage != null && currentPage.IsValid && next != null;
-            }
-        }
+        private bool CanGoForward => currentPage != null && currentPage.IsValid && next != null;
 
         public void AddPage(IWizardPage page)
         {
@@ -146,7 +128,7 @@
 
         private void AcceptDialog()
         {
-            if ( currentPage != null )
+            if (currentPage != null)
             {
                 SavedData = currentPage.Save(SavedData);
             }
@@ -177,18 +159,14 @@
 
         private void GoBack()
         {
-            Debug.Assert(
-                CanGoBack,
-                "Should not be able to attempt to go back, the button's state should be disabled.");
+            Debug.Assert(CanGoBack, "Should not be able to attempt to go back, the button's state should be disabled.");
 
             SwitchPage(PageChange.Previous);
         }
 
         private void GoForward()
         {
-            Debug.Assert(
-                CanGoForward,
-                "Should not be able to attempt to go forward, button should be disabled.");
+            Debug.Assert(CanGoForward, "Should not be able to attempt to go forward, button should be disabled.");
 
             SwitchPage(PageChange.Next);
         }
@@ -240,20 +218,17 @@
             }
             else
             {
-                if (change == PageChange.Next
-                    || change == PageChange.Previous)
+                if (change == PageChange.Next || change == PageChange.Previous)
                 {
                     throw new NotSupportedException("Unable to go to previous/next because no current page defined.");
                 }
 
-                if (change == PageChange.First
-                    && first == null)
+                if (change == PageChange.First && first == null)
                 {
                     throw new NotSupportedException("Unable to go to first page because no pages are registered.");
                 }
 
-                if (change == PageChange.Last
-                    && last == null)
+                if (change == PageChange.Last && last == null)
                 {
                     throw new NotSupportedException("Unable to go to last page because no pages are registered.");
                 }
@@ -295,38 +270,18 @@
         {
             private readonly ObservableCollection<IWizardPage> pages = new ObservableCollection<IWizardPage>();
 
-            private readonly ReadOnlyObservableCollection<IWizardPage> readonlyPages;
-
             public RootPage()
             {
-                readonlyPages = new ReadOnlyObservableCollection<IWizardPage>(pages);
+                Children = new ReadOnlyObservableCollection<IWizardPage>(pages);
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
 
-            public ReadOnlyObservableCollection<IWizardPage> Children
-            {
-                get
-                {
-                    return readonlyPages;
-                }
-            }
+            public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-            public string Description
-            {
-                get
-                {
-                    return "Hidden Root Page - this page should never be shown";
-                }
-            }
+            public string Description => "Hidden Root Page - this page should never be shown";
 
-            public bool IsValid
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            public bool IsValid => false;
 
             public Control PageContent
             {
@@ -336,13 +291,7 @@
                 }
             }
 
-            public string Title
-            {
-                get
-                {
-                    return "Hidden Root Page";
-                }
-            }
+            public string Title => "Hidden Root Page";
 
             public void AddChild(IWizardPage newItem)
             {
