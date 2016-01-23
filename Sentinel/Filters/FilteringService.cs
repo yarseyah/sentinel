@@ -38,7 +38,7 @@
 
             // Register self as an observer of the collection.
             collectionHelper.OnPropertyChanged += CustomFilterPropertyChanged;
-            
+
             collectionHelper.ManagerName = "FilteringService";
             collectionHelper.NameLookup += e => e.Name;
 
@@ -89,12 +89,12 @@
             Filters.Add(new StandardFilter("Info", LogEntryField.Type, "INFO") as T);
             Filters.Add(new StandardFilter("Warn", LogEntryField.Type, "WARN") as T);
             Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
-            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);            
+            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);
         }
 
         public bool IsFiltered(ILogEntry entry)
         {
-            return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||                
+            return Filters.Any(filter => filter.Enabled && filter.IsMatch(entry)) ||
                 SearchFilters.Any(filter => filter.Enabled && filter.IsMatch(entry));
         }
 

@@ -9,7 +9,7 @@
 
     /// <summary>
     /// An implementation of the IUserPreferences which holds all of the user
-    /// selections in a view-model based structure, allowing simple binding to 
+    /// selections in a view-model based structure, allowing simple binding to
     /// the contents for GUIs whilst also allowing other interested parties to
     /// register to elements to be notified when they change.
     /// </summary>
@@ -295,7 +295,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a visual padding correction should be used to 
+        /// Gets or sets a value indicating whether a visual padding correction should be used to
         /// tighten the rows in a list view.  Windows Vista and Windows 7 both use much more padding
         /// around each row than Windows XP does.  Sometimes the XP look works better!
         /// </summary>

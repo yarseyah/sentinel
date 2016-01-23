@@ -10,14 +10,12 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class ObservableDictionary<TKey, TValue>
-        :
-            IDictionary<TKey, TValue>,
-            IDictionary,
-            ISerializable,
-            IDeserializationCallback,
-            INotifyCollectionChanged,
-            INotifyPropertyChanged
+    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,
+                                                      IDictionary,
+                                                      ISerializable,
+                                                      IDeserializationCallback,
+                                                      INotifyCollectionChanged,
+                                                      INotifyPropertyChanged
     {
         public ObservableDictionary()
         {
@@ -64,7 +62,7 @@
         {
             get
             {
-                return (TValue) keyedEntryCollection[key].Value;
+                return (TValue)keyedEntryCollection[key].Value;
             }
 
             set
@@ -127,7 +125,7 @@
         public bool TryGetValue(TKey key, out TValue value)
         {
             var result = keyedEntryCollection.Contains(key);
-            value = result ? (TValue) keyedEntryCollection[key].Value : default(TValue);
+            value = result ? (TValue)keyedEntryCollection[key].Value : default(TValue);
             return result;
         }
 
@@ -353,7 +351,7 @@
         {
             get
             {
-                return (TValue) keyedEntryCollection[key].Value;
+                return (TValue)keyedEntryCollection[key].Value;
             }
 
             set
@@ -364,7 +362,7 @@
 
         void IDictionary.Add(object key, object value)
         {
-            DoAddEntry((TKey) key, (TValue) value);
+            DoAddEntry((TKey)key, (TValue)value);
         }
 
         void IDictionary.Clear()
@@ -374,7 +372,7 @@
 
         bool IDictionary.Contains(object key)
         {
-            return keyedEntryCollection.Contains((TKey) key);
+            return keyedEntryCollection.Contains((TKey)key);
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
@@ -390,12 +388,12 @@
         {
             get
             {
-                return keyedEntryCollection[(TKey) key].Value;
+                return keyedEntryCollection[(TKey)key].Value;
             }
 
             set
             {
-                DoSetEntry((TKey) key, (TValue) value);
+                DoSetEntry((TKey)key, (TValue)value);
             }
         }
 
@@ -403,7 +401,7 @@
 
         void IDictionary.Remove(object key)
         {
-            DoRemoveEntry((TKey) key);
+            DoRemoveEntry((TKey)key);
         }
 
         ICollection IDictionary.Values => Values;
@@ -432,8 +430,9 @@
 
             if (index < 0 || index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index),
-                                                      "CopyTo() failed:  index parameter was outside the bounds of the supplied array");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index),
+                    "CopyTo() failed:  index parameter was outside the bounds of the supplied array");
             }
 
             if ((array.Length - index) < keyedEntryCollection.Count)
@@ -443,7 +442,7 @@
 
             foreach (var entry in keyedEntryCollection)
             {
-                array[index++] = new KeyValuePair<TKey, TValue>((TKey) entry.Key, (TValue) entry.Value);
+                array[index++] = new KeyValuePair<TKey, TValue>((TKey)entry.Key, (TValue)entry.Value);
             }
         }
 
@@ -458,14 +457,14 @@
 
         void ICollection.CopyTo(Array array, int index)
         {
-            ((ICollection) keyedEntryCollection).CopyTo(array, index);
+            ((ICollection)keyedEntryCollection).CopyTo(array, index);
         }
 
         int ICollection.Count => keyedEntryCollection.Count;
 
-        bool ICollection.IsSynchronized => ((ICollection) keyedEntryCollection).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)keyedEntryCollection).IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection) keyedEntryCollection).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)keyedEntryCollection).SyncRoot;
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
@@ -549,7 +548,7 @@
 
             protected override TKey GetKeyForItem(DictionaryEntry entry)
             {
-                return (TKey) entry.Key;
+                return (TKey)entry.Key;
             }
         }
 
@@ -666,22 +665,22 @@
             }
 
             private ObservableDictionary<TKey, TValue> dictionary;
-            
+
             private int version;
-            
+
             private int index;
-            
+
             private KeyValuePair<TKey, TValue> current;
-            
+
             private bool isDictionaryEntryEnumerator;
         }
 
         private int countCache;
 
         private Dictionary<TKey, TValue> dictionaryCache = new Dictionary<TKey, TValue>();
-        
+
         private int dictionaryCacheVersion;
-        
+
         protected KeyedDictionaryEntryCollection keyedEntryCollection;
 
         [NonSerialized]

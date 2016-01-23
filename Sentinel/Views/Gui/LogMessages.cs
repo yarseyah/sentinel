@@ -10,16 +10,21 @@
     using System.Windows.Threading;
 
     using Extractors.Interfaces;
+
     using Filters.Interfaces;
-    using Sentinel.Interfaces;
-    using Services;
-    using Support.Mvvm;
+
     using Interfaces;
+
+    using Sentinel.Interfaces;
+
+    using Services;
+
+    using Support.Mvvm;
 
     public class LogMessages : ViewModelBase, ILogViewer
     {
         private const string ID = "f4d8c068-bf72-4b83-9d4a-1cd8a89fea11";
-        
+
         private const string NAME = "Log viewer";
 
         private const string DESCRIPTION = "Traditional row based log view with highlighting and incremental search.";
@@ -27,21 +32,30 @@
         public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
 
         private readonly IFilteringService<IFilter> filteringService;
+
         private readonly IExtractingService<IExtractor> extractingService;
+
         private readonly Queue<ILogEntry> pendingAdditions = new Queue<ILogEntry>();
+
         private readonly LogMessagesControl presenter;
 
-        private bool clearPending;        
+        private bool clearPending;
+
         private int filteredCount;
+
         private ILogger logger;
+
         private bool rebuildList;
+
         private string status;
+
         private int unfilteredCount;
+
         private bool autoscroll = true;
 
         public LogMessages()
         {
-            ((ViewInformation) Info).Description = DESCRIPTION;
+            ((ViewInformation)Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl { DataContext = this };
 
             Messages = new ObservableCollection<ILogEntry>();
@@ -78,17 +92,17 @@
                 if (notify != null)
                 {
                     notify.PropertyChanged += (sender, args) =>
-                    {
-                        var prop = args.PropertyName;
-                        switch (prop)
                         {
-                            case "SelectedTimeFormatOption":
-                            case "ConvertUtcTimesToLocalTimezone":
-                            case "SelectedDateOption":
-                                rebuildList = true;
-                                break;
-                        }
-                    };
+                            var prop = args.PropertyName;
+                            switch (prop)
+                            {
+                                case "SelectedTimeFormatOption":
+                                case "ConvertUtcTimesToLocalTimezone":
+                                case "SelectedDateOption":
+                                    rebuildList = true;
+                                    break;
+                            }
+                        };
                 }
             }
 
@@ -121,8 +135,8 @@
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
-                                  autoscrollButton, 
-                                  clearButton, 
+                                  autoscrollButton,
+                                  clearButton,
                                   pauseButton
                               };
 
@@ -334,7 +348,7 @@
             else
             {
                 if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
-                {                    
+                {
                     Messages.Add(entry);
                 }
             }

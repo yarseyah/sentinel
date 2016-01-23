@@ -15,9 +15,9 @@ namespace Sentinel.Highlighters
     using Sentinel.Support.Wpf;
 
     /// <summary>
-    /// Style selector that provides a implements the highlighters of the QuickHighligher
+    /// Style selector that provides a implements the highlighters of the QuickHighlighter
     /// (fancy name for the highlighting of results for the search box) and other registered
-    /// highlighters.  This class gets disposed of and rebuilt from scratch when the constituent 
+    /// highlighters.  This class gets disposed of and rebuilt from scratch when the constituent
     /// highlighters change their status.
     /// </summary>
     public class HighlightingSelector : StyleSelector
@@ -129,7 +129,7 @@ namespace Sentinel.Highlighters
                             // Top align values
                             style.Setters.Add(
                                 new Setter(
-                                    Control.VerticalContentAlignmentProperty, 
+                                    Control.VerticalContentAlignmentProperty,
                                     VerticalAlignment.Top));
 
                             style.Triggers.Add(trigger);
@@ -138,7 +138,6 @@ namespace Sentinel.Highlighters
 
                             // TODO: make this optional based upon the settings (but will need to rebuild highlighters when the setting changes.
                             RegisterDoubleClickEvent(style, messagesOnMouseDoubleClick);
-                            
                             styles[highlighter] = style;
                         }
                     }

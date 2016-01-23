@@ -70,7 +70,7 @@
             get
             {
                 var modeDescription = "Exact";
-                
+
                 switch (Mode)
                 {
                     case MatchMode.RegularExpression:

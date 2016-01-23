@@ -22,7 +22,7 @@ namespace Sentinel.Highlighters.Gui
 
         private bool coloursAreClose;
 
-        private int foregroundColourIndex;                
+        private int foregroundColourIndex;
 
         private bool overrideBackgroundColour = false;
 

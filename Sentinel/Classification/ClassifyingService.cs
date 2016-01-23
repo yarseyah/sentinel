@@ -41,7 +41,7 @@
             Remove = new DelegateCommand(RemoveClassifier, e => SelectedIndex != -1);
             OrderEarlier = new DelegateCommand(MoveItemUp, e => SelectedIndex > 0);
             OrderLater = new DelegateCommand(
-                MoveItemDown, 
+                MoveItemDown,
                 e => SelectedIndex < (Classifiers.Count - 1) && SelectedIndex != -1);
 
             Classifiers = new ObservableCollection<T>();
@@ -70,14 +70,14 @@
         public ObservableCollection<T> Classifiers { get; set; }
 
         /// <summary>
-        /// Gets the <c>ICommand</c> providing the functionality to 
+        /// Gets the <c>ICommand</c> providing the functionality to
         /// move the currently selected element to an earlier position
         /// in the ordered list of classifiers.
         /// </summary>
         public ICommand OrderEarlier { get; private set; }
 
         /// <summary>
-        /// Gets the <c>ICommand</c> providing the functionality to 
+        /// Gets the <c>ICommand</c> providing the functionality to
         /// move the currently selected element to a later position
         /// in the ordered list of classifiers.
         /// </summary>
@@ -117,7 +117,7 @@
         public void Initialise()
         {
             Classifiers.Add(new Classifier("Timing messages", true, LogEntryField.Description, MatchMode.RegularExpression, @"^\[SimulationTime\] (?<description>[^$]+)$", "TIMING") as T);
-            Classifiers.Add(new Classifier("Smp messages", true, LogEntryField.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);           
+            Classifiers.Add(new Classifier("Smp messages", true, LogEntryField.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
             Classifiers.Add(new Classifier("SimSat messages", true, LogEntryField.Description, MatchMode.RegularExpression, "SIMSAT:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
         }
 
@@ -143,7 +143,7 @@
 
         /// <summary>
         /// Edit the currently selected classifier (defined by the
-        /// <seealso cref="SelectedIndex">SelectedIndex</seealso> 
+        /// <seealso cref="SelectedIndex">SelectedIndex</seealso>
         /// property).
         /// <para>
         /// Private method that implements the <c>ICommand</c> <seealso cref="Edit">
@@ -162,7 +162,7 @@
 
         /// <summary>
         /// Move the currently selected classifier (defined by the
-        /// <seealso cref="SelectedIndex">SelectedIndex</seealso> 
+        /// <seealso cref="SelectedIndex">SelectedIndex</seealso>
         /// property) to later in the ordered list.
         /// <para>
         /// Private method that implements the <c>ICommand</c> <seealso cref="OrderLater">
@@ -177,13 +177,13 @@
                 lock (this)
                 {
                     Debug.Assert(
-                        selectedIndex >= 0, 
+                        selectedIndex >= 0,
                         "SelectedIndex must be >= 0.");
                     Debug.Assert(
-                        selectedIndex < Classifiers.Count - 1, 
+                        selectedIndex < Classifiers.Count - 1,
                         "SelectedIndex must be within the index range of Items collection");
                     Debug.Assert(
-                        Classifiers.Count > 1, 
+                        Classifiers.Count > 1,
                         "Can not move an item unless there is more than one.");
 
                     lock (Classifiers)
@@ -196,7 +196,7 @@
 
         /// <summary>
         /// Move the currently selected classifier (defined by the
-        /// <seealso cref="SelectedIndex">SelectedIndex</seealso> 
+        /// <seealso cref="SelectedIndex">SelectedIndex</seealso>
         /// property) to earlier in the ordered list.
         /// <para>
         /// Private method that implements the <c>ICommand</c> <seealso cref="OrderEarlier">
@@ -223,7 +223,7 @@
 
         /// <summary>
         /// Removes the currently selected classifier (defined by the
-        /// <seealso cref="SelectedIndex">SelectedIndex</seealso> 
+        /// <seealso cref="SelectedIndex">SelectedIndex</seealso>
         /// property).
         /// <para>
         /// Private method that implements the <c>ICommand</c> <seealso cref="Remove">

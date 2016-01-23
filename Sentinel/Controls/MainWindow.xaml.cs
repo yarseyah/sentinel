@@ -129,7 +129,7 @@
             {
                 return null;
             }
-            
+
             try
             {
                 var virtualScreen = new Rect(
@@ -213,7 +213,7 @@
                                };
 
             if (savefile.ShowDialog(this) == true)
-            {                
+            {
                 sessionManager.SaveSession(savefile.FileName);
                 AddToRecentFiles(savefile.FileName);
             }
@@ -284,16 +284,16 @@
             if (!sessionManager.IsSaved)
             {
                 var userResult = MessageBox.Show(
-                    "Do you want to save changes you made to " + sessionManager.Name + "?", 
-                    "Sentinel", 
-                    MessageBoxButton.YesNoCancel, 
+                    "Do you want to save changes you made to " + sessionManager.Name + "?",
+                    "Sentinel",
+                    MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Warning);
 
                 if (userResult == MessageBoxResult.Cancel)
                 {
                     return;
                 }
-                
+
                 if (userResult == MessageBoxResult.Yes)
                 {
                     SaveSession.Execute(null);
@@ -427,7 +427,7 @@
                 log.DebugFormat("Provider: {0}", instance.Name);
                 log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 log.DebugFormat("   - logger = {0}", instance.Logger);
-            }            
+            }
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
@@ -613,10 +613,10 @@
         {
             var windowInfo = new WindowPlacementInfo
                 {
-                    Height = (int)Height, 
-                    Top = (int)Top, 
-                    Left = (int)Left, 
-                    Width = (int)Width, 
+                    Height = (int)Height,
+                    Top = (int)Top,
+                    Left = (int)Left,
+                    Width = (int)Width,
                     WindowState = WindowState
                 };
 
@@ -625,7 +625,7 @@
 
             var recentFileInfo = new RecentFileInfo
             {
-                RecentFilePaths = RecentFiles.ToList(), 
+                RecentFilePaths = RecentFiles.ToList()
             };
 
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
@@ -805,7 +805,7 @@
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
             ViewManager = ServiceLocator.Instance.Get<IViewManager>();
 
-            // Maintaining column widths is proving difficult in Xaml alone, so 
+            // Maintaining column widths is proving difficult in Xaml alone, so
             // add an observer here and deal with it in code.
             if (Preferences is INotifyPropertyChanged)
             {
@@ -820,7 +820,7 @@
             // View-specific bindings
             var collapseIfZero = new CollapseIfZeroConverter();
 
-            var standardHighlighters = new CollectionViewSource() {Source = Highlighters.Highlighters};
+            var standardHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
             standardHighlighters.View.Filter = c => c is IStandardDebuggingHighlighter;
 
             var customHighlighters = new CollectionViewSource() {Source = Highlighters.Highlighters};

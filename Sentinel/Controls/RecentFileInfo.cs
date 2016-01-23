@@ -5,7 +5,7 @@
 
     [DataContract]
     public class RecentFileInfo
-    {        
+    {
         [DataMember]
         public IEnumerable<string> RecentFilePaths { get; set; }
     }

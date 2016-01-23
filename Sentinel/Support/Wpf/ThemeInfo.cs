@@ -16,7 +16,7 @@
         /// Gets the filename of the current theme.
         /// </summary>
         /// <remarks>
-        /// Will return an empty string if themes are not supported by 
+        /// Will return an empty string if themes are not supported by
         /// the operating system or disabled by the user.
         /// </remarks>
         public static string CurrentThemeFileName

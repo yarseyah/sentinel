@@ -20,7 +20,7 @@
 
         private string logName = "Untitled";
         private bool isValid;
-        
+
         private readonly ILogManager logManager = Services.ServiceLocator.Instance.Get<ILogManager>();
 
         public SetLoggerNamePage()
@@ -35,7 +35,7 @@
         {
             if ( e.PropertyName == "LogName" )
             {
-                // Validate against standard validation rules. 
+                // Validate against standard validation rules.
                 IsValid = this["LogName"] == null;
             }
         }

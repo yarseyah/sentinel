@@ -8,36 +8,64 @@ namespace Sentinel.Images
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
 
+    using Interfaces;
+
     using Microsoft.Win32;
 
-    using Sentinel.Images.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Support.Mvvm;
 
     public class AddEditTypeImageViewModel
         : ViewModelBase, IDataErrorInfo
     {
-        private readonly Dictionary<ImageError, string> imageErrorMessages =
-            new Dictionary<ImageError, string>
-                {
-                    {ImageError.NotSpecified, "No image selected."}, 
-                    {ImageError.NotFound, "Image not found."}, 
-                    {
-                        ImageError.TooLarge, 
-                        "Image must be less than 128x128. [Note: images are most often used at 64x64]"
-                        }, 
-                    {ImageError.Unknown, "Problem with reading image."}, 
-                    {ImageError.NoError, null}
-                };
+        private readonly Dictionary<ImageError, string> imageErrorMessages = new Dictionary<ImageError, string>
+                                                                                 {
+                                                                                     {
+                                                                                         ImageError
+                                                                                         .NotSpecified,
+                                                                                         "No image selected."
+                                                                                     },
+                                                                                     {
+                                                                                         ImageError
+                                                                                         .NotFound,
+                                                                                         "Image not found."
+                                                                                     },
+                                                                                     {
+                                                                                         ImageError
+                                                                                         .TooLarge,
+                                                                                         "Image must be less than 128x128. [Note: images are most often used at 64x64]"
+                                                                                     },
+                                                                                     {
+                                                                                         ImageError
+                                                                                         .Unknown,
+                                                                                         "Problem with reading image."
+                                                                                     },
+                                                                                     {
+                                                                                         ImageError
+                                                                                         .NoError,
+                                                                                         null
+                                                                                     }
+                                                                                 };
 
         private ITypeImageService ImageService { get; set; }
 
-        private readonly Dictionary<TypeError, string> typeErrorMessages =
-            new Dictionary<TypeError, string>
-                {
-                    {TypeError.NotSpecified, "Type name must be specified."}, 
-                    {TypeError.Duplicate, "There is already an entry for this type name and size combination."}, 
-                    {TypeError.NoError, null}
-                };
+        private readonly Dictionary<TypeError, string> typeErrorMessages = new Dictionary<TypeError, string>
+                                                                               {
+                                                                                   {
+                                                                                       TypeError
+                                                                                       .NotSpecified,
+                                                                                       "Type name must be specified."
+                                                                                   },
+                                                                                   {
+                                                                                       TypeError
+                                                                                       .Duplicate,
+                                                                                       "There is already an entry for this type name and size combination."
+                                                                                   },
+                                                                                   {
+                                                                                       TypeError
+                                                                                       .NoError,
+                                                                                       null
+                                                                                   }
+                                                                               };
 
         public Window Window { get; }
 
@@ -226,7 +254,7 @@ namespace Sentinel.Images
         /// <returns>
         /// The error message for the property. The default is an empty string ("").
         /// </returns>
-        /// <param name="fieldName">The name of the property whose error message to get. 
+        /// <param name="fieldName">The name of the property whose error message to get.
         /// </param>
         public string this[string fieldName]
         {
@@ -268,17 +296,18 @@ namespace Sentinel.Images
         private void BrowseForImageFiles(object obj)
         {
             var openFileDialog = new OpenFileDialog
-                {
-                    Title = "Select image", 
-                    ValidateNames = true, 
-                    CheckFileExists = true, 
-                    Multiselect = false, 
-                    Filter = "Images files|*.png;*.bmp|All Files|*.*", 
-                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
-                };
+                                     {
+                                         Title = "Select image",
+                                         ValidateNames = true,
+                                         CheckFileExists = true,
+                                         Multiselect = false,
+                                         Filter = "Images files|*.png;*.bmp|All Files|*.*",
+                                         InitialDirectory =
+                                             Environment.GetFolderPath(
+                                                 Environment.SpecialFolder.MyPictures)
+                                     };
 
             var dialogResult = openFileDialog.ShowDialog(Window);
-            
 
             if (dialogResult == true)
             {
@@ -358,22 +387,22 @@ namespace Sentinel.Images
             /// <summary>
             /// No image yet specified.
             /// </summary>
-            NotSpecified, 
+            NotSpecified,
 
             /// <summary>
             /// Image can not be found.
             /// </summary>
-            NotFound, 
+            NotFound,
 
             /// <summary>
             /// Image is too large for the purposes.
             /// </summary>
-            TooLarge, 
+            TooLarge,
 
             /// <summary>
             /// Some unknown error.
             /// </summary>
-            Unknown, 
+            Unknown,
 
             /// <summary>
             /// No error condition encountered.
@@ -389,12 +418,12 @@ namespace Sentinel.Images
             /// <summary>
             /// Type name has not been specified.
             /// </summary>
-            NotSpecified, 
+            NotSpecified,
 
             /// <summary>
             /// Type name duplicates another.
             /// </summary>
-            Duplicate, 
+            Duplicate,
 
             /// <summary>
             /// No error encountered.

@@ -46,7 +46,7 @@
             if (vm != null)
             {
                 registeredViews = new List<IViewInformation>(vm.GetRegistered());
-                
+
 #if DISABLE_MULTIPLE_VIEWS
                 MultipleViewsSupported = registeredViews.Count() > 1;
 #endif

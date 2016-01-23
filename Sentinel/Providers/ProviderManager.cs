@@ -115,7 +115,7 @@
         }
 
         /// <summary>
-        /// Gets the configuration abstraction for the specified Guid.  
+        /// Gets the configuration abstraction for the specified Guid.
         /// Type left to caller to determine (as long as it is satisfied
         /// by the implementer too).
         /// </summary>

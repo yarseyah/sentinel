@@ -59,7 +59,7 @@ namespace Sentinel.Filters.Gui
                 mode = value;
                 OnPropertyChanged("Mode");
             }
-        }        
+        }
 
         public string Name
         {

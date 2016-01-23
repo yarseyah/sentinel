@@ -10,7 +10,7 @@ namespace Sentinel.Interfaces
         IEnumerable<string> DateFormatOptions { get; }
 
         IEnumerable<string> TimeFormatOptions { get; }
-            
+
         [DataMember]
         int SelectedDateOption { get; set; }
 

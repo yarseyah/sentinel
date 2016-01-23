@@ -13,8 +13,11 @@
 
     using Highlighters;
     using Highlighters.Interfaces;
+
     using Sentinel.Interfaces;
+
     using Services;
+
     using Support;
     using Support.Wpf;
 
@@ -32,14 +35,14 @@
             AddCopyCommandBinding();
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
-            
+
             if (Highlight is INotifyPropertyChanged)
             {
                 (Highlight as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
-            if (searchHighlighter?.Highlighter is INotifyPropertyChanged )
+            if (searchHighlighter?.Highlighter is INotifyPropertyChanged)
             {
                 ((INotifyPropertyChanged)searchHighlighter.Highlighter).PropertyChanged += (s, e) => UpdateStyles();
             }
@@ -194,7 +197,7 @@
             var converter = (IValueConverter)Resources["TimePreferenceConverter"];
             column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
         }
-    
+
         private void BindDateColumn(GridViewColumn column)
         {
             if (column == null)
