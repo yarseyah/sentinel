@@ -2,6 +2,7 @@
 <RuleSet Name="Rules for Sentinel" Description="Code analysis rules for Sentinel.csproj." ToolsVersion="14.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0000" Action="Warning" />
     <Rule Id="SA1101" Action="None" />
   </Rules>
 </RuleSet>

@@ -45,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\Sentinel\Sentinel.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\NLogTester.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
