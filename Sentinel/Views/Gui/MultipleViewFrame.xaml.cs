@@ -69,7 +69,6 @@
             }
         }
 
-
         public string PrimaryTitle
         {
             get
@@ -86,7 +85,6 @@
                 }
             }
         }
-
 
         public string SecondaryTitle
         {
