@@ -31,7 +31,7 @@
                     nameof(logName));
             }
 
-            var log = new Log {Name = logName};
+            var log = new Log { Name = logName };
 
             loggers[logName] = log;
             return log;
