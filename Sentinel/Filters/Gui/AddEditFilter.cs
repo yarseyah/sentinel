@@ -39,6 +39,7 @@ namespace Sentinel.Filters.Gui
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -52,6 +53,7 @@ namespace Sentinel.Filters.Gui
             {
                 return mode;
             }
+
             set
             {
                 mode = value;

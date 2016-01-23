@@ -58,6 +58,7 @@
             {
                 return logName;
             }
+
             set
             {
                 if (logName != value)
@@ -80,6 +81,7 @@
             {
                 return isValid;
             }
+
             private set
             {
                 if (isValid != value)

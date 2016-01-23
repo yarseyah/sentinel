@@ -108,6 +108,7 @@
             {
                 return convertUtcTimesToLocalTimezone;
             }
+
             set
             {
                 if (value != convertUtcTimesToLocalTimezone)
@@ -321,6 +322,7 @@
             {
                 return doubleClickToShowExceptions;
             }
+
             set
             {
                 if (doubleClickToShowExceptions != value)
@@ -337,6 +339,7 @@
             {
                 return showSourceInformationColumns;
             }
+
             set
             {
                 if (showSourceInformationColumns != value)

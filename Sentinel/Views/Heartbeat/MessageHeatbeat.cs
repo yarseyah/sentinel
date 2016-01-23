@@ -26,7 +26,9 @@
             }
 
             public string Identifier { get; private set; }
+
             public string Name { get; private set; }
+
             public string Description { get; set; }
         }
 

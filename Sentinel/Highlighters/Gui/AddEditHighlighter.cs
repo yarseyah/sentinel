@@ -155,6 +155,7 @@ namespace Sentinel.Highlighters.Gui
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -168,12 +169,13 @@ namespace Sentinel.Highlighters.Gui
             {
                 return mode;
             }
+
             set
             {
                 mode = value;
                 OnPropertyChanged("Mode");
             }
-        } 
+        }
 
         public string Name
         {

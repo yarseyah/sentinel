@@ -41,6 +41,7 @@ namespace Sentinel.Views.Heartbeat
             {
                 return data;
             }
+
             set
             {
                 if (data == value) return;

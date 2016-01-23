@@ -353,6 +353,7 @@
             {
                 return (TValue) keyedEntryCollection[key].Value;
             }
+
             set
             {
                 DoSetEntry(key, value);
