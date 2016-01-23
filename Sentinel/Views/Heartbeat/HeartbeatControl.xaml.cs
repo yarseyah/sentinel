@@ -1,20 +1,16 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using Sentinel.Support.Wpf;
-
-#endregion
-
-namespace Sentinel.Views.Heartbeat
+﻿namespace Sentinel.Views.Heartbeat
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+    using System.Windows.Threading;
+    using Support.Wpf;
+
     /// <summary>
     ///   Interaction logic for HeartbeatControl.xaml
     /// </summary>
@@ -52,8 +48,6 @@ namespace Sentinel.Views.Heartbeat
             }
         }
 
-        #region Implementation of INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -65,8 +59,6 @@ namespace Sentinel.Views.Heartbeat
                 handler(this, e);
             }
         }
-
-        #endregion
 
         private void SampleTick(object sender, EventArgs e)
         {
