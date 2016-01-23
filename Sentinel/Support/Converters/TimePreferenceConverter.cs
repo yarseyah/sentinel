@@ -8,9 +8,9 @@ namespace Sentinel.Support.Converters
 
     using Common.Logging;
 
-    using NodaTime;
-
     using Interfaces;
+
+    using NodaTime;
 
     public class TimePreferenceConverter : IValueConverter
     {

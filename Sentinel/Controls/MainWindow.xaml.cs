@@ -43,7 +43,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog log = LogManager.GetLogger<MainWindow>();
+        private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
 
         private readonly string persistingFilename;
 
@@ -145,7 +145,7 @@
             }
             catch (Exception e)
             {
-                log.Error("Unable to calculate rectangle or perform intersection with window", e);
+                Log.Error("Unable to calculate rectangle or perform intersection with window", e);
             }
 
             return null;
@@ -423,15 +423,15 @@
             var logManager = ServiceLocator.Instance.Get<Logs.Interfaces.ILogManager>();
             foreach (var logger in logManager)
             {
-                log.DebugFormat("Log: {0}", logger.Name);
+                Log.DebugFormat("Log: {0}", logger.Name);
             }
 
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
             foreach (var instance in providerManager.GetInstances())
             {
-                log.DebugFormat("Provider: {0}", instance.Name);
-                log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
-                log.DebugFormat("   - logger = {0}", instance.Logger);
+                Log.DebugFormat("Provider: {0}", instance.Name);
+                Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
+                Log.DebugFormat("   - logger = {0}", instance.Logger);
             }
         }
 
@@ -511,7 +511,7 @@
         private void CreateDefaultLog4NetListener(Log4NetOptions log4NetOptions, ISessionManager sessionManager)
         {
             var info = $"Using log4net listener on Udp port {log4NetOptions.Port}";
-            log.Debug(info);
+            Log.Debug(info);
 
             var providerSettings = new UdpAppenderSettings
                                        {
@@ -536,7 +536,7 @@
         {
             var name = $"Using nlog listener on {(verbOptions.IsUdp ? "Udp" : "Tcp")} port {verbOptions.Port}";
             var info = NLogViewerProvider.ProviderRegistrationInformation.Info;
-            log.Debug(name);
+            Log.Debug(name);
 
             var providerSettings = new NetworkSettings
                                        {
@@ -568,7 +568,7 @@
 
             if (wp != null)
             {
-                log.TraceFormat(
+                Log.TraceFormat(
                     "Window position being restored to ({0},{1})-({2},{3}) {4}",
                     wp.Top,
                     wp.Left,
@@ -696,47 +696,41 @@
 
         private void BindSearchToSearchExtractor()
         {
-            SearchRibbonTextBox.SetBinding(
-                TextBox.TextProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Pattern"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            SearchRibbonTextBox.SetBinding(TextBox.TextProperty, CreatePatternBinding(SearchExtractor));
 
-            SearchModeListBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Mode"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            var modeBinding = new Binding
+            {
+                Source = SearchExtractor,
+                Path = new PropertyPath("Mode"),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            SearchModeListBox.SetBinding(Selector.SelectedItemProperty, modeBinding);
 
-            SearchTargetComboBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Field"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            var fieldBinding = new Binding
+                                   {
+                                       Source = SearchExtractor,
+                                       Path = new PropertyPath("Field"),
+                                       UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                                   };
+            SearchTargetComboBox.SetBinding(Selector.SelectedItemProperty, fieldBinding);
 
             HighlightToggleButton.IsChecked = false;
             FilterToggleButton.IsChecked = false;
         }
 
+        private Binding CreatePatternBinding(object source)
+        {
+            return new Binding
+                       {
+                           Source = source,
+                           Path = new PropertyPath("Pattern"),
+                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                       };
+        }
+
         private void BindSearchToSearchFilter()
         {
-            SearchRibbonTextBox.SetBinding(
-                TextBox.TextProperty,
-                new Binding
-                    {
-                        Source = SearchFilter,
-                        Path = new PropertyPath("Pattern"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            SearchRibbonTextBox.SetBinding(TextBox.TextProperty, CreatePatternBinding(SearchFilter));
             SearchModeListBox.SetBinding(
                 Selector.SelectedItemProperty,
                 new Binding

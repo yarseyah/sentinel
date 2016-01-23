@@ -1,5 +1,4 @@
-﻿
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
     using System;
 

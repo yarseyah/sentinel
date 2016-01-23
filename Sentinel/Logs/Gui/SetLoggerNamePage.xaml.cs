@@ -1,13 +1,12 @@
 ﻿namespace Sentinel.Logs.Gui
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Windows.Controls;
 
-    using Sentinel.Logs.Interfaces;
+    using Interfaces;
 
     using WpfExtras;
 
@@ -18,10 +17,11 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private string logName = "Untitled";
-        private bool isValid;
-
         private readonly ILogManager logManager = Services.ServiceLocator.Instance.Get<ILogManager>();
+
+        private string logName = "Untitled";
+
+        private bool isValid;
 
         public SetLoggerNamePage()
         {

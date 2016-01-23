@@ -17,24 +17,9 @@
         : ViewModelBase
           , ILogViewer
     {
-        public class ViewInformation : IViewInformation
-        {
-            public ViewInformation(string identifier, string name)
-            {
-                Identifier = identifier;
-                Name = name;
-            }
+        private const int MaxiumHistory = 200;
 
-            public string Identifier { get; private set; }
-
-            public string Name { get; private set; }
-
-            public string Description { get; set; }
-        }
-
-        private const int MAX_HISTORY = 200;
-
-        private const int SAMPLE_PERIOD = 1000;
+        private const int SamplePeriod = 1000;
 
         private HeartbeatControl presenter;
 
@@ -64,7 +49,7 @@
 
             DispatcherTimer samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
                                                    {
-                                                       Interval = TimeSpan.FromMilliseconds(SAMPLE_PERIOD)
+                                                       Interval = TimeSpan.FromMilliseconds(SamplePeriod)
                                                    };
             samplePeriodTimer.Tick += SampleTick;
             samplePeriodTimer.Start();
@@ -101,7 +86,7 @@
                     // Push out old data.
                     foreach (KeyValuePair<string, ObservableCollection<int>> pair in Data)
                     {
-                        if (pair.Value.Count() >= MAX_HISTORY)
+                        if (pair.Value.Count() >= MaxiumHistory)
                         {
                             pair.Value.RemoveAt(0);
                         }
@@ -119,7 +104,7 @@
                         if (!Data.ContainsKey(dataPoint.Key))
                         {
                             Data.Add(dataPoint.Key, new ObservableCollection<int>());
-                            for (int i = 0; i < MAX_HISTORY - 1; i++)
+                            for (int i = 0; i < MaxiumHistory - 1; i++)
                             {
                                 Data[dataPoint.Key].Add(0);
                             }
@@ -238,6 +223,21 @@
                     }
                 }
             }
+        }
+
+        public class ViewInformation : IViewInformation
+        {
+            public ViewInformation(string identifier, string name)
+            {
+                Identifier = identifier;
+                Name = name;
+            }
+
+            public string Identifier { get; private set; }
+
+            public string Name { get; private set; }
+
+            public string Description { get; set; }
         }
     }
 }

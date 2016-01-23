@@ -244,6 +244,5 @@
             collapseSecondaryView = true;
             SetupSplitter();
         }
-
     }
 }

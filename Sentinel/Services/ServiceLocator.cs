@@ -36,7 +36,6 @@
                 {
                     di.Create();
                 }
-                // ReSharper disable once CatchAllClause
                 catch (Exception e)
                 {
                     Log.Error("Unable to create directory", e);
@@ -59,7 +58,9 @@
 
         public bool ReportErrors { get; set; }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design", 
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "This approach has been chosen as the intended usage style.")]
         public T Get<T>()
         {
@@ -78,14 +79,18 @@
             return default(T);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design", 
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public bool IsRegistered<T>()
         {
             return services.Keys.Contains(typeof(T));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design", 
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public void Register<T>(object serviceInstance)
         {

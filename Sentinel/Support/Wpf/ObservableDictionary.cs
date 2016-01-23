@@ -19,12 +19,12 @@
     {
         public ObservableDictionary()
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection();
+            KeyedEntryCollection = new KeyedDictionaryEntryCollection();
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection();
+            KeyedEntryCollection = new KeyedDictionaryEntryCollection();
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
             {
@@ -34,12 +34,12 @@
 
         public ObservableDictionary(IEqualityComparer<TKey> comparer)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
+            KeyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            keyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
+            KeyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
 
             foreach (KeyValuePair<TKey, TValue> entry in dictionary)
             {
@@ -52,9 +52,9 @@
             siInfo = info;
         }
 
-        public IEqualityComparer<TKey> Comparer => keyedEntryCollection.Comparer;
+        public IEqualityComparer<TKey> Comparer => KeyedEntryCollection.Comparer;
 
-        public int Count => keyedEntryCollection.Count;
+        public int Count => KeyedEntryCollection.Count;
 
         public Dictionary<TKey, TValue>.KeyCollection Keys => TrueDictionary.Keys;
 
@@ -62,7 +62,7 @@
         {
             get
             {
-                return (TValue)keyedEntryCollection[key].Value;
+                return (TValue)KeyedEntryCollection[key].Value;
             }
 
             set
@@ -80,7 +80,7 @@
                 if (dictionaryCacheVersion != version)
                 {
                     dictionaryCache.Clear();
-                    foreach (var entry in keyedEntryCollection)
+                    foreach (var entry in KeyedEntryCollection)
                     {
                         dictionaryCache.Add((TKey)entry.Key, (TValue)entry.Value);
                     }
@@ -104,7 +104,7 @@
 
         public bool ContainsKey(TKey key)
         {
-            return keyedEntryCollection.Contains(key);
+            return KeyedEntryCollection.Contains(key);
         }
 
         public bool ContainsValue(TValue value)
@@ -124,14 +124,14 @@
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            var result = keyedEntryCollection.Contains(key);
-            value = result ? (TValue)keyedEntryCollection[key].Value : default(TValue);
+            var result = KeyedEntryCollection.Contains(key);
+            value = result ? (TValue)KeyedEntryCollection[key].Value : default(TValue);
             return result;
         }
 
         protected virtual bool AddEntry(TKey key, TValue value)
         {
-            keyedEntryCollection.Add(new DictionaryEntry(key, value));
+            KeyedEntryCollection.Add(new DictionaryEntry(key, value));
             return true;
         }
 
@@ -142,7 +142,7 @@
             if (result)
             {
                 // if so, clear the dictionary
-                keyedEntryCollection.Clear();
+                KeyedEntryCollection.Clear();
             }
 
             return result;
@@ -152,10 +152,10 @@
         {
             entry = default(DictionaryEntry);
             var index = -1;
-            if (keyedEntryCollection.Contains(key))
+            if (KeyedEntryCollection.Contains(key))
             {
-                entry = keyedEntryCollection[key];
-                index = keyedEntryCollection.IndexOf(entry);
+                entry = KeyedEntryCollection[key];
+                index = KeyedEntryCollection.IndexOf(entry);
             }
 
             return index;
@@ -174,15 +174,15 @@
         protected virtual bool RemoveEntry(TKey key)
         {
             // remove the entry
-            return keyedEntryCollection.Remove(key);
+            return KeyedEntryCollection.Remove(key);
         }
 
         protected virtual bool SetEntry(TKey key, TValue value)
         {
-            var keyExists = keyedEntryCollection.Contains(key);
+            var keyExists = KeyedEntryCollection.Contains(key);
 
             // if identical key/value pair already exists, nothing to do
-            if (keyExists && value.Equals((TValue)keyedEntryCollection[key].Value))
+            if (keyExists && value.Equals((TValue)KeyedEntryCollection[key].Value))
             {
                 return false;
             }
@@ -190,11 +190,11 @@
             // otherwise, remove the existing entry
             if (keyExists)
             {
-                keyedEntryCollection.Remove(key);
+                KeyedEntryCollection.Remove(key);
             }
 
             // add the new entry
-            keyedEntryCollection.Add(new DictionaryEntry(key, value));
+            KeyedEntryCollection.Add(new DictionaryEntry(key, value));
 
             return true;
         }
@@ -335,7 +335,7 @@
 
         bool IDictionary<TKey, TValue>.ContainsKey(TKey key)
         {
-            return keyedEntryCollection.Contains(key);
+            return KeyedEntryCollection.Contains(key);
         }
 
         bool IDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value)
@@ -351,7 +351,7 @@
         {
             get
             {
-                return (TValue)keyedEntryCollection[key].Value;
+                return (TValue)KeyedEntryCollection[key].Value;
             }
 
             set
@@ -372,7 +372,7 @@
 
         bool IDictionary.Contains(object key)
         {
-            return keyedEntryCollection.Contains((TKey)key);
+            return KeyedEntryCollection.Contains((TKey)key);
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
@@ -388,7 +388,7 @@
         {
             get
             {
-                return keyedEntryCollection[(TKey)key].Value;
+                return KeyedEntryCollection[(TKey)key].Value;
             }
 
             set
@@ -418,7 +418,7 @@
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> kvp)
         {
-            return keyedEntryCollection.Contains(kvp.Key);
+            return KeyedEntryCollection.Contains(kvp.Key);
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
@@ -435,18 +435,18 @@
                     "CopyTo() failed:  index parameter was outside the bounds of the supplied array");
             }
 
-            if ((array.Length - index) < keyedEntryCollection.Count)
+            if ((array.Length - index) < KeyedEntryCollection.Count)
             {
                 throw new ArgumentException("CopyTo() failed:  supplied array was too small", nameof(array));
             }
 
-            foreach (var entry in keyedEntryCollection)
+            foreach (var entry in KeyedEntryCollection)
             {
                 array[index++] = new KeyValuePair<TKey, TValue>((TKey)entry.Key, (TValue)entry.Value);
             }
         }
 
-        int ICollection<KeyValuePair<TKey, TValue>>.Count => keyedEntryCollection.Count;
+        int ICollection<KeyValuePair<TKey, TValue>>.Count => KeyedEntryCollection.Count;
 
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
@@ -457,14 +457,14 @@
 
         void ICollection.CopyTo(Array array, int index)
         {
-            ((ICollection)keyedEntryCollection).CopyTo(array, index);
+            ((ICollection)KeyedEntryCollection).CopyTo(array, index);
         }
 
-        int ICollection.Count => keyedEntryCollection.Count;
+        int ICollection.Count => KeyedEntryCollection.Count;
 
-        bool ICollection.IsSynchronized => ((ICollection)keyedEntryCollection).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)KeyedEntryCollection).IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection)keyedEntryCollection).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)KeyedEntryCollection).SyncRoot;
 
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
@@ -484,7 +484,7 @@
             }
 
             var entries = new Collection<DictionaryEntry>();
-            foreach (DictionaryEntry entry in keyedEntryCollection)
+            foreach (DictionaryEntry entry in KeyedEntryCollection)
             {
                 entries.Add(entry);
             }
@@ -582,11 +582,11 @@
             {
                 ValidateVersion();
                 index++;
-                if (index < dictionary.keyedEntryCollection.Count)
+                if (index < dictionary.KeyedEntryCollection.Count)
                 {
                     current = new KeyValuePair<TKey, TValue>(
-                        (TKey)dictionary.keyedEntryCollection[index].Key,
-                        (TValue)dictionary.keyedEntryCollection[index].Value);
+                        (TKey)dictionary.KeyedEntryCollection[index].Key,
+                        (TValue)dictionary.KeyedEntryCollection[index].Value);
                     return true;
                 }
 
@@ -681,7 +681,7 @@
 
         private int dictionaryCacheVersion;
 
-        protected KeyedDictionaryEntryCollection keyedEntryCollection;
+        protected KeyedDictionaryEntryCollection KeyedEntryCollection { get; }
 
         [NonSerialized]
         private SerializationInfo siInfo;

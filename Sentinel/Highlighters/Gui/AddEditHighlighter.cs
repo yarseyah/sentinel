@@ -16,9 +16,9 @@ namespace Sentinel.Highlighters.Gui
     {
         private readonly Window window;
 
-        private int backgroundColourIndex = 1;
-
         private readonly Dictionary<string, Color> colours = GetColours();
+
+        private int backgroundColourIndex = 1;
 
         private bool coloursAreClose;
 
