@@ -152,7 +152,7 @@
 
         protected int GetIndexAndEntryForKey(TKey key, out DictionaryEntry entry)
         {
-            entry = new DictionaryEntry();
+            entry = default(DictionaryEntry);
             var index = -1;
             if (keyedEntryCollection.Contains(key))
             {
@@ -563,7 +563,7 @@
                 version = dictionary.version;
                 index = -1;
                 this.isDictionaryEntryEnumerator = isDictionaryEntryEnumerator;
-                current = new KeyValuePair<TKey, TValue>();
+                current = default(KeyValuePair<TKey, TValue>);
             }
 
             public KeyValuePair<TKey, TValue> Current
@@ -592,7 +592,7 @@
                 }
 
                 index = -2;
-                current = new KeyValuePair<TKey, TValue>();
+                current = default(KeyValuePair<TKey, TValue>);
                 return false;
             }
 
@@ -635,7 +635,7 @@
             {
                 ValidateVersion();
                 index = -1;
-                current = new KeyValuePair<TKey, TValue>();
+                current = default(KeyValuePair<TKey, TValue>);
             }
 
             DictionaryEntry IDictionaryEnumerator.Entry
