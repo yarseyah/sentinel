@@ -5,7 +5,8 @@ namespace Sentinel.Highlighters.Interfaces
 
     using Sentinel.Interfaces;
 
-    public interface IHighlightingService<T> where T : IHighlighter
+    public interface IHighlightingService<T>
+        where T : IHighlighter
     {
         ICommand Add { get; }
 
