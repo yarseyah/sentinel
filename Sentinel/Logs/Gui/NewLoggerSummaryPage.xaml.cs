@@ -24,21 +24,13 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
-
         public string Title => "Summary";
 
         public string Description => "Review the selections made in this Wizard.";
 
         public bool IsValid => true;
+
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
         public Control PageContent => this;
 
@@ -57,6 +49,14 @@
             return saveData;
         }
 
-        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
+        }
     }
 }

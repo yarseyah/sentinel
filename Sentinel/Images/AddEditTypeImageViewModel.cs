@@ -46,8 +46,6 @@ namespace Sentinel.Images
                                                                                      }
                                                                                  };
 
-        private ITypeImageService ImageService { get; set; }
-
         private readonly Dictionary<TypeError, string> typeErrorMessages = new Dictionary<TypeError, string>
                                                                                {
                                                                                    {
@@ -66,8 +64,6 @@ namespace Sentinel.Images
                                                                                        null
                                                                                    }
                                                                                };
-
-        public Window Window { get; }
 
         private string errorMessage = "No image selected.";
 
@@ -108,13 +104,67 @@ namespace Sentinel.Images
             UpdateErrorMessage(false);
 
             PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == "FileName")
                 {
-                    LoadImageFromFileName(FileName);
-                }
-            };
+                    if (e.PropertyName == "FileName")
+                    {
+                        LoadImageFromFileName(FileName);
+                    }
+                };
         }
+
+        /// <summary>
+        /// Error messages corresponding to the image field.
+        /// </summary>
+        private enum ImageError
+        {
+            /// <summary>
+            /// No image yet specified.
+            /// </summary>
+            NotSpecified,
+
+            /// <summary>
+            /// Image can not be found.
+            /// </summary>
+            NotFound,
+
+            /// <summary>
+            /// Image is too large for the purposes.
+            /// </summary>
+            TooLarge,
+
+            /// <summary>
+            /// Some unknown error.
+            /// </summary>
+            Unknown,
+
+            /// <summary>
+            /// No error condition encountered.
+            /// </summary>
+            NoError
+        }
+
+        /// <summary>
+        /// Errors corresponding to the data validation of the Type field.
+        /// </summary>
+        private enum TypeError
+        {
+            /// <summary>
+            /// Type name has not been specified.
+            /// </summary>
+            NotSpecified,
+
+            /// <summary>
+            /// Type name duplicates another.
+            /// </summary>
+            Duplicate,
+
+            /// <summary>
+            /// No error encountered.
+            /// </summary>
+            NoError
+        }
+
+        public Window Window { get; }
 
         /// <summary>
         /// Gets the <c>ICommand</c> corresponding to the Accept action.
@@ -248,6 +298,8 @@ namespace Sentinel.Images
             }
         }
 
+        private ITypeImageService ImageService { get; set; }
+
         /// <summary>
         /// Gets the error message for the property with the given name.
         /// </summary>
@@ -377,58 +429,6 @@ namespace Sentinel.Images
             {
                 Error = newErrorMessage;
             }
-        }
-
-        /// <summary>
-        /// Error messages corresponding to the image field.
-        /// </summary>
-        private enum ImageError
-        {
-            /// <summary>
-            /// No image yet specified.
-            /// </summary>
-            NotSpecified,
-
-            /// <summary>
-            /// Image can not be found.
-            /// </summary>
-            NotFound,
-
-            /// <summary>
-            /// Image is too large for the purposes.
-            /// </summary>
-            TooLarge,
-
-            /// <summary>
-            /// Some unknown error.
-            /// </summary>
-            Unknown,
-
-            /// <summary>
-            /// No error condition encountered.
-            /// </summary>
-            NoError
-        }
-
-        /// <summary>
-        /// Errors corresponding to the data validation of the Type field.
-        /// </summary>
-        private enum TypeError
-        {
-            /// <summary>
-            /// Type name has not been specified.
-            /// </summary>
-            NotSpecified,
-
-            /// <summary>
-            /// Type name duplicates another.
-            /// </summary>
-            Duplicate,
-
-            /// <summary>
-            /// No error encountered.
-            /// </summary>
-            NoError
         }
     }
 }

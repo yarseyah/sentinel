@@ -22,14 +22,12 @@ namespace Sentinel.Highlighters
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
-        private Action<object, MouseButtonEventArgs> MessagesOnMouseDoubleClick { get; }
-
         private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
 
         /// <summary>
-        /// Initializes a new instance of the HighlightingSelector class.
+        /// Initializes a new instance of the <see cref="HighlightingSelector"/> class.
         /// </summary>
-        /// <param name="messagesOnMouseDoubleClick"></param>
+        /// <param name="messagesOnMouseDoubleClick">Action to perform on double click</param>
         public HighlightingSelector(Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick)
         {
             MessagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
@@ -45,15 +43,15 @@ namespace Sentinel.Highlighters
                 var style = new Style(typeof(ListViewItem));
 
                 var trigger = new DataTrigger
-                                          {
-                                              Binding = new Binding
-                                                            {
-                                                                ConverterParameter = highlighter,
-                                                                Converter = new HighlighterConverter(highlighter),
-                                                                Mode = BindingMode.OneWay
-                                                            },
-                                              Value = "Match"
-                                          };
+                                  {
+                                      Binding = new Binding
+                                                    {
+                                                        ConverterParameter = highlighter,
+                                                        Converter = new HighlighterConverter(highlighter),
+                                                        Mode = BindingMode.OneWay
+                                                    },
+                                      Value = "Match"
+                                  };
 
                 if (highlighter.Style != null)
                 {
@@ -96,16 +94,16 @@ namespace Sentinel.Highlighters
                             var style = new Style(typeof(ListViewItem));
 
                             var trigger = new DataTrigger
-                                {
-                                    Binding =
-                                        new Binding
-                                            {
-                                                ConverterParameter = highlighter,
-                                                Converter = new HighlighterConverter(highlighter),
-                                                Mode = BindingMode.OneWay
-                                            },
-                                    Value = "Match"
-                                };
+                                              {
+                                                  Binding =
+                                                      new Binding
+                                                          {
+                                                              ConverterParameter = highlighter,
+                                                              Converter = new HighlighterConverter(highlighter),
+                                                              Mode = BindingMode.OneWay
+                                                          },
+                                                  Value = "Match"
+                                              };
 
                             if (highlighter.Style != null)
                             {
@@ -144,6 +142,8 @@ namespace Sentinel.Highlighters
                 }
             }
         }
+
+        private Action<object, MouseButtonEventArgs> MessagesOnMouseDoubleClick { get; }
 
         /// <summary>
         /// Override of the <c>SelectStyle</c> method.  Looks up a suitable style for the

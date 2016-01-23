@@ -56,6 +56,8 @@
             PropertyChanged += PropertyChangedHandler;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public bool Horizontal
         {
             get
@@ -236,6 +238,16 @@
             return saveData;
         }
 
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
+        }
+
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -252,18 +264,6 @@
                 case "MultipleView":
                     SingleView = !MultipleView;
                     break;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
             }
         }
     }

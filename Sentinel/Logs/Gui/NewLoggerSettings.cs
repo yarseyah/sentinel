@@ -158,17 +158,6 @@
             }
         }
 
-        public class InternalSettings
-        {
-            public string LogName { get; set; }
-
-            public string PrimaryView { get; set; }
-
-            public bool IsVertical { get; set; }
-
-            public string Layout { get; set; }
-        }
-
         private static string LookupViewInformation(string identifier)
         {
             var vm = ServiceLocator.Instance.Get<IViewManager>();
@@ -184,6 +173,17 @@
             }
 
             SecondaryView = Views.Count >= 2 ? LookupViewInformation(Views.ElementAt(1)) : "Not used.";
+        }
+
+        public class InternalSettings
+        {
+            public string LogName { get; set; }
+
+            public string PrimaryView { get; set; }
+
+            public bool IsVertical { get; set; }
+
+            public string Layout { get; set; }
         }
     }
 }

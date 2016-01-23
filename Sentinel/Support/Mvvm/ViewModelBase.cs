@@ -10,13 +10,16 @@
     {
         private readonly ILog log;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
+        /// </summary>
         protected ViewModelBase()
         {
             log = LogManager.GetLogger(GetType().Name);
         }
 
         /// <summary>
-        /// Finalizes an instance of the ViewModelBase class.
+        /// Finalizes an instance of the <see cref="ViewModelBase"/> class.
         /// </summary>
         ~ViewModelBase()
         {

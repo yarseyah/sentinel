@@ -120,8 +120,7 @@
         }
 
         /// <summary>
-        /// Gets or sets whether the display should be of the parsed date/time or of the one made upon
-        /// message receipt.
+        /// Gets or sets a value indicating whether the display should be of the parsed date/time or of the one made upon message receipt.
         /// </summary>
         public bool UseArrivalDateTime
         {

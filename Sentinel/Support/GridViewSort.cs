@@ -154,7 +154,8 @@
             "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
-        public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
+        public static T GetAncestor<T>(DependencyObject reference)
+            where T : DependencyObject
         {
             var parent = VisualTreeHelper.GetParent(reference);
             while (!(parent is T))

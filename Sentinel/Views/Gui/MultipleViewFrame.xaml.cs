@@ -44,6 +44,17 @@
             DataContext = this;
         }
 
+        ~MultipleViewFrame()
+        {
+            var changed = preferences as INotifyPropertyChanged;
+            if (changed != null)
+            {
+                changed.PropertyChanged -= PreferencesChanged;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ICommand Clear { get; private set; }
 
         public ICommand ClearActivity { get; private set; }
@@ -162,12 +173,13 @@
             }
         }
 
-        ~MultipleViewFrame()
+        protected void OnPropertyChanged(string propertyName)
         {
-            var changed = preferences as INotifyPropertyChanged;
-            if (changed != null)
+            var handler = PropertyChanged;
+            if (handler != null)
             {
-                changed.PropertyChanged -= PreferencesChanged;
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
             }
         }
 
@@ -224,18 +236,6 @@
 
                 splitter.Visibility = Visibility.Hidden;
                 second.Visibility = Visibility.Hidden;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
             }
         }
 

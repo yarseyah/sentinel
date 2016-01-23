@@ -22,7 +22,7 @@
         private int selectedIndex = -1;
 
         /// <summary>
-        /// Initializes a new instance of the HighlightingService class.
+        /// Initializes a new instance of the <see cref="HighlightingService{T}"/> class.
         /// </summary>
         public HighlightingService()
         {

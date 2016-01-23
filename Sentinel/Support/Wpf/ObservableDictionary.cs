@@ -562,6 +562,16 @@
         [StructLayout(LayoutKind.Sequential)]
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {
+            private readonly ObservableDictionary<TKey, TValue> dictionary;
+
+            private readonly int version;
+
+            private readonly bool isDictionaryEntryEnumerator;
+
+            private int index;
+
+            private KeyValuePair<TKey, TValue> current;
+
             internal Enumerator(ObservableDictionary<TKey, TValue> dictionary, bool isDictionaryEntryEnumerator)
             {
                 this.dictionary = dictionary;
@@ -571,12 +581,53 @@
                 current = default(KeyValuePair<TKey, TValue>);
             }
 
+            object IEnumerator.Current
+            {
+                get
+                {
+                    ValidateCurrent();
+                    if (isDictionaryEntryEnumerator)
+                    {
+                        return new DictionaryEntry(current.Key, current.Value);
+                    }
+
+                    return new KeyValuePair<TKey, TValue>(current.Key, current.Value);
+                }
+            }
+
             public KeyValuePair<TKey, TValue> Current
             {
                 get
                 {
                     ValidateCurrent();
                     return current;
+                }
+            }
+
+            object IDictionaryEnumerator.Key
+            {
+                get
+                {
+                    ValidateCurrent();
+                    return current.Key;
+                }
+            }
+
+            DictionaryEntry IDictionaryEnumerator.Entry
+            {
+                get
+                {
+                    ValidateCurrent();
+                    return new DictionaryEntry(current.Key, current.Value);
+                }
+            }
+
+            object IDictionaryEnumerator.Value
+            {
+                get
+                {
+                    ValidateCurrent();
+                    return current.Value;
                 }
             }
 
@@ -601,17 +652,11 @@
                 return false;
             }
 
-            private void ValidateCurrent()
+            void IEnumerator.Reset()
             {
-                if (index == -1)
-                {
-                    throw new InvalidOperationException("The enumerator has not been started.");
-                }
-
-                if (index == -2)
-                {
-                    throw new InvalidOperationException("The enumerator has reached the end of the collection.");
-                }
+                ValidateVersion();
+                index = -1;
+                current = default(KeyValuePair<TKey, TValue>);
             }
 
             private void ValidateVersion()
@@ -622,63 +667,16 @@
                 }
             }
 
-            object IEnumerator.Current
+            private void ValidateCurrent()
             {
-                get
+                switch (index)
                 {
-                    ValidateCurrent();
-                    if (isDictionaryEntryEnumerator)
-                    {
-                        return new DictionaryEntry(current.Key, current.Value);
-                    }
-
-                    return new KeyValuePair<TKey, TValue>(current.Key, current.Value);
+                    case -1:
+                        throw new InvalidOperationException("The enumerator has not been started.");
+                    case -2:
+                        throw new InvalidOperationException("The enumerator has reached the end of the collection.");
                 }
             }
-
-            void IEnumerator.Reset()
-            {
-                ValidateVersion();
-                index = -1;
-                current = default(KeyValuePair<TKey, TValue>);
-            }
-
-            DictionaryEntry IDictionaryEnumerator.Entry
-            {
-                get
-                {
-                    ValidateCurrent();
-                    return new DictionaryEntry(current.Key, current.Value);
-                }
-            }
-
-            object IDictionaryEnumerator.Key
-            {
-                get
-                {
-                    ValidateCurrent();
-                    return current.Key;
-                }
-            }
-
-            object IDictionaryEnumerator.Value
-            {
-                get
-                {
-                    ValidateCurrent();
-                    return current.Value;
-                }
-            }
-
-            private readonly ObservableDictionary<TKey, TValue> dictionary;
-
-            private readonly int version;
-
-            private int index;
-
-            private KeyValuePair<TKey, TValue> current;
-
-            private readonly bool isDictionaryEntryEnumerator;
         }
 
         protected class KeyedDictionaryEntryCollection : KeyedCollection<TKey, DictionaryEntry>

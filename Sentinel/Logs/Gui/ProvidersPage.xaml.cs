@@ -30,13 +30,8 @@
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
         private int selectedProviderIndex = -1;
+
         private bool isValid;
-
-        public ICommand Add { get; private set; }
-
-        public ICommand Remove { get; private set; }
-
-        public ObservableCollection<PendingProviderRecord> Providers { get; private set; }
 
         public ProvidersPage()
         {
@@ -53,11 +48,13 @@
             Providers.CollectionChanged += ProvidersCollectionChanged;
         }
 
-        private void ProvidersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged("Providers");
-            IsValid = Error == null;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand Add { get; private set; }
+
+        public ICommand Remove { get; private set; }
+
+        public ObservableCollection<PendingProviderRecord> Providers { get; private set; }
 
         public int SelectedProviderIndex
         {
@@ -74,18 +71,6 @@
                     selectedProviderIndex = value;
                     OnPropertyChanged("SelectedProviderIndex");
                 }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
             }
         }
 
@@ -114,6 +99,41 @@
 
         public Control PageContent => this;
 
+        /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        /// <returns>
+        /// An error message indicating what is wrong with this object. The default is an empty string ("").
+        /// </returns>
+        public string Error
+        {
+            get
+            {
+                return this["Providers"];
+            }
+        }
+
+        /// <summary>
+        /// Gets the error message for the property with the given name.
+        /// </summary>
+        /// <returns>
+        /// The error message for the property. The default is an empty string ("").
+        /// </returns>
+        /// <param name="columnName">The name of the property whose error message to get.</param>
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case "Providers":
+                        return ValidateProviders();
+                }
+
+                return null;
+            }
+        }
+
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
@@ -140,6 +160,16 @@
             }
 
             return saveData;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
         }
 
         private void AddNewProvider(object obj)
@@ -176,41 +206,6 @@
             else
             {
                 // TODO: error condition.
-            }
-        }
-
-        /// <summary>
-        /// Gets the error message for the property with the given name.
-        /// </summary>
-        /// <returns>
-        /// The error message for the property. The default is an empty string ("").
-        /// </returns>
-        /// <param name="columnName">The name of the property whose error message to get.</param>
-        public string this[string columnName]
-        {
-            get
-            {
-                switch (columnName)
-                {
-                    case "Providers":
-                        return ValidateProviders();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets an error message indicating what is wrong with this object.
-        /// </summary>
-        /// <returns>
-        /// An error message indicating what is wrong with this object. The default is an empty string ("").
-        /// </returns>
-        public string Error
-        {
-            get
-            {
-                return this["Providers"];
             }
         }
 
@@ -276,6 +271,12 @@
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             OnPropertyChanged("Providers");
+        }
+
+        private void ProvidersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Providers");
+            IsValid = Error == null;
         }
     }
 }

@@ -18,8 +18,8 @@ namespace Sentinel.Views.Interfaces
 
         string Status { get; }
 
-        void SetLogger(ILogger newLogger);
-
         IEnumerable<ILogViewerToolbarButton> ToolbarItems { get; }
+
+        void SetLogger(ILogger newLogger);
     }
 }

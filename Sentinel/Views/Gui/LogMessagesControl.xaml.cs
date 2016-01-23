@@ -74,75 +74,16 @@
             }
         }
 
-        private void AddCopyCommandBinding()
-        {
-            ExecutedRoutedEventHandler handler = (s, a) => { CopySelectedLogEntries(); };
-
-            var command = new RoutedCommand("Copy", typeof(GridView));
-            command.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control, "Copy"));
-            messages.CommandBindings.Add(new CommandBinding(command, handler));
-
-            try
-            {
-                Clipboard.SetData(DataFormats.Text, string.Empty);
-            }
-            catch (COMException)
-            {
-            }
-        }
-
-        private void CopySelectedLogEntries()
-        {
-            if (messages.SelectedItems.Count != 0)
-            {
-                var sb = new StringBuilder();
-                foreach (ILogEntry item in messages.SelectedItems)
-                {
-                    sb.AppendLine(
-                        $"{item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{item.Type}|{item.System}|{item.Description}");
-                }
-
-                try
-                {
-                    Clipboard.SetData(DataFormats.Text, sb.ToString());
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException("Sentinel could not copy to the clipboard", ex);
-                }
-            }
-        }
-
         private IHighlightingService<IHighlighter> Highlight { get; }
 
         private IUserPreferences Preferences { get; }
+
+        private bool DoubleClickToShowExceptions { get; set; }
 
         public void ScrollToEnd()
         {
             ScrollingHelper.ScrollToEnd(Dispatcher, messages);
         }
-
-        private void PreferencesChanged(object s, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "UseTighterRows")
-            {
-                UpdateStyles();
-            }
-            else if (e.PropertyName == "SelectedTypeOption")
-            {
-                SetTypeColumnPreferences(Preferences.SelectedTypeOption);
-            }
-            else if (e.PropertyName == "SelectedDateOption")
-            {
-                UpdateDateFormat();
-            }
-            else if (e.PropertyName == "DoubleClickToShowExceptions")
-            {
-                DoubleClickToShowExceptions = Preferences.DoubleClickToShowExceptions;
-            }
-        }
-
-        private bool DoubleClickToShowExceptions { get; set; }
 
         private void SetTypeColumnPreferences(int selectedTypeOption)
         {
@@ -239,6 +180,65 @@
                         }
                     }
                 }
+            }
+        }
+
+        private void CopySelectedLogEntries()
+        {
+            if (messages.SelectedItems.Count != 0)
+            {
+                var sb = new StringBuilder();
+                foreach (ILogEntry item in messages.SelectedItems)
+                {
+                    sb.AppendLine(
+                        $"{item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{item.Type}|{item.System}|{item.Description}");
+                }
+
+                try
+                {
+                    Clipboard.SetData(DataFormats.Text, sb.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Sentinel could not copy to the clipboard", ex);
+                }
+            }
+        }
+
+        private void AddCopyCommandBinding()
+        {
+            ExecutedRoutedEventHandler handler = (s, a) => { CopySelectedLogEntries(); };
+
+            var command = new RoutedCommand("Copy", typeof(GridView));
+            command.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control, "Copy"));
+            messages.CommandBindings.Add(new CommandBinding(command, handler));
+
+            try
+            {
+                Clipboard.SetData(DataFormats.Text, string.Empty);
+            }
+            catch (COMException)
+            {
+            }
+        }
+
+        private void PreferencesChanged(object s, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "UseTighterRows")
+            {
+                UpdateStyles();
+            }
+            else if (e.PropertyName == "SelectedTypeOption")
+            {
+                SetTypeColumnPreferences(Preferences.SelectedTypeOption);
+            }
+            else if (e.PropertyName == "SelectedDateOption")
+            {
+                UpdateDateFormat();
+            }
+            else if (e.PropertyName == "DoubleClickToShowExceptions")
+            {
+                DoubleClickToShowExceptions = Preferences.DoubleClickToShowExceptions;
             }
         }
     }

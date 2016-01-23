@@ -15,20 +15,20 @@
 
     public class MessageHeatbeat : ViewModelBase, ILogViewer
     {
-        private const int MaxiumHistory = 200;
-
-        private const int SamplePeriod = 1000;
-
-        private HeartbeatControl presenter;
-
         public static readonly string Id = "f1da010a-bd8f-4957-a16d-2f3ada1e40f6";
 
         public static readonly IViewInformation Info = new ViewInformation(Id, "Message Heartbeat");
+
+        private const int MaxiumHistory = 200;
+
+        private const int SamplePeriod = 1000;
 
         private readonly ObservableDictionary<string, ObservableCollection<int>> historicalData =
             new ObservableDictionary<string, ObservableCollection<int>>();
 
         private readonly Dictionary<string, int> liveData = new Dictionary<string, int>();
+
+        private HeartbeatControl presenter;
 
         private ILogger logger;
 
@@ -50,6 +50,62 @@
             samplePeriodTimer.Start();
         }
 
+        public ObservableCollection<ILogEntry> Messages { get; private set; }
+
+        public string Name
+        {
+            get
+            {
+                return Info.Name;
+            }
+        }
+
+        public ILogger Logger
+        {
+            get
+            {
+                return logger;
+            }
+
+            private set
+            {
+                if (logger != value)
+                {
+                    if (logger != null)
+                    {
+                        logger.PropertyChanged -= LoggerPropertyChanged;
+                    }
+
+                    // If new logger isn't null, register to it.
+                    if (value != null)
+                    {
+                        value.PropertyChanged += LoggerPropertyChanged;
+                    }
+
+                    logger = value;
+                    OnPropertyChanged("Logger");
+                }
+
+                // TODO: Unregister from existing logger (if not null)
+            }
+        }
+
+        /// <summary>
+        /// Gets the Presenter control for a log viewer.
+        /// </summary>
+        public Control Presenter => presenter;
+
+        public string Status => string.Empty;
+
+        public IEnumerable<ILogViewerToolbarButton> ToolbarItems => null;
+
+        public ObservableDictionary<string, ObservableCollection<int>> Data => historicalData;
+
+        public void SetLogger(ILogger newLogger)
+        {
+            Logger = newLogger;
+        }
+
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Logger")
@@ -59,16 +115,27 @@
             }
         }
 
-        private void PurgeData()
+        private void LoggerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            lock (Data)
+            if (e.PropertyName == "NewEntries")
             {
-                Data.Clear();
-            }
-
-            lock (liveData)
-            {
-                liveData.Clear();
+                lock (Logger.NewEntries)
+                {
+                    lock (liveData)
+                    {
+                        foreach (ILogEntry entry in Logger.NewEntries)
+                        {
+                            if (liveData.ContainsKey(entry.Type))
+                            {
+                                liveData[entry.Type]++;
+                            }
+                            else
+                            {
+                                liveData[entry.Type] = 1;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -116,107 +183,16 @@
             }
         }
 
-        public ObservableCollection<ILogEntry> Messages { get; private set; }
-
-        public string Name
+        private void PurgeData()
         {
-            get
+            lock (Data)
             {
-                return Info.Name;
-            }
-        }
-
-        public ILogger Logger
-        {
-            get
-            {
-                return logger;
+                Data.Clear();
             }
 
-            private set
+            lock (liveData)
             {
-                if (logger != value)
-                {
-                    if (logger != null)
-                    {
-                        logger.PropertyChanged -= LoggerPropertyChanged;
-                    }
-
-                    // If new logger isn't null, register to it.
-                    if (value != null)
-                    {
-                        value.PropertyChanged += LoggerPropertyChanged;
-                    }
-
-                    logger = value;
-                    OnPropertyChanged("Logger");
-                }
-
-                // TODO: Unregister from existing logger (if not null)
-            }
-        }
-
-        /// <summary>
-        ///   Gets or sets the Presenter control for a log viewer.
-        /// </summary>
-        public Control Presenter
-        {
-            get
-            {
-                return presenter;
-            }
-        }
-
-        public string Status
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
-
-        public void SetLogger(ILogger newLogger)
-        {
-            Logger = newLogger;
-        }
-
-        public IEnumerable<ILogViewerToolbarButton> ToolbarItems
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        public ObservableDictionary<string, ObservableCollection<int>> Data
-        {
-            get
-            {
-                return historicalData;
-            }
-        }
-
-        private void LoggerPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "NewEntries")
-            {
-                lock (Logger.NewEntries)
-                {
-                    lock (liveData)
-                    {
-                        foreach (ILogEntry entry in Logger.NewEntries)
-                        {
-                            if (liveData.ContainsKey(entry.Type))
-                            {
-                                liveData[entry.Type]++;
-                            }
-                            else
-                            {
-                                liveData[entry.Type] = 1;
-                            }
-                        }
-                    }
-                }
+                liveData.Clear();
             }
         }
 

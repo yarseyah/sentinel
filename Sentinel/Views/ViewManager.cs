@@ -23,7 +23,7 @@
         }
 
         /// <summary>
-        /// Observerable collection of the instances of a viewer main frame.
+        /// Gets the observerable collection of the instances of a viewer main frame.
         /// </summary>
         public ObservableCollection<IWindowFrame> Viewers { get; private set; }
 

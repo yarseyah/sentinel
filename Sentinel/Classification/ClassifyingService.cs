@@ -17,6 +17,7 @@
     /// as a ServiceLocator provided resource, so there is only one collection
     /// across the whole of the system.
     /// </summary>
+    /// <typeparam name="T">The first generic type parameter.</typeparam>
     [DataContract]
     public class ClassifyingService<T> : ViewModelBase, IClassifyingService<T>, IDefaultInitialisation
         where T : class, IClassifier
@@ -32,7 +33,7 @@
         private int selectedIndex = -1;
 
         /// <summary>
-        /// Initializes a new instance of the Classifiers class.
+        /// Initializes a new instance of the <see cref="ClassifyingService{T}"/> class.
         /// </summary>
         public ClassifyingService()
         {
@@ -64,7 +65,7 @@
         public ICommand Edit { get; private set; }
 
         /// <summary>
-        /// Gets the <c>ObservableCollection</c> of items representing the
+        /// Gets or sets the <c>ObservableCollection</c> of items representing the
         /// collection of Classifiers.
         /// </summary>
         public ObservableCollection<T> Classifiers { get; set; }

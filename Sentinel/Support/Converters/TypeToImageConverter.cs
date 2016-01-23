@@ -13,6 +13,8 @@ namespace Sentinel.Support.Converters
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class TypeToImageConverter : IValueConverter
     {
+        protected ImageQuality Quality { get; set; } = ImageQuality.BestAvailable;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var imageService = ServiceLocator.Instance.Get<ITypeImageService>();
@@ -36,8 +38,6 @@ namespace Sentinel.Support.Converters
 
             return null;
         }
-
-        protected ImageQuality Quality { get; set; } = ImageQuality.BestAvailable;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

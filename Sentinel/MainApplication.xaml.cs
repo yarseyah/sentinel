@@ -15,7 +15,7 @@
     public partial class MainApplication : Application
     {
         /// <summary>
-        /// Initializes a new instance of the MainApplication class.
+        /// Initializes a new instance of the <see cref="MainApplication"/> class.
         /// </summary>
         public MainApplication()
         {

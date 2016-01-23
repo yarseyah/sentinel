@@ -68,6 +68,8 @@
 
         public Control PageContent => this;
 
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
+
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
@@ -79,8 +81,6 @@
             children.Remove(item);
             OnPropertyChanged("Children");
         }
-
-        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
         public object Save(object saveData)
         {

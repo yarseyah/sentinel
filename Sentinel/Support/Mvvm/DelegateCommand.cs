@@ -5,10 +5,6 @@
 
     public class DelegateCommand : ICommand
     {
-        private Predicate<object> CanExecutePredicate { get; }
-
-        private Action<object> ExecuteAction { get; }
-
         public DelegateCommand(Action<object> executeAction, Predicate<object> canExecute = null)
         {
             ExecuteAction = executeAction;
@@ -27,6 +23,10 @@
                 CommandManager.RequerySuggested -= value;
             }
         }
+
+        private Predicate<object> CanExecutePredicate { get; }
+
+        private Action<object> ExecuteAction { get; }
 
         public bool CanExecute(object parameter)
         {
