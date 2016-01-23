@@ -38,6 +38,5 @@
         void LoadSession(string filePath);
 
         void SaveSession(string filePath);
-
     }
 }

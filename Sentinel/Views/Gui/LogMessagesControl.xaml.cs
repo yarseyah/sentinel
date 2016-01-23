@@ -181,7 +181,6 @@
                 BindTimeColumn(view.Columns[2]);
 
                 // TODO: need to invalidate all existing ones!
-
             }
         }
 
