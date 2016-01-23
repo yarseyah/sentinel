@@ -235,8 +235,8 @@
     <Compile Include="Services\Interfaces\ISessionManager.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\SessionManager.cs" />
+    <Compile Include="Support\Converters\BooleanToDisabledConverter.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
-    <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
     <Compile Include="Support\Converters\ColourConverter.cs" />
     <Compile Include="Support\Converters\DatePreferenceConverter.cs" />
     <Compile Include="Support\Converters\TimePreferenceConverter.cs" />
