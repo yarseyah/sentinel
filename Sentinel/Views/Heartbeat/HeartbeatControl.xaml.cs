@@ -73,7 +73,7 @@
                 int maxValue = Data.Count() > 0
                                    ? Data.Max(kvp => kvp.Value != null && kvp.Value.Count() > 0 ? kvp.Value.Max() : 0)
                                    : 0;
-                double scale = maxValue > 0 ? canvas.Height / maxValue: 1.0d;
+                double scale = maxValue > 0 ? canvas.Height / maxValue : 1.0d;
 
                 foreach (KeyValuePair<string, ObservableCollection<int>> d in Data)
                 {
