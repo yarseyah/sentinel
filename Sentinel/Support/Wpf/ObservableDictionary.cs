@@ -86,8 +86,10 @@
                     {
                         dictionaryCache.Add((TKey)entry.Key, (TValue)entry.Value);
                     }
+
                     dictionaryCacheVersion = version;
                 }
+
                 return dictionaryCache;
             }
         }
@@ -427,11 +429,13 @@
             {
                 throw new ArgumentNullException(nameof(array), "CopyTo() failed:  array parameter was null");
             }
+
             if (index < 0 || index > array.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(index),
                                                       "CopyTo() failed:  index parameter was outside the bounds of the supplied array");
             }
+
             if ((array.Length - index) < keyedEntryCollection.Count)
             {
                 throw new ArgumentException("CopyTo() failed:  supplied array was too small", nameof(array));
@@ -618,6 +622,7 @@
                     {
                         return new DictionaryEntry(current.Key, current.Value);
                     }
+
                     return new KeyValuePair<TKey, TValue>(current.Key, current.Value);
                 }
             }
