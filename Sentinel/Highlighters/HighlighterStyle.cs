@@ -9,9 +9,7 @@ namespace Sentinel.Highlighters
     using Sentinel.Support.Mvvm;
 
     [DataContract]
-    public class HighlighterStyle 
-        : ViewModelBase
-        , IHighlighterStyle
+    public class HighlighterStyle : ViewModelBase, IHighlighterStyle
     {
         private Color? background;
 
