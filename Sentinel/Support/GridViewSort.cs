@@ -53,34 +53,25 @@
 
         static GridViewSort()
         {
-            PropertyChangedCallback commandCallback =
-                delegate(
-                    DependencyObject o,
-                    DependencyPropertyChangedEventArgs e)
+            PropertyChangedCallback commandCallback = (o, e) =>
+                {
+                    ItemsControl listView = o as ItemsControl;
+                    if (listView != null)
                     {
-                        ItemsControl listView = o as ItemsControl;
-                        if (listView != null)
+                        if (!GetAutoSort(listView))
                         {
-                            if (!GetAutoSort(listView))
+                            if (e.OldValue != null && e.NewValue == null)
                             {
-                                if (e.OldValue != null &&
-                                    e.NewValue == null)
-                                {
-                                    listView.RemoveHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                                listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
+                            }
 
-                                if (e.OldValue == null &&
-                                    e.NewValue != null)
-                                {
-                                    listView.AddHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                            if (e.OldValue == null && e.NewValue != null)
+                            {
+                                listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
                             }
                         }
-                    };
+                    }
+                };
 
             CommandProperty = DependencyProperty.RegisterAttached(
                 "Command",
@@ -88,35 +79,28 @@
                 typeof(GridViewSort),
                 new UIPropertyMetadata(null, commandCallback));
 
-            PropertyChangedCallback autoSortCallback =
-                delegate(
-                    DependencyObject o,
-                    DependencyPropertyChangedEventArgs e)
+            PropertyChangedCallback autoSortCallback = (o, e) =>
+                {
+                    ListView listView = o as ListView;
+                    if (listView != null)
                     {
-                        ListView listView = o as ListView;
-                        if (listView != null)
+                        // Don't change click handler if a command is set
+                        if (GetCommand(listView) == null)
                         {
-                            // Don't change click handler if a command is set
-                            if (GetCommand(listView) == null)
+                            bool oldValue = (bool)e.OldValue;
+                            bool newValue = (bool)e.NewValue;
+                            if (oldValue && !newValue)
                             {
-                                bool oldValue = (bool) e.OldValue;
-                                bool newValue = (bool) e.NewValue;
-                                if (oldValue && !newValue)
-                                {
-                                    listView.RemoveHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                                listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
+                            }
 
-                                if (!oldValue && newValue)
-                                {
-                                    listView.AddHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                            if (!oldValue && newValue)
+                            {
+                                listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
                             }
                         }
-                    };
+                    }
+                };
 
             AutoSortProperty = DependencyProperty.RegisterAttached(
                 "AutoSort",
