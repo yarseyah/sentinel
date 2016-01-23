@@ -26,7 +26,7 @@
             else
             {
                 return valueString;
-            }            
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

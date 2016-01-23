@@ -11,7 +11,7 @@ namespace Sentinel.Highlighters.Gui
     {
         public void Edit(IHighlighter highlighter)
         {
-            Debug.Assert(highlighter != null, "Highligher must be supplied for editing.");
+            Debug.Assert(highlighter != null, "Highlighter must be supplied for editing.");
 
             var window = new AddEditHighlighterWindow();
             var data = new AddEditHighlighter(window, false);
@@ -21,7 +21,7 @@ namespace Sentinel.Highlighters.Gui
             data.Name = highlighter.Name;
             data.Pattern = highlighter.Pattern;
             data.Mode = highlighter.Mode;
-            data.Field = highlighter.Field;         
+            data.Field = highlighter.Field;
 
             if (highlighter.Style?.Background != null)
             {

@@ -77,7 +77,7 @@ namespace Sentinel.Support.Converters
             }
 
             var dateFormatSource = settings.ElementAt(setting);
-            
+
             // Need to quote special characters, this will only happen when changing formats, so don't need to be too clever.
             return dateFormatSource.Replace("-", "'-'").Replace(":", "':'");
         }

@@ -59,7 +59,7 @@
         public bool ReportErrors { get; set; }
 
         [SuppressMessage(
-            "Microsoft.Design", 
+            "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "This approach has been chosen as the intended usage style.")]
         public T Get<T>()
@@ -80,7 +80,7 @@
         }
 
         [SuppressMessage(
-            "Microsoft.Design", 
+            "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public bool IsRegistered<T>()
@@ -89,7 +89,7 @@
         }
 
         [SuppressMessage(
-            "Microsoft.Design", 
+            "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public void Register<T>(object serviceInstance)

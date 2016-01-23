@@ -4,6 +4,7 @@
     using System.Windows.Input;
 
     using Sentinel.Interfaces;
+
     using Support.Mvvm;
 
     public class AddEditClassifier : ViewModelBase
@@ -55,7 +56,7 @@
             {
                 return mode;
             }
-            
+
             set
             {
                 mode = value;

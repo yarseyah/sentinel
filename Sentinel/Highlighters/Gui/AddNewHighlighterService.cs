@@ -34,13 +34,13 @@
             Color? foreground = null;
 
             var highlighter = new Highlighter
-                              {
-                                  Name = data.Name, 
-                                  Field = data.Field, 
-                                  Pattern = data.Pattern, 
-                                  Mode = data.Mode, 
-                                  Enabled = true
-                              };
+                                  {
+                                      Name = data.Name,
+                                      Field = data.Field,
+                                      Pattern = data.Pattern,
+                                      Mode = data.Mode,
+                                      Enabled = true
+                                  };
 
             if (data.OverrideBackgroundColour)
             {
@@ -52,11 +52,7 @@
                 foreground = data.ForegroundColour;
             }
 
-            highlighter.Style = new HighlighterStyle
-                                    {
-                                        Background = background, 
-                                        Foreground = foreground
-                                    };
+            highlighter.Style = new HighlighterStyle { Background = background, Foreground = foreground };
             return highlighter;
         }
     }

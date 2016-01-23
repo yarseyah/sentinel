@@ -34,9 +34,9 @@
         protected string DisplayName { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether an exception is thrown, or if a Debug.Fail() 
+        /// Gets a value indicating whether an exception is thrown, or if a Debug.Fail()
         /// is used when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
+        /// The default value is false, but subclasses used by unit tests might
         /// override this property's getter to return true.
         /// </summary>
         protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
@@ -52,7 +52,7 @@
 
         /// <summary>
         /// Warns the developer if this object does not have
-        /// a public property with the specified name. This 
+        /// a public property with the specified name. This
         /// method does not exist in a Release build.
         /// </summary>
         /// <param name="propertyName">Name of property to investigate.</param>
@@ -62,7 +62,7 @@
         {
             if (!string.IsNullOrEmpty(propertyName))
             {
-                // Verify that the property name matches a real,  
+                // Verify that the property name matches a real,
                 // public, instance property on this object.
                 if (TypeDescriptor.GetProperties(this)[propertyName] == null)
                 {
@@ -95,7 +95,7 @@
         }
 
         /// <summary>
-        /// Child classes can override this method to perform 
+        /// Child classes can override this method to perform
         /// clean-up logic, such as removing event handlers.
         /// </summary>
         protected virtual void OnDispose()

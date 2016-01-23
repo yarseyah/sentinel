@@ -88,7 +88,11 @@ namespace Sentinel.Images
             }
         }
 
-        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true, bool mustHaveImage = false)
+        public ImageTypeRecord Get(
+            string type,
+            ImageQuality quality = ImageQuality.BestAvailable,
+            bool acceptLower = true,
+            bool mustHaveImage = false)
         {
             var typeName = type.ToUpper();
             var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
@@ -114,8 +118,8 @@ namespace Sentinel.Images
                     return Get(type, newQuality);
                 }
             }
-           
-            return mustHaveImage ? Get("Unknown", quality) : null;            
+
+            return mustHaveImage ? Get("Unknown", quality) : null;
         }
 
         private void AddMapping(object obj)
@@ -139,7 +143,7 @@ namespace Sentinel.Images
         }
 
         public void Initialise()
-        {            
+        {
             Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
             Register("ERROR", ImageQuality.Medium, "/Resources/Medium/Error.png");
             Register("ERROR", ImageQuality.Large, "/Resources/Large/Error.png");

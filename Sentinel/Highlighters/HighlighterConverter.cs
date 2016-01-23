@@ -13,12 +13,12 @@ namespace Sentinel.Highlighters
     {
         private static readonly ILog Log = LogManager.GetLogger<HighlighterConverter>();
 
-        private IHighlighter Highlighter { get; }
-
         public HighlighterConverter(IHighlighter highlighter)
         {
             Highlighter = highlighter;
         }
+
+        private IHighlighter Highlighter { get; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -35,7 +35,7 @@ namespace Sentinel.Support
             {
                 Log.Error("Exception caught in serialization:", e);
                 throw;
-            }            
+            }
         }
 
         public static string SerializeToString<T>(T objectToSerialize)

@@ -10,7 +10,7 @@ namespace Sentinel.Images
     public class EditTypeImageMapping : IEditTypeImage
     {
         public void Edit(ImageTypeRecord imageTypeRecord)
-        {           
+        {
             Debug.Assert(imageTypeRecord != null, "ImageTypeRecord must be supplied to allow editing.");
 
             var service = ServiceLocator.Instance.Get<ITypeImageService>();
@@ -23,13 +23,13 @@ namespace Sentinel.Images
             data.Type = imageTypeRecord.Name;
             data.Size = imageTypeRecord.Quality.ToString();
             data.FileName = imageTypeRecord.Image;
-            
+
             bool? dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)
-            {                
-                imageTypeRecord.Image = data.FileName;            
-            }        
+            {
+                imageTypeRecord.Image = data.FileName;
+            }
         }
     }
 }

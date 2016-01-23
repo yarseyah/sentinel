@@ -23,7 +23,7 @@ namespace Sentinel.Support.Wpf
         {
             get
             {
-                return (double) GetValue(FixedWidthProperty);
+                return (double)GetValue(FixedWidthProperty);
             }
 
             set

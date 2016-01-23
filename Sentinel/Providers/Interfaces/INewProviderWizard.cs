@@ -6,7 +6,7 @@
 
     public interface INewProviderWizard
     {
-        IProviderInfo Provider { get; } 
+        IProviderInfo Provider { get; }
 
         IProviderSettings Settings { get; }
 

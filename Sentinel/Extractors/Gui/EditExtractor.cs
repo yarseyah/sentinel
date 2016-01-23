@@ -5,8 +5,7 @@
 
     using Sentinel.Extractors.Interfaces;
 
-    public class EditExtractor
-        : IEditExtractorService
+    public class EditExtractor : IEditExtractorService
     {
         public void Edit(IExtractor extractor)
         {
@@ -17,7 +16,7 @@
             window.DataContext = data;
             window.Owner = Application.Current.MainWindow;
 
-            data.Name = extractor.Name;            
+            data.Name = extractor.Name;
             data.Field = extractor.Field;
             data.Pattern = extractor.Pattern;
             data.Mode = extractor.Mode;
@@ -28,7 +27,7 @@
             {
                 extractor.Name = data.Name;
                 extractor.Pattern = data.Pattern;
-                extractor.Mode = data.Mode;               
+                extractor.Mode = data.Mode;
                 extractor.Field = data.Field;
             }
         }

@@ -21,7 +21,7 @@
             data.Pattern = classifier.Pattern;
             data.Mode = classifier.Mode;
             data.Type = classifier.Type;
-            
+
             var dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)

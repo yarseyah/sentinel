@@ -78,7 +78,7 @@ namespace Sentinel.Support.Converters
 
             var dateFormatSource = settings.ElementAt(setting);
             var dateFormat = dateFormatSource.Replace("-", "'-'").Replace(":", "':'");
-            
+
             // Need to quote special characters, this will only happen when changing formats, so don't need to be too clever.
             return convertToLocalIfUtc ? dateFormat + " x" : dateFormat;
         }

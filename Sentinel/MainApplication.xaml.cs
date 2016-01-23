@@ -25,7 +25,6 @@
 
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
-            
             locator.Register<ISessionManager>(new SessionManager());
 
             // Request that the application close on main window close.

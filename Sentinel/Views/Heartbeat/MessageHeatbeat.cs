@@ -13,9 +13,7 @@
     using Sentinel.Support.Wpf;
     using Sentinel.Views.Interfaces;
 
-    public class MessageHeatbeat
-        : ViewModelBase
-          , ILogViewer
+    public class MessageHeatbeat : ViewModelBase, ILogViewer
     {
         private const int MaxiumHistory = 200;
 
@@ -38,19 +36,16 @@
         {
             ((ViewInformation)Info).Description = "Displays a heartbeat graph based upon the incoming message type.";
 
-            presenter = new HeartbeatControl
-                            {
-                                Data = historicalData
-                            };
+            presenter = new HeartbeatControl { Data = historicalData };
 
             // Register an interest in changes to self, so that when the caller changes
             // properties on the view model, appropriate reactions can be preformed.
             PropertyChanged += PropertyChangedHandler;
 
-            DispatcherTimer samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
-                                                   {
-                                                       Interval = TimeSpan.FromMilliseconds(SamplePeriod)
-                                                   };
+            var samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
+                                        {
+                                            Interval = TimeSpan.FromMilliseconds(SamplePeriod)
+                                        };
             samplePeriodTimer.Tick += SampleTick;
             samplePeriodTimer.Start();
         }

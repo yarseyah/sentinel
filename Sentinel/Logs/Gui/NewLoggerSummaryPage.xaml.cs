@@ -9,7 +9,7 @@
     /// <summary>
     /// Interaction logic for NewLoggerSummaryPage.xaml
     /// </summary>
-    public partial class NewLoggerSummaryPage : IWizardPage 
+    public partial class NewLoggerSummaryPage : IWizardPage
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 

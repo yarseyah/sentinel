@@ -6,7 +6,7 @@ namespace Sentinel.Services
     public static class DictionaryHelper
     {
         /// <summary>
-        /// Safely returns the value from the dictionary associated to the key supplied, or the default (usually a null) for the 
+        /// Safely returns the value from the dictionary associated to the key supplied, or the default (usually a null) for the
         /// value type.
         /// </summary>
         /// <typeparam name="TKey">Dictionary key type, can usually be deduced from the <see cref="dict"/> parameter.</typeparam>

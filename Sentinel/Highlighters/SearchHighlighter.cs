@@ -11,8 +11,7 @@ namespace Sentinel.Highlighters
     using Sentinel.Interfaces;
 
     [DataContract]
-    public class SearchHighlighter 
-        : IDefaultInitialisation, ISearchHighlighter
+    public class SearchHighlighter : IDefaultInitialisation, ISearchHighlighter
     {
         [DataMember]
         public IHighlighter Highlighter { get; set; }
@@ -78,7 +77,7 @@ namespace Sentinel.Highlighters
             }
 
             set
-            {                
+            {
                 Highlighter.Pattern = value;
             }
         }
@@ -86,16 +85,17 @@ namespace Sentinel.Highlighters
         public void Initialise()
         {
             Highlighter = new Highlighter
-            {
-                Name = "Search",
-                Style = new HighlighterStyle
-                {
-                    Background = Colors.Lime,
-                    Foreground = Colors.Fuchsia
-                },
-                Field = LogEntryField.System,
-                Mode = MatchMode.CaseSensitive,
-            };
+                              {
+                                  Name = "Search",
+                                  Style =
+                                      new HighlighterStyle
+                                          {
+                                              Background = Colors.Lime,
+                                              Foreground = Colors.Fuchsia
+                                          },
+                                  Field = LogEntryField.System,
+                                  Mode = MatchMode.CaseSensitive,
+                              };
 
             Search = string.Empty;
         }

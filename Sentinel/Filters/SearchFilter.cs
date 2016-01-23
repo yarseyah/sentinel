@@ -6,14 +6,13 @@
     using Sentinel.Interfaces;
 
     [DataContract]
-    public class SearchFilter
-        : Filter, IDefaultInitialisation, ISearchFilter
+    public class SearchFilter : Filter, IDefaultInitialisation, ISearchFilter
     {
         public void Initialise()
         {
             Name = "SearchFilter";
             Field = LogEntryField.System;
             Pattern = string.Empty;
-        }     
+        }
     }
 }

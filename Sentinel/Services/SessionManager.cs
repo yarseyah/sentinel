@@ -136,7 +136,7 @@
                 if (value.HasAttribute<DataContractAttribute>())
                 {
                     stringToSave.AppendLine(JsonHelper.SerializeToString(value));
-                    stringToSave.AppendLine(ObjectSeparator.ToString()); 
+                    stringToSave.AppendLine(ObjectSeparator.ToString());
                 }
             }
 
@@ -305,7 +305,7 @@
                 }
             }
 
-            // Load new objects for the rest.            
+            // Load new objects for the rest.
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);

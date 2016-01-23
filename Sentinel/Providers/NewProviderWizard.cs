@@ -20,12 +20,12 @@
 
             // Construct the wizard
             var wizard = new Wizard
-                                {
-                                    Owner = parent, 
-                                    ShowNavigationTree = false,
-                                    SavedData = settings,
-                                    Title = "Add New Log Provider"
-                                };
+                             {
+                                 Owner = parent,
+                                 ShowNavigationTree = false,
+                                 SavedData = settings,
+                                 Title = "Add New Log Provider"
+                             };
 
             wizard.AddPage(new SelectProviderPage());
 
