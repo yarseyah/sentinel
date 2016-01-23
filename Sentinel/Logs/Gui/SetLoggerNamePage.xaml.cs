@@ -33,7 +33,7 @@
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            if ( e.PropertyName == "LogName" )
+            if (e.PropertyName == "LogName")
             {
                 // Validate against standard validation rules.
                 IsValid = this["LogName"] == null;

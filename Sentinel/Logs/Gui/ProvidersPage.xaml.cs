@@ -190,7 +190,7 @@
         {
             get
             {
-                switch ( columnName )
+                switch (columnName)
                 {
                     case "Providers":
                         return ValidateProviders();

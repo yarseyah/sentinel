@@ -114,7 +114,7 @@ namespace Sentinel.Highlighters
                                     trigger.Setters.Add(
                                         new Setter(
                                             Control.BackgroundProperty,
-                                            new SolidColorBrush((Color) highlighter.Style.Background)));
+                                            new SolidColorBrush((Color)highlighter.Style.Background)));
                                 }
 
                                 if (highlighter.Style.Foreground != null)
@@ -122,7 +122,7 @@ namespace Sentinel.Highlighters
                                     trigger.Setters.Add(
                                         new Setter(
                                             Control.ForegroundProperty,
-                                            new SolidColorBrush((Color) highlighter.Style.Foreground)));
+                                            new SolidColorBrush((Color)highlighter.Style.Foreground)));
                                 }
                             }
 

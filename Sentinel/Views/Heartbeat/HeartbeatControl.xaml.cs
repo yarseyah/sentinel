@@ -77,11 +77,8 @@
 
                 foreach (KeyValuePair<string, ObservableCollection<int>> d in Data)
                 {
-                    PointCollection pc = new PointCollection(
-                        CreatePoints(d.Value,
-                                     (int) canvas.Width,
-                                     (int) canvas.Height,
-                                     scale));
+                    PointCollection pc =
+                        new PointCollection(CreatePoints(d.Value, (int)canvas.Width, (int)canvas.Height, scale));
 
                     Polyline pl = new Polyline
                                       {

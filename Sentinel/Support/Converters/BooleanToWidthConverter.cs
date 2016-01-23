@@ -11,7 +11,7 @@ namespace Sentinel.Support.Converters
         {
             Debug.Assert(value is bool, "Value must be a boolean.");
             Debug.Assert(parameter is string, "Parameter must be a string.");
-            return (bool) value ? double.Parse(parameter.ToString()) : 0.0;
+            return (bool)value ? double.Parse(parameter.ToString()) : 0.0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

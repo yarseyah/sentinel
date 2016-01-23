@@ -84,7 +84,7 @@
 
             var settings = wizard.Settings;
 
-            //Set session properties
+            // Set session properties
             Name = settings.LogName;
 
             ConfigureLoggerServices(settings.LogName, settings.Views, settings.Providers);

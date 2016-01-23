@@ -15,11 +15,11 @@
                 if (!(value is DateTime))
                 {
                     Trace.WriteLine($"Time wasn't passed as DateTime, but as a {value.GetType()}");
-                    dateTime = DateTime.Parse((string) value);
+                    dateTime = DateTime.Parse((string)value);
                 }
                 else
                 {
-                    dateTime = (DateTime) value;
+                    dateTime = (DateTime)value;
                 }
 
                 // adjust the timezone information in the dateTime

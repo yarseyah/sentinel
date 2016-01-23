@@ -150,12 +150,9 @@
             }
         }
 
-        [SuppressMessage(
-            "Microsoft.Design",
-            "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
-        public static T GetAncestor<T>(DependencyObject reference)
-            where T : DependencyObject
+        public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
         {
             var parent = VisualTreeHelper.GetParent(reference);
             while (!(parent is T))
@@ -169,36 +166,36 @@
         // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
         public static bool GetAutoSort(DependencyObject obj)
         {
-            return (bool) obj.GetValue(AutoSortProperty);
+            return (bool)obj.GetValue(AutoSortProperty);
         }
 
         public static ICommand GetCommand(DependencyObject obj)
         {
-            return (ICommand) obj.GetValue(CommandProperty);
+            return (ICommand)obj.GetValue(CommandProperty);
         }
 
         // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
         public static string GetPropertyName(DependencyObject obj)
         {
-            return (string) obj.GetValue(PropertyNameProperty);
+            return (string)obj.GetValue(PropertyNameProperty);
         }
 
         // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
         public static bool GetShowSortGlyph(DependencyObject obj)
         {
-            return (bool) obj.GetValue(ShowSortGlyphProperty);
+            return (bool)obj.GetValue(ShowSortGlyphProperty);
         }
 
         // Using a DependencyProperty as the backing store for ShowSortGlyph.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphAscending(DependencyObject obj)
         {
-            return (ImageSource) obj.GetValue(SortGlyphAscendingProperty);
+            return (ImageSource)obj.GetValue(SortGlyphAscendingProperty);
         }
 
         // Using a DependencyProperty as the backing store for SortGlyphAscending.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphDescending(DependencyObject obj)
         {
-            return (ImageSource) obj.GetValue(SortGlyphDescendingProperty);
+            return (ImageSource)obj.GetValue(SortGlyphDescendingProperty);
         }
 
         public static void SetAutoSort(DependencyObject obj, bool value)
@@ -237,11 +234,7 @@
             ImageSource sortGlyph)
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            adornerLayer.Add(
-                new SortGlyphAdorner(
-                    columnHeader,
-                    direction,
-                    sortGlyph));
+            adornerLayer.Add(new SortGlyphAdorner(columnHeader, direction, sortGlyph));
         }
 
         private static void ColumnHeaderClick(object sender, RoutedEventArgs e)
@@ -277,7 +270,7 @@
 
         private static GridViewColumnHeader GetSortedColumnHeader(DependencyObject obj)
         {
-            return (GridViewColumnHeader) obj.GetValue(SortedColumnHeaderProperty);
+            return (GridViewColumnHeader)obj.GetValue(SortedColumnHeaderProperty);
         }
 
         private static void RemoveSortGlyph(GridViewColumnHeader columnHeader)
@@ -349,12 +342,11 @@
                     y2 = tmp;
                 }
 
-                var pathSegmentCollection =
-                    new PathSegmentCollection
-                        {
-                            new LineSegment(new Point(x2, y1), true),
-                            new LineSegment(new Point(x3, y2), true)
-                        };
+                var pathSegmentCollection = new PathSegmentCollection
+                                                {
+                                                    new LineSegment(new Point(x2, y1), true),
+                                                    new LineSegment(new Point(x3, y2), true)
+                                                };
 
                 var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);
 

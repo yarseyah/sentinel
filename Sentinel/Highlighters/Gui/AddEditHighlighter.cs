@@ -255,7 +255,7 @@ namespace Sentinel.Highlighters.Gui
                 var colour = ColorConverter.ConvertFromString(propertyInfo.Name);
                 if (colour != null)
                 {
-                    colours.Add(propertyInfo.Name, (Color) colour);
+                    colours.Add(propertyInfo.Name, (Color)colour);
                 }
             }
 

@@ -51,7 +51,7 @@
 
         public MessageHeatbeat()
         {
-            ((ViewInformation) Info).Description = "Displays a heartbeat graph based upon the incoming message type.";
+            ((ViewInformation)Info).Description = "Displays a heartbeat graph based upon the incoming message type.";
 
             presenter = new HeartbeatControl
                             {
@@ -116,7 +116,7 @@
                     // Push in new data
                     foreach (var dataPoint in liveData)
                     {
-                        if ( !Data.ContainsKey(dataPoint.Key) )
+                        if (!Data.ContainsKey(dataPoint.Key))
                         {
                             Data.Add(dataPoint.Key, new ObservableCollection<int>());
                             for (int i = 0; i < MAX_HISTORY - 1; i++)
