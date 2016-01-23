@@ -197,7 +197,7 @@ namespace Sentinel.Images
         }
 
         /// <summary>
-        /// Gets or sets an error message indicating what is wrong with this object.
+        /// Gets an error message indicating what is wrong with this object.
         /// </summary>
         /// <returns>
         /// An error message indicating what is wrong with this object. The default is an empty string ("").
