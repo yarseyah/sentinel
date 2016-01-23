@@ -27,7 +27,8 @@
                 {
                     foreach (var msg in messages)
                     {
-                        AddText(fs,
+                        AddText(
+                            fs,
                             $"{msg.DateTime.ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{msg.Type}|{msg.System}|{msg.Description}\r\n");
                     }
                 }

@@ -107,8 +107,9 @@
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
             if (providers.All(p => p.Identifier != providerGuid))
             {
-                throw new ArgumentException("Specified guid does not correspond to a registered provider",
-                                            nameof(providerGuid));
+                throw new ArgumentException(
+                    "Specified guid does not correspond to a registered provider",
+                    nameof(providerGuid));
             }
 
             return providers.First(p => p.Identifier == providerGuid).Info;

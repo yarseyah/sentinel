@@ -150,7 +150,9 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design", 
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
         {
