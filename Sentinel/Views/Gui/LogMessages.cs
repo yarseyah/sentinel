@@ -395,9 +395,11 @@
 
             private set
             {
-                if (logger == value) return;
-                logger = value;
-                OnPropertyChanged(nameof(Logger));
+                if (logger != value)
+                {
+                    logger = value;
+                    OnPropertyChanged(nameof(Logger));
+                }
             }
         }
 

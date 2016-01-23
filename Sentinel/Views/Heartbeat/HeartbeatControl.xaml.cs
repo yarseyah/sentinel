@@ -44,9 +44,11 @@ namespace Sentinel.Views.Heartbeat
 
             set
             {
-                if (data == value) return;
-                data = value;
-                OnPropertyChanged("Data");
+                if (data != value)
+                {
+                    data = value;
+                    OnPropertyChanged("Data");
+                }
             }
         }
 

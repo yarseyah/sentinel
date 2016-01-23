@@ -486,19 +486,23 @@
 
             var entries = new Collection<DictionaryEntry>();
             foreach (DictionaryEntry entry in keyedEntryCollection)
+            {
                 entries.Add(entry);
+            }
+
             info.AddValue("entries", entries);
         }
 
         public virtual void OnDeserialization(object sender)
         {
-            if (siInfo == null) return;
-
-            Collection<DictionaryEntry> entries = (Collection<DictionaryEntry>)
-                                                  siInfo.GetValue("entries", typeof(Collection<DictionaryEntry>));
-            foreach (var entry in entries)
+            if (siInfo != null)
             {
-                AddEntry((TKey) entry.Key, (TValue) entry.Value);
+                Collection<DictionaryEntry> entries =
+                    (Collection<DictionaryEntry>)siInfo.GetValue("entries", typeof(Collection<DictionaryEntry>));
+                foreach (var entry in entries)
+                {
+                    AddEntry((TKey)entry.Key, (TValue)entry.Value);
+                }
             }
         }
 

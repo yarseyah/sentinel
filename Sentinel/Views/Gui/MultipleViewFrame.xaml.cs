@@ -61,9 +61,11 @@
 
             set
             {
-                if (primaryView == value) return;
-                primaryView = value;
-                OnPropertyChanged("PrimaryView");
+                if (primaryView != value)
+                {
+                    primaryView = value;
+                    OnPropertyChanged("PrimaryView");
+                }
             }
         }
 
@@ -77,9 +79,11 @@
 
             set
             {
-                if (primaryTitle == value) return;
-                primaryTitle = value;
-                OnPropertyChanged("PrimaryTitle");
+                if (primaryTitle != value)
+                {
+                    primaryTitle = value;
+                    OnPropertyChanged("PrimaryTitle");
+                }
             }
         }
 
@@ -93,9 +97,11 @@
 
             set
             {
-                if (secondaryTitle == value) return;
-                secondaryTitle = value;
-                OnPropertyChanged("SecondaryTitle");
+                if (secondaryTitle != value)
+                {
+                    secondaryTitle = value;
+                    OnPropertyChanged("SecondaryTitle");
+                }
             }
         }
 
@@ -108,9 +114,11 @@
 
             set
             {
-                if (secondaryView == value) return;
-                secondaryView = value;
-                OnPropertyChanged("SecondaryView");
+                if (secondaryView != value)
+                {
+                    secondaryView = value;
+                    OnPropertyChanged("SecondaryView");
+                }
             }
         }
 

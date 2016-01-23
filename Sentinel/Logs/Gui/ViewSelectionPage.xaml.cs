@@ -65,7 +65,11 @@
 
             set
             {
-                if (horizontal == value) return;
+                if (horizontal == value)
+                {
+                    return;
+                }
+
                 horizontal = value;
                 OnPropertyChanged("Horizontal");
             }

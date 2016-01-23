@@ -155,22 +155,24 @@
 
             private set
             {
-                if (logger == value) return;
-
-                // Unregister from existing logger (if not null)
-                if (logger != null)
+                if (logger != value)
                 {
-                    logger.PropertyChanged -= LoggerPropertyChanged;
+                    if (logger != null)
+                    {
+                        logger.PropertyChanged -= LoggerPropertyChanged;
+                    }
+
+                    // If new logger isn't null, register to it.
+                    if (value != null)
+                    {
+                        value.PropertyChanged += LoggerPropertyChanged;
+                    }
+
+                    logger = value;
+                    OnPropertyChanged("Logger");
                 }
 
-                // If new logger isn't null, register to it.
-                if (value != null)
-                {
-                    value.PropertyChanged += LoggerPropertyChanged;
-                }
-
-                logger = value;
-                OnPropertyChanged("Logger");
+                // TODO: Unregister from existing logger (if not null)
             }
         }
 
