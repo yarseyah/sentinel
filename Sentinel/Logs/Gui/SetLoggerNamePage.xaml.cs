@@ -131,14 +131,14 @@
         {
             get
             {
-                if ( columnName == "LogName" )
+                if (columnName == "LogName")
                 {
-                    if ( String.IsNullOrEmpty(LogName) )
+                    if (string.IsNullOrEmpty(LogName))
                     {
                         return "Log name may not be blank.";
                     }
 
-                    if ( logManager != null && logManager.Any(l => l.Name == LogName))
+                    if (logManager != null && logManager.Any(l => l.Name == LogName))
                     {
                         return "A logger with that name already exists";
                     }
