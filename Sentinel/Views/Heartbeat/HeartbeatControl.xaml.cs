@@ -31,6 +31,8 @@
             samplePeriodTimer.Start();
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ObservableDictionary<string, ObservableCollection<int>> Data
         {
             get
@@ -48,7 +50,31 @@
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public IEnumerable<Point> CreatePoints(IEnumerable<int> values, int width, int height, double heightScale)
+        {
+            IList<Point> returnCollection = new List<Point>();
+
+            int stride = width / (values.Count() - 1);
+
+            int xPosition = -stride;
+
+            // Prepoulate structure with entry off to side and down to origin.
+            returnCollection.Add(new Point(xPosition, height));
+            returnCollection.Add(new Point(xPosition, height - (values.ElementAt(0) * heightScale)));
+            xPosition += stride;
+
+            foreach (int value in values)
+            {
+                int yPosition = (int)(value * heightScale);
+                returnCollection.Add(new Point(xPosition, height - yPosition));
+                xPosition += stride;
+            }
+
+            // Post populate with values right off to the side (so null values don't enter visibility).
+            returnCollection.Add(new Point(xPosition, height));
+
+            return returnCollection;
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -128,32 +154,6 @@
         {
             canvas.Width = ActualWidth;
             canvas.Height = ActualHeight;
-        }
-
-        public IEnumerable<Point> CreatePoints(IEnumerable<int> values, int width, int height, double heightScale)
-        {
-            IList<Point> returnCollection = new List<Point>();
-
-            int stride = width / (values.Count() - 1);
-
-            int xPosition = -stride;
-
-            // Prepoulate structure with entry off to side and down to origin.
-            returnCollection.Add(new Point(xPosition, height));
-            returnCollection.Add(new Point(xPosition, height - (values.ElementAt(0) * heightScale)));
-            xPosition += stride;
-
-            foreach (int value in values)
-            {
-                int yPosition = (int)(value * heightScale);
-                returnCollection.Add(new Point(xPosition, height - yPosition));
-                xPosition += stride;
-            }
-
-            // Post populate with values right off to the side (so null values don't enter visibility).
-            returnCollection.Add(new Point(xPosition, height));
-
-            return returnCollection;
         }
     }
 }

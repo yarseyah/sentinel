@@ -30,13 +30,6 @@
                 typeof(GridViewSort),
                 new UIPropertyMetadata(true));
 
-        private static readonly DependencyProperty SortedColumnHeaderProperty =
-            DependencyProperty.RegisterAttached(
-                "SortedColumnHeader",
-                typeof(GridViewColumnHeader),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(null));
-
         public static readonly DependencyProperty SortGlyphAscendingProperty =
             DependencyProperty.RegisterAttached(
                 "SortGlyphAscending",
@@ -48,6 +41,13 @@
             DependencyProperty.RegisterAttached(
                 "SortGlyphDescending",
                 typeof(ImageSource),
+                typeof(GridViewSort),
+                new UIPropertyMetadata(null));
+
+        private static readonly DependencyProperty SortedColumnHeaderProperty =
+            DependencyProperty.RegisterAttached(
+                "SortedColumnHeader",
+                typeof(GridViewColumnHeader),
                 typeof(GridViewSort),
                 new UIPropertyMetadata(null));
 

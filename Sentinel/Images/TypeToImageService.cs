@@ -122,26 +122,6 @@ namespace Sentinel.Images
             return mustHaveImage ? Get("Unknown", quality) : null;
         }
 
-        private void AddMapping(object obj)
-        {
-            AddImage.Add();
-        }
-
-        private void EditMapping(object obj)
-        {
-            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
-            if (typeImageRecord != null)
-            {
-                EditImage.Edit(typeImageRecord);
-            }
-        }
-
-        private void RemoveMapping(object obj)
-        {
-            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
-            RemoveImage.Remove(typeImageRecord);
-        }
-
         public void Initialise()
         {
             Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
@@ -173,6 +153,26 @@ namespace Sentinel.Images
             Register("UNKNOWN", ImageQuality.Small, "/Resources/Small/Unknown.png");
             Register("UNKNOWN", ImageQuality.Medium, "/Resources/Medium/Unknown.png");
             Register("UNKNOWN", ImageQuality.Large, "/Resources/Large/Unknown.png");
+        }
+
+        private void AddMapping(object obj)
+        {
+            AddImage.Add();
+        }
+
+        private void EditMapping(object obj)
+        {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            if (typeImageRecord != null)
+            {
+                EditImage.Edit(typeImageRecord);
+            }
+        }
+
+        private void RemoveMapping(object obj)
+        {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            RemoveImage.Remove(typeImageRecord);
         }
     }
 }

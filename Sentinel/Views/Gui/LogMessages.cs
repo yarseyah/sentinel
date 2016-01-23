@@ -23,13 +23,13 @@
 
     public class LogMessages : ViewModelBase, ILogViewer
     {
+        public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
+
         private const string ID = "f4d8c068-bf72-4b83-9d4a-1cd8a89fea11";
 
         private const string NAME = "Log viewer";
 
         private const string DESCRIPTION = "Traditional row based log view with highlighting and incremental search.";
-
-        public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
 
         private readonly IFilteringService<IFilter> filteringService;
 

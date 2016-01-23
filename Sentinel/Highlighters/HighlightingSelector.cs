@@ -145,16 +145,6 @@ namespace Sentinel.Highlighters
             }
         }
 
-        private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
-        {
-            if (style == null)
-            {
-                throw new ArgumentNullException(nameof(style));
-            }
-
-            style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
-        }
-
         /// <summary>
         /// Override of the <c>SelectStyle</c> method.  Looks up a suitable style for the
         /// specified item.
@@ -200,6 +190,16 @@ namespace Sentinel.Highlighters
                         FrameworkElement.MarginProperty,
                         new Thickness(0, -1, 0, -1)));
             }
+        }
+
+        private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
+        {
+            if (style == null)
+            {
+                throw new ArgumentNullException(nameof(style));
+            }
+
+            style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
         }
     }
 }
