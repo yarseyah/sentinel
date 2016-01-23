@@ -50,8 +50,6 @@
 
         public ICommand Save { get; private set; }
 
-        // public IFilteringService<IFilter> Filters { get; private set; }
-        
         public ILogViewer PrimaryView
         {
             get

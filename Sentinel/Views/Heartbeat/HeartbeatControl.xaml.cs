@@ -164,9 +164,6 @@ namespace Sentinel.Views.Heartbeat
             // Post populate with values right off to the side (so null values don't enter visibility).
             returnCollection.Add(new Point(xPosition, height));
 
-            //Trace.WriteLine(string.Format("CreatePoints(values, {0}) = {1} entries", destinationPosition,
-            //                              returnCollection.Count()));
-
             return returnCollection;
         }
     }
