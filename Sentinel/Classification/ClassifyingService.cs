@@ -7,10 +7,10 @@
     using System.Runtime.Serialization;
     using System.Windows.Input;
 
-    using Sentinel.Classification.Gui;
-    using Sentinel.Classification.Interfaces;
+    using Gui;
+    using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Support.Mvvm;
 
     /// <summary>
     /// View Model for classifier collection.  This has been written to operate
