@@ -1,6 +1,7 @@
 ﻿namespace Sentinel.Extractors
 {
     using System.Diagnostics;
+    using System.Globalization;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -198,7 +199,7 @@
                 case MatchMode.CaseSensitive:
                     return !target.Contains(Pattern);
                 case MatchMode.CaseInsensitive:
-                    return !target.ToLower().Contains(Pattern.ToLower());
+                    return !target.ToLower(CultureInfo.InvariantCulture).Contains(Pattern.ToLower(CultureInfo.InvariantCulture));
                 case MatchMode.RegularExpression:
                     var regex = new Regex(Pattern);
                     return !regex.IsMatch(target);

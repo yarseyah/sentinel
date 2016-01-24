@@ -4,18 +4,25 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
 
+    using Common.Logging;
+
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
 
-    public class FileMonitoringProvider : ILogProvider
+    public class FileMonitoringProvider : ILogProvider, IDisposable
     {
-        public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
+        private const string LoggerIdentifier = "Logger";
+
+        private static readonly ILog Log = LogManager.GetLogger(nameof(FileMonitoringProvider));
+
+        public static IProviderRegistrationRecord ProviderRegistrationInformation { get; } =
             new ProviderRegistrationInformation(new ProviderInfo());
 
         private readonly bool loadExistingContent;
@@ -28,20 +35,30 @@
 
         private readonly List<string> usedGroupNames = new List<string>();
 
-        private readonly BackgroundWorker purgeWorker;
+        private BackgroundWorker Worker { get; set; } = new BackgroundWorker();
+
+        private BackgroundWorker PurgeWorker { get; set; } = new BackgroundWorker { WorkerReportsProgress = true };
 
         private long bytesRead;
 
-        private BackgroundWorker worker;
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Reliability", 
+            "CA2000: DisposeObjectsBeforeLosingScope", 
+            Justification = "Both Worker and PurgeWorker are disposed in the IDispose implementation (or finalizer)")]
         public FileMonitoringProvider(IProviderSettings settings)
         {
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            var fileSettings = settings as IFileMonitoringProviderSettings;
+
             Debug.Assert(
-                settings is IFileMonitoringProviderSettings,
+                fileSettings != null,
                 "The FileMonitoringProvider class expects configuration information "
                 + "to be of IFileMonitoringProviderSettings type");
 
-            var fileSettings = (IFileMonitoringProviderSettings)settings;
             ProviderSettings = fileSettings;
             FileName = fileSettings.FileName;
             Information = settings.Info;
@@ -51,52 +68,67 @@
 
             PredetermineGroupNames(fileSettings.MessageDecoder);
 
-            worker = new BackgroundWorker();
-            worker.DoWork += DoWork;
-            worker.RunWorkerCompleted += DoWorkComplete;
+            // Chain up callbacks to the workers.
+            Worker.DoWork += DoWork;
+            Worker.RunWorkerCompleted += DoWorkComplete;
+            PurgeWorker.DoWork += PurgeWorkerDoWork;
+        }
 
-            purgeWorker = new BackgroundWorker { WorkerReportsProgress = true };
-            purgeWorker.DoWork += PurgeWorkerDoWork;
+        ~FileMonitoringProvider()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            Worker?.Dispose();
+            Worker = null;
+            PurgeWorker?.Dispose();
+            PurgeWorker = null;
         }
 
         // ReSharper disable once MemberCanBePrivate.Global used from view
-        public string FileName { get; private set; }
+        public string FileName { get; }
 
-        public IProviderInfo Information { get; private set; }
+        public IProviderInfo Information { get; }
 
-        public IProviderSettings ProviderSettings { get; private set; }
+        public IProviderSettings ProviderSettings { get;  }
 
         public ILogger Logger { get; set; }
 
         public string Name { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public bool IsActive => Worker.IsBusy;
 
         public void Start()
         {
             Debug.Assert(!string.IsNullOrEmpty(FileName), "Filename not specified");
             Debug.Assert(Logger != null, "No logger has been registered, this is required before starting a provider");
 
-            Trace.WriteLine(string.Format("Starting of file-monitor upon {0}", FileName));
-            worker.RunWorkerAsync();
-            purgeWorker.RunWorkerAsync();
+            lock (pendingQueue)
+            {
+                Log.Trace(string.Format(CultureInfo.InvariantCulture, "Starting of file-monitor upon {0}", FileName));
+            }
+
+            Worker.RunWorkerAsync();
+            PurgeWorker.RunWorkerAsync();
         }
 
         public void Close()
         {
-            worker.CancelAsync();
-            purgeWorker.CancelAsync();
+            Worker.CancelAsync();
+            PurgeWorker.CancelAsync();
         }
 
         public void Pause()
         {
-            if (worker != null)
+            if (Worker != null)
             {
                 // TODO: need a better pause mechanism...
                 Close();
@@ -113,8 +145,11 @@
                 {
                     if (pendingQueue.Any())
                     {
-                        Trace.WriteLine(
-                            string.Format("Adding a batch of {0} entries to the logger", pendingQueue.Count()));
+                        Log.Trace(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Adding a batch of {0} entries to the logger",
+                                pendingQueue.Count()));
                         Logger.AddBatch(pendingQueue);
                         Trace.WriteLine("Done adding the batch");
                     }
@@ -124,25 +159,25 @@
 
         private void PredetermineGroupNames(string messageDecoder)
         {
-            string decoder = messageDecoder.ToLower();
-            if (decoder.Contains("(?<description>"))
+            var decoder = messageDecoder.ToUpperInvariant();
+            if (decoder.Contains("(?<DESCRIPTION>"))
             {
                 usedGroupNames.Add("Description");
             }
 
-            if (decoder.Contains("(?<datetime>"))
+            if (decoder.Contains("(?<DATETIME>"))
             {
                 usedGroupNames.Add("DateTime");
             }
 
-            if (decoder.Contains("(?<type>"))
+            if (decoder.Contains("(?<TYPE>"))
             {
                 usedGroupNames.Add("Type");
             }
 
-            if (decoder.Contains("(?<logger>"))
+            if (decoder.Contains("(?<LOGGER>"))
             {
-                usedGroupNames.Add("Logger");
+                usedGroupNames.Add(LoggerIdentifier);
             }
         }
 
@@ -236,7 +271,11 @@
                     DateTime dt;
                     if (!DateTime.TryParse(m.Groups["DateTime"].Value, out dt))
                     {
-                        Trace.WriteLine("Failed to parse date " + m.Groups["DateTime"].Value);
+                        Log.Trace(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Failed to parse date {0}",
+                                m.Groups["DateTime"].Value));
                     }
                     entry.DateTime = dt;
                 }
@@ -246,10 +285,10 @@
                     entry.Type = m.Groups["Type"].Value;
                 }
 
-                if (usedGroupNames.Contains("Logger"))
+                if (usedGroupNames.Contains(LoggerIdentifier))
                 {
-                    entry.Source = m.Groups["Logger"].Value;
-                    entry.System = m.Groups["Logger"].Value;
+                    entry.Source = m.Groups[LoggerIdentifier].Value;
+                    entry.System = m.Groups[LoggerIdentifier].Value;
                 }
 
                 entry.MetaData = new Dictionary<string, object>
@@ -258,7 +297,7 @@
                                          { "Host", FileName }
                                      };
 
-                if (entry.Description.ToUpper().Contains("EXCEPTION"))
+                if (entry.Description.ToUpper(CultureInfo.InvariantCulture).Contains("EXCEPTION"))
                 {
                     entry.MetaData.Add("Exception", true);
                 }
@@ -269,35 +308,16 @@
 
         private void DoWorkComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            // TODO: brutal...
-            worker = null;
+            Worker.CancelAsync();
         }
 
-        public class ProviderInfo : IProviderInfo
+        private class ProviderInfo : IProviderInfo
         {
-            public Guid Identifier
-            {
-                get
-                {
-                    return new Guid("1a2f8249-b390-4baa-ba5e-3d67804ba1ed");
-                }
-            }
+            public Guid Identifier => new Guid("1a2f8249-b390-4baa-ba5e-3d67804ba1ed");
 
-            public string Name
-            {
-                get
-                {
-                    return "File Monitoring Provider";
-                }
-            }
+            public string Name => "File Monitoring Provider";
 
-            public string Description
-            {
-                get
-                {
-                    return "Monitor a text file for new log entries.";
-                }
-            }
+            public string Description => "Monitor a text file for new log entries.";
         }
     }
 }

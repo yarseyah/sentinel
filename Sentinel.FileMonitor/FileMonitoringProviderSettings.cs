@@ -1,5 +1,7 @@
 ﻿namespace Sentinel.FileMonitor
 {
+    using System.Globalization;
+
     using Sentinel.Interfaces.Providers;
 
     public class FileMonitoringProviderSettings : IFileMonitoringProviderSettings
@@ -34,12 +36,7 @@
         public int RefreshPeriod { get; private set; }
 
         public string Summary
-        {
-            get
-            {
-                return string.Format("Monitor the file {0} for new log entries", FileName);
-            }
-        }
+            => string.Format(CultureInfo.InvariantCulture, "Monitor the file {0} for new log entries", FileName);
 
         public void Update(string fileName, int refreshPeriod, bool loadExistingContent)
         {

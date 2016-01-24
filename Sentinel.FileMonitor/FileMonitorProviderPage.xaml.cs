@@ -220,33 +220,42 @@
                     return "File name not specified";
                 }
 
-                try
-                {
-                    // ReSharper disable once UnusedVariable
-                    var fi = new FileInfo(FileName);
-                    return null;
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    return "The file name specified is in a location unauthorised";
-                }
-                catch (NotSupportedException)
-                {
-                    return "The file name specified is not valid for a file.";
-                }
-                catch (ArgumentException)
-                {
-                    return "The file name specified is not valid for a file.";
-                }
-                catch (PathTooLongException)
-                {
-                    return "The file name specified is too long to be a valid file.";
-                }
-                catch (SecurityException)
-                {
-                    return "You do not have permission to work with that file/location.";
-                }
+                string reason;
+                return !CheckSuppliedFilenameIsValid(FileName, out reason) ? reason : null;
             }
+        }
+
+        private bool CheckSuppliedFilenameIsValid(string fileNameToValidate, out string reason)
+        {
+            try
+            {
+                reason = null;
+                // ReSharper disable once ObjectCreationAsStatement
+                new FileInfo(fileNameToValidate);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                reason = "The file name specified is in a location unauthorised";
+            }
+            catch (NotSupportedException)
+            {
+                reason = "The file name specified is not valid for a file.";
+            }
+            catch (ArgumentException)
+            {
+                reason = "The file name specified is not valid for a file.";
+            }
+            catch (PathTooLongException)
+            {
+                reason = "The file name specified is too long to be a valid file.";
+            }
+            catch (SecurityException)
+            {
+                reason = "You do not have permission to work with that file/location.";
+            }
+
+            return false;
         }
 
         /// <summary>
