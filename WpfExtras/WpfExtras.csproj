@@ -53,8 +53,11 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Converters\BooleanInvertingValueConverter.cs" />
+    <Compile Include="Converters\BooleanToDisabledConverter.cs" />
     <Compile Include="Converters\CollapseIfZeroConverter.cs" />
     <Compile Include="Converters\CollapseIfFalseConverter.cs" />
+    <Compile Include="Converters\ColourConverter.cs" />
+    <Compile Include="Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Converters\VisibilityToHiddenConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="EstablishPossibleNavigation.cs" />

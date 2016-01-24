@@ -6,7 +6,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
     xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:Converters1="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" 
+    xmlns:WpfExtrasConverters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" 
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -58,8 +58,6 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <Converters:TypeToImageConverter
-            x:Key="TypeToImageConverter" />
         <Converters:TypeToLargeImageConverter
             x:Key="typeToLargeImage" />
         <Converters:TypeToMediumImageConverter
@@ -68,29 +66,6 @@
             x:Key="typeToSmallImage" />
         <Converters:LongPathToShortPathConverter
             x:Key="longPathToShortPath" />
-        <CollectionViewSource
-            x:Key="standardFilters"
-            Source="{Binding Filters.Filters}"
-            Filter="RetainOnlyStandardFilters" />
-        <CollectionViewSource            
-            x:Key="customFilters"
-            Source="{Binding Filters.Filters}"
-            Filter="ExcludeStandardFilters" />
-        <CollectionViewSource
-            x:Key="standardHighlighters"
-            Source="{Binding Highlighters.Highlighters}"
-            Filter="RetainOnlyStandardHighlighters" />
-        <CollectionViewSource
-            x:Key="customHighlighters"
-            Source="{Binding Highlighters.Highlighters}"
-            Filter="ExcludeStandardHighlighters" />
-        <CollectionViewSource
-            x:Key="customExtractors"
-            Source="{Binding Extractors.Extractors}" />
-        <Converters1:CollapseIfZeroConverter
-            x:Key="collapseIfZero" />
-        <Converters:VisibilityToCollapsedConverter
-            x:Key="collapseIfFalse" />
     </RibbonWindow.Resources>
 
     <DockPanel>

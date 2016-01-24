@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Support.Converters
+﻿namespace WpfExtras.Converters
 {
     using System;
     using System.Globalization;

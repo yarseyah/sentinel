@@ -235,9 +235,7 @@
     <Compile Include="Services\Interfaces\ISessionManager.cs" />
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\SessionManager.cs" />
-    <Compile Include="Support\Converters\BooleanToDisabledConverter.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
-    <Compile Include="Support\Converters\ColourConverter.cs" />
     <Compile Include="Support\Converters\DatePreferenceConverter.cs" />
     <Compile Include="Support\Converters\TimePreferenceConverter.cs" />
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
@@ -249,7 +247,6 @@
     <Compile Include="Support\Converters\TypeToLargeImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToMediumImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToSmallImageConverter.cs" />
-    <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Support\JsonHelper.cs" />
     <Compile Include="Support\Mvvm\DelegateCommand.cs" />
     <Compile Include="Support\Mvvm\ViewModelBase.cs" />

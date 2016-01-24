@@ -2,10 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf">
+             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf"
+             xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras">
 
     <UserControl.Resources>
-        <Converters:ColourConverter x:Key="ColorConverter" />
+        <converters:ColourConverter x:Key="ColorConverter" />
     </UserControl.Resources>
     
     <DockPanel>
