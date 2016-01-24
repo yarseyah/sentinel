@@ -59,11 +59,11 @@ namespace Sentinel.NLog
         {
             if (isUdp)
             {
-                udpClient.Client.ReceiveTimeout = 1000;
+                udpClient.Client.ReceiveTimeout = timeout;
             }
             else
             {
-                tcpClient.Client.ReceiveTimeout = 1000;
+                tcpClient.Client.ReceiveTimeout = timeout;
             }
         }
     }

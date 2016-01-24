@@ -103,22 +103,9 @@
             }
         }
 
-        public int MaxRefresh
-        {
-            get
-            {
-                return 5000;
-            }
-        }
+        public int MaxRefresh => 5000;
 
-        public int MinRefresh
-        {
-            get
-            {
-                return 50;
-            }
-        }
-
+        public int MinRefresh => 50;
 
         public bool LoadExisting
         {
@@ -132,7 +119,7 @@
                 if (loadExisting != value)
                 {
                     loadExisting = value;
-                    OnPropertyChanged("LoadExisting");
+                    OnPropertyChanged(nameof(LoadExisting));
                 }
             }
         }
@@ -149,29 +136,13 @@
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return "Log file monitoring provider";
-            }
-        }
+        public string Title => "Log file monitoring provider";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children => readonlyChildren;
 
-        public string Description
-        {
-            get
-            {
-                return "Configure Sentinel to monitor a file for new entries";
-            }
-        }
+        public Control PageContent => this;
+
+        public string Description => "Configure Sentinel to monitor a file for new entries";
 
         public bool IsValid
         {
@@ -187,14 +158,6 @@
                     isValid = value;
                     OnPropertyChanged("IsValid");
                 }
-            }
-        }
-
-        public Control PageContent
-        {
-            get
-            {
-                return this;
             }
         }
 
@@ -241,10 +204,8 @@
         /// <summary>
         ///   Gets the error message for the property with the given name.
         /// </summary>
-        /// <returns>
-        ///   The error message for the property. The default is an empty string ("").
-        /// </returns>
         /// <param name = "columnName">The name of the property whose error message to get.</param>
+        /// <returns>The error message for the property. The default is an empty string ("").</returns>
         public string this[string columnName]
         {
             get
@@ -259,33 +220,31 @@
                     return "File name not specified";
                 }
 
+                try
                 {
-                    try
-                    {
-                        // ReSharper disable once UnusedVariable
-                        var fi = new FileInfo(FileName);
-                        return null;
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        return "The file name specified is in a location unauthorised";
-                    }
-                    catch (NotSupportedException)
-                    {
-                        return "The file name specified is not valid for a file.";
-                    }
-                    catch (ArgumentException)
-                    {
-                        return "The file name specified is not valid for a file.";
-                    }
-                    catch (PathTooLongException)
-                    {
-                        return "The file name specified is too long to be a valid file.";
-                    }
-                    catch (SecurityException)
-                    {
-                        return "You do not have permission to work with that file/location.";
-                    }
+                    // ReSharper disable once UnusedVariable
+                    var fi = new FileInfo(FileName);
+                    return null;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return "The file name specified is in a location unauthorised";
+                }
+                catch (NotSupportedException)
+                {
+                    return "The file name specified is not valid for a file.";
+                }
+                catch (ArgumentException)
+                {
+                    return "The file name specified is not valid for a file.";
+                }
+                catch (PathTooLongException)
+                {
+                    return "The file name specified is too long to be a valid file.";
+                }
+                catch (SecurityException)
+                {
+                    return "You do not have permission to work with that file/location.";
                 }
             }
         }
@@ -313,7 +272,7 @@
 
             try
             {
-                FileInfo fi = new FileInfo(FileName);
+                var fi = new FileInfo(FileName);
                 WarnFileNotFound = !fi.Exists;
                 IsValid = this["FileName"] == null;
             }
@@ -328,19 +287,16 @@
         private void BrowseForFile(object obj)
         {
             // Display the File Open Dialog.
-            var dlg =
-                new OpenFileDialog
-                    {
-                        FileName = "logFile",
-                        DefaultExt = ".log",
-                        Multiselect = false,
-                        Filter =
-                            "Log files (.log)|*.log"
-                            + "|Text documents (.txt)|*.txt"
-                            + "|All files|*.*"
-                    };
+            var dlg = new OpenFileDialog
+                          {
+                              FileName = "logFile",
+                              DefaultExt = ".log",
+                              Multiselect = false,
+                              Filter = "Log files (.log)|*.log|Text documents (.txt)|*.txt|All files|*.*"
+                          };
 
             var result = dlg.ShowDialog();
+
             if (result == true)
             {
                 FileName = dlg.FileName;
