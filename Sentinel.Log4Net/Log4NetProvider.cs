@@ -46,16 +46,10 @@
 
         public Log4NetProvider(IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             udpSettings = settings as IUdpAppenderListenerSettings;
-            if (udpSettings == null)
-            {
-                throw new ArgumentException("settings should be assignable to IUdpAppenderListenerSettings", nameof(settings));
-            }
+            udpSettings.ThrowIfNull(nameof(udpSettings));
 
             Information = ProviderRegistrationInformation.Info;
             ProviderSettings = udpSettings;
@@ -321,15 +315,9 @@
 
         private void AddExceptionIfFound(XElement entryEvent, Dictionary<string, object> metaData)
         {
-            if (entryEvent == null)
-            {
-                throw new ArgumentNullException(nameof(entryEvent));
-            }
+            entryEvent.ThrowIfNull(nameof(entryEvent));
 
-            if (metaData == null)
-            {
-                throw new ArgumentNullException(nameof(metaData));
-            }
+            metaData.ThrowIfNull(nameof(metaData));
 
             var exceptionElement = entryEvent.Element(log4Net + "exception");
             if (exceptionElement != null)

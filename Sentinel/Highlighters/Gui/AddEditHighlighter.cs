@@ -63,10 +63,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 var find = colours.FirstOrDefault(r => r.Value == value);
-                if (find.Key == null)
-                {
-                    throw new NotSupportedException($"Match for {value} not found in system colours");
-                }
+                find.Key.ThrowIfNull(nameof(find.Key));
 
                 var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 BackgroundColourIndex = index;
@@ -120,10 +117,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 var find = colours.FirstOrDefault(r => r.Value == value);
-                if (find.Key == null)
-                {
-                    throw new NotSupportedException($"Match for {value} not found in system colours");
-                }
+                find.Key.ThrowIfNull(nameof(find.Key));
 
                 var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 ForegroundColourIndex = index;

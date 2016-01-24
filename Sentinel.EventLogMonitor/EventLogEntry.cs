@@ -6,17 +6,15 @@
 
     using Interfaces;
 
+    using Sentinel.Interfaces;
+
     internal class EventLogEntry : IEventLogEntry
     {
         private System.Diagnostics.EventLogEntry Entry { get; }
 
         public EventLogEntry(System.Diagnostics.EventLogEntry entry)
         {
-            if (entry == null)
-            {
-                throw new ArgumentNullException(nameof(entry));
-            }
-
+            entry.ThrowIfNull(nameof(entry));
             Entry = entry;
         }
 

@@ -20,10 +20,7 @@ namespace Sentinel.MSBuild
                 throw new ArgumentNullException(nameof(msbuildEventType));
             }
 
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
+            content.ThrowIfNull(nameof(content));
 
             switch (msbuildEventType)
             {

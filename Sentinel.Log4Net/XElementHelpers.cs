@@ -6,16 +6,15 @@ namespace Sentinel.Log4Net
 
     using Common.Logging;
 
+    using Sentinel.Interfaces;
+
     public static class XElementHelpers
     {
         private static readonly ILog Log = LogManager.GetLogger("XElementHelpers");
 
         public static string GetAttribute(this XElement element, string attributeName, string defaultValue)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException(nameof(element));
-            }
+            element.ThrowIfNull(nameof(element));
 
             if (!element.HasAttributes)
             {

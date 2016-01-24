@@ -12,7 +12,7 @@ namespace Sentinel.Interfaces
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfNull([ValidatedNotNull] this object value, string parameterName)
         {
-            Contract.Requires<ArgumentNullException>(
+            Contract.Requires(
                 value != null,
                 "The value '" + parameterName + "' cannot be null. ");
 
@@ -27,8 +27,8 @@ namespace Sentinel.Interfaces
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfNullOrWhitespace([ValidatedNotNull] this string value, string parameterName)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(value));
-            if (!string.IsNullOrWhiteSpace(value))
+            Contract.Requires(!string.IsNullOrWhiteSpace(value));
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentNullException(parameterName);
             }

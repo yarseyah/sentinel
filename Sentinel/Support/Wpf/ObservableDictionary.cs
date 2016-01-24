@@ -9,6 +9,8 @@
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
 
+    using Sentinel.Interfaces;
+
     [Serializable]
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,
                                                       IDictionary,
@@ -35,10 +37,7 @@
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            if (dictionary == null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
+            dictionary.ThrowIfNull(nameof(dictionary));
 
             KeyedEntryCollection = new KeyedDictionaryEntryCollection();
 
@@ -55,10 +54,7 @@
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            if (dictionary == null)
-            {
-                throw new ArgumentNullException(nameof(dictionary));
-            }
+            dictionary.ThrowIfNull(nameof(dictionary));
 
             KeyedEntryCollection = new KeyedDictionaryEntryCollection(comparer);
 
@@ -220,10 +216,7 @@
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
-            {
-                throw new ArgumentNullException("info");
-            }
+            info.ThrowIfNull(nameof(info));
 
             var entries = new Collection<DictionaryEntry>();
             foreach (var entry in KeyedEntryCollection)
@@ -316,10 +309,7 @@
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
         {
-            if (array == null)
-            {
-                throw new ArgumentNullException(nameof(array), "CopyTo() failed:  array parameter was null");
-            }
+            array.ThrowIfNull(nameof(array));
 
             if (index < 0 || index > array.Length)
             {

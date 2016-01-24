@@ -130,10 +130,7 @@
 
         private void BindTimeColumn(GridViewColumn column)
         {
-            if (column == null)
-            {
-                throw new ArgumentNullException(nameof(column));
-            }
+            column.ThrowIfNull(nameof(column));
 
             var converter = (IValueConverter)Resources["TimePreferenceConverter"];
             column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
@@ -141,10 +138,7 @@
 
         private void BindDateColumn(GridViewColumn column)
         {
-            if (column == null)
-            {
-                throw new ArgumentNullException(nameof(column));
-            }
+            column.ThrowIfNull(nameof(column));
 
             var converter = (IValueConverter)Resources["DatePreferenceConverter"];
             column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
@@ -158,10 +152,7 @@
 
         private void Messages_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (sender == null)
-            {
-                throw new ArgumentNullException(nameof(sender));
-            }
+            sender.ThrowIfNull(nameof(sender));
 
             if (DoubleClickToShowExceptions)
             {

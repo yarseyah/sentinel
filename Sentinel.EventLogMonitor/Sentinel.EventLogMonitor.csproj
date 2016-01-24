@@ -79,6 +79,10 @@
       <Project>{43D710A0-7805-4B0A-B38F-4A4D772800F6}</Project>
       <Name>Sentinel.EventLogMonitor.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sentinel.Interfaces\Sentinel.Interfaces.csproj">
+      <Project>{AA7AE77F-D8FE-4D3E-98C0-789A0E886EC6}</Project>
+      <Name>Sentinel.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -33,16 +33,10 @@ namespace Sentinel.MSBuild
 
         public MsBuildProvider(IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             Settings = settings as IMsBuildListenerSettings;
-            if (Settings == null)
-            {
-                throw new ArgumentException("settings should be assignable to IMsBuildListenerSettings", "settings");
-            }
+            Settings.ThrowIfNull(nameof(Settings));
 
             ProviderSettings = settings; 
         }

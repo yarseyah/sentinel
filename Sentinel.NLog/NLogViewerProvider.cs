@@ -36,16 +36,10 @@
 
         public NLogViewerProvider(IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             networkSettings = settings as INLogAppenderSettings;
-            if (networkSettings == null)
-            {
-                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", nameof(settings));
-            }
+            networkSettings.ThrowIfNull(nameof(networkSettings));
 
             Information = ProviderRegistrationInformation.Info;
             ProviderSettings = networkSettings;
