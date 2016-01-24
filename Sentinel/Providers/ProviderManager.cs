@@ -121,7 +121,7 @@
         /// </summary>
         /// <typeparam name="T">Type of configuration</typeparam>
         /// <param name="providerGuid">Identifier of provider</param>
-        /// <returns></returns>
+        /// <returns>Returns the provider associated to the supplied <see cref="Guid"/>></returns>
         public T GetConfiguration<T>(Guid providerGuid)
         {
             var matchesGuid = providers.Where(p => p.Identifier == providerGuid).Where(p => p.Settings != null);
