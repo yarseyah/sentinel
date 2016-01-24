@@ -74,7 +74,7 @@
                                           ItemsSource="{Binding Preferences.TimeFormatOptions}"
                                           MinWidth="100" />
                                     <CheckBox Margin="0,5,0,5"
-                                              IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimezone}">Convert UTC times to local timezone</CheckBox>
+                                              IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimeZone}">Convert UTC times to local timezone</CheckBox>
                                 </StackPanel>
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="0"

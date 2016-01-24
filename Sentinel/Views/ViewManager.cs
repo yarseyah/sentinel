@@ -19,7 +19,7 @@
             Viewers = new ObservableCollection<IWindowFrame>();
 
             Register(LogMessages.Info, typeof(LogMessages));
-            Register(MessageHeatbeat.Info, typeof(MessageHeatbeat));
+            Register(MessageHeatBeat.Info, typeof(MessageHeatBeat));
         }
 
         /// <summary>

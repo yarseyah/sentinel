@@ -13,7 +13,7 @@
     using Sentinel.Support.Wpf;
     using Sentinel.Views.Interfaces;
 
-    public class MessageHeatbeat : ViewModelBase, ILogViewer
+    public class MessageHeatBeat : ViewModelBase, ILogViewer
     {
         public static readonly string Id = "f1da010a-bd8f-4957-a16d-2f3ada1e40f6";
 
@@ -32,7 +32,7 @@
 
         private ILogger logger;
 
-        public MessageHeatbeat()
+        public MessageHeatBeat()
         {
             ((ViewInformation)Info).Description = "Displays a heartbeat graph based upon the incoming message type.";
 

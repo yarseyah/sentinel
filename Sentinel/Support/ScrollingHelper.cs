@@ -8,7 +8,7 @@
 
     public class ScrollingHelper
     {
-        public delegate void VoidFunctionHandler(ListBox lb);
+        public delegate void VoidFunctionHandler(ListBox listBox);
 
         public static Visual GetDescendantByType(Visual element, Type type)
         {

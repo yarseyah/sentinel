@@ -97,7 +97,7 @@
                             switch (prop)
                             {
                                 case "SelectedTimeFormatOption":
-                                case "ConvertUtcTimesToLocalTimezone":
+                                case "ConvertUtcTimesToLocalTimeZone":
                                 case "SelectedDateOption":
                                     rebuildList = true;
                                     break;

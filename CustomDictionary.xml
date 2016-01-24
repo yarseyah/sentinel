@@ -4,6 +4,20 @@
     <Recognized>
       <Word>Colour</Word>
       <Word>Colours</Word>
+      <Word>Initialise</Word>
+      <Word>Initialisation</Word>
+      <Word>Appender</Word>
+      <Word>Ms</Word>
+      <Word>Gui</Word>
+      <Word>Mvvm</Word>
     </Recognized>
+    <!--<Deprecated>
+      <Term PreferredAlternate="ModelViewViewModel">Mvvm</Term>
+    </Deprecated>-->
   </Words>
+  <Acronyms>
+    <CasingExceptions>
+    </CasingExceptions>
+  </Acronyms>
+
 </Dictionary>

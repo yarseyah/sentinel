@@ -48,7 +48,7 @@ namespace Sentinel.Support.Converters
             var dt = (DateTime?)displayDateTime ?? message.DateTime;
 
             // TODO: make a time selection option....
-            if (dt.Kind == DateTimeKind.Utc && Preferences.ConvertUtcTimesToLocalTimezone)
+            if (dt.Kind == DateTimeKind.Utc && Preferences.ConvertUtcTimesToLocalTimeZone)
             {
                 var defaultTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
                 var global = new ZonedDateTime(Instant.FromDateTimeUtc(dt), defaultTimeZone);

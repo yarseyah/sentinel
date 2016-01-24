@@ -47,7 +47,7 @@ namespace Sentinel.Support.Converters
             // Fallback if message does not contain meta-data.
             var dt = (DateTime)(displayDateTime ?? message.DateTime);
             var isUtc = dt.Kind == DateTimeKind.Utc;
-            if (isUtc && Preferences.ConvertUtcTimesToLocalTimezone)
+            if (isUtc && Preferences.ConvertUtcTimesToLocalTimeZone)
             {
                 var defaultTimeZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
                 var global = new ZonedDateTime(Instant.FromDateTimeUtc(dt), defaultTimeZone);

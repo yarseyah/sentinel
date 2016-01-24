@@ -18,7 +18,7 @@ namespace Sentinel.Interfaces
         int SelectedTimeFormatOption { get; set; }
 
         [DataMember]
-        bool ConvertUtcTimesToLocalTimezone { get; set; }
+        bool ConvertUtcTimesToLocalTimeZone { get; set; }
 
         [DataMember]
         bool UseArrivalDateTime { get; set; }

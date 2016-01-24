@@ -22,7 +22,7 @@
 
         private bool useArrivalDateTime;
 
-        private bool convertUtcTimesToLocalTimezone = true;
+        private bool convertUtcTimesToLocalTimeZone = true;
 
         private int selectedTypeOption = 1;
 
@@ -102,19 +102,19 @@
             }
         }
 
-        public bool ConvertUtcTimesToLocalTimezone
+        public bool ConvertUtcTimesToLocalTimeZone
         {
             get
             {
-                return convertUtcTimesToLocalTimezone;
+                return convertUtcTimesToLocalTimeZone;
             }
 
             set
             {
-                if (value != convertUtcTimesToLocalTimezone)
+                if (value != convertUtcTimesToLocalTimeZone)
                 {
-                    convertUtcTimesToLocalTimezone = value;
-                    OnPropertyChanged(nameof(ConvertUtcTimesToLocalTimezone));
+                    convertUtcTimesToLocalTimeZone = value;
+                    OnPropertyChanged(nameof(ConvertUtcTimesToLocalTimeZone));
                 }
             }
         }
