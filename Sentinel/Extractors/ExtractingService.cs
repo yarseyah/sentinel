@@ -103,9 +103,9 @@
 
         private void CustomExtractorPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Extractor)
+            var extractor = sender as Extractor;
+            if (extractor != null)
             {
-                var extractor = sender as Extractor;
                 Trace.WriteLine(
                     $"ExtractingService saw some activity on {extractor.Name} (IsEnabled = {extractor.Enabled})");
             }

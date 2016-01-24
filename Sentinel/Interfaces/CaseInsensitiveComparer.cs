@@ -7,9 +7,11 @@ namespace Sentinel.Interfaces
     {
         public bool Equals(T x, T y)
         {
-            if (x is string)
+            var stringX = x as string;
+
+            if (stringX != null)
             {
-                return string.Compare(x as string, y as string, StringComparison.OrdinalIgnoreCase) == 0;
+                return string.Compare(stringX, y as string, StringComparison.OrdinalIgnoreCase) == 0;
             }
 
             return x.Equals(y);
