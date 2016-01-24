@@ -17,6 +17,6 @@ namespace Sentinel.MSBuild
 
         public Type Settings => typeof(ConfigurationPage);
 
-        public Type Implementor => typeof(MsBuildProvider);
+        public Type Implementer => typeof(MsBuildProvider);
     }
 }

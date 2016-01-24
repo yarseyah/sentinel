@@ -17,6 +17,6 @@ namespace Sentinel.Log4Net
 
         public Type Settings => typeof(ConfigurationPage);
 
-        public Type Implementor => typeof(Log4NetProvider);
+        public Type Implementer => typeof(Log4NetProvider);
     }
 }

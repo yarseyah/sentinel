@@ -17,6 +17,6 @@ namespace Sentinel.NLog
 
         public Type Settings => typeof(NetworkConfigurationPage);
 
-        public Type Implementor => typeof(NLogViewerProvider);
+        public Type Implementer => typeof(NLogViewerProvider);
     }
 }

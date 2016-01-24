@@ -12,6 +12,6 @@
 
         public Type Settings { get; set; }
 
-        public Type Implementor { get; set; }
+        public Type Implementer { get; set; }
     }
 }

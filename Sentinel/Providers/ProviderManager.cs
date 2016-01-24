@@ -62,11 +62,11 @@
 
             if (record != null)
             {
-                Debug.Assert(record.Implementor != null, "Need to know the implementing type for the provider");
+                Debug.Assert(record.Implementer != null, "Need to know the implementing type for the provider");
 
                 try
                 {
-                    var provider = (ILogProvider)Activator.CreateInstance(record.Implementor, settings);
+                    var provider = (ILogProvider)Activator.CreateInstance(record.Implementer, settings);
                     providerInstances.Add(new KeyValuePair<string, ILogProvider>(settings.Name, provider));
                     return provider;
                 }
