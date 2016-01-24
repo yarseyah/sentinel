@@ -1,7 +1,9 @@
 ﻿namespace Sentinel.Support
 {
+    using System;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -10,7 +12,9 @@
     using System.Windows.Input;
     using System.Windows.Media;
 
-    public class GridViewSort
+    using Sentinel.Interfaces;
+
+    public static class GridViewSort
     {
         public static readonly DependencyProperty AutoSortProperty;
 
@@ -115,7 +119,9 @@
             ListView listView,
             GridViewColumnHeader sortedColumnHeader)
         {
-            ListSortDirection direction = ListSortDirection.Ascending;
+            view.ThrowIfNull(nameof(view));
+
+            var direction = ListSortDirection.Ascending;
             if (view.SortDescriptions.Count > 0)
             {
                 SortDescription currentSort = view.SortDescriptions[0];
@@ -169,65 +175,77 @@
         // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
         public static bool GetAutoSort(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (bool)obj.GetValue(AutoSortProperty);
         }
 
         public static ICommand GetCommand(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (ICommand)obj.GetValue(CommandProperty);
         }
 
         // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
         public static string GetPropertyName(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (string)obj.GetValue(PropertyNameProperty);
         }
 
         // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
         public static bool GetShowSortGlyph(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (bool)obj.GetValue(ShowSortGlyphProperty);
         }
 
         // Using a DependencyProperty as the backing store for ShowSortGlyph.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphAscending(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (ImageSource)obj.GetValue(SortGlyphAscendingProperty);
         }
 
         // Using a DependencyProperty as the backing store for SortGlyphAscending.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphDescending(DependencyObject obj)
         {
+            obj.ThrowIfNull(nameof(obj));
             return (ImageSource)obj.GetValue(SortGlyphDescendingProperty);
         }
 
         public static void SetAutoSort(DependencyObject obj, bool value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(AutoSortProperty, value);
         }
 
         public static void SetCommand(DependencyObject obj, ICommand value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(CommandProperty, value);
         }
 
         public static void SetPropertyName(DependencyObject obj, string value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(PropertyNameProperty, value);
         }
 
         public static void SetShowSortGlyph(DependencyObject obj, bool value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(ShowSortGlyphProperty, value);
         }
 
         public static void SetSortGlyphAscending(DependencyObject obj, ImageSource value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(SortGlyphAscendingProperty, value);
         }
 
         public static void SetSortGlyphDescending(DependencyObject obj, ImageSource value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(SortGlyphDescendingProperty, value);
         }
 

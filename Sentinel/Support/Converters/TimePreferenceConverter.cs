@@ -71,10 +71,7 @@ namespace Sentinel.Support.Converters
 
         private static string GetDateDisplayFormat(int setting, IEnumerable<string> settings, bool convertToLocalIfUtc)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             var dateFormatSource = settings.ElementAt(setting);
             var dateFormat = dateFormatSource.Replace("-", "'-'").Replace(":", "':'");

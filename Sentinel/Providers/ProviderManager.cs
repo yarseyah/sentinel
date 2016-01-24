@@ -7,6 +7,7 @@
     using System.Linq;
 
     using Sentinel.FileMonitor;
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.MSBuild;
@@ -38,16 +39,14 @@
 
         public ILogProvider Create(Guid providerGuid, IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentException("Settings can not be null", nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             // Make sure we don't have any instances of that providerGuid.
             if (providerInstances.Any(p => p.Key == settings.Name && p.Value.Information.Identifier == providerGuid))
             {
                 throw new ArgumentException(
-                    "Already an instance of that ILoggerProvider with that name specified", nameof(settings));
+                    "Already an instance of that ILoggerProvider with that name specified",
+                    nameof(settings));
             }
 
             // Make sure that the type is supported.))

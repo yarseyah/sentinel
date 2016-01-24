@@ -194,11 +194,7 @@ namespace Sentinel.Highlighters
 
         private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
         {
-            if (style == null)
-            {
-                throw new ArgumentNullException(nameof(style));
-            }
-
+            style.ThrowIfNull(nameof(style));
             style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
         }
     }

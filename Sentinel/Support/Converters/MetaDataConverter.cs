@@ -5,14 +5,13 @@ namespace Sentinel.Support.Converters
     using System.Globalization;
     using System.Windows.Data;
 
+    using Sentinel.Interfaces;
+
     public class MetaDataConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            value.ThrowIfNull(nameof(value));
 
             var member = parameter as string;
             var metaData = value as IDictionary<string, object>;

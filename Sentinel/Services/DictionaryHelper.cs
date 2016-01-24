@@ -3,6 +3,8 @@ namespace Sentinel.Services
     using System;
     using System.Collections.Generic;
 
+    using Sentinel.Interfaces;
+
     public static class DictionaryHelper
     {
         /// <summary>
@@ -16,11 +18,7 @@ namespace Sentinel.Services
         /// <returns>Value corresponding to the supplied key.</returns>
         public static TValue Get<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
         {
-            if (dict == null)
-            {
-                throw new ArgumentNullException(nameof(dict));
-            }
-
+            dict.ThrowIfNull(nameof(dict));
             return dict.ContainsKey(key) ? dict[key] : default(TValue);
         }
     }

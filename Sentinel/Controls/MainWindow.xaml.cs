@@ -437,10 +437,7 @@
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
-            if (commandLine == null)
-            {
-                throw new ArgumentNullException(nameof(commandLine));
-            }
+            commandLine.ThrowIfNull(nameof(commandLine));
 
             var commandLineArguments = commandLine as string[] ?? commandLine.ToArray();
             if (!commandLineArguments.Any())
@@ -635,41 +632,25 @@
 
         private void RetainOnlyStandardFilters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingFilter;
         }
 
         private void ExcludeStandardFilters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingFilter || e.Item is ISearchFilter);
         }
 
         private void RetainOnlyStandardHighlighters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingHighlighter;
         }
 
         private void ExcludeStandardHighlighters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingHighlighter);
         }
 

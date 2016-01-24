@@ -58,10 +58,9 @@ namespace Sentinel.Support.Converters
             }
 
             var local = LocalDateTime.FromDateTime(dt);
-            return
-                local.ToString(
-                    GetDateDisplayFormat(Preferences.SelectedDateOption, Preferences.DateFormatOptions),
-                    CultureInfo.CurrentCulture);
+            return local.ToString(
+                GetDateDisplayFormat(Preferences.SelectedDateOption, Preferences.DateFormatOptions),
+                CultureInfo.CurrentCulture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -71,10 +70,7 @@ namespace Sentinel.Support.Converters
 
         private static string GetDateDisplayFormat(int setting, IEnumerable<string> settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             var dateFormatSource = settings.ElementAt(setting);
 

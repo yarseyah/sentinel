@@ -15,13 +15,7 @@
 
         public ILogger Add(string logName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(logName), "Log name can not be null or empty.");
-            if (string.IsNullOrEmpty(logName))
-            {
-                throw new ArgumentException(
-                    "Log name can not be null or empty for LogManager.Add(...)",
-                    nameof(logName));
-            }
+            logName.ThrowIfNullOrWhitespace(nameof(logName));
 
             Debug.Assert(!loggers.ContainsKey(logName), "Log name has already been used.");
             if (loggers.ContainsKey(logName))
