@@ -35,11 +35,10 @@
             }
 
             // Validate that the type supports the necessary interface: ILogViewer
-            var intefaceType = typeof(ILogViewer);
-            if (viewerType.GetInterfaces().All(i => i != intefaceType))
+            var interfaceType = typeof(ILogViewer);
+            if (viewerType.GetInterfaces().All(i => i != interfaceType))
             {
-                throw new NotSupportedException("Types registered in ViewManager must support the inteface " +
-                                                intefaceType);
+                throw new NotSupportedException($"Types registered in ViewManager must support the interface '{interfaceType}'");
             }
 
             // Populate the registration information.
