@@ -8,9 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Sentinel")]
 [assembly: AssemblyDescription("To watch over as a guard and provide real-time organization of logging sessions.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ray Hayes, Ishmal Lewis, et al.")]
 [assembly: AssemblyProduct("Sentinel")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

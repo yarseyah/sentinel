@@ -8,9 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Sentinel.MSBuild")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ray Hayes")]
 [assembly: AssemblyProduct("Sentinel.MSBuild")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

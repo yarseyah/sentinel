@@ -8,9 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Sentinel.FileMonitor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sentinel.FileMonitor")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

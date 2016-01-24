@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Resources;
 
@@ -16,3 +17,9 @@ using System.Resources;
 
 // Ensure all assemblies have a neutral language defined.
 [assembly: NeutralResourcesLanguage("en")]
+
+// Addres CA1014 issues
+[assembly: CLSCompliant(true)]
+
+[assembly: AssemblyCompany("Ray Hayes, Ishmal Lewis, et al.")]
+[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2016")]

@@ -7,9 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Sentinel.EventLogMonitor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Sentinel.EventLogMonitor")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
