@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Resources;
 
 // Version information for an assembly consists of the following four values:
 //
@@ -12,3 +13,6 @@ using System.Reflection;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.12.2.0")]
 [assembly: AssemblyFileVersion("0.12.2.0")]
+
+// Ensure all assemblies have a neutral language defined.
+[assembly: NeutralResourcesLanguage("en")]
