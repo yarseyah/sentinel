@@ -16,6 +16,8 @@
     using Interfaces;
     using Interfaces.Providers;
 
+    using Sentinel.Interfaces.CodeContracts;
+
     public class Log4NetProvider : INetworkProvider
     {
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =

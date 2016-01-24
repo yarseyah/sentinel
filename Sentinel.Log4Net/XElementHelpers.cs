@@ -7,6 +7,7 @@ namespace Sentinel.Log4Net
     using Common.Logging;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     public static class XElementHelpers
     {

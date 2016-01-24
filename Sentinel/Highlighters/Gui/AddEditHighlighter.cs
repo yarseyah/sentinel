@@ -10,6 +10,7 @@ namespace Sentinel.Highlighters.Gui
     using System.Windows.Media;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Support.Mvvm;
 
     public class AddEditHighlighter : ViewModelBase

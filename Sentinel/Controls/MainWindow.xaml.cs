@@ -25,6 +25,7 @@
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Log4Net;
     using Sentinel.Logs.Interfaces;
     using Sentinel.NLog;

@@ -16,6 +16,8 @@ namespace Sentinel.MSBuild
 
     using Newtonsoft.Json.Linq;
 
+    using Sentinel.Interfaces.CodeContracts;
+
     public class MsBuildProvider : INetworkProvider
     {
         public static readonly IProviderRegistrationRecord ProviderRegistrationRecord =

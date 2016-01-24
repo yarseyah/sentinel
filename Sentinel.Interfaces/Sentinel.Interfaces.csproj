@@ -50,7 +50,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CodeContractExtensions.cs" />
+    <Compile Include="CodeContracts\ThrowIfNull.cs" />
+    <Compile Include="CodeContracts\ThrowIfNullOrWhiteSpace.cs" />
+    <Compile Include="CodeContracts\ValidatedNotNullAttribute.cs" />
     <Compile Include="ILogEntry.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Providers\ILogProvider.cs" />

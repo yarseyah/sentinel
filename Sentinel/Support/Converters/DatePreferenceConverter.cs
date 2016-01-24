@@ -11,6 +11,7 @@ namespace Sentinel.Support.Converters
     using NodaTime;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     public class DatePreferenceConverter : IValueConverter
     {

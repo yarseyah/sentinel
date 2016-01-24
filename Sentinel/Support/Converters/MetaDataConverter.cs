@@ -6,6 +6,7 @@ namespace Sentinel.Support.Converters
     using System.Windows.Data;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     public class MetaDataConverter : IValueConverter
     {

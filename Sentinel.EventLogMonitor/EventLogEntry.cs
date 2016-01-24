@@ -7,6 +7,7 @@
     using Interfaces;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     internal class EventLogEntry : IEventLogEntry
     {

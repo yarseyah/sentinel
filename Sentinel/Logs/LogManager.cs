@@ -6,6 +6,7 @@
     using System.Diagnostics;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Logs.Interfaces;
     using Sentinel.Support.Mvvm;
 
@@ -15,7 +16,7 @@
 
         public ILogger Add(string logName)
         {
-            logName.ThrowIfNullOrWhitespace(nameof(logName));
+            logName.ThrowIfNullOrWhiteSpace(nameof(logName));
 
             Debug.Assert(!loggers.ContainsKey(logName), "Log name has already been used.");
             if (loggers.ContainsKey(logName))

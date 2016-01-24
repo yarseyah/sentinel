@@ -13,6 +13,7 @@
     using System.Windows.Media;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     public static class GridViewSort
     {

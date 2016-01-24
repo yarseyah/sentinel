@@ -10,6 +10,7 @@
     using System.Runtime.Serialization;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     [Serializable]
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,

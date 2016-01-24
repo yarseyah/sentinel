@@ -15,6 +15,8 @@
     using Interfaces;
     using Interfaces.Providers;
 
+    using Sentinel.Interfaces.CodeContracts;
+
     public class NLogViewerProvider : INetworkProvider
     {
         private const int PumpFrequency = 100;

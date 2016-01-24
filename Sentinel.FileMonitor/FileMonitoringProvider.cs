@@ -14,6 +14,7 @@
     using Common.Logging;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
 
     public class FileMonitoringProvider : ILogProvider, IDisposable

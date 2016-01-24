@@ -11,6 +11,7 @@ namespace Sentinel.Highlighters
     using System.Windows.Media;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Services;
     using Sentinel.Support.Wpf;
 

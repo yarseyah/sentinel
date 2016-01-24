@@ -15,6 +15,7 @@
     using Highlighters.Interfaces;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     using Services;
 

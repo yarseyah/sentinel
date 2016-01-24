@@ -8,6 +8,7 @@
 
     using Sentinel.FileMonitor;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.MSBuild;
