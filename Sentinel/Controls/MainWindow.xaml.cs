@@ -428,7 +428,7 @@
             }
 
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-            foreach (var instance in providerManager.GetInstances())
+            foreach (var instance in providerManager.Instances)
             {
                 Log.DebugFormat("Provider: {0}", instance.Name);
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");

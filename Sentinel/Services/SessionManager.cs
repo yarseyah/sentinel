@@ -62,7 +62,7 @@
             get
             {
                 var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-                return providerManager.GetInstances().Select(c => c.ProviderSettings);
+                return providerManager.Instances.Select(c => c.ProviderSettings);
             }
         }
 
@@ -97,13 +97,7 @@
         {
             CleanUpResources();
 
-            var views = new List<string>
-                            {
-                                ServiceLocator.Instance.Get<IViewManager>()
-                                    .GetRegistered()
-                                    .First()
-                                    .Identifier
-                            };
+            var views = new List<string> { ServiceLocator.Instance.Get<IViewManager>().Registered.First().Identifier };
 
             ConfigureLoggerServices("Untitled", views, providers);
 
@@ -183,7 +177,7 @@
         {
             // Close all open providers
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-            foreach (var provider in providerManager.GetInstances())
+            foreach (var provider in providerManager.Instances)
             {
                 provider.Close();
             }
@@ -325,10 +319,7 @@
                     true);
             }
 
-            var viewIDs = new List<string>
-                              {
-                                  locator.Get<IViewManager>().GetRegistered().First().Identifier
-                              };
+            var viewIDs = new List<string> { locator.Get<IViewManager>().Registered.First().Identifier };
 
             ConfigureLoggerServices(Name, viewIDs, pendingProviderRecords);
 

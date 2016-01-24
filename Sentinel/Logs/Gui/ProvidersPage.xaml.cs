@@ -226,11 +226,9 @@
                 return "Duplicate provider names are not supported, please provide appropriate names.";
             }
 
-            var providersWithPorts = Providers
-                .Select(p => p.Settings)
-                .OfType<NetworkSettings>();
+            var providersWithPorts = Providers.Select(p => p.Settings).OfType<NetworkSettings>().ToList();
             var providersGroupedByPort = providersWithPorts
-                .GroupBy(p => p.Port);
+                .GroupBy(p => p.Port).ToList();
 
             if (providersGroupedByPort.Any(g => g.Count() > 1))
             {
@@ -243,22 +241,21 @@
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
 
             if (providerManager != null
-                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name)).Any())
+                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.Instances.Select(p2 => p2.Name)).Any())
             {
-                var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name));
+                var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.Instances.Select(p2 => p2.Name));
                 return $"Providers should be uniquely named, there is already one called {duplicates.First()}";
             }
 
             if (providerManager != null
-                && providerManager.GetInstances().OfType<INetworkProvider>().Any()
+                && providerManager.Instances.OfType<INetworkProvider>().Any()
                 && providersWithPorts.Any())
             {
                 // Get the two lists:
-                var instances = providerManager.GetInstances().OfType<INetworkProvider>().Select(i => i.Port);
+                var instances = providerManager.Instances.OfType<INetworkProvider>().Select(i => i.Port);
                 var newSettings = providersWithPorts.Select(p => p.Port);
 
-                var intersection = instances.Intersect(newSettings);
-
+                var intersection = instances.Intersect(newSettings).ToList();
                 if (intersection.Any())
                 {
                     return $"Network port numbers must be unique, port number {intersection.First()} is already in use.";

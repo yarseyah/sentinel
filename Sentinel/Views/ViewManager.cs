@@ -16,8 +16,6 @@
 
         public ViewManager()
         {
-            Viewers = new ObservableCollection<IWindowFrame>();
-
             Register(LogMessages.Info, typeof(LogMessages));
             Register(MessageHeatBeat.Info, typeof(MessageHeatBeat));
         }
@@ -25,7 +23,9 @@
         /// <summary>
         /// Gets the observerable collection of the instances of a viewer main frame.
         /// </summary>
-        public ObservableCollection<IWindowFrame> Viewers { get; private set; }
+        public ObservableCollection<IWindowFrame> Viewers { get; } = new ObservableCollection<IWindowFrame>();
+
+        public IEnumerable<IViewInformation> Registered => registeredTypes.Keys;
 
         public void Register(IViewInformation info, Type viewerType)
         {
@@ -43,11 +43,6 @@
 
             // Populate the registration information.
             registeredTypes.Add(info, viewerType);
-        }
-
-        public IEnumerable<IViewInformation> GetRegistered()
-        {
-            return registeredTypes.Keys;
         }
 
         public IViewInformation Get(string identifier)

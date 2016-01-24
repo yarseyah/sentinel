@@ -33,6 +33,10 @@
                             };
         }
 
+        public IEnumerable<Guid> Registered => providers.Select(p => p.Identifier);
+
+        public IEnumerable<ILogProvider> Instances => providerInstances.Select(i => i.Value);
+
         public void Register(IProviderRegistrationRecord record)
         {
             throw new NotImplementedException("Dynamic registration is not yet supported");
@@ -96,11 +100,6 @@
             throw new NotSupportedException("Removal is not yet supported");
         }
 
-        public IEnumerable<Guid> GetRegistered()
-        {
-            return providers.Select(p => p.Identifier);
-        }
-
         public IProviderInfo GetInformation(Guid providerGuid)
         {
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
@@ -148,11 +147,6 @@
             }
 
             return default(T);
-        }
-
-        public IEnumerable<ILogProvider> GetInstances()
-        {
-            return providerInstances.Select(i => i.Value);
         }
 
         public IEnumerator<Guid> GetEnumerator()

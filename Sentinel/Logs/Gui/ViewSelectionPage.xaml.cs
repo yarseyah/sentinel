@@ -45,7 +45,7 @@
             IViewManager vm = ServiceLocator.Instance.Get<IViewManager>();
             if (vm != null)
             {
-                registeredViews = new List<IViewInformation>(vm.GetRegistered());
+                registeredViews = new List<IViewInformation>(vm.Registered);
 
 #if DISABLE_MULTIPLE_VIEWS
                 MultipleViewsSupported = registeredViews.Count() > 1;

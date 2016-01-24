@@ -7,6 +7,10 @@ namespace Sentinel.Providers.Interfaces
 
     public interface IProviderManager : IEnumerable<Guid>
     {
+        IEnumerable<ILogProvider> Instances { get; }
+
+        IEnumerable<Guid> Registered { get; }
+
         void Register(IProviderRegistrationRecord record);
 
         ILogProvider Create(Guid providerGuid, IProviderSettings settings);
@@ -15,12 +19,8 @@ namespace Sentinel.Providers.Interfaces
 
         void Remove(string name);
 
-        IEnumerable<Guid> GetRegistered();
-
         IProviderInfo GetInformation(Guid providerGuid);
 
         T GetConfiguration<T>(Guid providerGuid);
-
-        IEnumerable<ILogProvider> GetInstances();
     }
 }
