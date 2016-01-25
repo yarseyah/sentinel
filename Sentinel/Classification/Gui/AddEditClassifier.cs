@@ -5,7 +5,7 @@
 
     using Sentinel.Interfaces;
 
-    using Support.Mvvm;
+    using WpfExtras;
 
     public class AddEditClassifier : ViewModelBase
     {

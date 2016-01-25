@@ -10,7 +10,8 @@
     using Gui;
     using Interfaces;
     using Sentinel.Interfaces;
-    using Support.Mvvm;
+
+    using WpfExtras;
 
     /// <summary>
     /// View Model for classifier collection.  This has been written to operate

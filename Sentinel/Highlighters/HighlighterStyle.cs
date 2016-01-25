@@ -6,7 +6,8 @@ namespace Sentinel.Highlighters
     using Newtonsoft.Json;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class HighlighterStyle : ViewModelBase, IHighlighterStyle

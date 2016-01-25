@@ -6,7 +6,8 @@ namespace Sentinel.Highlighters
 
     using Interfaces;
     using Sentinel.Interfaces;
-    using Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Highlighter : ViewModelBase, IHighlighter

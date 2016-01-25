@@ -6,7 +6,8 @@
 
     using Sentinel.Interfaces.Providers;
     using Sentinel.Providers.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public interface ISessionManager
     {

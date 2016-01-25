@@ -19,7 +19,7 @@
 
     using Services;
 
-    using Support.Mvvm;
+    using WpfExtras;
 
     public class LogMessages : ViewModelBase, ILogViewer
     {

@@ -11,7 +11,8 @@
     using Gui;
     using Interfaces;
     using Sentinel.Interfaces;
-    using Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class HighlightingService<T> : ViewModelBase, IHighlightingService<T>, IDefaultInitialisation

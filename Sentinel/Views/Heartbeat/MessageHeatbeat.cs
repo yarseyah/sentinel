@@ -9,9 +9,10 @@
     using System.Windows.Threading;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Support.Wpf;
     using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
 
     public class MessageHeatBeat : ViewModelBase, ILogViewer
     {

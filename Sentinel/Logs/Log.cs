@@ -7,7 +7,8 @@ namespace Sentinel.Logs
     using Sentinel.Classification.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class Log : ViewModelBase, ILogger
     {

@@ -11,7 +11,8 @@
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class FilteringService<T> : ViewModelBase, IFilteringService<T>, IDefaultInitialisation

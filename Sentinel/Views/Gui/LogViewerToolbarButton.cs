@@ -3,8 +3,9 @@
     using System.Diagnostics;
     using System.Windows.Input;
 
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
 
     public class LogViewerToolbarButton
         : ViewModelBase, ILogViewerToolbarButton

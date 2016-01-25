@@ -9,7 +9,8 @@ namespace Sentinel.Images
     using Sentinel.Images.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class TypeToImageService : ViewModelBase, ITypeImageService, IDefaultInitialisation

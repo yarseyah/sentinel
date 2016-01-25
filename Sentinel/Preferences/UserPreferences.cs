@@ -4,8 +4,9 @@
     using System.Runtime.Serialization;
 
     using Interfaces;
-    using Support.Mvvm;
     using Support.Wpf;
+
+    using WpfExtras;
 
     /// <summary>
     /// An implementation of the IUserPreferences which holds all of the user

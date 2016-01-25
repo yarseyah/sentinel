@@ -12,7 +12,7 @@ namespace Sentinel.Images
 
     using Microsoft.Win32;
 
-    using Support.Mvvm;
+    using WpfExtras;
 
     public class AddEditTypeImageViewModel
         : ViewModelBase, IDataErrorInfo

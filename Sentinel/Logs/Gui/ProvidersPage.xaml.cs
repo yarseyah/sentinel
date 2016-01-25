@@ -18,8 +18,6 @@
 
     using WpfExtras;
 
-    using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
-
     /// <summary>
     /// Interaction logic for ProvidersPage.xaml
     /// </summary>

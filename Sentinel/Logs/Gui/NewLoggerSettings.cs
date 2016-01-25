@@ -7,8 +7,9 @@
 
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
 
     public class NewLoggerSettings : ViewModelBase
     {

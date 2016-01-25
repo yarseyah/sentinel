@@ -8,7 +8,8 @@
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Logs.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class LogManager : ViewModelBase, ILogManager
     {

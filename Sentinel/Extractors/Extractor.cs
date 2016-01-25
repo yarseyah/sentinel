@@ -7,7 +7,8 @@
 
     using Interfaces;
     using Sentinel.Interfaces;
-    using Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Extractor : ViewModelBase, IExtractor

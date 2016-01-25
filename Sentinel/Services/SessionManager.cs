@@ -33,10 +33,11 @@
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services.Interfaces;
     using Sentinel.Support;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views;
     using Sentinel.Views.Gui;
     using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
 
     [DataContract]
     public class SessionManager : ISessionManager

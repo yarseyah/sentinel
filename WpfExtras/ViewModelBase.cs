@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Support.Mvvm
+﻿namespace WpfExtras
 {
     using System;
     using System.ComponentModel;

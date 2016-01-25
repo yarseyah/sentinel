@@ -1,13 +1,13 @@
 namespace Sentinel.Filters
 {
-    using System;
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Filter : ViewModelBase, IFilter

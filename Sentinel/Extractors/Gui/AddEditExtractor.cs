@@ -4,7 +4,8 @@
     using System.Windows.Input;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class AddEditExtractor : ViewModelBase
     {

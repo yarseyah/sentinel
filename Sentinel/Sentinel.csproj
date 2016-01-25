@@ -249,8 +249,6 @@
     <Compile Include="Support\Converters\TypeToMediumImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToSmallImageConverter.cs" />
     <Compile Include="Support\JsonHelper.cs" />
-    <Compile Include="Support\Mvvm\DelegateCommand.cs" />
-    <Compile Include="Support\Mvvm\ViewModelBase.cs" />
     <Compile Include="Support\Wpf\DataBoundToolbar.cs" />
     <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />

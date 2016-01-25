@@ -34,9 +34,9 @@
     using Sentinel.Services.Interfaces;
     using Sentinel.StartUp;
     using Sentinel.Support;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views.Interfaces;
 
+    using WpfExtras;
     using WpfExtras.Converters;
 
     /// <summary>

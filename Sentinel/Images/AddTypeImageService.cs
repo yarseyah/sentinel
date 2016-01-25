@@ -6,7 +6,8 @@ namespace Sentinel.Images
     using Sentinel.Images.Controls;
     using Sentinel.Images.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class AddTypeImageService : ViewModelBase, IAddTypeImage
     {

@@ -11,7 +11,8 @@
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class ExtractingService<T> : ViewModelBase, IExtractingService<T>, IDefaultInitialisation
