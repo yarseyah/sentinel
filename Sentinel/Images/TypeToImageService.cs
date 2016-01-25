@@ -8,6 +8,7 @@ namespace Sentinel.Images
 
     using Sentinel.Images.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Support.Mvvm;
 
     [DataContract]
@@ -65,7 +66,8 @@ namespace Sentinel.Images
             Debug.Assert(quality != ImageQuality.BestAvailable, "Must use a specific size when registering");
 
             var typeName = type.ToUpper();
-            var imageRecord = Get(typeName, quality, false);
+            var options = new ImageOptions { AcceptLowerQuality = false, Quality = quality };
+            var imageRecord = Get(typeName, options);
 
             var updated = false;
             if (imageRecord != null)
@@ -90,10 +92,13 @@ namespace Sentinel.Images
 
         public ImageTypeRecord Get(
             string type,
-            ImageQuality quality = ImageQuality.BestAvailable,
-            bool acceptLower = true,
-            bool mustHaveImage = false)
+            ImageOptions options)
         {
+            type.ThrowIfNullOrWhiteSpace(nameof(type));
+            options.ThrowIfNull(nameof(options));
+
+            var quality = options.Quality;
+
             var typeName = type.ToUpper();
             var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
 
@@ -109,17 +114,27 @@ namespace Sentinel.Images
             }
 
             // Don't have explicit size or have not asked for best available.
-            if (acceptLower)
+            if (options.AcceptLowerQuality)
             {
                 Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit Quality");
                 var newQuality = quality == ImageQuality.Large ? ImageQuality.Medium : ImageQuality.Small;
                 if (newQuality != quality)
                 {
-                    return Get(type, newQuality);
+                    // Update options
+                    // TODO: ideally this should clone
+                    var newOptions = new ImageOptions
+                                         {
+                                             Quality = newQuality,
+                                             AcceptLowerQuality = options.AcceptLowerQuality,
+                                             ImageMustExist = options.ImageMustExist
+                                         };
+
+                    // Recursive
+                    return Get(type, newOptions);
                 }
             }
 
-            return mustHaveImage ? Get("Unknown", quality) : null;
+            return options.ImageMustExist ? Get("Unknown", options) : null;
         }
 
         public void Initialise()

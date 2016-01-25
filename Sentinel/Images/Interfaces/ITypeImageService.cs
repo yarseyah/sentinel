@@ -19,6 +19,6 @@
 
         void Register(string type, ImageQuality quality, string image);
 
-        ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true, bool mustHaveImage = false);
+        ImageTypeRecord Get(string type, ImageOptions options);
     }
 }

@@ -318,9 +318,12 @@ namespace Sentinel.Images
                 {
                     var oldTypeError = typeError;
 
-                    // TODO: need to be aware of the different qualities of images, using best available
-                    var selectedSize = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size);
-                    if (!string.IsNullOrEmpty(Type) && ImageService?.Get(Type, selectedSize, false) != null)
+                    var options = new ImageOptions
+                                      {
+                                          Quality = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size),
+                                          AcceptLowerQuality = true
+                                      };
+                    if (!string.IsNullOrEmpty(Type) && ImageService?.Get(Type, options) != null)
                     {
                         typeError = TypeError.Duplicate;
                     }

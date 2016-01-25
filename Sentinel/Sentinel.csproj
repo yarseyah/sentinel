@@ -191,6 +191,7 @@
     <Compile Include="Highlighters\StandardHighlighter.cs" />
     <Compile Include="Images\ImageQuality.cs" />
     <Compile Include="Images\ImageTypeRecord.cs" />
+    <Compile Include="Images\Interfaces\ImageOptions.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
