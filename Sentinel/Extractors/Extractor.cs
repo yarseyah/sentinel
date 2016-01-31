@@ -200,7 +200,7 @@
                 case MatchMode.CaseSensitive:
                     return !target.Contains(Pattern);
                 case MatchMode.CaseInsensitive:
-                    return !target.ToLower(CultureInfo.InvariantCulture).Contains(Pattern.ToLower(CultureInfo.InvariantCulture));
+                    return !target.ToUpperInvariant().Contains(Pattern.ToUpperInvariant());
                 case MatchMode.RegularExpression:
                     var regex = new Regex(Pattern);
                     return !regex.IsMatch(target);
