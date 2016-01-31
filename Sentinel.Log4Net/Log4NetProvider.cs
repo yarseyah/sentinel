@@ -204,7 +204,7 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Log.Error("Unspecific exception", e);
                 }
             }
 
