@@ -11,7 +11,8 @@
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class ExtractingService<T> : ViewModelBase, IExtractingService<T>, IDefaultInitialisation
@@ -103,9 +104,9 @@
 
         private void CustomExtractorPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Extractor)
+            var extractor = sender as Extractor;
+            if (extractor != null)
             {
-                var extractor = sender as Extractor;
                 Trace.WriteLine(
                     $"ExtractingService saw some activity on {extractor.Name} (IsEnabled = {extractor.Enabled})");
             }

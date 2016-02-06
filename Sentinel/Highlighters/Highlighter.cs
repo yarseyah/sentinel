@@ -4,9 +4,10 @@ namespace Sentinel.Highlighters
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Sentinel.Highlighters.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Highlighter : ViewModelBase, IHighlighter
@@ -32,15 +33,19 @@ namespace Sentinel.Highlighters
 
             PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) || e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
 
-        public Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, HighlighterStyle style)
+        protected Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, IHighlighterStyle style)
         {
             Name = name;
             Enabled = enabled;
@@ -55,8 +60,12 @@ namespace Sentinel.Highlighters
                 if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) ||
                     e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }

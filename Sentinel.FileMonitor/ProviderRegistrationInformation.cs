@@ -29,7 +29,7 @@ namespace Sentinel.FileMonitor
             }
         }
 
-        public Type Implementor
+        public Type Implementer
         {
             get
             {

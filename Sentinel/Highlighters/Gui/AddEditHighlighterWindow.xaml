@@ -4,6 +4,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
         xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
+        xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
         Title="Add / Edit Highlighter"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
@@ -52,8 +53,8 @@
             </Setter>
         </Style>
 
-        <Converters:BoolToDisableConverter x:Key="checkboxToDisableConverter" />
-        <Converters:VisibilityToCollapsedConverter x:Key="collapsedVisibilityConverter" />
+        <converters:BooleanToDisabledConverter x:Key="checkboxToDisableConverter" />
+        <converters:VisibilityToCollapsedConverter x:Key="collapsedVisibilityConverter" />
     </Window.Resources>
 
     <DockPanel Height="Auto"

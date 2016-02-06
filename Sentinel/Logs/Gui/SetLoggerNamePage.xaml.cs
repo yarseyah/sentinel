@@ -1,13 +1,12 @@
 ﻿namespace Sentinel.Logs.Gui
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Windows.Controls;
 
-    using Sentinel.Logs.Interfaces;
+    using Interfaces;
 
     using WpfExtras;
 
@@ -18,41 +17,21 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
+        private readonly ILogManager logManager = Services.ServiceLocator.Instance.Get<ILogManager>();
 
         private string logName = "Untitled";
+
         private bool isValid;
-        
-        private readonly ILogManager logManager = Services.ServiceLocator.Instance.Get<ILogManager>();
 
         public SetLoggerNamePage()
         {
             InitializeComponent();
             DataContext = this;
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
             PropertyChanged += PropertyChangedHandler;
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            if ( e.PropertyName == "LogName" )
-            {
-                // Validate against standard validation rules. 
-                IsValid = this["LogName"] == null;
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
 
         public string LogName
         {
@@ -60,31 +39,22 @@
             {
                 return logName;
             }
+
             set
             {
-                if (logName == value) return;
-                logName = value;
-                OnPropertyChanged("LogName");
+                if (logName != value)
+                {
+                    logName = value;
+                    OnPropertyChanged("LogName");
+                }
             }
         }
 
-        public string Title { get { return "Log Name"; } }
+        public string Title => "Log Name";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Description
-        {
-            get
-            {
-                return "Define a name for the log to be created.";
-            }
-        }
+        public string Description => "Define a name for the log to be created.";
 
         public bool IsValid
         {
@@ -92,19 +62,52 @@
             {
                 return isValid;
             }
+
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
             }
         }
 
-        public Control PageContent
+        public Control PageContent => this;
+
+        /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        /// <returns>
+        /// An error message indicating what is wrong with this object. The default is an empty string ("").
+        /// </returns>
+        public string Error => this["LogName"];
+
+        /// <summary>
+        /// Gets the error message for the property with the given name.
+        /// </summary>
+        /// <returns>
+        /// The error message for the property.
+        /// </returns>
+        /// <param name="columnName">The name of the property whose error message to get.</param>
+        public string this[string columnName]
         {
             get
             {
-                return this;
+                if (columnName == "LogName")
+                {
+                    if (string.IsNullOrEmpty(LogName))
+                    {
+                        return "Log name may not be blank.";
+                    }
+
+                    if (logManager != null && logManager.Any(l => l.Name == LogName))
+                    {
+                        return "A logger with that name already exists";
+                    }
+                }
+
+                return null;
             }
         }
 
@@ -113,7 +116,7 @@
             Debug.Assert(saveData is NewLoggerSettings, "Expecting to have a NewLoggerSettings instance");
             Debug.Assert(saveData as NewLoggerSettings != null, "Not expecting a null");
 
-            NewLoggerSettings settings = saveData as NewLoggerSettings;
+            var settings = saveData as NewLoggerSettings;
             if (settings != null)
             {
                 settings.LogName = LogName;
@@ -134,45 +137,22 @@
             OnPropertyChanged("Children");
         }
 
-        /// <summary>
-        /// Gets the error message for the property with the given name.
-        /// </summary>
-        /// <returns>
-        /// The error message for the property.
-        /// </returns>
-        /// <param name="columnName">The name of the property whose error message to get.</param>
-        public string this[string columnName]
+        protected void OnPropertyChanged(string propertyName)
         {
-            get
+            var handler = PropertyChanged;
+            if (handler != null)
             {
-                if ( columnName == "LogName" )
-                {
-                    if ( String.IsNullOrEmpty(LogName) )
-                    {
-                        return "Log name may not be blank.";
-                    }
-
-                    if ( logManager != null && logManager.Any(l => l.Name == LogName))
-                    {
-                        return "A logger with that name already exists";
-                    }
-                }
-
-                return null;
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
             }
         }
 
-        /// <summary>
-        /// Gets an error message indicating what is wrong with this object.
-        /// </summary>
-        /// <returns>
-        /// An error message indicating what is wrong with this object. The default is an empty string ("").
-        /// </returns>
-        public string Error
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
-            get
+            if (e.PropertyName == "LogName")
             {
-                return this["LogName"];
+                // Validate against standard validation rules.
+                IsValid = this["LogName"] == null;
             }
         }
 

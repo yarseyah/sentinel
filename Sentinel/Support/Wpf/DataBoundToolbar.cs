@@ -5,6 +5,8 @@
 
     public class DataBoundToolbar : ToolBar
     {
+        private delegate void InvalidateMeasurementDelegate();
+
         public override void OnApplyTemplate()
         {
             Dispatcher.BeginInvoke(
@@ -13,7 +15,5 @@
                 null);
             base.OnApplyTemplate();
         }
-
-        private delegate void InvalidateMeasurementDelegate();
     }
 }

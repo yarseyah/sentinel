@@ -1,28 +1,28 @@
 namespace Sentinel.Highlighters.Gui
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Sentinel.Interfaces.CodeContracts;
+
+    using WpfExtras;
 
     public class AddEditHighlighter : ViewModelBase
     {
         private readonly Window window;
 
-        private int backgroundColourIndex = 1;
-
         private readonly Dictionary<string, Color> colours = GetColours();
+
+        private int backgroundColourIndex = 1;
 
         private bool coloursAreClose;
 
-        private int foregroundColourIndex;                
+        private int foregroundColourIndex;
 
         private bool overrideBackgroundColour = false;
 
@@ -63,10 +63,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 var find = colours.FirstOrDefault(r => r.Value == value);
-                if (find.Key == null)
-                {
-                    throw new NotSupportedException($"Match for {value} not found in system colours");
-                }
+                find.Key.ThrowIfNull(nameof(find.Key));
 
                 var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 BackgroundColourIndex = index;
@@ -120,10 +117,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 var find = colours.FirstOrDefault(r => r.Value == value);
-                if (find.Key == null)
-                {
-                    throw new NotSupportedException($"Match for {value} not found in system colours");
-                }
+                find.Key.ThrowIfNull(nameof(find.Key));
 
                 var index = colours.Keys.OrderBy(n => n).ToList().IndexOf(find.Key);
                 ForegroundColourIndex = index;
@@ -155,6 +149,7 @@ namespace Sentinel.Highlighters.Gui
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -168,12 +163,13 @@ namespace Sentinel.Highlighters.Gui
             {
                 return mode;
             }
+
             set
             {
                 mode = value;
                 OnPropertyChanged("Mode");
             }
-        } 
+        }
 
         public string Name
         {
@@ -250,7 +246,11 @@ namespace Sentinel.Highlighters.Gui
             var colours = new Dictionary<string, Color>();
             foreach (var propertyInfo in typeof(Colors).GetProperties())
             {
-                colours.Add(propertyInfo.Name, (Color) ColorConverter.ConvertFromString(propertyInfo.Name));
+                var colour = ColorConverter.ConvertFromString(propertyInfo.Name);
+                if (colour != null)
+                {
+                    colours.Add(propertyInfo.Name, (Color)colour);
+                }
             }
 
             return colours;

@@ -6,7 +6,8 @@
 
     using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Classifier : ViewModelBase, IClassifier
@@ -70,7 +71,7 @@
             get
             {
                 var modeDescription = "Exact";
-                
+
                 switch (Mode)
                 {
                     case MatchMode.RegularExpression:

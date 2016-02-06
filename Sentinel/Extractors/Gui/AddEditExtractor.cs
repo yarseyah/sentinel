@@ -4,11 +4,12 @@
     using System.Windows.Input;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class AddEditExtractor : ViewModelBase
     {
-        private readonly Window window;        
+        private readonly Window window;
 
         private string name = "Unnamed";
 
@@ -32,7 +33,7 @@
 
         public ICommand Accept { get; private set; }
 
-        public LogEntryField Field 
+        public LogEntryField Field
         {
             get
             {
@@ -46,7 +47,7 @@
             }
         }
 
-        public MatchMode Mode 
+        public MatchMode Mode
         {
             get
             {
@@ -58,7 +59,7 @@
                 mode = value;
                 OnPropertyChanged("Mode");
             }
-        }        
+        }
 
         public string Name
         {
@@ -110,8 +111,7 @@
 
         private bool Validates(object obj)
         {
-            return Name.Length > 0
-                   && Pattern.Length > 0;
+            return Name.Length > 0 && Pattern.Length > 0;
         }
     }
 }

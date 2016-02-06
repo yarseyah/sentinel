@@ -44,14 +44,23 @@
             DataContext = this;
         }
 
+        ~MultipleViewFrame()
+        {
+            var changed = preferences as INotifyPropertyChanged;
+            if (changed != null)
+            {
+                changed.PropertyChanged -= PreferencesChanged;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ICommand Clear { get; private set; }
 
         public ICommand ClearActivity { get; private set; }
 
         public ICommand Save { get; private set; }
 
-        // public IFilteringService<IFilter> Filters { get; private set; }
-        
         public ILogViewer PrimaryView
         {
             get
@@ -61,12 +70,13 @@
 
             set
             {
-                if (primaryView == value) return;
-                primaryView = value;
-                OnPropertyChanged("PrimaryView");
+                if (primaryView != value)
+                {
+                    primaryView = value;
+                    OnPropertyChanged("PrimaryView");
+                }
             }
         }
-
 
         public string PrimaryTitle
         {
@@ -77,12 +87,13 @@
 
             set
             {
-                if (primaryTitle == value) return;
-                primaryTitle = value;
-                OnPropertyChanged("PrimaryTitle");
+                if (primaryTitle != value)
+                {
+                    primaryTitle = value;
+                    OnPropertyChanged("PrimaryTitle");
+                }
             }
         }
-
 
         public string SecondaryTitle
         {
@@ -93,9 +104,11 @@
 
             set
             {
-                if (secondaryTitle == value) return;
-                secondaryTitle = value;
-                OnPropertyChanged("SecondaryTitle");
+                if (secondaryTitle != value)
+                {
+                    secondaryTitle = value;
+                    OnPropertyChanged("SecondaryTitle");
+                }
             }
         }
 
@@ -108,19 +121,15 @@
 
             set
             {
-                if (secondaryView == value) return;
-                secondaryView = value;
-                OnPropertyChanged("SecondaryView");
+                if (secondaryView != value)
+                {
+                    secondaryView = value;
+                    OnPropertyChanged("SecondaryView");
+                }
             }
         }
 
-        public IUserPreferences Preferences
-        {
-            get
-            {
-                return preferences;
-            }
-        }
+        public IUserPreferences Preferences => preferences;
 
         public ILogger Log
         {
@@ -141,33 +150,36 @@
 
         public void SetViews(IEnumerable<string> viewIdentifiers)
         {
-            if (viewIdentifiers != null && viewIdentifiers.Count() >= 1)
+            var identifiers = viewIdentifiers as string[] ?? viewIdentifiers.ToArray();
+            if (identifiers.Any())
             {
-                string guid = viewIdentifiers.ElementAt(0);
+                var guid = identifiers.ElementAt(0);
                 PrimaryView = viewManager.GetInstance(guid);
                 PrimaryView.SetLogger(log);
                 PrimaryTitle = viewManager.Get(guid).Name;
             }
 
-            if (viewIdentifiers != null && viewIdentifiers.Count() >= 2)
+            if (identifiers.Length >= 2)
             {
-                string guid = viewIdentifiers.ElementAt(1);
+                var guid = identifiers.ElementAt(1);
                 SecondaryView = viewManager.GetInstance(guid);
                 SecondaryView.SetLogger(log);
                 SecondaryTitle = viewManager.Get(guid).Name;
             }
 
-            if (viewIdentifiers != null && viewIdentifiers.Count() == 1)
+            if (identifiers.Length == 1)
             {
                 CollapseSecondaryView();
             }
         }
 
-        ~MultipleViewFrame()
+        protected void OnPropertyChanged(string propertyName)
         {
-            if (preferences is INotifyPropertyChanged)
+            var handler = PropertyChanged;
+            if (handler != null)
             {
-                (preferences as INotifyPropertyChanged).PropertyChanged -= PreferencesChanged;
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
             }
         }
 
@@ -183,10 +195,10 @@
         {
             if (!collapseSecondaryView)
             {
-                bool vertical = preferences.UseStackedLayout;
+                var vertical = preferences.UseStackedLayout;
 
-                int rowSpan = vertical ? 1 : 3;
-                int colSpan = vertical ? 3 : 1;
+                var rowSpan = vertical ? 1 : 3;
+                var colSpan = vertical ? 3 : 1;
 
                 Grid.SetRowSpan(first, rowSpan);
                 Grid.SetRowSpan(splitter, rowSpan);
@@ -227,23 +239,10 @@
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
-
         private void CollapseSecondaryView()
         {
             collapseSecondaryView = true;
             SetupSplitter();
         }
-
     }
 }

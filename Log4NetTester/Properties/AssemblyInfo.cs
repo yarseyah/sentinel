@@ -9,9 +9,7 @@ using log4net.Config;
 [assembly: AssemblyTitle("Log4NetTester")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ray Hayes")]
 [assembly: AssemblyProduct("Log4NetTester")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,16 +21,4 @@ using log4net.Config;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("c808e6b9-22c9-4f69-839f-af32cb5fe7e4")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.11.0.2")]
-[assembly: AssemblyFileVersion("0.11.0.2")]
 [assembly: XmlConfigurator(Watch = true)]

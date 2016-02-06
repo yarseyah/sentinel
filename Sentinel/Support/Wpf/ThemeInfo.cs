@@ -7,7 +7,7 @@
 
     public static class ThemeInfo
     {
-        internal const int MaxPath = 260;
+        private const int MaxPath = 260;
 
         // Cache the name of the current theme.
         private static string currentTheme = string.Empty;
@@ -16,7 +16,7 @@
         /// Gets the filename of the current theme.
         /// </summary>
         /// <remarks>
-        /// Will return an empty string if themes are not supported by 
+        /// Will return an empty string if themes are not supported by
         /// the operating system or disabled by the user.
         /// </remarks>
         public static string CurrentThemeFileName
@@ -46,25 +46,13 @@
         /// <summary>
         /// Gets a value indicating whether the user has enabled visual styles in the operating system.
         /// </summary>
-        public static bool IsEnabledByUser
-        {
-            get
-            {
-                return IsSupportedByOS && SafeNativeMethods.IsThemeActive();
-            }
-        }
+        public static bool IsEnabledByUser => IsSupportedByOS && SafeNativeMethods.IsThemeActive();
 
         /// <summary>
         /// Gets a value indicating whether the operating system supports visual styles.
         /// </summary>
-        public static bool IsSupportedByOS
-        {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT
-                       && Environment.OSVersion.Version >= new Version(5, 1);
-            }
-        }
+        public static bool IsSupportedByOS => Environment.OSVersion.Platform == PlatformID.Win32NT
+                                              && Environment.OSVersion.Version >= new Version(5, 1);
 
         internal abstract class SafeNativeMethods
         {

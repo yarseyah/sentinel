@@ -8,9 +8,9 @@ namespace Sentinel.Views.Interfaces
     {
         ObservableCollection<IWindowFrame> Viewers { get; }
 
-        void Register(IViewInformation info, Type viewerType);
+        IEnumerable<IViewInformation> Registered { get; }
 
-        IEnumerable<IViewInformation> GetRegistered();
+        void Register(IViewInformation info, Type viewerType);
 
         IViewInformation Get(string identifier);
 

@@ -8,7 +8,7 @@
 
     public class ScrollingHelper
     {
-        public delegate void VoidFunctionHandler(ListBox lb);
+        public delegate void VoidFunctionHandler(ListBox listBox);
 
         public static Visual GetDescendantByType(Visual element, Type type)
         {
@@ -17,14 +17,11 @@
                 if (element.GetType() != type)
                 {
                     Visual foundElement = null;
-                    if (element is FrameworkElement)
-                    {
-                        (element as FrameworkElement).ApplyTemplate();
-                    }
+                    (element as FrameworkElement)?.ApplyTemplate();
 
-                    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+                    for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
                     {
-                        Visual visual = VisualTreeHelper.GetChild(element, i) as Visual;
+                        var visual = VisualTreeHelper.GetChild(element, i) as Visual;
                         foundElement = GetDescendantByType(visual, type);
                         if (foundElement != null)
                         {
@@ -58,11 +55,8 @@
 
         private static void SelectLastEntry(ListBox listBox)
         {
-            ScrollViewer scrollViewer = GetDescendantByType(listBox, typeof(ScrollViewer)) as ScrollViewer;
-            if (scrollViewer != null)
-            {
-                scrollViewer.ScrollToEnd();
-            }
+            var scrollViewer = GetDescendantByType(listBox, typeof(ScrollViewer)) as ScrollViewer;
+            scrollViewer?.ScrollToEnd();
         }
     }
 }

@@ -14,7 +14,7 @@
         {
             InitializeComponent();
 
-            Owner = parent;            
+            Owner = parent;
 
             try
             {

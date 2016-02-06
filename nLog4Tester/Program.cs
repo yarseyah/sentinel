@@ -36,7 +36,7 @@
             for (var i=0;;i++)
             {
                 // Randomly generate a message:
-                var text = RandomMessage(i++);
+                var text = RandomMessage(i);
 
                 // Randomly assign a message
                 LogMessage(text);

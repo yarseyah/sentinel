@@ -1,5 +1,4 @@
-﻿
-namespace Sentinel.Providers
+﻿namespace Sentinel.Providers
 {
     using System;
 
@@ -13,6 +12,6 @@ namespace Sentinel.Providers
 
         public Type Settings { get; set; }
 
-        public Type Implementor { get; set; }
+        public Type Implementer { get; set; }
     }
 }

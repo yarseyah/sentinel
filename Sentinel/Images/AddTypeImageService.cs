@@ -6,7 +6,8 @@ namespace Sentinel.Images
     using Sentinel.Images.Controls;
     using Sentinel.Images.Interfaces;
     using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class AddTypeImageService : ViewModelBase, IAddTypeImage
     {
@@ -17,9 +18,9 @@ namespace Sentinel.Images
             if (addImageWindow != null)
             {
                 MessageBox.Show(
-                    "Only able to have one add image dialog open at a time!", 
-                    "Add image", 
-                    MessageBoxButton.OK, 
+                    "Only able to have one add image dialog open at a time!",
+                    "Add image",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             else

@@ -1,6 +1,6 @@
 namespace Sentinel.Images
 {
-    using Sentinel.Support.Mvvm;
+    using WpfExtras;
 
     public class ImageTypeRecord : ViewModelBase
     {

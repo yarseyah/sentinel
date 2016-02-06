@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="Sentinel.Highlighters.Gui.HighlightersControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf">
+             xmlns:wpf="clr-namespace:Sentinel.Support.Wpf"
+             xmlns:wpfConverters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras">
 
     <UserControl.Resources>
-        <Converters:ColourConverter x:Key="ColorConverter" />
+        <wpfConverters:ColourConverter x:Key="ColorConverter" />
     </UserControl.Resources>
     
     <DockPanel>
@@ -38,22 +38,22 @@
                   SelectionMode="Single">
             <ListView.View>
                 <GridView>
-                    <Wpf:FixedWidthColumn FixedWidth="28">
-                        <Wpf:FixedWidthColumn.HeaderTemplate>
+                    <wpf:FixedWidthColumn FixedWidth="28">
+                        <wpf:FixedWidthColumn.HeaderTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="True"
                                           IsEnabled="False"
                                           ToolTipService.ShowOnDisabled="True"
                                           ToolTip="Is the ConcreteHighlighter enabled?" />
                             </DataTemplate>
-                        </Wpf:FixedWidthColumn.HeaderTemplate>
-                        <Wpf:FixedWidthColumn.CellTemplate>
+                        </wpf:FixedWidthColumn.HeaderTemplate>
+                        <wpf:FixedWidthColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding Enabled}"
                                           Margin="2,3,0,3" />
                             </DataTemplate>
-                        </Wpf:FixedWidthColumn.CellTemplate>
-                    </Wpf:FixedWidthColumn>
+                        </wpf:FixedWidthColumn.CellTemplate>
+                    </wpf:FixedWidthColumn>
                     <GridViewColumn Header="Name"
                                     DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Type"
@@ -62,9 +62,9 @@
                                     DisplayMemberBinding="{Binding Mode}" />
                     <GridViewColumn Header="Pattern"
                                     DisplayMemberBinding="{Binding Pattern}" />
-                    <Wpf:FixedWidthColumn Header="Example"
+                    <wpf:FixedWidthColumn Header="Example"
                                                FixedWidth="100">
-                        <Wpf:FixedWidthColumn.CellTemplate>
+                        <wpf:FixedWidthColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="example"
                                            Text="Example text...."
@@ -73,10 +73,13 @@
                                            VerticalAlignment="Stretch"
                                            HorizontalAlignment="Stretch" />
                             </DataTemplate>
-                        </Wpf:FixedWidthColumn.CellTemplate>
-                    </Wpf:FixedWidthColumn>
+                        </wpf:FixedWidthColumn.CellTemplate>
+                    </wpf:FixedWidthColumn>
                 </GridView>
             </ListView.View>
         </ListView>
     </DockPanel>
 </UserControl>
+
+
+

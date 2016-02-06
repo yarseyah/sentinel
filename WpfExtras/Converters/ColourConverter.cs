@@ -1,4 +1,4 @@
-﻿namespace Sentinel.Support.Converters
+﻿namespace WpfExtras.Converters
 {
     using System;
     using System.Globalization;
@@ -29,7 +29,7 @@
                 return null;
             }
 
-            return new SolidColorBrush((Color) value);
+            return new SolidColorBrush((Color)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

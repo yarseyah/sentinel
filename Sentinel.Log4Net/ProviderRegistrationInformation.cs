@@ -11,30 +11,12 @@ namespace Sentinel.Log4Net
             Info = providerInfo;
         }
 
-        public Guid Identifier
-        {
-            get
-            {
-                return Info.Identifier;
-            }
-        }
+        public Guid Identifier => Info.Identifier;
 
         public IProviderInfo Info { get; private set; }
 
-        public Type Settings
-        {
-            get
-            {
-                return typeof(ConfigurationPage);
-            }
-        }
+        public Type Settings => typeof(ConfigurationPage);
 
-        public Type Implementor
-        {
-            get
-            {
-                return typeof(Log4NetProvider);
-            }
-        }
+        public Type Implementer => typeof(Log4NetProvider);
     }
 }

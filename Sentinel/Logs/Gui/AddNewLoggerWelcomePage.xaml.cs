@@ -12,7 +12,6 @@
     public partial class AddNewLoggerWelcomePage : IWizardPage
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
 
         private string description;
 
@@ -23,7 +22,7 @@
             InitializeComponent();
             DataContext = this;
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             Title = "Sentinel Logs";
             Description = "Information about how Sentinel works with loggers, providers and views";
@@ -43,7 +42,7 @@
                 if (title != value)
                 {
                     title = value;
-                    OnPropertyChanged("Title");
+                    OnPropertyChanged(nameof(Title));
                 }
             }
         }
@@ -60,26 +59,16 @@
                 if (description != value)
                 {
                     description = value;
-                    OnPropertyChanged("Description");
+                    OnPropertyChanged(nameof(Description));
                 }
             }
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool IsValid => true;
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
+
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
         public void AddChild(IWizardPage newItem)
         {
@@ -91,14 +80,6 @@
         {
             children.Remove(item);
             OnPropertyChanged("Children");
-        }
-
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
         }
 
         public object Save(object saveData)

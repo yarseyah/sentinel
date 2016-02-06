@@ -1,14 +1,14 @@
-﻿using System;
-
-namespace Sentinel.Extractors
+﻿namespace Sentinel.Extractors
 {
     using System.Diagnostics;
+    using System.Globalization;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Sentinel.Extractors.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Extractor : ViewModelBase, IExtractor
@@ -200,7 +200,7 @@ namespace Sentinel.Extractors
                 case MatchMode.CaseSensitive:
                     return !target.Contains(Pattern);
                 case MatchMode.CaseInsensitive:
-                    return !target.ToLower().Contains(Pattern.ToLower());
+                    return !target.ToUpperInvariant().Contains(Pattern.ToUpperInvariant());
                 case MatchMode.RegularExpression:
                     var regex = new Regex(Pattern);
                     return !regex.IsMatch(target);

@@ -1,11 +1,11 @@
 namespace Sentinel.Filters.Gui
 {
-    using System;
     using System.Windows;
     using System.Windows.Input;
 
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     public class AddEditFilter : ViewModelBase
     {
@@ -39,6 +39,7 @@ namespace Sentinel.Filters.Gui
             {
                 return field;
             }
+
             set
             {
                 field = value;
@@ -52,12 +53,13 @@ namespace Sentinel.Filters.Gui
             {
                 return mode;
             }
+
             set
             {
                 mode = value;
                 OnPropertyChanged("Mode");
             }
-        }        
+        }
 
         public string Name
         {

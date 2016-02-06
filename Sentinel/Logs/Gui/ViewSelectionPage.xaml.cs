@@ -19,8 +19,6 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private bool horizontal;
 
         private bool multipleView;
@@ -42,13 +40,13 @@
             InitializeComponent();
             DataContext = this;
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             IViewManager vm = ServiceLocator.Instance.Get<IViewManager>();
             if (vm != null)
             {
-                registeredViews = new List<IViewInformation>(vm.GetRegistered());
-                
+                registeredViews = new List<IViewInformation>(vm.Registered);
+
 #if DISABLE_MULTIPLE_VIEWS
                 MultipleViewsSupported = registeredViews.Count() > 1;
 #endif
@@ -57,6 +55,8 @@
 
             PropertyChanged += PropertyChangedHandler;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Horizontal
         {
@@ -67,7 +67,11 @@
 
             set
             {
-                if (horizontal == value) return;
+                if (horizontal == value)
+                {
+                    return;
+                }
+
                 horizontal = value;
                 OnPropertyChanged("Horizontal");
             }
@@ -150,7 +154,7 @@
 
             private set
             {
-                if (registeredViews != value)
+                if (!Equals(registeredViews, value))
                 {
                     registeredViews = value;
                     OnPropertyChanged("RegisteredViews");
@@ -192,45 +196,15 @@
             }
         }
 
-        public string Title
-        {
-            get
-            {
-                return "Visualising the Log";
-            }
-        }
+        public string Title => "Visualising the Log";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Description
-        {
-            get
-            {
-                return "Select the desired views to visualise the logger and its providers.";
-            }
-        }
+        public string Description => "Select the desired views to visualise the logger and its providers.";
 
-        public bool IsValid
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool IsValid => true;
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -249,7 +223,7 @@
             Debug.Assert(saveData != null, "Expecting a non-null instance of a class to save settings into");
             Debug.Assert(saveData is NewLoggerSettings, "Expecting save data structure to be a NewLoggerSettings");
 
-            NewLoggerSettings settings = saveData as NewLoggerSettings;
+            var settings = saveData as NewLoggerSettings;
             if (settings != null)
             {
                 settings.Views.Clear();
@@ -262,6 +236,16 @@
             }
 
             return saveData;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -280,18 +264,6 @@
                 case "MultipleView":
                     SingleView = !MultipleView;
                     break;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
             }
         }
     }

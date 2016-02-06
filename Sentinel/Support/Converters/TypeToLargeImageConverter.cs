@@ -6,7 +6,7 @@ namespace Sentinel.Support.Converters
     {
         public TypeToLargeImageConverter()
         {
-            quality = ImageQuality.Large;
+            Quality = ImageQuality.Large;
         }
     }
 }

@@ -17,8 +17,6 @@
     {
         private static readonly ILog Log = LogManager.GetLogger<ServiceLocator>();
 
-        private static readonly ServiceLocator ActualInstance = new ServiceLocator();
-
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         private ServiceLocator()
@@ -38,7 +36,6 @@
                 {
                     di.Create();
                 }
-                // ReSharper disable once CatchAllClause
                 catch (Exception e)
                 {
                     Log.Error("Unable to create directory", e);
@@ -46,13 +43,7 @@
             }
         }
 
-        public static ServiceLocator Instance
-        {
-            get
-            {
-                return ActualInstance;
-            }
-        }
+        public static ServiceLocator Instance { get; } = new ServiceLocator();
 
         public string SaveLocation { get; private set; }
 
@@ -67,7 +58,9 @@
 
         public bool ReportErrors { get; set; }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "This approach has been chosen as the intended usage style.")]
         public T Get<T>()
         {
@@ -78,7 +71,7 @@
 
             if (ReportErrors)
             {
-                var errorMessage = string.Format("No registered service supporting {0}", typeof(T));
+                var errorMessage = $"No registered service supporting {typeof(T)}";
                 Log.Error(errorMessage);
                 MessageBox.Show(errorMessage, "Service location error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -86,14 +79,18 @@
             return default(T);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public bool IsRegistered<T>()
         {
             return services.Keys.Contains(typeof(T));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+        [SuppressMessage(
+            "Microsoft.Design",
+            "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
         public void Register<T>(object serviceInstance)
         {
@@ -112,10 +109,7 @@
                 services[keyType] = Activator.CreateInstance(instanceType);
 
                 var defaultInitialisation = services[keyType] as IDefaultInitialisation;
-                if (defaultInitialisation != null)
-                {
-                    defaultInitialisation.Initialise();
-                }
+                defaultInitialisation?.Initialise();
             }
         }
     }

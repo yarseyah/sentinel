@@ -6,6 +6,7 @@ namespace Sentinel.MSBuild
     using Newtonsoft.Json.Linq;
 
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
 
     internal class LogEntry : ILogEntry
     {
@@ -17,13 +18,10 @@ namespace Sentinel.MSBuild
         {
             if (string.IsNullOrWhiteSpace(msbuildEventType))
             {
-                throw new ArgumentNullException("msbuildEventType");
+                throw new ArgumentNullException(nameof(msbuildEventType));
             }
 
-            if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
+            content.ThrowIfNull(nameof(content));
 
             switch (msbuildEventType)
             {

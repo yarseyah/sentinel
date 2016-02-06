@@ -18,8 +18,6 @@
 
     using WpfExtras;
 
-    using DelegateCommand = Sentinel.Support.Mvvm.DelegateCommand;
-
     /// <summary>
     /// Interaction logic for ProvidersPage.xaml
     /// </summary>
@@ -29,16 +27,9 @@
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private int selectedProviderIndex = -1;
+
         private bool isValid;
-
-        public ICommand Add { get; private set; }
-
-        public ICommand Remove { get; private set; }
-
-        public ObservableCollection<PendingProviderRecord> Providers { get; private set; }
 
         public ProvidersPage()
         {
@@ -47,7 +38,7 @@
 
             Providers = new ObservableCollection<PendingProviderRecord>();
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             Add = new DelegateCommand(AddNewProvider);
             Remove = new DelegateCommand(RemoveSelectedProvider, e => SelectedProviderIndex != -1);
@@ -55,11 +46,13 @@
             Providers.CollectionChanged += ProvidersCollectionChanged;
         }
 
-        private void ProvidersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged("Providers");
-            IsValid = Error == null;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand Add { get; private set; }
+
+        public ICommand Remove { get; private set; }
+
+        public ObservableCollection<PendingProviderRecord> Providers { get; private set; }
 
         public int SelectedProviderIndex
         {
@@ -79,41 +72,11 @@
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public string Title => "Provider Registration";
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public string Title
-        {
-            get
-            {
-                return "Provider Registration";
-            }
-        }
-
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return "Specify the source-providers for the new logger.";
-            }
-        }
+        public string Description => "Specify the source-providers for the new logger.";
 
         public bool IsValid
         {
@@ -124,13 +87,50 @@
 
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged("IsValid");
+                }
             }
         }
 
-        public Control PageContent { get { return this; } }
+        public Control PageContent => this;
+
+        /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        /// <returns>
+        /// An error message indicating what is wrong with this object. The default is an empty string ("").
+        /// </returns>
+        public string Error
+        {
+            get
+            {
+                return this["Providers"];
+            }
+        }
+
+        /// <summary>
+        /// Gets the error message for the property with the given name.
+        /// </summary>
+        /// <returns>
+        /// The error message for the property. The default is an empty string ("").
+        /// </returns>
+        /// <param name="columnName">The name of the property whose error message to get.</param>
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case "Providers":
+                        return ValidateProviders();
+                }
+
+                return null;
+            }
+        }
 
         public void AddChild(IWizardPage newItem)
         {
@@ -147,7 +147,7 @@
             Debug.Assert(saveData != null, "Expecting an instance to save data into");
             Debug.Assert(saveData is NewLoggerSettings, "Expecting a NewLoggerSettings instance");
 
-            NewLoggerSettings settings = saveData as NewLoggerSettings;
+            var settings = saveData as NewLoggerSettings;
             if (settings != null)
             {
                 settings.Providers.Clear();
@@ -158,6 +158,16 @@
             }
 
             return saveData;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
         }
 
         private void AddNewProvider(object obj)
@@ -197,41 +207,6 @@
             }
         }
 
-        /// <summary>
-        /// Gets the error message for the property with the given name.
-        /// </summary>
-        /// <returns>
-        /// The error message for the property. The default is an empty string ("").
-        /// </returns>
-        /// <param name="columnName">The name of the property whose error message to get.</param>
-        public string this[string columnName]
-        {
-            get
-            {
-                switch ( columnName )
-                {
-                    case "Providers":
-                        return ValidateProviders();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets an error message indicating what is wrong with this object.
-        /// </summary>
-        /// <returns>
-        /// An error message indicating what is wrong with this object. The default is an empty string ("").
-        /// </returns>
-        public string Error
-        {
-            get
-            {
-                return this["Providers"];
-            }
-        }
-
         private string ValidateProviders()
         {
             if (Providers == null)
@@ -249,41 +224,39 @@
                 return "Duplicate provider names are not supported, please provide appropriate names.";
             }
 
-            var providersWithPorts = Providers
-                .Select(p => p.Settings)
-                .OfType<NetworkSettings>();
+            var providersWithPorts = Providers.Select(p => p.Settings).OfType<NetworkSettings>().ToList();
             var providersGroupedByPort = providersWithPorts
-                .GroupBy(p => p.Port);
+                .GroupBy(p => p.Port).ToList();
 
             if (providersGroupedByPort.Any(g => g.Count() > 1))
             {
                 // Duplicate port #
                 var duplicatePort = providersGroupedByPort.First(g => g.Count() > 1).Key;
-                return string.Format("Duplicate network ports are not permitted, you have specified port number {0} more than once", duplicatePort);
+                return
+                    $"Duplicate network ports are not permitted, you have specified port number {duplicatePort} more than once";
             }
 
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
 
             if (providerManager != null
-                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name)).Any())
+                && Providers.Select(p => p.Settings.Name).Intersect(providerManager.Instances.Select(p2 => p2.Name)).Any())
             {
-                var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.GetInstances().Select(p2 => p2.Name));
-                return string.Format("Providers should be uniquely named, there is already one called {0}", duplicates.First());
+                var duplicates = Providers.Select(p => p.Settings.Name).Intersect(providerManager.Instances.Select(p2 => p2.Name));
+                return $"Providers should be uniquely named, there is already one called {duplicates.First()}";
             }
 
             if (providerManager != null
-                && providerManager.GetInstances().OfType<INetworkProvider>().Any()
+                && providerManager.Instances.OfType<INetworkProvider>().Any()
                 && providersWithPorts.Any())
             {
                 // Get the two lists:
-                var instances = providerManager.GetInstances().OfType<INetworkProvider>().Select(i => i.Port);
+                var instances = providerManager.Instances.OfType<INetworkProvider>().Select(i => i.Port);
                 var newSettings = providersWithPorts.Select(p => p.Port);
 
-                var intersection = instances.Intersect(newSettings);
-
+                var intersection = instances.Intersect(newSettings).ToList();
                 if (intersection.Any())
                 {
-                    return string.Format("Network port numbers must be unique, port number {0} is already in use.", intersection.First());
+                    return $"Network port numbers must be unique, port number {intersection.First()} is already in use.";
                 }
             }
 
@@ -293,6 +266,12 @@
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             OnPropertyChanged("Providers");
+        }
+
+        private void ProvidersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Providers");
+            IsValid = Error == null;
         }
     }
 }

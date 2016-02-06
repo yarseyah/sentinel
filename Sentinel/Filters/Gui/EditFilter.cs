@@ -21,7 +21,7 @@ namespace Sentinel.Filters.Gui
             data.Pattern = filter.Pattern;
             data.Mode = filter.Mode;
 
-            bool? dialogResult = window.ShowDialog();
+            var dialogResult = window.ShowDialog();
 
             if (dialogResult != null && (bool)dialogResult)
             {

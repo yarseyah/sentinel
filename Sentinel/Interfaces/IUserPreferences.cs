@@ -9,8 +9,19 @@ namespace Sentinel.Interfaces
 
         IEnumerable<string> DateFormatOptions { get; }
 
+        IEnumerable<string> TimeFormatOptions { get; }
+
         [DataMember]
         int SelectedDateOption { get; set; }
+
+        [DataMember]
+        int SelectedTimeFormatOption { get; set; }
+
+        [DataMember]
+        bool ConvertUtcTimesToLocalTimeZone { get; set; }
+
+        [DataMember]
+        bool UseArrivalDateTime { get; set; }
 
         [DataMember]
         int SelectedTypeOption { get; set; }
@@ -22,6 +33,9 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         bool ShowExceptionColumn { get; set; }
+
+        [DataMember]
+        bool ShowSourceColumn { get; set; }
 
         IEnumerable<string> TypeOptions { get; }
 
@@ -36,5 +50,8 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         bool DoubleClickToShowExceptions { get; set; }
+
+        [DataMember]
+        bool ShowSourceInformationColumns { get; set; }
     }
 }

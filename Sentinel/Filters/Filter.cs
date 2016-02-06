@@ -1,13 +1,13 @@
 namespace Sentinel.Filters
 {
-    using System;
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+
+    using WpfExtras;
 
     [DataContract]
     public class Filter : ViewModelBase, IFilter
@@ -31,10 +31,14 @@ namespace Sentinel.Filters
         {
             PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) || e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
@@ -48,10 +52,14 @@ namespace Sentinel.Filters
 
             PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
+                if (e.PropertyName == nameof(Field) || e.PropertyName == nameof(Mode) || e.PropertyName == nameof(Pattern))
                 {
-                    if (Mode == MatchMode.RegularExpression && Pattern != null) regex = new Regex(Pattern);
-                    OnPropertyChanged("Description");
+                    if (Mode == MatchMode.RegularExpression && Pattern != null)
+                    {
+                        regex = new Regex(Pattern);
+                    }
+
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
@@ -68,7 +76,7 @@ namespace Sentinel.Filters
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -88,7 +96,7 @@ namespace Sentinel.Filters
                 if (value != enabled)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -105,7 +113,7 @@ namespace Sentinel.Filters
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -122,7 +130,7 @@ namespace Sentinel.Filters
                 if (field != value)
                 {
                     field = value;
-                    OnPropertyChanged("Field");
+                    OnPropertyChanged(nameof(Field));
                 }
             }
         }
@@ -139,7 +147,7 @@ namespace Sentinel.Filters
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }
@@ -162,7 +170,7 @@ namespace Sentinel.Filters
                         break;
                 }
 
-                return string.Format("{0} match of {1} in the {2} field", modeDescription, Pattern, Field);
+                return $"{modeDescription} match of {Pattern} in the {Field} field";
             }
         }
 

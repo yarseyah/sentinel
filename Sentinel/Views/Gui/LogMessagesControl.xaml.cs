@@ -11,12 +11,16 @@
 
     using Common.Logging;
 
-    using Sentinel.Highlighters;
-    using Sentinel.Highlighters.Interfaces;
+    using Highlighters;
+    using Highlighters.Interfaces;
+
     using Sentinel.Interfaces;
-    using Sentinel.Services;
-    using Sentinel.Support;
-    using Sentinel.Support.Wpf;
+    using Sentinel.Interfaces.CodeContracts;
+
+    using Services;
+
+    using Support;
+    using Support.Wpf;
 
     /// <summary>
     /// Interaction logic for LogMessagesControl.xaml
@@ -32,34 +36,165 @@
             AddCopyCommandBinding();
 
             Highlight = ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
-            
+
             if (Highlight is INotifyPropertyChanged)
             {
                 (Highlight as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
             }
 
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
-            if (searchHighlighter != null
-                && searchHighlighter.Highlighter != null 
-                && searchHighlighter.Highlighter is INotifyPropertyChanged )
+            if (searchHighlighter?.Highlighter is INotifyPropertyChanged)
             {
-                (searchHighlighter.Highlighter as INotifyPropertyChanged).PropertyChanged += (s, e) => UpdateStyles();
+                ((INotifyPropertyChanged)searchHighlighter.Highlighter).PropertyChanged += (s, e) => UpdateStyles();
             }
 
             messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
 
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
-            if (Preferences != null && Preferences is INotifyPropertyChanged)
+            var preferenceChanged = Preferences as INotifyPropertyChanged;
+            if (preferenceChanged != null)
             {
-                (Preferences as INotifyPropertyChanged).PropertyChanged
-                    += PreferencesChanged;
+                preferenceChanged.PropertyChanged += PreferencesChanged;
             }
 
             // Read defaulted values from preferences
             UpdateStyles();
-            SetDateFormat(Preferences != null ? Preferences.SelectedDateOption : 1);
-            SetTypeColumnPreferences(Preferences != null ? Preferences.SelectedTypeOption : 1);
+
+            UpdateDateFormat();
+            SetTypeColumnPreferences(Preferences?.SelectedTypeOption ?? 1);
             DoubleClickToShowExceptions = Preferences != null && Preferences.DoubleClickToShowExceptions;
+        }
+
+        ~LogMessagesControl()
+        {
+            // Unregister observer of Preferences changing.
+            var preferences = Preferences as INotifyPropertyChanged;
+            if (preferences != null)
+            {
+                preferences.PropertyChanged -= PreferencesChanged;
+            }
+        }
+
+        private IHighlightingService<IHighlighter> Highlight { get; }
+
+        private IUserPreferences Preferences { get; }
+
+        private bool DoubleClickToShowExceptions { get; set; }
+
+        public void ScrollToEnd()
+        {
+            ScrollingHelper.ScrollToEnd(Dispatcher, messages);
+        }
+
+        private void SetTypeColumnPreferences(int selectedTypeOption)
+        {
+            // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
+            // Get the first column in logDetails and check it is a fixed-width column.
+            var view = messages?.View as GridView;
+
+            if (view?.Columns[0] is FixedWidthColumn)
+            {
+                var fixedColumn = (FixedWidthColumn)view.Columns[0];
+                switch (selectedTypeOption)
+                {
+                    case 0:
+                        fixedColumn.FixedWidth = 0;
+                        break;
+                    case 1:
+                        fixedColumn.FixedWidth = 30;
+                        break;
+                    case 2:
+                        fixedColumn.FixedWidth = 60;
+                        break;
+                    case 3:
+                        fixedColumn.FixedWidth = 90;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void UpdateDateFormat()
+        {
+            var view = messages?.View as GridView;
+
+            if (view != null)
+            {
+                // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
+                BindDateColumn(view.Columns[1]);
+                BindTimeColumn(view.Columns[2]);
+
+                // TODO: need to invalidate all existing ones!
+            }
+        }
+
+        private void BindTimeColumn(GridViewColumn column)
+        {
+            column.ThrowIfNull(nameof(column));
+
+            var converter = (IValueConverter)Resources["TimePreferenceConverter"];
+            column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
+        }
+
+        private void BindDateColumn(GridViewColumn column)
+        {
+            column.ThrowIfNull(nameof(column));
+
+            var converter = (IValueConverter)Resources["DatePreferenceConverter"];
+            column.DisplayMemberBinding = new Binding(".") { Converter = converter, ConverterParameter = Preferences };
+        }
+
+        private void UpdateStyles()
+        {
+            messages.ItemContainerStyleSelector = null;
+            messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
+        }
+
+        private void Messages_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            sender.ThrowIfNull(nameof(sender));
+
+            if (DoubleClickToShowExceptions)
+            {
+                var item = sender as ListViewItem;
+                if (item != null)
+                {
+                    Log.Trace("Double click performed on entry");
+
+                    if (item.HasContent)
+                    {
+                        var entry = item.Content as ILogEntry;
+                        if (entry != null)
+                        {
+                            Log.Trace(entry.Type);
+                            Log.Trace(entry.Description);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CopySelectedLogEntries()
+        {
+            if (messages.SelectedItems.Count != 0)
+            {
+                var sb = new StringBuilder();
+                foreach (ILogEntry item in messages.SelectedItems)
+                {
+                    sb.AppendLine(
+                        $"{item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{item.Type}|{item.System}|{item.Description}");
+                }
+
+                try
+                {
+                    Clipboard.SetData(DataFormats.Text, sb.ToString());
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("Sentinel could not copy to the clipboard", ex);
+                }
+            }
         }
 
         private void AddCopyCommandBinding()
@@ -79,42 +214,6 @@
             }
         }
 
-        private void CopySelectedLogEntries()
-        {
-            if (messages.SelectedItems.Count != 0)
-            {
-                var sb = new StringBuilder();
-                foreach (ILogEntry item in messages.SelectedItems)
-                {
-                    sb.AppendLine(
-                        string.Format(
-                            "{0}|{1}|{2}|{3}",
-                            item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff"),
-                            item.Type,
-                            item.System,
-                            item.Description));
-                }
-
-                try
-                {
-                    Clipboard.SetData(DataFormats.Text, sb.ToString());
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException("Sentinel could not copy to the clipboard", ex);
-                }
-            }
-        }
-
-        private IHighlightingService<IHighlighter> Highlight { get; set; }
-
-        private IUserPreferences Preferences { get; set; }
-
-        public void ScrollToEnd()
-        {
-            ScrollingHelper.ScrollToEnd(Dispatcher, messages);
-        }
-
         private void PreferencesChanged(object s, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "UseTighterRows")
@@ -127,119 +226,11 @@
             }
             else if (e.PropertyName == "SelectedDateOption")
             {
-                SetDateFormat(Preferences.SelectedDateOption);
+                UpdateDateFormat();
             }
             else if (e.PropertyName == "DoubleClickToShowExceptions")
             {
                 DoubleClickToShowExceptions = Preferences.DoubleClickToShowExceptions;
-            }
-        }
-
-        private bool DoubleClickToShowExceptions { get; set; }
-
-        private void SetTypeColumnPreferences(int selectedTypeOption)
-        {
-            if (messages != null)
-            {
-                // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the first.
-                // Get the first column in logDetails and check it is a fixed-width column.
-                var view = messages.View as GridView;
-                if (view != null && view.Columns[0] is FixedWidthColumn)
-                {
-                    var fixedColumn = (FixedWidthColumn)view.Columns[0];
-                    switch (selectedTypeOption)
-                    {
-                        case 0:
-                            fixedColumn.FixedWidth = 0;
-                            break;
-                        case 1:
-                            fixedColumn.FixedWidth = 30;
-                            break;
-                        case 2:
-                            fixedColumn.FixedWidth = 60;
-                            break;
-                        case 3:
-                            fixedColumn.FixedWidth = 90;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        private void SetDateFormat(int selectedDateOption)
-        {
-            if (messages != null)
-            {
-                var view = messages.View as GridView;
-                if (view != null)
-                {
-                    // TODO: to cope with resorting of columns, this code should search for the column, not assume it is the second.
-                    var column = view.Columns[1];
-
-                    var dateFormat = "r";
-                    switch (selectedDateOption)
-                    {
-                        case 0:
-                            dateFormat = "r";
-                            column.Width = 175;
-                            break;
-                        case 1:
-                            dateFormat = "dd/MM/yyyy HH:mm:ss";
-                            column.Width = 120;
-                            break;
-                        case 2:
-                            dateFormat = "dddd, d MMM yyyy, HH:mm:ss";
-                            column.Width = 170;
-                            break;
-                        case 3:
-                            dateFormat = "HH:mm:ss";
-                            column.Width = 60;
-                            break;
-                        case 4:
-                            dateFormat = "HH:mm:ss,fff";
-                            column.Width = 80;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    column.DisplayMemberBinding = new Binding("DateTime") { StringFormat = dateFormat };
-                }
-            }
-        }
-
-        private void UpdateStyles()
-        {
-            messages.ItemContainerStyleSelector = null;
-            messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
-        }
-
-        private void Messages_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (sender == null)
-            {
-                throw new ArgumentNullException("sender");
-            }
-
-            if (DoubleClickToShowExceptions)
-            {
-                var item = sender as ListViewItem;
-                if (item != null)
-                {
-                    Log.Trace("Double click performed on entry");
-
-                    if (item.HasContent)
-                    {
-                        var entry = item.Content as ILogEntry;
-                        if (entry != null)
-                        {
-                            Log.Trace(entry.Type);
-                            Log.Trace(entry.Description);
-                        }
-                    }
-                }
             }
         }
     }

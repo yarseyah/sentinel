@@ -17,24 +17,22 @@
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
-
         private bool isValid;
 
         private int port;
 
         private bool isUdp = true;
 
-        public virtual bool SupportsTcp { get { return true; } }
+        public virtual bool SupportsTcp => true;
 
-        public virtual bool SupportsUdp { get { return true; } }
+        public virtual bool SupportsUdp => true;
 
         public NetworkConfigurationPage()
         {
             InitializeComponent();
             DataContext = this;
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             // Register to self so that we can handler user interactions.
             PropertyChanged += SelectProviderPage_PropertyChanged;
@@ -47,7 +45,7 @@
             if (e.PropertyName == "Port")
             {
                 bool state = port > 2000;
-                Trace.WriteLine(String.Format("Setting PageValidates to {0}", state));
+                Trace.WriteLine($"Setting PageValidates to {state}");
                 IsValid = state;
             }
         }
@@ -80,31 +78,11 @@
             }
         }
 
-        #region Implementation of IWizardPage
+        public string Title => "Configure Provider";
 
-        public string Title
-        {
-            get
-            {
-                return "Configure Provider";
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get
-            {
-                return readonlyChildren;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return "Network settings to be used by new provider";
-            }
-        }
+        public string Description => "Network settings to be used by new provider";
 
         public bool IsValid
         {
@@ -112,6 +90,7 @@
             {
                 return isValid;
             }
+
             private set
             {
                 if (isValid == value) return;
@@ -120,13 +99,7 @@
             }
         }
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -152,28 +125,21 @@
                            Name = previousInfo.Name,
                            Info = previousInfo.Info,
                            Port = Port,
-                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Udp
+                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp
                        };
         }
-
-
-        #endregion
-
-        #region Implementation of INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                var e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
-
-        #endregion
 
         private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -181,6 +147,5 @@
             Debug.Assert(SupportsUdp || SupportsTcp, "The provider needs to support at least one of UDP or TCP");
             IsUdp = SupportsUdp;
         }
-
     }
 }

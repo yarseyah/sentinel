@@ -9,49 +9,59 @@
     using System.Windows.Controls;
     using System.Windows.Threading;
 
-    using Sentinel.Extractors.Interfaces;
-    using Sentinel.Filters.Interfaces;
+    using Extractors.Interfaces;
+
+    using Filters.Interfaces;
+
+    using Interfaces;
+
     using Sentinel.Interfaces;
-    using Sentinel.Services;
-    using Sentinel.Support.Mvvm;
-    using Sentinel.Views.Interfaces;
+
+    using Services;
+
+    using WpfExtras;
 
     public class LogMessages : ViewModelBase, ILogViewer
     {
+        public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
+
         private const string ID = "f4d8c068-bf72-4b83-9d4a-1cd8a89fea11";
-        
+
         private const string NAME = "Log viewer";
 
         private const string DESCRIPTION = "Traditional row based log view with highlighting and incremental search.";
 
-        public static readonly IViewInformation Info = new ViewInformation(ID, NAME);
-
         private readonly IFilteringService<IFilter> filteringService;
+
         private readonly IExtractingService<IExtractor> extractingService;
+
         private readonly Queue<ILogEntry> pendingAdditions = new Queue<ILogEntry>();
+
         private readonly LogMessagesControl presenter;
 
-        private bool clearPending;        
+        private bool clearPending;
+
         private int filteredCount;
-        private int extractedCount;
+
         private ILogger logger;
+
         private bool rebuildList;
+
         private string status;
+
         private int unfilteredCount;
+
         private bool autoscroll = true;
 
         public LogMessages()
         {
-            ((ViewInformation) Info).Description = DESCRIPTION;
+            ((ViewInformation)Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl { DataContext = this };
 
             Messages = new ObservableCollection<ILogEntry>();
             PropertyChanged += PropertyChangedHandler;
 
-            DispatcherTimer dt = new DispatcherTimer(DispatcherPriority.Normal)
-                                     {
-                                         Interval = TimeSpan.FromMilliseconds(200)
-                                     };
+            var dt = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(200) };
             dt.Tick += UpdateTick;
             dt.Start();
 
@@ -75,54 +85,34 @@
                 }
             }
 
+            var preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            if (preferences != null)
+            {
+                var notify = preferences as INotifyPropertyChanged;
+                if (notify != null)
+                {
+                    notify.PropertyChanged += (sender, args) =>
+                        {
+                            var prop = args.PropertyName;
+                            switch (prop)
+                            {
+                                case "SelectedTimeFormatOption":
+                                case "ConvertUtcTimesToLocalTimeZone":
+                                case "SelectedDateOption":
+                                    rebuildList = true;
+                                    break;
+                            }
+                        };
+                }
+            }
+
             InitialiseToolbar();
-        }
-
-        private void InitialiseToolbar()
-        {
-            var autoscrollButton = new LogViewerToolbarButton(
-                "Auto-Scroll", 
-                "Automatically scroll to show the newest entry", 
-                true, 
-                new DelegateCommand(e => autoscroll = !autoscroll));
-            autoscrollButton.IsChecked = autoscroll;
-            autoscrollButton.ImageIdentifier = "ScrollDown";
-
-            var clearButton = new LogViewerToolbarButton(
-                "Clear", 
-                "Clear the log messages from the display", 
-                false, 
-                new DelegateCommand(e => clearPending = true));
-            clearButton.ImageIdentifier = "Clear";
-
-            var pauseButton = new LogViewerToolbarButton(
-                "Pause", 
-                "Pause the addition of messages to the display", 
-                true, 
-                new DelegateCommand(PauseMessagesHandler));
-            pauseButton.IsChecked = false;
-            pauseButton.ImageIdentifier = "Pause";
-
-            var toolbar = new ObservableCollection<ILogViewerToolbarButton>
-                              {
-                                  autoscrollButton, 
-                                  clearButton, 
-                                  pauseButton
-                              };
-
-            ToolbarItems = toolbar;
-        }
-
-        private void PauseMessagesHandler(object obj)
-        {
-            Debug.Assert(logger != null, "Logger has not been instantiated");
-            logger.Enabled = !logger.Enabled;
         }
 
         public ObservableCollection<ILogEntry> Messages { get; private set; }
 
         /// <summary>
-        /// Gets the count of filtered entries.
+        /// Gets or sets the count of filtered entries.
         /// </summary>
         public int FilteredCount
         {
@@ -131,39 +121,20 @@
                 return filteredCount;
             }
 
-            private set
+            set
             {
                 if (filteredCount != value)
                 {
                     filteredCount = value;
-                    OnPropertyChanged("FilteredCount");
+                    OnPropertyChanged(nameof(FilteredCount));
                 }
             }
         }
 
         /// <summary>
-        /// Gets the count of extracted entries.
+        /// Gets or sets the count of unfiltered entries.
         /// </summary>
-        public int ExtractedCount
-        {
-            get
-            {
-                return extractedCount;
-            }
-
-            private set
-            {
-                if (extractedCount != value)
-                {
-                    extractedCount = value;
-                    OnPropertyChanged("ExtractedCount");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the count of unfiltered entries.
-        /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global - used in view model
         public int UnfilteredCount
         {
             get
@@ -171,7 +142,7 @@
                 return unfilteredCount;
             }
 
-            private set
+            set
             {
                 if (unfilteredCount != value)
                 {
@@ -200,50 +171,138 @@
             }
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        /// <summary>
+        /// Gets the name of a LogViewer.
+        /// </summary>
+        public string Name => Info.Name;
+
+        public IEnumerable<ILogViewerToolbarButton> ToolbarItems { get; private set; }
+
+        public ILogger Logger
         {
-            if (e.PropertyName == "Logger")
+            get
             {
-                // Get rid of any existing messages and populate with messages
-                // from newly bound structure (if any).
-                Messages.Clear();
-
-                // Register to the logger.
-                logger.PropertyChanged += LoggerPropertyChanged;
+                return logger;
             }
-            else if (e.PropertyName == "FilteredCount" || e.PropertyName == "UnfilteredCount")
-            {
-                if (!Logger.Entries.Any())
-                {
-                    Messages.Clear();
-                }
 
-                var filtered = FilteredCount < UnfilteredCount;
-                Status = filtered
-                             ? string.Format("{0} of {1} Messages [Filters Applied]", FilteredCount, UnfilteredCount)
-                             : string.Format("{0} Messages", UnfilteredCount);
+            private set
+            {
+                if (logger != value)
+                {
+                    logger = value;
+                    OnPropertyChanged(nameof(Logger));
+                }
             }
         }
 
-        private void LoggerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        /// <summary>
+        /// Gets the Presenter control for a log viewer.
+        /// </summary>
+        public Control Presenter => presenter;
+
+        public void SetLogger(ILogger newLogger)
         {
-            if (e.PropertyName == "NewEntries")
+            Logger = newLogger;
+        }
+
+        private void PauseMessagesHandler(object obj)
+        {
+            Debug.Assert(logger != null, "Logger has not been instantiated");
+            logger.Enabled = !logger.Enabled;
+        }
+
+        private void InitialiseToolbar()
+        {
+            var autoscrollButton = new LogViewerToolbarButton(
+                "Auto-Scroll",
+                "Automatically scroll to show the newest entry",
+                true,
+                new DelegateCommand(e => autoscroll = !autoscroll))
+                                       {
+                                           IsChecked = autoscroll,
+                                           ImageIdentifier = "ScrollDown"
+                                       };
+
+            var clearButton = new LogViewerToolbarButton(
+                "Clear",
+                "Clear the log messages from the display",
+                false,
+                new DelegateCommand(e => clearPending = true)) { ImageIdentifier = "Clear" };
+
+            var pauseButton = new LogViewerToolbarButton(
+                "Pause",
+                "Pause the addition of messages to the display",
+                true,
+                new DelegateCommand(PauseMessagesHandler)) { IsChecked = false, ImageIdentifier = "Pause" };
+
+            var toolbar = new ObservableCollection<ILogViewerToolbarButton>
+                              {
+                                  autoscrollButton,
+                                  clearButton,
+                                  pauseButton
+                              };
+
+            ToolbarItems = toolbar;
+        }
+
+        /// <summary>
+        /// Apply filtering to the the collection of log entries.
+        /// </summary>
+        private void ApplyFiltering()
+        {
+            lock (Messages)
             {
-                lock (Logger.NewEntries)
+                Trace.WriteLine("Applying filters...");
+
+                // About to get the full dataset from the LogEntriesManager,
+                // therefore anything in the pendingQueue is unneeded as it
+                // will already be in the complete collection and the incomplete
+                // filtered copy of that list is going to be disposed.
+                lock (pendingAdditions)
                 {
-                    lock (pendingAdditions)
-                    {
-                        foreach (ILogEntry entry in Logger.NewEntries)
-                        {
-                            pendingAdditions.Enqueue(entry);
-                        }
-                    }
+                    pendingAdditions.Clear();
+                }
+
+                rebuildList = true;
+            }
+        }
+
+        /// <summary>
+        /// Append new log entry, as long as it wouldn't normally have been filtered.
+        /// </summary>
+        /// <param name="entry">Entry to add.</param>
+        private void AddIfPassesFilters(ILogEntry entry)
+        {
+            // If no filtering service or no extracting service, then assume it passes.
+            if (filteringService == null || extractingService == null)
+            {
+                Messages.Add(entry);
+            }
+            else
+            {
+                if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
+                {
+                    Messages.Add(entry);
                 }
             }
-            else if (e.PropertyName == "Enabled")
+        }
+
+        private void ApplyExtracting()
+        {
+            lock (Messages)
             {
-                var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
-                pauseButton.IsChecked = !logger.Enabled;
+                Trace.WriteLine("Applying extractors...");
+
+                // About to get the full dataset from the LogEntriesManager,
+                // therefore anything in the pendingQueue is unneeded as it
+                // will already be in the complete collection and the incomplete
+                // filtered copy of that list is going to be disposed.
+                lock (pendingAdditions)
+                {
+                    pendingAdditions.Clear();
+                }
+
+                rebuildList = true;
             }
         }
 
@@ -316,113 +375,58 @@
                 }
             }
 
-            FilteredCount = Messages.Count();
+            FilteredCount = Messages.Count;
             UnfilteredCount = Logger.Entries.Count();
         }
 
-        /// <summary>
-        /// Append new log entry, as long as it wouldn't normally have been filtered.
-        /// </summary>
-        /// <param name="entry">Entry to add.</param>
-        private void AddIfPassesFilters(ILogEntry entry)
+        private void LoggerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // If no filtering service or no extracting service, then assume it passes.
-            if (filteringService == null || extractingService == null)
+            if (e.PropertyName == "NewEntries")
             {
-                Messages.Add(entry);
-            }
-            else
-            {
-                if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
-                {                    
-                    Messages.Add(entry);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Apply filtering to the the collection of log entries.
-        /// </summary>
-        private void ApplyFiltering()
-        {
-            lock (Messages)
-            {
-                Trace.WriteLine("Applying filters...");
-
-                // About to get the full dataset from the LogEntriesManager,
-                // therefore anything in the pendingQueue is unneeded as it
-                // will already be in the complete collection and the incomplete
-                // filtered copy of that list is going to be disposed.
-                lock (pendingAdditions)
+                lock (Logger.NewEntries)
                 {
-                    pendingAdditions.Clear();
+                    lock (pendingAdditions)
+                    {
+                        foreach (var entry in Logger.NewEntries)
+                        {
+                            pendingAdditions.Enqueue(entry);
+                        }
+                    }
                 }
-
-                rebuildList = true;
             }
-        }
-
-        private void ApplyExtracting()
-        {
-            lock (Messages)
+            else if (e.PropertyName == "Enabled")
             {
-                Trace.WriteLine("Applying extractors...");
-
-                // About to get the full dataset from the LogEntriesManager,
-                // therefore anything in the pendingQueue is unneeded as it
-                // will already be in the complete collection and the incomplete
-                // filtered copy of that list is going to be disposed.
-                lock (pendingAdditions)
+                var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
+                if (pauseButton != null)
                 {
-                    pendingAdditions.Clear();
+                    pauseButton.IsChecked = !logger.Enabled;
+                }
+            }
+        }
+
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Logger")
+            {
+                // Get rid of any existing messages and populate with messages
+                // from newly bound structure (if any).
+                Messages.Clear();
+
+                // Register to the logger.
+                logger.PropertyChanged += LoggerPropertyChanged;
+            }
+            else if (e.PropertyName == "FilteredCount" || e.PropertyName == "UnfilteredCount")
+            {
+                if (!Logger.Entries.Any())
+                {
+                    Messages.Clear();
                 }
 
-                rebuildList = true;
+                var filtered = FilteredCount < UnfilteredCount;
+                Status = filtered
+                             ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]"
+                             : $"{UnfilteredCount} Messages";
             }
         }
-
-        /// <summary>
-        /// Gets or sets the name of a LogViewer.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return Info.Name;
-            }
-        }
-
-        public ILogger Logger
-        {
-            get
-            {
-                return logger;
-            }
-
-            private set
-            {
-                if (logger == value) return;
-                logger = value;
-                OnPropertyChanged("Logger");
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Presenter control for a log viewer.
-        /// </summary>
-        public Control Presenter
-        {
-            get
-            {
-                return presenter;
-            }
-        }
-
-        public void SetLogger(ILogger newLogger)
-        {
-            Logger = newLogger;
-        }
-
-        public IEnumerable<ILogViewerToolbarButton> ToolbarItems { get; private set; }
     }
 }

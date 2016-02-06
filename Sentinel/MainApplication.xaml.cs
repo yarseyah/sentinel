@@ -15,7 +15,7 @@
     public partial class MainApplication : Application
     {
         /// <summary>
-        /// Initializes a new instance of the MainApplication class.
+        /// Initializes a new instance of the <see cref="MainApplication"/> class.
         /// </summary>
         public MainApplication()
         {
@@ -25,7 +25,6 @@
 
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
-            
             locator.Register<ISessionManager>(new SessionManager());
 
             // Request that the application close on main window close.

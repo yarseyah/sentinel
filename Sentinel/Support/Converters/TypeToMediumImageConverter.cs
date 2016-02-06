@@ -6,7 +6,7 @@ namespace Sentinel.Support.Converters
     {
         public TypeToMediumImageConverter()
         {
-            this.quality = ImageQuality.Medium;
+            Quality = ImageQuality.Medium;
         }
     }
 }

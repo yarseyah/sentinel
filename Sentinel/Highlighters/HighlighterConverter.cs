@@ -1,25 +1,24 @@
 namespace Sentinel.Highlighters
 {
     using System;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Data;
 
     using Common.Logging;
 
-    using Sentinel.Highlighters.Interfaces;
+    using Interfaces;
     using Sentinel.Interfaces;
 
     public class HighlighterConverter : IValueConverter
     {
         private static readonly ILog Log = LogManager.GetLogger<HighlighterConverter>();
 
-        private readonly IHighlighter highlighter;
-
         public HighlighterConverter(IHighlighter highlighter)
         {
-            this.highlighter = highlighter;
+            Highlighter = highlighter;
         }
+
+        private IHighlighter Highlighter { get; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -33,7 +32,7 @@ namespace Sentinel.Highlighters
                 }
                 else
                 {
-                    match = highlighter.Enabled && highlighter.IsMatch(entry);
+                    match = Highlighter.Enabled && Highlighter.IsMatch(entry);
                 }
             }
 

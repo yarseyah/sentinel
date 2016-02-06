@@ -13,8 +13,10 @@
 
     using Common.Logging;
 
-    using Sentinel.Interfaces;
-    using Sentinel.Interfaces.Providers;
+    using Interfaces;
+    using Interfaces.Providers;
+
+    using Sentinel.Interfaces.CodeContracts;
 
     public class Log4NetProvider : INetworkProvider
     {
@@ -46,16 +48,10 @@
 
         public Log4NetProvider(IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException("settings");
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             udpSettings = settings as IUdpAppenderListenerSettings;
-            if (udpSettings == null)
-            {
-                throw new ArgumentException("settings should be assignable to IUdpAppenderListenerSettings", "settings");
-            }
+            udpSettings.ThrowIfNull(nameof(udpSettings));
 
             Information = ProviderRegistrationInformation.Info;
             ProviderSettings = udpSettings;
@@ -69,13 +65,7 @@
 
         public string Name { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                return udpListenerTask != null && udpListenerTask.Status == TaskStatus.Running;
-            }
-        }
+        public bool IsActive => udpListenerTask != null && udpListenerTask.Status == TaskStatus.Running;
 
         public int Port { get; private set; }
 
@@ -123,7 +113,7 @@
 
             if (udpSettings == null)
             {
-                Log.Error("UDP settings has not been initialised");
+                Log.Error("UDP settings has not been initialized");
                 throw new NullReferenceException();
             }
 
@@ -141,8 +131,7 @@
                         {
                             var bytes = listener.Receive(ref remoteEndPoint);
 
-                            Log.Debug(
-                                string.Format("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address));
+                            Log.Debug($"Received {bytes.Length} bytes from {remoteEndPoint.Address}");
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
                             lock (PendingQueue)
@@ -197,11 +186,11 @@
                                 // TODO: validate
                                 if (IsValidMessage(message))
                                 {
-                                    var deserializeMessage = DeserializeMessage(message);
+                                    var deserializedMessage = DeserializeMessage(message);
 
-                                    if (deserializeMessage != null)
+                                    if (deserializedMessage != null)
                                     {
-                                        processedQueue.Enqueue(deserializeMessage);
+                                        processedQueue.Enqueue(deserializedMessage);
                                     }
                                 }
                             }
@@ -215,7 +204,7 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Log.Error("Unspecific exception", e);
                 }
             }
 
@@ -227,7 +216,10 @@
 
             try
             {
-                var payload = string.Format(@"<entry xmlns:log4net=""{0}"">{1}</entry>", log4Net, message);
+                // Record the current date/time 
+                var receivedTime = DateTime.UtcNow;
+
+                var payload = $@"<entry xmlns:log4net=""{log4Net}"">{message}</entry>";
                 var element = XElement.Parse(payload);
                 var entryEvent = element.Element(log4Net + "event");
 
@@ -260,15 +252,35 @@
                         }
                     }
 
-                    var metaData = new Dictionary<string, object>();
-                    metaData["Classification"] = classification;
-                    metaData["Host"] = host;
+                    var className = string.Empty;
+                    var methodName = string.Empty;
+                    var sourceFile = string.Empty;
+                    var line = string.Empty;
+
+                    // Any source information
+                    var source = entryEvent.Element(log4Net + "locationInfo");
+                    if (source != null)
+                    {
+                        className = source.Attribute("class").Value;
+                        methodName = source.Attribute("method").Value;
+                        sourceFile = source.Attribute("file").Value;
+                        line = source.Attribute("line").Value;
+                    }
+
+                    var metaData = new Dictionary<string, object>
+                                       {
+                                           ["Classification"] = classification,
+                                           ["Host"] = host
+                                       };
 
                     AddExceptionIfFound(entryEvent, metaData);
 
+                    // Extract from the source the originating date/time
+                    var sourceTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now);
+
                     var logEntry = new LogEntry
                                        {
-                                           DateTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now),
+                                           DateTime = sourceTime,
                                            System = system,
                                            Thread = entryEvent.GetAttribute("thread", string.Empty),
                                            Description = description,
@@ -280,6 +292,17 @@
                     {
                         logEntry.MetaData.Add("Exception", true);
                     }
+
+                    if (!string.IsNullOrWhiteSpace(className))
+                    {
+                        // TODO: use an object for these?
+                        logEntry.MetaData.Add("ClassName", className);
+                        logEntry.MetaData.Add("MethodName", methodName);
+                        logEntry.MetaData.Add("SourceFile", sourceFile);
+                        logEntry.MetaData.Add("SourceLine", line);
+                    }
+
+                    logEntry.MetaData.Add("ReceivedTime", receivedTime);
 
                     return logEntry;
                 }
@@ -294,15 +317,9 @@
 
         private void AddExceptionIfFound(XElement entryEvent, Dictionary<string, object> metaData)
         {
-            if (entryEvent == null)
-            {
-                throw new ArgumentNullException("entryEvent");
-            }
+            entryEvent.ThrowIfNull(nameof(entryEvent));
 
-            if (metaData == null)
-            {
-                throw new ArgumentNullException("metaData");
-            }
+            metaData.ThrowIfNull(nameof(metaData));
 
             var exceptionElement = entryEvent.Element(log4Net + "exception");
             if (exceptionElement != null)
@@ -315,7 +332,7 @@
         {
             if (string.IsNullOrWhiteSpace(message))
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             return message.StartsWith("<log4net:event");
@@ -323,29 +340,11 @@
 
         internal class ProviderInfo : IProviderInfo
         {
-            public Guid Identifier
-            {
-                get
-                {
-                    return new Guid("D19E8097-FC08-47AF-8418-F737168A9645");
-                }
-            }
+            public Guid Identifier => new Guid("D19E8097-FC08-47AF-8418-F737168A9645");
 
-            public string Name
-            {
-                get
-                {
-                    return "Log4Net UdpAppender Provider";
-                }
-            }
+            public string Name => "Log4Net UdpAppender Provider";
 
-            public string Description
-            {
-                get
-                {
-                    return "Handler for the remote side of log4net's UdpAppender";
-                }
-            }
+            public string Description => "Handler for the remote side of log4net's UdpAppender";
         }
     }
 }

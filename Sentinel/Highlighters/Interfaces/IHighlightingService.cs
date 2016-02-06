@@ -5,7 +5,8 @@ namespace Sentinel.Highlighters.Interfaces
 
     using Sentinel.Interfaces;
 
-    public interface IHighlightingService<T> where T : IHighlighter
+    public interface IHighlightingService<T>
+        where T : IHighlighter
     {
         ICommand Add { get; }
 
@@ -21,6 +22,6 @@ namespace Sentinel.Highlighters.Interfaces
 
         int SelectedIndex { get; set; }
 
-        IHighlighterStyle IsHighlighted(LogEntry entry);
+        IHighlighterStyle IsHighlighted(ILogEntry entry);
     }
 }

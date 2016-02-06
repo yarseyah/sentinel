@@ -11,28 +11,27 @@ namespace Sentinel.Highlighters
     using System.Windows.Media;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Services;
     using Sentinel.Support.Wpf;
 
     /// <summary>
-    /// Style selector that provides a implements the highlighters of the QuickHighligher
+    /// Style selector that provides a implements the highlighters of the QuickHighlighter
     /// (fancy name for the highlighting of results for the search box) and other registered
-    /// highlighters.  This class gets disposed of and rebuilt from scratch when the constituent 
+    /// highlighters.  This class gets disposed of and rebuilt from scratch when the constituent
     /// highlighters change their status.
     /// </summary>
     public class HighlightingSelector : StyleSelector
     {
-        private readonly Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick;
-
         private readonly Dictionary<IHighlighter, Style> styles = new Dictionary<IHighlighter, Style>();
 
         /// <summary>
-        /// Initializes a new instance of the HighlightingSelector class.
+        /// Initializes a new instance of the <see cref="HighlightingSelector"/> class.
         /// </summary>
-        /// <param name="messagesOnMouseDoubleClick"></param>
+        /// <param name="messagesOnMouseDoubleClick">Action to perform on double click</param>
         public HighlightingSelector(Action<object, MouseButtonEventArgs> messagesOnMouseDoubleClick)
         {
-            this.messagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
+            MessagesOnMouseDoubleClick = messagesOnMouseDoubleClick;
             var oldState = ServiceLocator.Instance.ReportErrors;
             ServiceLocator.Instance.ReportErrors = false;
             var searchHighlighter = ServiceLocator.Instance.Get<ISearchHighlighter>();
@@ -45,15 +44,15 @@ namespace Sentinel.Highlighters
                 var style = new Style(typeof(ListViewItem));
 
                 var trigger = new DataTrigger
-                                          {
-                                              Binding = new Binding
-                                                            {
-                                                                ConverterParameter = highlighter,
-                                                                Converter = new HighlighterConverter(highlighter),
-                                                                Mode = BindingMode.OneWay
-                                                            },
-                                              Value = "Match"
-                                          };
+                                  {
+                                      Binding = new Binding
+                                                    {
+                                                        ConverterParameter = highlighter,
+                                                        Converter = new HighlighterConverter(highlighter),
+                                                        Mode = BindingMode.OneWay
+                                                    },
+                                      Value = "Match"
+                                  };
 
                 if (highlighter.Style != null)
                 {
@@ -96,16 +95,16 @@ namespace Sentinel.Highlighters
                             var style = new Style(typeof(ListViewItem));
 
                             var trigger = new DataTrigger
-                                {
-                                    Binding =
-                                        new Binding
-                                            {
-                                                ConverterParameter = highlighter,
-                                                Converter = new HighlighterConverter(highlighter),
-                                                Mode = BindingMode.OneWay
-                                            },
-                                    Value = "Match"
-                                };
+                                              {
+                                                  Binding =
+                                                      new Binding
+                                                          {
+                                                              ConverterParameter = highlighter,
+                                                              Converter = new HighlighterConverter(highlighter),
+                                                              Mode = BindingMode.OneWay
+                                                          },
+                                                  Value = "Match"
+                                              };
 
                             if (highlighter.Style != null)
                             {
@@ -114,7 +113,7 @@ namespace Sentinel.Highlighters
                                     trigger.Setters.Add(
                                         new Setter(
                                             Control.BackgroundProperty,
-                                            new SolidColorBrush((Color) highlighter.Style.Background)));
+                                            new SolidColorBrush((Color)highlighter.Style.Background)));
                                 }
 
                                 if (highlighter.Style.Foreground != null)
@@ -122,14 +121,14 @@ namespace Sentinel.Highlighters
                                     trigger.Setters.Add(
                                         new Setter(
                                             Control.ForegroundProperty,
-                                            new SolidColorBrush((Color) highlighter.Style.Foreground)));
+                                            new SolidColorBrush((Color)highlighter.Style.Foreground)));
                                 }
                             }
 
                             // Top align values
                             style.Setters.Add(
                                 new Setter(
-                                    Control.VerticalContentAlignmentProperty, 
+                                    Control.VerticalContentAlignmentProperty,
                                     VerticalAlignment.Top));
 
                             style.Triggers.Add(trigger);
@@ -138,7 +137,6 @@ namespace Sentinel.Highlighters
 
                             // TODO: make this optional based upon the settings (but will need to rebuild highlighters when the setting changes.
                             RegisterDoubleClickEvent(style, messagesOnMouseDoubleClick);
-                            
                             styles[highlighter] = style;
                         }
                     }
@@ -146,15 +144,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
-        {
-            if (style == null)
-            {
-                throw new ArgumentNullException(nameof(style));
-            }
-
-            style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
-        }
+        private Action<object, MouseButtonEventArgs> MessagesOnMouseDoubleClick { get; }
 
         /// <summary>
         /// Override of the <c>SelectStyle</c> method.  Looks up a suitable style for the
@@ -178,7 +168,7 @@ namespace Sentinel.Highlighters
 
             Debug.Assert(defaultStyle != null, "Should always get a default style");
             SetStyleSpacing(defaultStyle);
-            RegisterDoubleClickEvent(defaultStyle, messagesOnMouseDoubleClick);
+            RegisterDoubleClickEvent(defaultStyle, MessagesOnMouseDoubleClick);
             defaultStyle.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Top));
 
             return defaultStyle;
@@ -201,6 +191,12 @@ namespace Sentinel.Highlighters
                         FrameworkElement.MarginProperty,
                         new Thickness(0, -1, 0, -1)));
             }
+        }
+
+        private void RegisterDoubleClickEvent(Style style, Action<object, MouseButtonEventArgs> handler)
+        {
+            style.ThrowIfNull(nameof(style));
+            style.Setters.Add(new EventSetter(Control.MouseDoubleClickEvent, new MouseButtonEventHandler(handler)));
         }
     }
 }

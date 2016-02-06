@@ -25,6 +25,7 @@
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Log4Net;
     using Sentinel.Logs.Interfaces;
     using Sentinel.NLog;
@@ -33,9 +34,9 @@
     using Sentinel.Services.Interfaces;
     using Sentinel.StartUp;
     using Sentinel.Support;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views.Interfaces;
 
+    using WpfExtras;
     using WpfExtras.Converters;
 
     /// <summary>
@@ -43,7 +44,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog log = LogManager.GetLogger<MainWindow>();
+        private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
 
         private readonly string persistingFilename;
 
@@ -103,13 +104,16 @@
         public IFilteringService<IFilter> Filters => ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public IHighlightingService<IHighlighter> Highlighters => ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
+        public IHighlightingService<IHighlighter> Highlighters
+            => ServiceLocator.Instance.Get<IHighlightingService<IHighlighter>>();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public IClassifyingService<IClassifier> ClassifyingService => ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
+        public IClassifyingService<IClassifier> ClassifyingService
+            => ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public IExtractingService<IExtractor> Extractors => ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
+        public IExtractingService<IExtractor> Extractors
+            => ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ISearchHighlighter Search => ServiceLocator.Instance.Get<ISearchHighlighter>();
@@ -129,7 +133,7 @@
             {
                 return null;
             }
-            
+
             try
             {
                 var virtualScreen = new Rect(
@@ -142,7 +146,7 @@
             }
             catch (Exception e)
             {
-                log.Error("Unable to calculate rectangle or perform intersection with window", e);
+                Log.Error("Unable to calculate rectangle or perform intersection with window", e);
             }
 
             return null;
@@ -164,11 +168,12 @@
             // Notify user that log messages will be paused during this operation
             if (frame.Log.Enabled)
             {
-                var messageBoxResult = MessageBox.Show(
-                    "The log viewer must be paused momentarily for this operation to continue. Is it OK to pause logging?",
-                    "Sentinel",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+                var messageBoxResult =
+                    MessageBox.Show(
+                        "The log viewer must be paused momentarily for this operation to continue. Is it OK to pause logging?",
+                        "Sentinel",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
 
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
@@ -213,7 +218,7 @@
                                };
 
             if (savefile.ShowDialog(this) == true)
-            {                
+            {
                 sessionManager.SaveSession(savefile.FileName);
                 AddToRecentFiles(savefile.FileName);
             }
@@ -284,16 +289,16 @@
             if (!sessionManager.IsSaved)
             {
                 var userResult = MessageBox.Show(
-                    "Do you want to save changes you made to " + sessionManager.Name + "?", 
-                    "Sentinel", 
-                    MessageBoxButton.YesNoCancel, 
+                    "Do you want to save changes you made to " + sessionManager.Name + "?",
+                    "Sentinel",
+                    MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Warning);
 
                 if (userResult == MessageBoxResult.Cancel)
                 {
                     return;
                 }
-                
+
                 if (userResult == MessageBoxResult.Yes)
                 {
                     SaveSession.Execute(null);
@@ -386,11 +391,12 @@
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             Exit = new DelegateCommand(ee => Close());
-            About = new DelegateCommand(ee =>
-            {
-                var about = new AboutWindow(this);
-                about.ShowDialog();
-            });
+            About = new DelegateCommand(
+                ee =>
+                    {
+                        var about = new AboutWindow(this);
+                        about.ShowDialog();
+                    });
 
             Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
@@ -418,24 +424,21 @@
             var logManager = ServiceLocator.Instance.Get<Logs.Interfaces.ILogManager>();
             foreach (var logger in logManager)
             {
-                log.DebugFormat("Log: {0}", logger.Name);
+                Log.DebugFormat("Log: {0}", logger.Name);
             }
 
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-            foreach (var instance in providerManager.GetInstances())
+            foreach (var instance in providerManager.Instances)
             {
-                log.DebugFormat("Provider: {0}", instance.Name);
-                log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
-                log.DebugFormat("   - logger = {0}", instance.Logger);
-            }            
+                Log.DebugFormat("Provider: {0}", instance.Name);
+                Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
+                Log.DebugFormat("   - logger = {0}", instance.Logger);
+            }
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
-            if (commandLine == null)
-            {
-                throw new ArgumentNullException(nameof(commandLine));
-            }
+            commandLine.ThrowIfNull(nameof(commandLine));
 
             var commandLineArguments = commandLine as string[] ?? commandLine.ToArray();
             if (!commandLineArguments.Any())
@@ -506,7 +509,7 @@
         private void CreateDefaultLog4NetListener(Log4NetOptions log4NetOptions, ISessionManager sessionManager)
         {
             var info = $"Using log4net listener on Udp port {log4NetOptions.Port}";
-            log.Debug(info);
+            Log.Debug(info);
 
             var providerSettings = new UdpAppenderSettings
                                        {
@@ -531,7 +534,7 @@
         {
             var name = $"Using nlog listener on {(verbOptions.IsUdp ? "Udp" : "Tcp")} port {verbOptions.Port}";
             var info = NLogViewerProvider.ProviderRegistrationInformation.Info;
-            log.Debug(name);
+            Log.Debug(name);
 
             var providerSettings = new NetworkSettings
                                        {
@@ -563,7 +566,7 @@
 
             if (wp != null)
             {
-                log.TraceFormat(
+                Log.TraceFormat(
                     "Window position being restored to ({0},{1})-({2},{3}) {4}",
                     wp.Top,
                     wp.Left,
@@ -612,68 +615,50 @@
         private void OnClosed(object sender, CancelEventArgs e)
         {
             var windowInfo = new WindowPlacementInfo
-                {
-                    Height = (int)Height, 
-                    Top = (int)Top, 
-                    Left = (int)Left, 
-                    Width = (int)Width, 
-                    WindowState = WindowState
-                };
+                                 {
+                                     Height = (int)Height,
+                                     Top = (int)Top,
+                                     Left = (int)Left,
+                                     Width = (int)Width,
+                                     WindowState = WindowState
+                                 };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
             JsonHelper.SerializeToFile(windowInfo, filename);
 
-            var recentFileInfo = new RecentFileInfo
-            {
-                RecentFilePaths = RecentFiles.ToList(), 
-            };
+            var recentFileInfo = new RecentFileInfo { RecentFilePaths = RecentFiles.ToList() };
 
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
         }
 
         private void RetainOnlyStandardFilters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingFilter;
         }
 
         private void ExcludeStandardFilters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingFilter || e.Item is ISearchFilter);
         }
 
         private void RetainOnlyStandardHighlighters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingHighlighter;
         }
 
         private void ExcludeStandardHighlighters(object sender, FilterEventArgs e)
         {
-            if (e == null)
-            {
-                throw new ArgumentException(nameof(e));
-            }
-
+            e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingHighlighter);
         }
 
         private void SearchToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            Debug.Assert(sender.GetType() == typeof(RibbonToggleButton),
+            Debug.Assert(
+                sender.GetType() == typeof(RibbonToggleButton),
                 $"A {sender.GetType()} accessed the wrong method");
 
             var button = (RibbonToggleButton)sender;
@@ -693,93 +678,38 @@
 
         private void BindSearchToSearchExtractor()
         {
-            SearchRibbonTextBox.SetBinding(
-                TextBox.TextProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Pattern"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-
-            SearchModeListBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Mode"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-
-            SearchTargetComboBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchExtractor,
-                        Path = new PropertyPath("Field"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            SearchRibbonTextBox.SetBinding(TextBox.TextProperty, CreateBinding("Pattern", SearchExtractor));
+            SearchModeListBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Mode", SearchExtractor));
+            SearchTargetComboBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Field", SearchExtractor));
 
             HighlightToggleButton.IsChecked = false;
             FilterToggleButton.IsChecked = false;
         }
 
+        private Binding CreateBinding(string path, object source)
+        {
+            return new Binding
+                       {
+                           Source = source,
+                           Path = new PropertyPath(path),
+                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                       };
+        }
+
         private void BindSearchToSearchFilter()
         {
-            SearchRibbonTextBox.SetBinding(
-                TextBox.TextProperty,
-                new Binding
-                    {
-                        Source = SearchFilter,
-                        Path = new PropertyPath("Pattern"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-            SearchModeListBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchFilter,
-                        Path = new PropertyPath("Mode"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-            SearchTargetComboBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = SearchFilter,
-                        Path = new PropertyPath("Field"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            SearchRibbonTextBox.SetBinding(TextBox.TextProperty, CreateBinding("Pattern", SearchFilter));
+            SearchModeListBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Mode", SearchFilter));
+            SearchTargetComboBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Field", SearchFilter));
             HighlightToggleButton.IsChecked = false;
             ExtractToggleButton.IsChecked = false;
         }
 
         private void BindSearchToSearchHighlighter()
         {
-            SearchRibbonTextBox.SetBinding(
-                TextBox.TextProperty,
-                new Binding
-                    {
-                        Source = Search,
-                        Path = new PropertyPath("Search"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-            SearchModeListBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = Search,
-                        Path = new PropertyPath("Mode"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
-            SearchTargetComboBox.SetBinding(
-                Selector.SelectedItemProperty,
-                new Binding
-                    {
-                        Source = Search,
-                        Path = new PropertyPath("Field"),
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    });
+            SearchRibbonTextBox.SetBinding(TextBox.TextProperty, CreateBinding("Search", Search));
+            SearchModeListBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Mode", Search));
+            SearchTargetComboBox.SetBinding(Selector.SelectedItemProperty, CreateBinding("Field", Search));
             FilterToggleButton.IsChecked = false;
             ExtractToggleButton.IsChecked = false;
         }
@@ -799,13 +729,13 @@
         {
             // Append version number to caption (to save effort of producing an about screen)
             Title =
-                $"{Assembly.GetExecutingAssembly().GetName().Name} ({Assembly.GetExecutingAssembly().GetName().Version})" +
-                $" {ServiceLocator.Instance.Get<ISessionManager>().Name}";
+                $"{Assembly.GetExecutingAssembly().GetName().Name} ({Assembly.GetExecutingAssembly().GetName().Version})"
+                + $" {ServiceLocator.Instance.Get<ISessionManager>().Name}";
 
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
             ViewManager = ServiceLocator.Instance.Get<IViewManager>();
 
-            // Maintaining column widths is proving difficult in Xaml alone, so 
+            // Maintaining column widths is proving difficult in Xaml alone, so
             // add an observer here and deal with it in code.
             if (Preferences is INotifyPropertyChanged)
             {
@@ -820,98 +750,96 @@
             // View-specific bindings
             var collapseIfZero = new CollapseIfZeroConverter();
 
-            var standardHighlighters = new CollectionViewSource() {Source = Highlighters.Highlighters};
+            var standardHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
             standardHighlighters.View.Filter = c => c is IStandardDebuggingHighlighter;
 
-            var customHighlighters = new CollectionViewSource() {Source = Highlighters.Highlighters};
+            var customHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
             customHighlighters.View.Filter = c => !(c is IStandardDebuggingHighlighter);
 
             StandardHighlightersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardHighlighters});
+                new Binding { Source = standardHighlighters });
 
             StandardHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardHighlighters});
-            StandardHighlighterRibbonGroupOnTab.SetBinding(
-                VisibilityProperty,
-                new Binding
-                {
-                    Source = standardHighlighters,
-                    Path = new PropertyPath("Count"),
-                    Converter = collapseIfZero
-                });
+                new Binding { Source = standardHighlighters });
+            var collapsingStandardHighlightersBinding = new Binding
+                                        {
+                                            Source = standardHighlighters,
+                                            Path = new PropertyPath("Count"),
+                                            Converter = collapseIfZero
+                                        };
+            StandardHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingStandardHighlightersBinding);
+
             CustomHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customHighlighters});
-            CustomHighlighterRibbonGroupOnTab.SetBinding(
-                VisibilityProperty,
-                new Binding
-                {
-                    Source = customHighlighters,
-                    Path = new PropertyPath("Count"),
-                    Converter = collapseIfZero
-                });
+                new Binding { Source = customHighlighters });
 
-            var standardFilters = new CollectionViewSource {Source = Filters.Filters};
+            var collapsingCustomHighlightersBinding = new Binding
+                                                          {
+                                                              Source = customHighlighters,
+                                                              Path = new PropertyPath("Count"),
+                                                              Converter = collapseIfZero
+                                                          };
+            CustomHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingCustomHighlightersBinding);
+
+            var standardFilters = new CollectionViewSource { Source = Filters.Filters };
             standardFilters.View.Filter = c => c is IStandardDebuggingFilter;
 
-            var customFilters = new CollectionViewSource {Source = Filters.Filters};
+            var customFilters = new CollectionViewSource { Source = Filters.Filters };
             customFilters.View.Filter = c => !(c is IStandardDebuggingFilter);
 
             StandardFiltersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardFilters});
+                new Binding { Source = standardFilters });
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardFilters});
+                new Binding { Source = standardFilters });
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding {Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
+                new Binding { Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customFilters});
+                new Binding { Source = customFilters });
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding {Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
+                new Binding { Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
 
             var customExtractors = Extractors.Extractors;
             CustomExtractorsRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customExtractors});
+                new Binding { Source = customExtractors });
 
             var customClassifyiers = ClassifyingService.Classifiers;
             CustomClassifiersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customClassifyiers});
+                new Binding { Source = customClassifyiers });
 
+            BindToSearchElements();
+
+            // Column view buttons
+            ExceptionRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowExceptionColumn") });
+            ThreadRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowThreadColumn") });
+            SourceHostRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceColumn") });
+            DebugSourceRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns") });
+        }
+
+        private void BindToSearchElements()
+        {
             // Bind search
-            HighlightToggleButton.SetBinding(
-                ToggleButton.IsCheckedProperty,
-                new Binding
-                {
-                    Source = Search,
-                    Path = new PropertyPath("Enabled"),
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
-            FilterToggleButton.SetBinding(
-                ToggleButton.IsCheckedProperty,
-                new Binding
-                {
-                    Source = SearchFilter,
-                    Path = new PropertyPath("Enabled"),
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
-            ExtractToggleButton.SetBinding(
-                ToggleButton.IsCheckedProperty,
-                new Binding
-                {
-                    Source = SearchExtractor,
-                    Path = new PropertyPath("Enabled"),
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
+            HighlightToggleButton.SetBinding(ToggleButton.IsCheckedProperty, CreateBinding("Enabled", Search));
+            FilterToggleButton.SetBinding(ToggleButton.IsCheckedProperty, CreateBinding("Enabled", SearchFilter));
+            ExtractToggleButton.SetBinding(ToggleButton.IsCheckedProperty, CreateBinding("Enabled", SearchExtractor));
 
             if (Search.Enabled)
             {
@@ -925,14 +853,6 @@
             {
                 BindSearchToSearchExtractor();
             }
-
-            // Column view buttons
-            ExceptionRibbonToggleButton.SetBinding(
-                ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowExceptionColumn")});
-            ThreadRibbonToggleButton.SetBinding(
-                ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowThreadColumn")});
         }
 
         private void GetRecentlyOpenedFiles()

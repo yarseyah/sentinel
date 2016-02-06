@@ -40,7 +40,7 @@ namespace Sentinel.Interfaces
         Classification = 4,
 
         /// <summary>
-        /// Thread identifier of original message.  
+        /// Thread identifier of original message.
         /// </summary>
         /// <remarks>
         /// Not the most useful field but since this a string, not a number, it can

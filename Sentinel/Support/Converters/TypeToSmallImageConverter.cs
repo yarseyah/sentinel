@@ -6,7 +6,7 @@ namespace Sentinel.Support.Converters
     {
         public TypeToSmallImageConverter()
         {
-            this.quality = ImageQuality.Small;
+            Quality = ImageQuality.Small;
         }
     }
 }

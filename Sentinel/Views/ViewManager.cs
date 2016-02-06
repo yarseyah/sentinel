@@ -16,16 +16,16 @@
 
         public ViewManager()
         {
-            Viewers = new ObservableCollection<IWindowFrame>();
-
             Register(LogMessages.Info, typeof(LogMessages));
-            Register(MessageHeatbeat.Info, typeof(MessageHeatbeat));
+            Register(MessageHeatBeat.Info, typeof(MessageHeatBeat));
         }
 
         /// <summary>
-        /// Observerable collection of the instances of a viewer main frame.
+        /// Gets the observerable collection of the instances of a viewer main frame.
         /// </summary>
-        public ObservableCollection<IWindowFrame> Viewers { get; private set; }
+        public ObservableCollection<IWindowFrame> Viewers { get; } = new ObservableCollection<IWindowFrame>();
+
+        public IEnumerable<IViewInformation> Registered => registeredTypes.Keys;
 
         public void Register(IViewInformation info, Type viewerType)
         {
@@ -35,20 +35,14 @@
             }
 
             // Validate that the type supports the necessary interface: ILogViewer
-            var intefaceType = typeof(ILogViewer);
-            if (viewerType.GetInterfaces().All(i => i != intefaceType))
+            var interfaceType = typeof(ILogViewer);
+            if (viewerType.GetInterfaces().All(i => i != interfaceType))
             {
-                throw new NotSupportedException("Types registered in ViewManager must support the inteface " +
-                                                intefaceType);
+                throw new NotSupportedException($"Types registered in ViewManager must support the interface '{interfaceType}'");
             }
 
             // Populate the registration information.
             registeredTypes.Add(info, viewerType);
-        }
-
-        public IEnumerable<IViewInformation> GetRegistered()
-        {
-            return registeredTypes.Keys;
         }
 
         public IViewInformation Get(string identifier)
@@ -62,8 +56,8 @@
 
             Debug.Assert(
                 registered.Concat(registered).Any(i => i.Identifier == identifier),
-                "Identifier must be registered in the collection of views, either explicity or by auto discovery");
-            
+                "Identifier must be registered in the collection of views, either explicitly or by auto discovery");
+
             if (registered.Any(i => i.Identifier == identifier))
             {
                 var t = registeredTypes.First(v => v.Key.Identifier == identifier).Value;

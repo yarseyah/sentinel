@@ -33,10 +33,11 @@
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services.Interfaces;
     using Sentinel.Support;
-    using Sentinel.Support.Mvvm;
     using Sentinel.Views;
     using Sentinel.Views.Gui;
     using Sentinel.Views.Interfaces;
+
+    using WpfExtras;
 
     [DataContract]
     public class SessionManager : ISessionManager
@@ -62,7 +63,7 @@
             get
             {
                 var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-                return providerManager.GetInstances().Select(c => c.ProviderSettings);
+                return providerManager.Instances.Select(c => c.ProviderSettings);
             }
         }
 
@@ -84,7 +85,7 @@
 
             var settings = wizard.Settings;
 
-            //Set session properties
+            // Set session properties
             Name = settings.LogName;
 
             ConfigureLoggerServices(settings.LogName, settings.Views, settings.Providers);
@@ -97,13 +98,7 @@
         {
             CleanUpResources();
 
-            var views = new List<string>
-                            {
-                                ServiceLocator.Instance.Get<IViewManager>()
-                                    .GetRegistered()
-                                    .First()
-                                    .Identifier
-                            };
+            var views = new List<string> { ServiceLocator.Instance.Get<IViewManager>().Registered.First().Identifier };
 
             ConfigureLoggerServices("Untitled", views, providers);
 
@@ -136,11 +131,11 @@
                 if (value.HasAttribute<DataContractAttribute>())
                 {
                     stringToSave.AppendLine(JsonHelper.SerializeToString(value));
-                    stringToSave.AppendLine(ObjectSeparator.ToString()); 
+                    stringToSave.AppendLine(ObjectSeparator.ToString());
                 }
             }
 
-            using (FileStream fs = File.Create(filePath))
+            using (var fs = File.Create(filePath))
             {
                 var info = new UTF8Encoding(true).GetBytes(stringToSave.ToString());
                 fs.Write(info, 0, info.Length);
@@ -183,7 +178,7 @@
         {
             // Close all open providers
             var providerManager = ServiceLocator.Instance.Get<IProviderManager>();
-            foreach (var provider in providerManager.GetInstances())
+            foreach (var provider in providerManager.Instances)
             {
                 provider.Close();
             }
@@ -305,7 +300,7 @@
                 }
             }
 
-            // Load new objects for the rest.            
+            // Load new objects for the rest.
             locator.Register<ILogManager>(new LogManager());
             locator.Register<LogWriter>(new LogWriter());
             locator.Register(typeof(IViewManager), typeof(ViewManager), false);
@@ -325,10 +320,7 @@
                     true);
             }
 
-            var viewIDs = new List<string>
-                              {
-                                  locator.Get<IViewManager>().GetRegistered().First().Identifier
-                              };
+            var viewIDs = new List<string> { locator.Get<IViewManager>().Registered.First().Identifier };
 
             ConfigureLoggerServices(Name, viewIDs, pendingProviderRecords);
 

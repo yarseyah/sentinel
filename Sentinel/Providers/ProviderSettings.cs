@@ -6,16 +6,10 @@
     {
         public string Name { get; set; }
 
-        public virtual string Summary
-        {
-            get
-            {
-                return string.Format("Provider named {0}", Name);
-            }
-        }
+        public virtual string Summary => $"Provider named {Name}";
 
         /// <summary>
-        /// Reference back to the provider this setting is appropriate to.
+        /// Gets or sets reference back to the provider this setting is appropriate to.
         /// </summary>
         public IProviderInfo Info { get; set; }
     }

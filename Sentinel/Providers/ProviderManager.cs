@@ -7,6 +7,8 @@
     using System.Linq;
 
     using Sentinel.FileMonitor;
+    using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
     using Sentinel.Log4Net;
     using Sentinel.MSBuild;
@@ -27,28 +29,29 @@
                                 NLogViewerProvider.ProviderRegistrationInformation,
                                 Log4NetProvider.ProviderRegistrationInformation,
                                 FileMonitoringProvider.ProviderRegistrationInformation,
-                                MSBuildProvider.ProviderRegistrationRecord
+                                MsBuildProvider.ProviderRegistrationRecord
                             };
         }
+
+        public IEnumerable<Guid> Registered => providers.Select(p => p.Identifier);
+
+        public IEnumerable<ILogProvider> Instances => providerInstances.Select(i => i.Value);
 
         public void Register(IProviderRegistrationRecord record)
         {
             throw new NotImplementedException("Dynamic registration is not yet supported");
         }
 
-        /// <exception cref="ArgumentException">Settings can not be null</exception>
         public ILogProvider Create(Guid providerGuid, IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentException("Settings can not be null", "Settings");
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             // Make sure we don't have any instances of that providerGuid.
             if (providerInstances.Any(p => p.Key == settings.Name && p.Value.Information.Identifier == providerGuid))
             {
                 throw new ArgumentException(
-                    "Already an instance of that ILoggerProvider with that name specified", "settings");
+                    "Already an instance of that ILoggerProvider with that name specified",
+                    nameof(settings));
             }
 
             // Make sure that the type is supported.))
@@ -63,11 +66,11 @@
 
             if (record != null)
             {
-                Debug.Assert(record.Implementor != null, "Need to know the implementing type for the provider");
+                Debug.Assert(record.Implementer != null, "Need to know the implementing type for the provider");
 
                 try
                 {
-                    var provider = (ILogProvider)Activator.CreateInstance(record.Implementor, settings);
+                    var provider = (ILogProvider)Activator.CreateInstance(record.Implementer, settings);
                     providerInstances.Add(new KeyValuePair<string, ILogProvider>(settings.Name, provider));
                     return provider;
                 }
@@ -86,7 +89,7 @@
             Debug.Assert(providerInstances.Any(p => p.Key == name), "There is no instance with the identifier " + name);
             if (providerInstances.All(p => p.Key != name))
             {
-                throw new ArgumentException("There is no instance with the identifier " + name, "name");
+                throw new ArgumentException("There is no instance with the identifier " + name, nameof(name));
             }
 
             return providerInstances.FirstOrDefault(p => p.Key == name).Value;
@@ -97,31 +100,27 @@
             throw new NotSupportedException("Removal is not yet supported");
         }
 
-        public IEnumerable<Guid> GetRegistered()
-        {
-            return providers.Select(p => p.Identifier);
-        }
-
         public IProviderInfo GetInformation(Guid providerGuid)
         {
             Debug.Assert(providers.Any(p => p.Identifier == providerGuid), "No such registered Provider");
-            if (!providers.Any(p => p.Identifier == providerGuid))
+            if (providers.All(p => p.Identifier != providerGuid))
             {
-                throw new ArgumentException("Specified guid does not correspond to a registered provider",
-                                            "providerGuid");
+                throw new ArgumentException(
+                    "Specified guid does not correspond to a registered provider",
+                    nameof(providerGuid));
             }
 
             return providers.First(p => p.Identifier == providerGuid).Info;
         }
 
         /// <summary>
-        /// Gets the configuration abstraction for the specified Guid.  
+        /// Gets the configuration abstraction for the specified Guid.
         /// Type left to caller to determine (as long as it is satisfied
         /// by the implementer too).
         /// </summary>
         /// <typeparam name="T">Type of configuration</typeparam>
         /// <param name="providerGuid">Identifier of provider</param>
-        /// <returns></returns>
+        /// <returns>Returns the provider associated to the supplied <see cref="Guid"/>></returns>
         public T GetConfiguration<T>(Guid providerGuid)
         {
             var matchesGuid = providers.Where(p => p.Identifier == providerGuid).Where(p => p.Settings != null);
@@ -134,8 +133,7 @@
             if (matchesType > 1)
             {
                 throw new NotSupportedException(
-                    string.Format(
-                        "There should only be one registered {0} handler for the provider {1}", typeof(T), providerGuid));
+                    $"There should only be one registered {typeof(T)} handler for the provider {providerGuid}");
             }
 
             var matches =
@@ -151,13 +149,6 @@
             return default(T);
         }
 
-        public IEnumerable<ILogProvider> GetInstances()
-        {
-            return providerInstances.Select(i => i.Value);
-        }
-
-        #region Implementation of IEnumerable
-
         public IEnumerator<Guid> GetEnumerator()
         {
             return providers.Select(p => p.Identifier).GetEnumerator();
@@ -167,7 +158,5 @@
         {
             return GetEnumerator();
         }
-
-        #endregion
     }
 }

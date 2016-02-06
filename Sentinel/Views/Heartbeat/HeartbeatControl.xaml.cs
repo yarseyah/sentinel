@@ -1,20 +1,16 @@
-﻿#region Using directives
-
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using Sentinel.Support.Wpf;
-
-#endregion
-
-namespace Sentinel.Views.Heartbeat
+﻿namespace Sentinel.Views.Heartbeat
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+    using System.Windows.Threading;
+    using Support.Wpf;
+
     /// <summary>
     ///   Interaction logic for HeartbeatControl.xaml
     /// </summary>
@@ -35,23 +31,50 @@ namespace Sentinel.Views.Heartbeat
             samplePeriodTimer.Start();
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ObservableDictionary<string, ObservableCollection<int>> Data
         {
             get
             {
                 return data;
             }
+
             set
             {
-                if (data == value) return;
-                data = value;
-                OnPropertyChanged("Data");
+                if (data != value)
+                {
+                    data = value;
+                    OnPropertyChanged("Data");
+                }
             }
         }
 
-        #region Implementation of INotifyPropertyChanged
+        public IEnumerable<Point> CreatePoints(IEnumerable<int> values, int width, int height, double heightScale)
+        {
+            IList<Point> returnCollection = new List<Point>();
 
-        public event PropertyChangedEventHandler PropertyChanged;
+            int stride = width / (values.Count() - 1);
+
+            int xPosition = -stride;
+
+            // Prepoulate structure with entry off to side and down to origin.
+            returnCollection.Add(new Point(xPosition, height));
+            returnCollection.Add(new Point(xPosition, height - (values.ElementAt(0) * heightScale)));
+            xPosition += stride;
+
+            foreach (int value in values)
+            {
+                int yPosition = (int)(value * heightScale);
+                returnCollection.Add(new Point(xPosition, height - yPosition));
+                xPosition += stride;
+            }
+
+            // Post populate with values right off to the side (so null values don't enter visibility).
+            returnCollection.Add(new Point(xPosition, height));
+
+            return returnCollection;
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -62,8 +85,6 @@ namespace Sentinel.Views.Heartbeat
                 handler(this, e);
             }
         }
-
-        #endregion
 
         private void SampleTick(object sender, EventArgs e)
         {
@@ -78,15 +99,12 @@ namespace Sentinel.Views.Heartbeat
                 int maxValue = Data.Count() > 0
                                    ? Data.Max(kvp => kvp.Value != null && kvp.Value.Count() > 0 ? kvp.Value.Max() : 0)
                                    : 0;
-                double scale = maxValue > 0 ? canvas.Height / maxValue: 1.0d;
+                double scale = maxValue > 0 ? canvas.Height / maxValue : 1.0d;
 
                 foreach (KeyValuePair<string, ObservableCollection<int>> d in Data)
                 {
-                    PointCollection pc = new PointCollection(
-                        CreatePoints(d.Value,
-                                     (int) canvas.Width,
-                                     (int) canvas.Height,
-                                     scale));
+                    PointCollection pc =
+                        new PointCollection(CreatePoints(d.Value, (int)canvas.Width, (int)canvas.Height, scale));
 
                     Polyline pl = new Polyline
                                       {
@@ -136,35 +154,6 @@ namespace Sentinel.Views.Heartbeat
         {
             canvas.Width = ActualWidth;
             canvas.Height = ActualHeight;
-        }
-
-        public IEnumerable<Point> CreatePoints(IEnumerable<int> values, int width, int height, double heightScale)
-        {
-            IList<Point> returnCollection = new List<Point>();
-
-            int stride = width / (values.Count() - 1);
-
-            int xPosition = -stride;
-
-            // Prepoulate structure with entry off to side and down to origin.
-            returnCollection.Add(new Point(xPosition, height));
-            returnCollection.Add(new Point(xPosition, height - (values.ElementAt(0) * heightScale)));
-            xPosition += stride;
-
-            foreach (int value in values)
-            {
-                int yPosition = (int)(value * heightScale);
-                returnCollection.Add(new Point(xPosition, height - yPosition));
-                xPosition += stride;
-            }
-
-            // Post populate with values right off to the side (so null values don't enter visibility).
-            returnCollection.Add(new Point(xPosition, height));
-
-            //Trace.WriteLine(string.Format("CreatePoints(values, {0}) = {1} entries", destinationPosition,
-            //                              returnCollection.Count()));
-
-            return returnCollection;
         }
     }
 }

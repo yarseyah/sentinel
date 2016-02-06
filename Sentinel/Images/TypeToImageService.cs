@@ -8,7 +8,9 @@ namespace Sentinel.Images
 
     using Sentinel.Images.Interfaces;
     using Sentinel.Interfaces;
-    using Sentinel.Support.Mvvm;
+    using Sentinel.Interfaces.CodeContracts;
+
+    using WpfExtras;
 
     [DataContract]
     public class TypeToImageService : ViewModelBase, ITypeImageService, IDefaultInitialisation
@@ -65,7 +67,8 @@ namespace Sentinel.Images
             Debug.Assert(quality != ImageQuality.BestAvailable, "Must use a specific size when registering");
 
             var typeName = type.ToUpper();
-            var imageRecord = Get(typeName, quality, false);
+            var options = new ImageOptions { AcceptLowerQuality = false, Quality = quality };
+            var imageRecord = Get(typeName, options);
 
             var updated = false;
             if (imageRecord != null)
@@ -88,8 +91,15 @@ namespace Sentinel.Images
             }
         }
 
-        public ImageTypeRecord Get(string type, ImageQuality quality = ImageQuality.BestAvailable, bool acceptLower = true, bool mustHaveImage = false)
+        public ImageTypeRecord Get(
+            string type,
+            ImageOptions options)
         {
+            type.ThrowIfNullOrWhiteSpace(nameof(type));
+            options.ThrowIfNull(nameof(options));
+
+            var quality = options.Quality;
+
             var typeName = type.ToUpper();
             var sorted = ImageMappings.Where(r => r.Name == typeName).OrderByDescending(r => r.Quality);
 
@@ -105,41 +115,31 @@ namespace Sentinel.Images
             }
 
             // Don't have explicit size or have not asked for best available.
-            if (acceptLower)
+            if (options.AcceptLowerQuality)
             {
-                Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit quality");
+                Debug.Assert(quality != ImageQuality.BestAvailable, "Must be an explicit Quality");
                 var newQuality = quality == ImageQuality.Large ? ImageQuality.Medium : ImageQuality.Small;
                 if (newQuality != quality)
                 {
-                    return Get(type, newQuality);
+                    // Update options
+                    // TODO: ideally this should clone
+                    var newOptions = new ImageOptions
+                                         {
+                                             Quality = newQuality,
+                                             AcceptLowerQuality = options.AcceptLowerQuality,
+                                             ImageMustExist = options.ImageMustExist
+                                         };
+
+                    // Recursive
+                    return Get(type, newOptions);
                 }
             }
-           
-            return mustHaveImage ? Get("Unknown", quality) : null;            
-        }
 
-        private void AddMapping(object obj)
-        {
-            AddImage.Add();
-        }
-
-        private void EditMapping(object obj)
-        {
-            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
-            if (typeImageRecord != null)
-            {
-                EditImage.Edit(typeImageRecord);
-            }
-        }
-
-        private void RemoveMapping(object obj)
-        {
-            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
-            RemoveImage.Remove(typeImageRecord);
+            return options.ImageMustExist ? Get("Unknown", options) : null;
         }
 
         public void Initialise()
-        {            
+        {
             Register("ERROR", ImageQuality.Small, "/Resources/Small/Error.png");
             Register("ERROR", ImageQuality.Medium, "/Resources/Medium/Error.png");
             Register("ERROR", ImageQuality.Large, "/Resources/Large/Error.png");
@@ -169,6 +169,26 @@ namespace Sentinel.Images
             Register("UNKNOWN", ImageQuality.Small, "/Resources/Small/Unknown.png");
             Register("UNKNOWN", ImageQuality.Medium, "/Resources/Medium/Unknown.png");
             Register("UNKNOWN", ImageQuality.Large, "/Resources/Large/Unknown.png");
+        }
+
+        private void AddMapping(object obj)
+        {
+            AddImage.Add();
+        }
+
+        private void EditMapping(object obj)
+        {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            if (typeImageRecord != null)
+            {
+                EditImage.Edit(typeImageRecord);
+            }
+        }
+
+        private void RemoveMapping(object obj)
+        {
+            var typeImageRecord = ImageMappings.ElementAt(SelectedIndex);
+            RemoveImage.Remove(typeImageRecord);
         }
     }
 }

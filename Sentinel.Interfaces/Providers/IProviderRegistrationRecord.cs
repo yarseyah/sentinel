@@ -10,6 +10,6 @@
 
         Type Settings { get; }
 
-        Type Implementor { get; }
+        Type Implementer { get; }
     }
 }

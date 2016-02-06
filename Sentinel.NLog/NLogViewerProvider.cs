@@ -15,6 +15,8 @@
     using Interfaces;
     using Interfaces.Providers;
 
+    using Sentinel.Interfaces.CodeContracts;
+
     public class NLogViewerProvider : INetworkProvider
     {
         private const int PumpFrequency = 100;
@@ -22,7 +24,7 @@
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
-        private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1);
+        private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
 
@@ -36,16 +38,10 @@
 
         public NLogViewerProvider(IProviderSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            settings.ThrowIfNull(nameof(settings));
 
             networkSettings = settings as INLogAppenderSettings;
-            if (networkSettings == null)
-            {
-                throw new ArgumentException("settings should be assignable to INLogAppenderSettings", nameof(settings));
-            }
+            networkSettings.ThrowIfNull(nameof(networkSettings));
 
             Information = ProviderRegistrationInformation.Info;
             ProviderSettings = networkSettings;
@@ -107,7 +103,7 @@
 
             if (networkSettings == null)
             {
-                Log.Error("Network settings has not been initialised");
+                Log.Error("Network settings has not been initialized");
                 throw new NullReferenceException();
             }
 
@@ -213,21 +209,24 @@
 
         private LogEntry DecodeEntry(string m)
         {
-            XNamespace log4J = "unique";
-            string message = $@"<entry xmlns:log4j=""{log4J}"">{m}</entry>";
+            // Record the current date/time 
+            var receivedTime = DateTime.UtcNow;
 
-            XElement element = XElement.Parse(message);
-            XElement record = element.Element(log4J + "event");
+            XNamespace log4J = "unique";
+            XNamespace nlogNamespace = "nlogUnique";
+            var message = $@"<entry xmlns:log4j=""{log4J}"" xmlns:nlog=""{nlogNamespace}"">{m}</entry>";
+            var element = XElement.Parse(message);
+            var record = element.Element(log4J + "event");
 
             // Establish whether a sub-system seems to be defined.
-            string description = record.Element(log4J + "message").Value;
+            var description = record.Element(log4J + "message").Value;
 
-            string classification = string.Empty;
-            string system = record.Attribute("logger").Value;
-            string type = record.Attribute("level").Value;
-            string host = "???";
+            var classification = string.Empty;
+            var system = record.Attribute("logger").Value;
+            var type = record.Attribute("level").Value;
+            var host = "???";
 
-            foreach (XElement propertyElement in record.Element(log4J + "properties").Elements())
+            foreach (var propertyElement in record.Element(log4J + "properties").Elements())
             {
                 if (propertyElement.Name == log4J + "data" && propertyElement.Attribute("name") != null
                     && propertyElement.Attribute("name").Value == "log4jmachinename")
@@ -236,7 +235,23 @@
                 }
             }
 
-            var date = Log4JDateBase + TimeSpan.FromMilliseconds(double.Parse(record.Attribute("timestamp").Value));
+            var className = string.Empty;
+            var methodName = string.Empty;
+            var sourceFile = string.Empty;
+            var line = string.Empty;
+
+            // Any source information
+            var source = record.Element(log4J + "locationInfo");
+            if (source != null)
+            {
+                className = source.Attribute("class").Value;
+                methodName = source.Attribute("method").Value;
+                sourceFile = source.Attribute("file").Value;
+                line = source.Attribute("line").Value;
+            }
+
+            var timestamp = double.Parse(record.Attribute("timestamp").Value);
+            var date = Log4JDateBase + TimeSpan.FromMilliseconds(timestamp);
 
             var entry = new LogEntry
                             {
@@ -256,6 +271,17 @@
             {
                 entry.MetaData.Add("Exception", true);
             }
+
+            if (!string.IsNullOrWhiteSpace(className))
+            {
+                // TODO: use an object for these?
+                entry.MetaData.Add("ClassName", className);
+                entry.MetaData.Add("MethodName", methodName);
+                entry.MetaData.Add("SourceFile", sourceFile);
+                entry.MetaData.Add("SourceLine", line);
+            }
+
+            entry.MetaData.Add("ReceivedTime", receivedTime);
 
             return entry;
         }

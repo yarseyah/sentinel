@@ -2,7 +2,7 @@ namespace Sentinel.NLog
 {
     using System;
 
-    using Sentinel.Interfaces.Providers;
+    using Interfaces.Providers;
 
     public class ProviderRegistrationInformation : IProviderRegistrationRecord
     {
@@ -11,30 +11,12 @@ namespace Sentinel.NLog
             Info = providerInfo;
         }
 
-        public Guid Identifier
-        {
-            get
-            {
-                return Info.Identifier;
-            }
-        }
+        public Guid Identifier => Info.Identifier;
 
         public IProviderInfo Info { get; private set; }
 
-        public Type Settings
-        {
-            get
-            {
-                return typeof(NetworkConfigurationPage);
-            }
-        }
+        public Type Settings => typeof(NetworkConfigurationPage);
 
-        public Type Implementor
-        {
-            get
-            {
-                return typeof(NLogViewerProvider);
-            }
-        }
+        public Type Implementer => typeof(NLogViewerProvider);
     }
 }

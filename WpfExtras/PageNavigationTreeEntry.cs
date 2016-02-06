@@ -1,6 +1,5 @@
 ﻿namespace WpfExtras
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
@@ -23,7 +22,7 @@
             (page.Children as INotifyCollectionChanged).CollectionChanged += PageChildCollectionChanged;
 
 
-            foreach (IWizardPage c in page.Children)
+            foreach (var c in page.Children)
             {
                 children.Add(new PageNavigationTreeEntry(c));
             }
@@ -73,26 +72,26 @@
 
         private void PageChildCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action
-                == NotifyCollectionChangedAction.Add)
+            switch (e.Action)
             {
-                foreach (object newItem in e.NewItems)
-                {
-                    children.Add(new PageNavigationTreeEntry(newItem as IWizardPage));
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                var itemsToRemove =
-                    Children.Join(e.OldItems.OfType<IWizardPage>(), n => n.Page, p => p, (n, p) => n).ToList();
-                foreach (var c in itemsToRemove)
-                {
-                    children.Remove(c);
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                children.Clear();
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var newItem in e.NewItems)
+                    {
+                        children.Add(new PageNavigationTreeEntry(newItem as IWizardPage));
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    var itemsToRemove = Children.Join(e.OldItems.OfType<IWizardPage>(), n => n.Page, p => p, (n, p) => n).ToList();
+                    foreach (var c in itemsToRemove)
+                    {
+                        children.Remove(c);
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    children.Clear();
+                    break;
             }
         }
 

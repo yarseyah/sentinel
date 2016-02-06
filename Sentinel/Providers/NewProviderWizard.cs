@@ -19,13 +19,13 @@
             IProviderSettings settings = new ProviderSettings();
 
             // Construct the wizard
-            Wizard wizard = new Wizard
-                                {
-                                    Owner = parent, 
-                                    ShowNavigationTree = false,
-                                    SavedData = settings,
-                                    Title = "Add New Log Provider"
-                                };
+            var wizard = new Wizard
+                             {
+                                 Owner = parent,
+                                 ShowNavigationTree = false,
+                                 SavedData = settings,
+                                 Title = "Add New Log Provider"
+                             };
 
             wizard.AddPage(new SelectProviderPage());
 

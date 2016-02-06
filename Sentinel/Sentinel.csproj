@@ -24,7 +24,7 @@
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <PublishUrl>C:\Users\Ray\Development\sentinel\\Installs\Sentinel\</PublishUrl>
+    <PublishUrl>C:\Users\Ray\Development\sentinel\Installs\Sentinel\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -41,8 +41,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>0.11.0.2</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.12.3.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -55,9 +55,8 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>
-    </DocumentationFile>
+    <CodeAnalysisRuleSet>Sentinel.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>Bin\Debug\Sentinel.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -67,7 +66,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Sentinel.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
@@ -77,10 +76,10 @@
     <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -105,10 +104,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NodaTime, Version=1.3.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.1.3.1\lib\net35-Client\NodaTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Xaml" />
@@ -142,6 +146,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Classification\Classifier.cs" />
     <Compile Include="Classification\Gui\AddClassifier.cs" />
     <Compile Include="Classification\Gui\AddEditClassifier.cs" />
@@ -184,6 +191,7 @@
     <Compile Include="Highlighters\StandardHighlighter.cs" />
     <Compile Include="Images\ImageQuality.cs" />
     <Compile Include="Images\ImageTypeRecord.cs" />
+    <Compile Include="Images\Interfaces\ImageOptions.cs" />
     <Compile Include="Interfaces\IDefaultInitialisation.cs" />
     <Compile Include="Filters\Interfaces\IAddFilterService.cs" />
     <Compile Include="Filters\Interfaces\IEditFilterService.cs" />
@@ -204,7 +212,6 @@
     <Compile Include="Interfaces\IHighlighterStyle.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
     <Compile Include="Interfaces\LinqHelpers.cs" />
-    <Compile Include="Interfaces\LogEntry.cs" />
     <Compile Include="Interfaces\LogEntryField.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
     <Compile Include="StartUp\Log4NetOptions.cs" />
@@ -230,25 +237,20 @@
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\SessionManager.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
-    <Compile Include="Support\Converters\BoolToDisableConverter.cs" />
-    <Compile Include="Support\Converters\ColourConverter.cs" />
+    <Compile Include="Support\Converters\DatePreferenceConverter.cs" />
+    <Compile Include="Support\Converters\TimePreferenceConverter.cs" />
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
-    <Compile Include="Support\Converters\IsTimingMessageValueConverter.cs" />
     <Compile Include="Support\Converters\LongPathToShortPathConverter.cs" />
-    <Compile Include="Support\Converters\MatchModeConverter.cs" />
     <Compile Include="Support\Converters\MessageHasExceptionMetadataConverter.cs" />
+    <Compile Include="Support\Converters\MetaDataConverter.cs" />
     <Compile Include="Support\Converters\TimeSinceDateTimeConverter.cs" />
     <Compile Include="Support\Converters\TypeToImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToLargeImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToMediumImageConverter.cs" />
     <Compile Include="Support\Converters\TypeToSmallImageConverter.cs" />
-    <Compile Include="Support\Converters\VisibilityToCollapsedConverter.cs" />
     <Compile Include="Support\JsonHelper.cs" />
-    <Compile Include="Support\Mvvm\DelegateCommand.cs" />
-    <Compile Include="Support\Mvvm\ViewModelBase.cs" />
-    <Compile Include="Support\RegexExtensions.cs" />
     <Compile Include="Support\Wpf\DataBoundToolbar.cs" />
-    <Compile Include="Support\Wpf\FixedWidthColumn.xaml.cs" />
+    <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />
     <Compile Include="Support\Wpf\ThemeInfo.cs" />
     <Compile Include="Views\Gui\LogMessages.cs" />
@@ -459,7 +461,6 @@
     <Compile Include="Controls\ImageTypesControl.xaml.cs">
       <DependentUpon>ImageTypesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ImageView.cs" />
     <Compile Include="Preferences\UserPreferences.cs" />
     <Compile Include="Controls\PreferencesWindow.xaml.cs">
       <DependentUpon>PreferencesWindow.xaml</DependentUpon>
@@ -491,15 +492,16 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages.config">
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Sentinel.ruleset" />
     <None Include="Sentinel_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -698,6 +700,31 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Small\Thread.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\DebugSource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\DebugSource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Medium\Network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-rc3\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-rc3\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-rc3\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

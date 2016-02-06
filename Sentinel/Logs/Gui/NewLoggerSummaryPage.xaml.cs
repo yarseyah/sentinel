@@ -9,64 +9,30 @@
     /// <summary>
     /// Interaction logic for NewLoggerSummaryPage.xaml
     /// </summary>
-    public partial class NewLoggerSummaryPage : IWizardPage 
+    public partial class NewLoggerSummaryPage : IWizardPage
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
-        private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
 
         public NewLoggerSummaryPage()
         {
             InitializeComponent();
 
-            readonlyChildren = new ReadOnlyObservableCollection<IWizardPage>(children);
+            Children = new ReadOnlyObservableCollection<IWizardPage>(children);
 
             DataContext = this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
+        public string Title => "Summary";
 
-        public string Title
-        {
-            get
-            {
-                return "Summary";
-            }
-        }
+        public string Description => "Review the selections made in this Wizard.";
 
-        public string Description
-        {
-            get
-            {
-                return "Review the selections made in this Wizard.";
-            }
-        }
+        public bool IsValid => true;
 
-        public bool IsValid
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children { get; }
 
-        public Control PageContent
-        {
-            get
-            {
-                return this;
-            }
-        }
-
+        public Control PageContent => this;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -83,11 +49,13 @@
             return saveData;
         }
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
+        protected void OnPropertyChanged(string propertyName)
         {
-            get
+            var handler = PropertyChanged;
+            if (handler != null)
             {
-                return readonlyChildren;
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
             }
         }
     }

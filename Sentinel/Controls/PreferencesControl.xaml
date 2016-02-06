@@ -7,11 +7,16 @@
              xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Gui"
              xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
              xmlns:Extractors="clr-namespace:Sentinel.Extractors.Gui"
+             xmlns:wpfExtras="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
              x:Name="UserControl"
              Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
+    <UserControl.Resources>
+        <wpfExtras:BooleanInvertingValueConverter x:Key="BooleanInverterConverter" />
+    </UserControl.Resources>
+    
     <Grid x:Name="LayoutRoot">
         <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="General">
@@ -20,6 +25,8 @@
                         <GroupBox Header="Column options">
                             <Grid Margin="5">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
@@ -45,7 +52,7 @@
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
                                            VerticalAlignment="Center"
-                                           Text="Date Formatting :" />
+                                           Text="Date Format :" />
                                 <ComboBox Grid.Row="1"
                                           Grid.Column="2"
                                           SelectedIndex="{Binding Preferences.SelectedDateOption}"
@@ -53,10 +60,39 @@
                                           Margin="0,5,0,5"
                                           ItemsSource="{Binding Preferences.DateFormatOptions}"
                                           MinWidth="100" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Margin="0,8"
+                                           VerticalAlignment="Top"
+                                           Text="Time Format :" />
+                                <StackPanel Grid.Row="2"
+                                            Grid.Column="2"
+                                            Orientation="Vertical">
+                                    <ComboBox SelectedIndex="{Binding Preferences.SelectedTimeFormatOption}"
+                                              Margin="0,5,0,5"
+                                              HorizontalAlignment="Left"
+                                          ItemsSource="{Binding Preferences.TimeFormatOptions}"
+                                          MinWidth="100" />
+                                    <CheckBox Margin="0,5,0,5"
+                                              IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimeZone}">Convert UTC times to local timezone</CheckBox>
+                                </StackPanel>
+                                <TextBlock Grid.Row="3"
+                                           Grid.Column="0"
+                                           Margin="0,4"
+                                           VerticalAlignment="Top"
+                                           Text="Message Date/Time value :" />
+                                <StackPanel Grid.Row="3"
+                                            Grid.Column="2">
+                                    <RadioButton Margin="0,5,0,5"
+                                                 IsChecked="{Binding Preferences.UseArrivalDateTime}">Use time of message receipt by Sentinel</RadioButton>
+                                    <RadioButton Margin="0,0,0,5"
+                                                 IsChecked="{Binding Preferences.UseArrivalDateTime, Converter={StaticResource BooleanInverterConverter}}">Use sender's time</RadioButton>
+                                </StackPanel>
                                 <StackPanel Orientation="Vertical"
-                                            Grid.Row="2"
+                                            Grid.Row="4"
                                             Margin="0,5,0,5"
-                                            Grid.ColumnSpan="3">
+                                            Grid.ColumnSpan="3"
+                                            Grid.Column="0">
                                     <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"
                                               HorizontalAlignment="Left"
                                               MinWidth="100"
@@ -67,8 +103,19 @@
                                               HorizontalAlignment="Left"
                                               MinWidth="100"
                                               Margin="0,0,0,5"
-                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifer (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
+                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifier (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
                                               Content="Show the Thread column" />
+                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceColumn}" 
+                                              HorizontalAlignment="Left"
+                                              MinWidth="100"
+                                              Margin="0,0,0,5"
+                                              ToolTip="Show the name of the machine from which the message was sourced"
+                                              Content="Show the message source host-name column"/>
+                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceInformationColumns}"
+                                              HorizontalAlignment="Left"
+                                              Margin="0,0,0,5"
+                                              ToolTip="Shows/hides the columns with the source-code information (nLog only)"
+                                              Content="Show source debugging information" />
                                     <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
                                               HorizontalAlignment="Left"
                                               ToolTip="Enables/disables live resorting of sortable columns"

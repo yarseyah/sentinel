@@ -1,7 +1,9 @@
 ﻿namespace Sentinel.Support
 {
+    using System;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -10,7 +12,10 @@
     using System.Windows.Input;
     using System.Windows.Media;
 
-    public class GridViewSort
+    using Sentinel.Interfaces;
+    using Sentinel.Interfaces.CodeContracts;
+
+    public static class GridViewSort
     {
         public static readonly DependencyProperty AutoSortProperty;
 
@@ -30,13 +35,6 @@
                 typeof(GridViewSort),
                 new UIPropertyMetadata(true));
 
-        private static readonly DependencyProperty SortedColumnHeaderProperty =
-            DependencyProperty.RegisterAttached(
-                "SortedColumnHeader",
-                typeof(GridViewColumnHeader),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(null));
-
         public static readonly DependencyProperty SortGlyphAscendingProperty =
             DependencyProperty.RegisterAttached(
                 "SortGlyphAscending",
@@ -51,36 +49,34 @@
                 typeof(GridViewSort),
                 new UIPropertyMetadata(null));
 
+        private static readonly DependencyProperty SortedColumnHeaderProperty =
+            DependencyProperty.RegisterAttached(
+                "SortedColumnHeader",
+                typeof(GridViewColumnHeader),
+                typeof(GridViewSort),
+                new UIPropertyMetadata(null));
+
         static GridViewSort()
         {
-            PropertyChangedCallback commandCallback =
-                delegate(
-                    DependencyObject o,
-                    DependencyPropertyChangedEventArgs e)
+            PropertyChangedCallback commandCallback = (o, e) =>
+                {
+                    ItemsControl listView = o as ItemsControl;
+                    if (listView != null)
                     {
-                        ItemsControl listView = o as ItemsControl;
-                        if (listView != null)
+                        if (!GetAutoSort(listView))
                         {
-                            if (!GetAutoSort(listView))
+                            if (e.OldValue != null && e.NewValue == null)
                             {
-                                if (e.OldValue != null &&
-                                    e.NewValue == null)
-                                {
-                                    listView.RemoveHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                                listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
+                            }
 
-                                if (e.OldValue == null &&
-                                    e.NewValue != null)
-                                {
-                                    listView.AddHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                            if (e.OldValue == null && e.NewValue != null)
+                            {
+                                listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
                             }
                         }
-                    };
+                    }
+                };
 
             CommandProperty = DependencyProperty.RegisterAttached(
                 "Command",
@@ -88,35 +84,28 @@
                 typeof(GridViewSort),
                 new UIPropertyMetadata(null, commandCallback));
 
-            PropertyChangedCallback autoSortCallback =
-                delegate(
-                    DependencyObject o,
-                    DependencyPropertyChangedEventArgs e)
+            PropertyChangedCallback autoSortCallback = (o, e) =>
+                {
+                    ListView listView = o as ListView;
+                    if (listView != null)
                     {
-                        ListView listView = o as ListView;
-                        if (listView != null)
+                        // Don't change click handler if a command is set
+                        if (GetCommand(listView) == null)
                         {
-                            // Don't change click handler if a command is set
-                            if (GetCommand(listView) == null)
+                            bool oldValue = (bool)e.OldValue;
+                            bool newValue = (bool)e.NewValue;
+                            if (oldValue && !newValue)
                             {
-                                bool oldValue = (bool) e.OldValue;
-                                bool newValue = (bool) e.NewValue;
-                                if (oldValue && !newValue)
-                                {
-                                    listView.RemoveHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                                listView.RemoveHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
+                            }
 
-                                if (!oldValue && newValue)
-                                {
-                                    listView.AddHandler(
-                                        ButtonBase.ClickEvent,
-                                        new RoutedEventHandler(ColumnHeaderClick));
-                                }
+                            if (!oldValue && newValue)
+                            {
+                                listView.AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(ColumnHeaderClick));
                             }
                         }
-                    };
+                    }
+                };
 
             AutoSortProperty = DependencyProperty.RegisterAttached(
                 "AutoSort",
@@ -131,7 +120,9 @@
             ListView listView,
             GridViewColumnHeader sortedColumnHeader)
         {
-            ListSortDirection direction = ListSortDirection.Ascending;
+            view.ThrowIfNull(nameof(view));
+
+            var direction = ListSortDirection.Ascending;
             if (view.SortDescriptions.Count > 0)
             {
                 SortDescription currentSort = view.SortDescriptions[0];
@@ -156,9 +147,9 @@
                 view.SortDescriptions.Add(new SortDescription(propertyName, direction));
                 if (GetShowSortGlyph(listView))
                 {
-                    ImageSource glyph = direction == ListSortDirection.Ascending
-                                            ? GetSortGlyphAscending(listView)
-                                            : GetSortGlyphDescending(listView);
+                    var glyph = direction == ListSortDirection.Ascending
+                                    ? GetSortGlyphAscending(listView)
+                                    : GetSortGlyphDescending(listView);
                     AddSortGlyph(sortedColumnHeader, direction, glyph);
                 }
 
@@ -170,7 +161,8 @@
             "Microsoft.Design",
             "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The generic style registration is desired, despite this rule.")]
-        public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
+        public static T GetAncestor<T>(DependencyObject reference)
+            where T : DependencyObject
         {
             var parent = VisualTreeHelper.GetParent(reference);
             while (!(parent is T))
@@ -184,65 +176,77 @@
         // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
         public static bool GetAutoSort(DependencyObject obj)
         {
-            return (bool) obj.GetValue(AutoSortProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (bool)obj.GetValue(AutoSortProperty);
         }
 
         public static ICommand GetCommand(DependencyObject obj)
         {
-            return (ICommand) obj.GetValue(CommandProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (ICommand)obj.GetValue(CommandProperty);
         }
 
         // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
         public static string GetPropertyName(DependencyObject obj)
         {
-            return (string) obj.GetValue(PropertyNameProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (string)obj.GetValue(PropertyNameProperty);
         }
 
         // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
         public static bool GetShowSortGlyph(DependencyObject obj)
         {
-            return (bool) obj.GetValue(ShowSortGlyphProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (bool)obj.GetValue(ShowSortGlyphProperty);
         }
 
         // Using a DependencyProperty as the backing store for ShowSortGlyph.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphAscending(DependencyObject obj)
         {
-            return (ImageSource) obj.GetValue(SortGlyphAscendingProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (ImageSource)obj.GetValue(SortGlyphAscendingProperty);
         }
 
         // Using a DependencyProperty as the backing store for SortGlyphAscending.  This enables animation, styling, binding, etc...
         public static ImageSource GetSortGlyphDescending(DependencyObject obj)
         {
-            return (ImageSource) obj.GetValue(SortGlyphDescendingProperty);
+            obj.ThrowIfNull(nameof(obj));
+            return (ImageSource)obj.GetValue(SortGlyphDescendingProperty);
         }
 
         public static void SetAutoSort(DependencyObject obj, bool value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(AutoSortProperty, value);
         }
 
         public static void SetCommand(DependencyObject obj, ICommand value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(CommandProperty, value);
         }
 
         public static void SetPropertyName(DependencyObject obj, string value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(PropertyNameProperty, value);
         }
 
         public static void SetShowSortGlyph(DependencyObject obj, bool value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(ShowSortGlyphProperty, value);
         }
 
         public static void SetSortGlyphAscending(DependencyObject obj, ImageSource value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(SortGlyphAscendingProperty, value);
         }
 
         public static void SetSortGlyphDescending(DependencyObject obj, ImageSource value)
         {
+            obj.ThrowIfNull(nameof(obj));
             obj.SetValue(SortGlyphDescendingProperty, value);
         }
 
@@ -251,12 +255,8 @@
             ListSortDirection direction,
             ImageSource sortGlyph)
         {
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            adornerLayer.Add(
-                new SortGlyphAdorner(
-                    columnHeader,
-                    direction,
-                    sortGlyph));
+            var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
+            adornerLayer.Add(new SortGlyphAdorner(columnHeader, direction, sortGlyph));
         }
 
         private static void ColumnHeaderClick(object sender, RoutedEventArgs e)
@@ -270,7 +270,7 @@
                     var listView = GetAncestor<ListView>(headerClicked);
                     if (listView != null)
                     {
-                        ICommand command = GetCommand(listView);
+                        var command = GetCommand(listView);
                         if (command != null)
                         {
                             if (command.CanExecute(propertyName))
@@ -292,16 +292,16 @@
 
         private static GridViewColumnHeader GetSortedColumnHeader(DependencyObject obj)
         {
-            return (GridViewColumnHeader) obj.GetValue(SortedColumnHeaderProperty);
+            return (GridViewColumnHeader)obj.GetValue(SortedColumnHeaderProperty);
         }
 
         private static void RemoveSortGlyph(GridViewColumnHeader columnHeader)
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            var adorners = adornerLayer.GetAdorners(columnHeader);
-            if (adorners != null)
+            var adornerCollection = adornerLayer.GetAdorners(columnHeader);
+            if (adornerCollection != null)
             {
-                foreach (SortGlyphAdorner adorner in adorners.OfType<SortGlyphAdorner>())
+                foreach (var adorner in adornerCollection.OfType<SortGlyphAdorner>())
                 {
                     adornerLayer.Remove(adorner);
                 }
@@ -351,11 +351,11 @@
 
             private Geometry GetDefaultGlyph()
             {
-                double x1 = columnHeader.ActualWidth - 13;
-                double x2 = x1 + 10;
-                double x3 = x1 + 5;
-                double y1 = (columnHeader.ActualHeight / 2) - 3;
-                double y2 = y1 + 5;
+                var x1 = columnHeader.ActualWidth - 13;
+                var x2 = x1 + 10;
+                var x3 = x1 + 5;
+                var y1 = (columnHeader.ActualHeight / 2) - 3;
+                var y2 = y1 + 5;
 
                 if (direction == ListSortDirection.Ascending)
                 {
@@ -364,17 +364,15 @@
                     y2 = tmp;
                 }
 
-                PathSegmentCollection pathSegmentCollection =
-                    new PathSegmentCollection
-                        {
-                            new LineSegment(new Point(x2, y1), true),
-                            new LineSegment(new Point(x3, y2), true)
-                        };
+                var pathSegmentCollection = new PathSegmentCollection
+                                                {
+                                                    new LineSegment(new Point(x2, y1), true),
+                                                    new LineSegment(new Point(x3, y2), true)
+                                                };
 
                 var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);
 
-                var pathFigureCollection = new PathFigureCollection();
-                pathFigureCollection.Add(pathFigure);
+                var pathFigureCollection = new PathFigureCollection { pathFigure };
 
                 var pathGeometry = new PathGeometry(pathFigureCollection);
                 return pathGeometry;
