@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Sockets;
+    using System.Runtime.CompilerServices;
     using System.Runtime.ExceptionServices;
     using System.Windows;
 
@@ -20,8 +21,10 @@
         public MainApplication()
         {
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler;
-
             Settings.Default.Upgrade();
+
+            Upgrader.CheckForUpgrades()
+                    .RunSynchronously();
 
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;

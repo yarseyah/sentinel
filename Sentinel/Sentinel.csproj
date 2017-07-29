@@ -286,6 +286,7 @@
     <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />
     <Compile Include="Support\Wpf\ThemeInfo.cs" />
+    <Compile Include="Upgrader.cs" />
     <Compile Include="Views\Gui\LogMessages.cs" />
     <Compile Include="Views\Gui\LogMessagesControl.xaml.cs">
       <DependentUpon>LogMessagesControl.xaml</DependentUpon>
@@ -757,6 +758,11 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Update.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
