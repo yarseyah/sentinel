@@ -12,8 +12,8 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.12.4.0")]
-[assembly: AssemblyFileVersion("0.12.4.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Ensure all assemblies have a neutral language defined.
 [assembly: NeutralResourcesLanguage("en")]
@@ -22,4 +22,4 @@ using System.Resources;
 [assembly: CLSCompliant(true)]
 
 [assembly: AssemblyCompany("Ray Hayes, Ishmal Lewis, et al.")]
-[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2016")]
+[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2017")]
