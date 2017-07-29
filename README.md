@@ -1,6 +1,5 @@
-# Sentinel
-
-Sentinel is a log-viewer with configurable filtering and highlighting (foreground/background colours).
+# ![](docs/Debug.png) sentinel
+Log-viewer with filtering and highlighting
 
 ![](docs/Home_sentinel-0.11.0.0.png)
 
