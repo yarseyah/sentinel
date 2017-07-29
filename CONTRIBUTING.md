@@ -1,0 +1,1 @@
+Releases are made from the master branch, but new developments are done on the develop branch.  There are a lot of new developments on that branch, so please be aware as changes to master directly may not merge nicely.
