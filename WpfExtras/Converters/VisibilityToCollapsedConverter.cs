@@ -9,7 +9,7 @@
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var isVisible = (bool)value;
+            var isVisible = (bool?)value ?? false;
 
             // If a parameter is supplied, invert the condition.
             if (parameter != null)
