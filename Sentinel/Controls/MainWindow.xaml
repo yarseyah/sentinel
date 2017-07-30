@@ -5,8 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
-    xmlns:Converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:WpfExtrasConverters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras" 
+    xmlns:converters="clr-namespace:Sentinel.Support.Converters"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -19,6 +18,9 @@
     ResizeMode="CanResizeWithGrip">
 
     <RibbonWindow.Resources>
+
+        <converters:CollapseIfNullConverter x:Key="collapseIfNullConverter" />
+
         <Style
             TargetType="{x:Type Image}">
             <Setter
@@ -58,13 +60,13 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <Converters:TypeToLargeImageConverter
+        <converters:TypeToLargeImageConverter
             x:Key="typeToLargeImage" />
-        <Converters:TypeToMediumImageConverter
+        <converters:TypeToMediumImageConverter
             x:Key="typeToMediumImage" />
-        <Converters:TypeToSmallImageConverter
+        <converters:TypeToSmallImageConverter
             x:Key="typeToSmallImage" />
-        <Converters:LongPathToShortPathConverter
+        <converters:LongPathToShortPathConverter
             x:Key="longPathToShortPath" />
     </RibbonWindow.Resources>
 
@@ -158,7 +160,7 @@
                         </Grid>
                     </RibbonApplicationMenu.FooterPaneContent>
 
-                    <RibbonApplicationMenu.AuxiliaryPaneContent>                        
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" Text="Recently Opened Sessions" FontSize="16" Opacity="0.40" />
                             <RibbonGroup ItemsSource="{Binding RecentFiles}">
@@ -463,9 +465,26 @@
             </RibbonTab>            
         </Ribbon>
 
-        <TabControl
-            x:Name="tabControl"
-            Grid.Row="1">
-        </TabControl>
+        <DockPanel>
+            <DockPanel Height="35"
+                   Background="Blue"
+                   DockPanel.Dock="Top"
+                   Visibility="{Binding Converter={StaticResource collapseIfNullConverter}, Path=AvailableUpgrade}">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Label Foreground="White"
+                           Height="30">Upgrade available</Label>
+                    <Label Content="{Binding Path=AvailableUpgrade.Version}"
+                           Foreground="White"
+                           Height="30" />
+                    <Label Foreground="White"
+                           Height="30">, will be installed on next launch</Label>
+                </StackPanel>
+            </DockPanel>
+            <TabControl x:Name="tabControl"
+                        Grid.Row="1">
+            </TabControl>
+        </DockPanel>
     </DockPanel>
 </RibbonWindow>

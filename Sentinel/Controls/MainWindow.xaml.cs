@@ -9,6 +9,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -36,13 +37,15 @@
     using Sentinel.Support;
     using Sentinel.Views.Interfaces;
 
+    using Squirrel;
+
     using WpfExtras;
     using WpfExtras.Converters;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : INotifyPropertyChanged
     {
         private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
 
@@ -55,6 +58,8 @@
         private PreferencesWindow preferencesWindow;
 
         private int preferencesWindowTabSelected;
+
+        private ReleaseEntry availableUpgrade;
 
         public MainWindow()
         {
@@ -69,6 +74,8 @@
             // Get recently opened files
             GetRecentlyOpenedFiles();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
@@ -126,6 +133,19 @@
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
+
+        public ReleaseEntry AvailableUpgrade
+        {
+            get => availableUpgrade;
+            set
+            {
+                if (value != availableUpgrade)
+                {
+                    availableUpgrade = value;
+                    OnPropertyChanged(nameof(AvailableUpgrade));
+                }
+            }
+        }
 
         private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
         {
@@ -410,7 +430,7 @@
 
             // Determine whether anything passed on the command line, limited options
             // may be supplied and they will suppress the prompting of the new listener wizard.
-            var commandLine = Environment.GetCommandLineArgs();
+            var commandLine = Upgrader.ParseCommandLine(Environment.GetCommandLineArgs());
             if (commandLine.Length == 1)
             {
                 Add.Execute(null);
@@ -434,11 +454,29 @@
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
             }
+
+            // Set up an upgrade check to take place after 30 seconds
+            Task.Delay(TimeSpan.FromSeconds(3))
+                .ContinueWith(t => PerformUpdateCheck());
+        }
+
+        private void PerformUpdateCheck()
+        {
+            var upgradeInfo = Upgrader.CheckForUpgrades();
+
+            var releases = upgradeInfo as IList<ReleaseEntry> ?? upgradeInfo.ToList();
+            if (releases.Any())
+            {
+                AvailableUpgrade = releases.OrderByDescending(u => u.Version)
+                                           .FirstOrDefault();
+            }
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
         {
             commandLine.ThrowIfNull(nameof(commandLine));
+
+            MessageBox.Show(string.Join(" ", commandLine));
 
             var commandLineArguments = commandLine as string[] ?? commandLine.ToArray();
             if (!commandLineArguments.Any())
@@ -866,6 +904,11 @@
             var recentFileInfo = JsonHelper.DeserializeFromFile<RecentFileInfo>(fileName);
 
             recentFilePathList = recentFileInfo?.RecentFilePaths.ToList() ?? new List<string>();
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

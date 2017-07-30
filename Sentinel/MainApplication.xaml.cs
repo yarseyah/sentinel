@@ -2,8 +2,8 @@
 {
     using System;
     using System.Net.Sockets;
-    using System.Runtime.CompilerServices;
     using System.Runtime.ExceptionServices;
+    using System.Text;
     using System.Windows;
 
     using Sentinel.Properties;
@@ -23,9 +23,6 @@
             AppDomain.CurrentDomain.FirstChanceException += FirstChanceExceptionHandler;
             Settings.Default.Upgrade();
 
-            Upgrader.CheckForUpgrades()
-                    .RunSynchronously();
-
             ServiceLocator locator = ServiceLocator.Instance;
             locator.ReportErrors = true;
             locator.Register<ISessionManager>(new SessionManager());
@@ -41,24 +38,22 @@
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(e.Exception.Source) && e.Exception.Source.ToLower() == "mscorlib")
+            var source = e.Exception.Source?.ToLower();
+            if (source == "mscorlib" || source == "squirrel")
             {
                 return;
             }
 
-            var errorString =
-                string.Format(
-                    "Sender: {0} FirstChanceException raised in {1} : Message -- {2} :: InnerException -- {3} :: TargetSite -- {4} :: StackTrace -- {5} :: HelpLink -- {6} ",
-                    sender,
-                    AppDomain.CurrentDomain.FriendlyName,
-                    e.Exception.Message,
-                    (e.Exception.InnerException != null) ? e.Exception.InnerException.Message : string.Empty,
-                    (e.Exception.TargetSite != null) ? e.Exception.TargetSite.Name : string.Empty,
-                    e.Exception.StackTrace ?? string.Empty,
-                    e.Exception.HelpLink ?? string.Empty);
+            var sb = new StringBuilder();
+            sb.AppendLine($"Sender: {sender} FirstChanceException raised in {AppDomain.CurrentDomain.FriendlyName}");
+            sb.AppendLine($"Message - {e.Exception.Message}");
+            sb.AppendLine($"InnerException -- {e.Exception?.InnerException?.Message ?? string.Empty}");
+            sb.AppendLine($"TargetSite - {e.Exception?.TargetSite?.Name ?? string.Empty}");
+            sb.AppendLine($"StackTrace - {e.Exception?.StackTrace ?? string.Empty}");
+            sb.AppendLine($"HelpLink -- {e.Exception?.HelpLink ?? string.Empty} ");
 
             MessageBox.Show(
-                errorString,
+                sb.ToString(),
                 "Error " + e.Exception.GetType(),
                 MessageBoxButton.OK,
                 MessageBoxImage.Error,

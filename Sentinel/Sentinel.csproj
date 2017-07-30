@@ -76,7 +76,7 @@
     <ManifestKeyFile>Sentinel_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -84,6 +84,7 @@
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -270,6 +271,7 @@
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\SessionManager.cs" />
     <Compile Include="Support\Converters\BooleanToWidthConverter.cs" />
+    <Compile Include="Support\Converters\CollapseIfNullConverter.cs" />
     <Compile Include="Support\Converters\DatePreferenceConverter.cs" />
     <Compile Include="Support\Converters\TimePreferenceConverter.cs" />
     <Compile Include="Support\Converters\ImageLibraryConverter.cs" />
@@ -527,9 +529,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Properties\app.manifest">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -758,11 +758,6 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Update.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
