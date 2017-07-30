@@ -15,6 +15,11 @@ build/
 [Bb]in/
 [Oo]bj/
 
+# Squirrel releases
+Releases/
+*.nupkg
+*.nuspec
+
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
