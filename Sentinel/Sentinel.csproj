@@ -244,6 +244,7 @@
     <Compile Include="Interfaces\CollectionChangeHelper.cs" />
     <Compile Include="Interfaces\EnumerableExtensions.cs" />
     <Compile Include="Interfaces\IHighlighterStyle.cs" />
+    <Compile Include="Upgrader\IUpgradeService.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
     <Compile Include="Interfaces\LinqHelpers.cs" />
     <Compile Include="Interfaces\LogEntryField.cs" />
@@ -288,7 +289,10 @@
     <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />
     <Compile Include="Support\Wpf\ThemeInfo.cs" />
-    <Compile Include="Upgrader.cs" />
+    <Compile Include="Upgrader\SquirrelUpgradeService.cs" />
+    <Compile Include="Upgrader\UpgradeNotification.xaml.cs">
+      <DependentUpon>UpgradeNotification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Gui\LogMessages.cs" />
     <Compile Include="Views\Gui\LogMessagesControl.xaml.cs">
       <DependentUpon>LogMessagesControl.xaml</DependentUpon>
@@ -477,6 +481,10 @@
     <Page Include="Providers\SelectProviderPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Upgrader\UpgradeNotification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Gui\LogMessagesControl.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -6,6 +6,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
     xmlns:converters="clr-namespace:Sentinel.Support.Converters"
+    xmlns:upgrader="clr-namespace:Sentinel.Upgrader"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="560"
@@ -18,9 +19,6 @@
     ResizeMode="CanResizeWithGrip">
 
     <RibbonWindow.Resources>
-
-        <converters:CollapseIfNullConverter x:Key="collapseIfNullConverter" />
-
         <Style
             TargetType="{x:Type Image}">
             <Setter
@@ -466,22 +464,7 @@
         </Ribbon>
 
         <DockPanel>
-            <DockPanel Height="35"
-                   Background="Blue"
-                   DockPanel.Dock="Top"
-                   Visibility="{Binding Converter={StaticResource collapseIfNullConverter}, Path=AvailableUpgrade}">
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <Label Foreground="White"
-                           Height="30">Upgrade available</Label>
-                    <Label Content="{Binding Path=AvailableUpgrade.Version}"
-                           Foreground="White"
-                           Height="30" />
-                    <Label Foreground="White"
-                           Height="30">, will be installed on next launch</Label>
-                </StackPanel>
-            </DockPanel>
+            <upgrader:UpgradeNotification DockPanel.Dock="Top" DataContext="{Binding UpgradeService}" />
             <TabControl x:Name="tabControl"
                         Grid.Row="1">
             </TabControl>
