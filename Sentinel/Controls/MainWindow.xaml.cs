@@ -442,7 +442,7 @@
 
                 // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
                 Task.Delay(CheckForUpgradesPeriod)
-                    .ContinueWith(t => PerformUpdateCheck());
+                    .ContinueWith(t => UpgradeService?.CheckForUpgrades());
             }
 
             if (commandLine.Length == 1)
@@ -467,23 +467,6 @@
                 Log.DebugFormat("Provider: {0}", instance.Name);
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
-            }
-        }
-
-        private void PerformUpdateCheck()
-        {
-            // Note, these operations may take some time, make sure this method is called
-            // via some dispatcher and not in the main thread.
-            if (UpgradeService != null)
-            {
-                var upgradeInfo = UpgradeService.CheckForUpgrades();
-
-                var releases = upgradeInfo?.ToArray();
-                if (releases != null && releases.Any())
-                {
-                    AvailableUpgrade = releases.OrderByDescending(u => u.Version)
-                                               .FirstOrDefault();
-                }
             }
         }
 
