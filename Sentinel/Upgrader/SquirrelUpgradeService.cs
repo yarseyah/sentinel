@@ -1,4 +1,6 @@
-﻿namespace Sentinel.Upgrader
+﻿#define DEBUG_UPGRADE
+
+namespace Sentinel.Upgrader
 {
     using System;
     using System.ComponentModel;
@@ -22,10 +24,20 @@
 
         private bool showPanel = true;
 
+#if DEBUG_UPGRADE
+        // A copy of update.exe is required to be placed in the sentinel\bin folder
+        // in order to be able to debug the upgrade process.
+        // Use the the file in ./packages/squirrel.windows.n.n.n/tools/squirrel.exe
+        // renamed as update.exe
+        private string applicationName = "Bin";
+#else
+        private string applicationName = "Sentinel";
+#endif
+
         //// = "https://github.com/yarseyah/sentinel/updates";
         private string location = @"C:\Users\Ray\Development\sentinel\Releases";
 
-        private ReleaseEntry[] availableReleases;
+        private ReleaseEntry availableRelease;
 
         public SquirrelUpgradeService()
         {
@@ -67,6 +79,11 @@
             }
         }
 
+        public string AvailableRelease
+        {
+            get => availableRelease?.Version?.ToString();
+        }
+
         public bool ShowPanel
         {
             get => showPanel;
@@ -98,17 +115,26 @@
         {
             try
             {
-                Status = "Checking for updates..";
-                using (var updateManager = new UpdateManager(location))
+                Status = "Checking for updates...";
+                using (var updateManager = new UpdateManager(location, applicationName))
                 {
                     var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                                                   .Result;
 
                     if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
+                        var msg = "New version available!\n\n"
+                                  + $"Current version: {updateInfo.CurrentlyInstalledVersion?.Version}\n"
+                                  + $"New version: {updateInfo.FutureReleaseEntry?.Version}";
+                        Status = msg;
+
                         IsUpgradeAvailable = true;
-                        availableReleases = updateInfo.ReleasesToApply.ToArray();
-                        Status = $"{availableReleases.Length} update(s) available";
+                        availableRelease = updateInfo.FutureReleaseEntry;
+
+                        // ReSharper disable once ExplicitCallerInfoArgument
+                        OnPropertyChanged(nameof(AvailableRelease));
+
+                        CommandManager.InvalidateRequerySuggested();
                     }
                     else
                     {
@@ -142,28 +168,27 @@
 
         public void DownloadReleases()
         {
-            if (availableReleases != null && availableReleases.Any())
+            if (availableRelease != null)
             {
                 using (var updateManager = new UpdateManager(location))
                 {
-                    updateManager.DownloadReleases(availableReleases, i => Status = $"Download progress {i}")
+                    var mgr = updateManager;
+
+                    updateManager.UpdateApp(i => Status = $"Update progress {i}")
+                                 .ContinueWith(t => mgr.CreateUninstallerRegistryEntry())
                                  .ContinueWith(
                                      t =>
                                          {
-                                             if (t.IsFaulted)
+                                             var x = mgr;
+                                             if (t.IsCompleted)
                                              {
-                                                 Trace.WriteLine("Download failure");
-                                                 Status = "Failure checking for downloads";
+                                                 UpdateManager.RestartApp("sentinel.exe");
                                              }
-                                             else if (t.IsCompleted)
+                                             else
                                              {
-                                                 Trace.WriteLine("Download complete");
-                                                 Status = "Checking for downloads complete";
+                                                 Status = t.Status.ToString();
                                              }
                                          });
-
-                    updateManager.UpdateApp(i => Status = $"Update progress {i}")
-                                 .ContinueWith(t => Trace.WriteLine("Application updated"));
                 }
             }
         }
