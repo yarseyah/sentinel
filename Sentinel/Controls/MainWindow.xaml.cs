@@ -422,10 +422,6 @@
                 // Determine whether anything passed on the command line, limited options
                 // may be supplied and they will suppress the prompting of the new listener wizard.
                 commandLine = UpgradeService.ParseCommandLine(commandLine);
-
-                // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
-                Task.Delay(CheckForUpgradesPeriod)
-                    .ContinueWith(t => UpgradeService?.CheckForUpgrades());
             }
 
             if (commandLine.Length == 1)
@@ -451,6 +447,10 @@
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
             }
+
+            // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
+            Task.Delay(CheckForUpgradesPeriod)
+                .ContinueWith(t => UpgradeService?.CheckForUpgrades());
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
