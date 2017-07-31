@@ -1,4 +1,6 @@
-﻿namespace Sentinel.Upgrader
+﻿using System.IO;
+
+namespace Sentinel.Upgrader
 {
     using System;
     using System.ComponentModel;
@@ -23,7 +25,7 @@
         private bool showPanel = true;
 
         //// = "https://github.com/yarseyah/sentinel/updates";
-        private string location = @"C:\Users\Ray\Development\sentinel\Releases";
+        private string location = @"..\..\..\Releases";
 
         private ReleaseEntry[] availableReleases;
 
@@ -99,6 +101,14 @@
             try
             {
                 Status = "Checking for updates..";
+
+                // For portability, if the location is a relative location, make into
+                // an absolute location (this will allow development to avoid being hardcoded
+                // to a specific folder).
+                location = location.StartsWith("..")
+                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, location))
+                    : location;
+
                 using (var updateManager = new UpdateManager(location))
                 {
                     var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
