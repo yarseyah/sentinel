@@ -14,8 +14,14 @@
                Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
         <StackPanel DockPanel.Dock="Right"
                     VerticalAlignment="Center"
-                    Margin="10">
-            <Button Command="{Binding HidePanel}">Close</Button>
+                    Margin="10"
+                    Orientation="Horizontal">
+            <Button Margin="5"
+                    Padding="5"
+                    Command="{Binding Upgrade}">Upgrade</Button>
+            <Button Margin="5"
+                    Padding="5"
+                    Command="{Binding HidePanel}">Close</Button>
         </StackPanel>
         <Label DockPanel.Dock="Top"
                MinHeight="30"

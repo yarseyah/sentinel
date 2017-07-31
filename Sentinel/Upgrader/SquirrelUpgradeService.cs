@@ -30,11 +30,16 @@
         public SquirrelUpgradeService()
         {
             HidePanel = new DelegateCommand(o => ShowPanel = false);
+            Upgrade = new DelegateCommand(
+                a => DownloadReleases(),
+                o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand HidePanel { get; private set; }
+
+        public ICommand Upgrade { get; }
 
         public bool? IsFirstRun
         {
@@ -89,13 +94,13 @@
             }
         }
 
-        public CheckForUpgrades()
+        public void CheckForUpgrades()
         {
             try
             {
+                Status = "Checking for updates..";
                 using (var updateManager = new UpdateManager(location))
                 {
-                    Status = "Checking for updates..";
                     var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                                                   .Result;
 
@@ -103,9 +108,12 @@
                     {
                         IsUpgradeAvailable = true;
                         availableReleases = updateInfo.ReleasesToApply.ToArray();
+                        Status = $"{availableReleases.Length} update(s) available";
                     }
-
-                    Status = "No updates available";
+                    else
+                    {
+                        Status = "No updates available";
+                    }
                 }
             }
             catch (AggregateException aggregateException)
@@ -123,8 +131,12 @@
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Squirrel upgrader had the following error");
-                Trace.WriteLine(e.Message);
+                var sb = new StringBuilder();
+                sb.AppendLine("Squirrel upgrader had the following errors");
+                sb.AppendLine(e.Message);
+                var error = sb.ToString();
+                Trace.WriteLine(error);
+                Status = error;
             }
         }
 
@@ -155,6 +167,7 @@
                 }
             }
         }
+
         public string[] ParseCommandLine(string[] commandLineArguments)
         {
             IsFirstRun = commandLineArguments.Any(a => a == "--squirrel-firstrun");
