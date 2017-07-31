@@ -35,6 +35,7 @@
     using Sentinel.Services.Interfaces;
     using Sentinel.StartUp;
     using Sentinel.Support;
+    using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
 
     using Squirrel;
@@ -130,6 +131,10 @@
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ISearchExtractor SearchExtractor => ServiceLocator.Instance.Get<ISearchExtractor>();
+
+        public IUpgradeService UpgradeService => ServiceLocator.Instance.Get<IUpgradeService>();
+
+        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(30);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
@@ -428,9 +433,18 @@
 
             BindViewToViewModel();
 
-            // Determine whether anything passed on the command line, limited options
-            // may be supplied and they will suppress the prompting of the new listener wizard.
-            var commandLine = Upgrader.ParseCommandLine(Environment.GetCommandLineArgs());
+            var commandLine = Environment.GetCommandLineArgs();
+            if (UpgradeService != null)
+            {
+                // Determine whether anything passed on the command line, limited options
+                // may be supplied and they will suppress the prompting of the new listener wizard.
+                commandLine = UpgradeService.ParseCommandLine(commandLine);
+
+                // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
+                Task.Delay(CheckForUpgradesPeriod)
+                    .ContinueWith(t => PerformUpdateCheck());
+            }
+
             if (commandLine.Length == 1)
             {
                 Add.Execute(null);
@@ -454,21 +468,22 @@
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
             }
-
-            // Set up an upgrade check to take place after 30 seconds
-            Task.Delay(TimeSpan.FromSeconds(3))
-                .ContinueWith(t => PerformUpdateCheck());
         }
 
         private void PerformUpdateCheck()
         {
-            var upgradeInfo = Upgrader.CheckForUpgrades();
-
-            var releases = upgradeInfo as IList<ReleaseEntry> ?? upgradeInfo.ToList();
-            if (releases.Any())
+            // Note, these operations may take some time, make sure this method is called
+            // via some dispatcher and not in the main thread.
+            if (UpgradeService != null)
             {
-                AvailableUpgrade = releases.OrderByDescending(u => u.Version)
-                                           .FirstOrDefault();
+                var upgradeInfo = UpgradeService.CheckForUpgrades();
+
+                var releases = upgradeInfo?.ToArray();
+                if (releases != null && releases.Any())
+                {
+                    AvailableUpgrade = releases.OrderByDescending(u => u.Version)
+                                               .FirstOrDefault();
+                }
             }
         }
 

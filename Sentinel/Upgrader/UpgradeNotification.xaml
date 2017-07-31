@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Sentinel.Upgrader.UpgradeNotification"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
+    </UserControl.Resources>
+
+    <DockPanel Background="Blue"
+               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
+        <StackPanel DockPanel.Dock="Right"
+                    VerticalAlignment="Center"
+                    Margin="10">
+            <Button Command="{Binding HidePanel}">Close</Button>
+        </StackPanel>
+        <Label DockPanel.Dock="Top"
+               MinHeight="30"
+               VerticalContentAlignment="Center"
+               Content="{Binding Path=Status, FallbackValue='Status...'}"
+               Foreground="White" />
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradeAvailable}">
+            <Label Foreground="White"
+                   Height="30">Upgrade available</Label>
+            <Label Content="{Binding Path=AvailableUpgrade.Version, FallbackValue='&lt;Unknown&gt;'}"
+                   Margin="-5,0,-10,0"
+                   Foreground="White"
+                   Height="30" />
+            <Label Foreground="White"
+                   Height="30">, will be installed on next launch</Label>
+        </StackPanel>
+    </DockPanel>
+</UserControl>
