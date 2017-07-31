@@ -46,7 +46,7 @@
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : INotifyPropertyChanged
+    public partial class MainWindow
     {
         private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
 
@@ -59,8 +59,6 @@
         private PreferencesWindow preferencesWindow;
 
         private int preferencesWindowTabSelected;
-
-        private ReleaseEntry availableUpgrade;
 
         public MainWindow()
         {
@@ -75,8 +73,6 @@
             // Get recently opened files
             GetRecentlyOpenedFiles();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
@@ -138,19 +134,6 @@
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
-
-        public ReleaseEntry AvailableUpgrade
-        {
-            get => availableUpgrade;
-            set
-            {
-                if (value != availableUpgrade)
-                {
-                    availableUpgrade = value;
-                    OnPropertyChanged(nameof(AvailableUpgrade));
-                }
-            }
-        }
 
         private static WindowPlacementInfo ValidateScreenPosition(WindowPlacementInfo wp)
         {
@@ -902,11 +885,6 @@
             var recentFileInfo = JsonHelper.DeserializeFromFile<RecentFileInfo>(fileName);
 
             recentFilePathList = recentFileInfo?.RecentFilePaths.ToList() ?? new List<string>();
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
