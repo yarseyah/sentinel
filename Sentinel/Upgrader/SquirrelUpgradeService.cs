@@ -1,5 +1,4 @@
-﻿using System.IO;
-
+﻿
 namespace Sentinel.Upgrader
 {
     using System;

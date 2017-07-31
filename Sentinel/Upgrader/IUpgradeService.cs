@@ -1,9 +1,5 @@
 namespace Sentinel.Upgrader
 {
-    using System.Collections.Generic;
-
-    using Squirrel;
-
     public interface IUpgradeService
     {
         /// <summary>

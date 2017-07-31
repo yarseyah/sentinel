@@ -34,7 +34,7 @@
                     Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradeAvailable}">
             <Label Foreground="White"
                    Height="30">Upgrade available</Label>
-            <Label Content="{Binding Path=AvailableUpgrade.Version, FallbackValue='&lt;Unknown&gt;'}"
+            <Label Content="{Binding Path=AvailableRelease, FallbackValue='&lt;Unknown&gt;'}"
                    Margin="-5,0,-10,0"
                    Foreground="White"
                    Height="30" />
