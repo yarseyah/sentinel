@@ -10,36 +10,23 @@
         <converters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
     </UserControl.Resources>
 
-    <DockPanel Background="Blue"
-               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
+    <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradePanelVisible}">
         <StackPanel DockPanel.Dock="Right"
                     VerticalAlignment="Center"
-                    Margin="10"
+                    Margin="5"
                     Orientation="Horizontal">
+            <Button Command="{Binding Upgrade}"
+                    Padding="10,0"
+                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradeAvailable}">Upgrade</Button>
+            <Button Command="{Binding Restart}"
+                    Padding="10,0"
+                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=CanRestart}">Restart</Button>
             <Button Margin="5"
-                    Padding="5"
-                    Command="{Binding Upgrade}">Upgrade</Button>
-            <Button Margin="5"
-                    Padding="5"
-                    Command="{Binding HidePanel}">Close</Button>
+                    Command="{Binding HidePanel}">x</Button>
         </StackPanel>
-        <Label DockPanel.Dock="Top"
-               MinHeight="30"
-               VerticalContentAlignment="Center"
-               Content="{Binding Path=Status, FallbackValue='Status...'}"
-               Foreground="White" />
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradeAvailable}">
-            <Label Foreground="White"
-                   Height="30">Upgrade available</Label>
-            <Label Content="{Binding Path=AvailableRelease, FallbackValue='&lt;Unknown&gt;'}"
-                   Margin="-5,0,-10,0"
-                   Foreground="White"
-                   Height="30" />
-            <Label Foreground="White"
-                   Height="30">, will be installed on next launch</Label>
-        </StackPanel>
+        <Label VerticalContentAlignment="Center"
+               Content="{Binding Path=Status, FallbackValue='Checking for upgrades'}"
+               Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
     </DockPanel>
 </UserControl>

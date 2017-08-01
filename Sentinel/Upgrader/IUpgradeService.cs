@@ -1,3 +1,5 @@
+using System.Windows.Threading;
+
 namespace Sentinel.Upgrader
 {
     public interface IUpgradeService
@@ -9,6 +11,8 @@ namespace Sentinel.Upgrader
         bool? IsFirstRun { get; }
 
         bool? IsUpgradeAvailable { get; }
+
+        Dispatcher Dispatcher { get; set; }
 
         /// <summary>
         /// Allow the upgrade service to review (and alter) the supplied command line arguments.
