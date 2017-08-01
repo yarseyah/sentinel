@@ -5,13 +5,15 @@ Log-viewer with filtering and highlighting
 
 ## Log Sources 
 Sentinel is a viewer for log-files - specifically I designed it to act as a network end-point for the likes of nLog and log4net, additionally it then works really well for capturing log entries from multiple sources.  
-|| Source || Status ||
-| Log4Net UdpAppender| Supported  |
-| nLog's nLogViewer | Supported |
-| Trace Listener         |Planned |
-| Log-File Watcher    | Experimental |
-| Custom, via plug-in | Planned |
-| MSBuild | Plug-in in source-repo |
+
+Source                | Status
+--------------------- | ------
+Log4Net UdpAppender   | Supported 
+nLog's nLogViewer     | Supported
+Trace Listener        | Planned
+Log-File Watcher      | Experimental
+Custom, via plug-in   | Planned
+MSBuild               | Plug-in in source-repo
 
 ## Command-Line usage
 There are command line options that allow control over Sentinel when started, options available include the following:
