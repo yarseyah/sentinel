@@ -7,10 +7,10 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Windows.Input;
-
+    using System.Windows.Threading;
     using Squirrel;
-
     using WpfExtras;
 
     public class SquirrelUpgradeService : IUpgradeService, INotifyPropertyChanged
@@ -21,20 +21,39 @@
 
         private bool? isUpgradeAvailable;
 
-        private bool showPanel = true;
+        private bool canRestart;
+
+        private bool isUpgradePanelVisible;
 
         //// = "https://github.com/yarseyah/sentinel/updates";
+
         //// private string upgradeLocation = @"..\..\..\Releases";
+
         private string upgradeLocation = "http://localhost:5000";
 
         private UpdateInfo availableReleases;
 
+        public Dispatcher Dispatcher { get; set; }
+
         public SquirrelUpgradeService()
         {
-            HidePanel = new DelegateCommand(o => ShowPanel = false);
+            HidePanel = new DelegateCommand(o => IsUpgradePanelVisible = false);
             Upgrade = new DelegateCommand(
-                a => DownloadReleases(),
+                a => Task.Run(() => DownloadReleases()),
                 o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
+            Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => CanRestart);
+
+            PropertyChanged += (s, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(CanRestart):
+                    case nameof(IsUpgradeAvailable):
+                    case nameof(IsFirstRun):
+                        Dispatcher?.Invoke(CommandManager.InvalidateRequerySuggested);
+                        break;
+                }
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,6 +61,8 @@
         public ICommand HidePanel { get; private set; }
 
         public ICommand Upgrade { get; }
+
+        public ICommand Restart { get; }
 
         public bool? IsFirstRun
         {
@@ -69,6 +90,20 @@
             }
         }
 
+        public bool CanRestart
+        {
+            get => canRestart;
+            set
+            {
+                if (canRestart != value)
+                {
+                    Trace.WriteLine($"CanRestart = {value}");
+                    canRestart = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public UpdateInfo AvailableReleases { get; private set; }
 
         public string AvailableRelease
@@ -80,14 +115,14 @@
             }
         }
 
-        public bool ShowPanel
+        public bool IsUpgradePanelVisible
         {
-            get => showPanel;
+            get => isUpgradePanelVisible;
             set
             {
-                if (showPanel != value)
+                if (isUpgradePanelVisible != value)
                 {
-                    showPanel = value;
+                    isUpgradePanelVisible = value;
                     OnPropertyChanged();
                 }
             }
@@ -127,9 +162,11 @@
 
                     if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
-                        var msg = "New version available!\n\n"
-                                  + $"Current version: {updateInfo.CurrentlyInstalledVersion?.Version}\n"
-                                  + $"New version: {updateInfo.FutureReleaseEntry?.Version}";
+                        IsUpgradePanelVisible = true;
+
+                        var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ?? "Unknown version";
+                        var available = updateInfo.FutureReleaseEntry?.Version.ToString();
+                        var msg = $"New version available (Intalled: {installed}, available: {available})";
                         Status = msg;
 
                         IsUpgradeAvailable = true;
@@ -137,8 +174,6 @@
 
                         // ReSharper disable once ExplicitCallerInfoArgument
                         OnPropertyChanged(nameof(AvailableRelease));
-
-                        CommandManager.InvalidateRequerySuggested();
                     }
                     else
                     {
@@ -179,26 +214,26 @@
                     var mgr = updateManager;
 
                     updateManager.DownloadReleases(
-                            AvailableReleases.ReleasesToApply,
-                            i => Status = $"Download progress {i}")
-                        .ContinueWith(t2 =>
-                            mgr.ApplyReleases(AvailableReleases, i => Status = $"Update progress {i}"))
-                        .ContinueWith(t => mgr.CreateUninstallerRegistryEntry())
-                        .ContinueWith(
-                            t =>
-                            {
-                                var x = mgr;
-                                if (t.IsCompleted)
-                                {
-                                    UpdateManager.RestartApp("sentinel.exe");
-                                }
-                                else
-                                {
-                                    Status = t.Status.ToString();
-                                }
-                            });
+                        AvailableReleases.ReleasesToApply,
+                        i => Status = $"Download progress {i}").Wait();
+
+                    updateManager.ApplyReleases(AvailableReleases, i => Status = $"Update progress {i}").Wait();
+
+                    var key = updateManager.CreateUninstallerRegistryEntry().Result;
+
+                    Status = "Upgrade installed, please 'Restart' to use upgraded application";
+                    Trace.WriteLine(key);
+
+                    CanRestart = true;
+                    IsUpgradeAvailable = false;
+                    CommandManager.InvalidateRequerySuggested();
                 }
             }
+        }
+
+        public void RestartApplication()
+        {
+            UpdateManager.RestartApp("sentinel.exe");
         }
 
         public string[] ParseCommandLine(string[] commandLineArguments)
@@ -213,6 +248,7 @@
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Trace.WriteLine($"OnPropertyChanged: {propertyName}");
         }
     }
 }
