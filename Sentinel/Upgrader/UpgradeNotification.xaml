@@ -4,14 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
+             xmlns:upgrader="clr-namespace:Sentinel.Upgrader"
              mc:Ignorable="d">
+
+    <!--<UserControl.DataContext>
+        <upgrader:SquirrelUpgradeService />
+    </UserControl.DataContext>-->
 
     <UserControl.Resources>
         <converters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
     </UserControl.Resources>
 
     <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradePanelVisible}">
+               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
         <StackPanel DockPanel.Dock="Right"
                     VerticalAlignment="Center"
                     Margin="5"
@@ -21,7 +26,7 @@
                     Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsUpgradeAvailable}">Upgrade</Button>
             <Button Command="{Binding Restart}"
                     Padding="10,0"
-                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=CanRestart}">Restart</Button>
+                    Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=IsReadyForRestart}">Restart</Button>
             <Button Margin="5"
                     Command="{Binding HidePanel}">x</Button>
         </StackPanel>

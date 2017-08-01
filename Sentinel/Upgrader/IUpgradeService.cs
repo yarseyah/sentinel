@@ -12,7 +12,7 @@ namespace Sentinel.Upgrader
 
         bool? IsUpgradeAvailable { get; }
 
-        Dispatcher Dispatcher { get; set; }
+        Dispatcher DispatcherUiThread { get; set; }
 
         /// <summary>
         /// Allow the upgrade service to review (and alter) the supplied command line arguments.

@@ -15,42 +15,45 @@
 
     public class SquirrelUpgradeService : IUpgradeService, INotifyPropertyChanged
     {
-        private bool? isFirstRun;
-
         private string status;
+
+        private bool? isFirstRun;
 
         private bool? isUpgradeAvailable;
 
-        private bool canRestart;
+        private bool isReadyForRestart;
 
-        private bool isUpgradePanelVisible;
+        private bool showPanel;
 
         //// = "https://github.com/yarseyah/sentinel/updates";
-
         //// private string upgradeLocation = @"..\..\..\Releases";
-
         private string upgradeLocation = "http://localhost:5000";
 
         private UpdateInfo availableReleases;
 
-        public Dispatcher Dispatcher { get; set; }
+        /// <summary>
+        /// Gets or sets the Dispatcher for the UI thread, this is useful because a lot of the
+        /// activity here is run in a background thread and is unable to make the UI detect
+        /// changes.  Need this dispatcher to force the UI thread to see changes.
+        /// </summary>
+        public Dispatcher DispatcherUiThread { get; set; }
 
         public SquirrelUpgradeService()
         {
-            HidePanel = new DelegateCommand(o => IsUpgradePanelVisible = false);
+            HidePanel = new DelegateCommand(o => ShowPanel = false);
             Upgrade = new DelegateCommand(
                 a => Task.Run(() => DownloadReleases()),
                 o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
-            Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => CanRestart);
+            Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => IsReadyForRestart);
 
             PropertyChanged += (s, e) =>
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(CanRestart):
+                    case nameof(IsReadyForRestart):
                     case nameof(IsUpgradeAvailable):
                     case nameof(IsFirstRun):
-                        Dispatcher?.Invoke(CommandManager.InvalidateRequerySuggested);
+                        DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
                         break;
                 }
             };
@@ -90,39 +93,27 @@
             }
         }
 
-        public bool CanRestart
+        public bool IsReadyForRestart
         {
-            get => canRestart;
+            get => isReadyForRestart;
             set
             {
-                if (canRestart != value)
+                if (isReadyForRestart != value)
                 {
-                    Trace.WriteLine($"CanRestart = {value}");
-                    canRestart = value;
+                    isReadyForRestart = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        public UpdateInfo AvailableReleases { get; private set; }
-
-        public string AvailableRelease
+        public bool ShowPanel
         {
-            get
-            {
-                return AvailableReleases?.ReleasesToApply?.OrderByDescending(r => r.Version)
-                    .FirstOrDefault()?.Version?.ToString();
-            }
-        }
-
-        public bool IsUpgradePanelVisible
-        {
-            get => isUpgradePanelVisible;
+            get => showPanel;
             set
             {
-                if (isUpgradePanelVisible != value)
+                if (showPanel != value)
                 {
-                    isUpgradePanelVisible = value;
+                    showPanel = value;
                     OnPropertyChanged();
                 }
             }
@@ -162,7 +153,7 @@
 
                     if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
-                        IsUpgradePanelVisible = true;
+                        ShowPanel = true;
 
                         var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ?? "Unknown version";
                         var available = updateInfo.FutureReleaseEntry?.Version.ToString();
@@ -170,10 +161,7 @@
                         Status = msg;
 
                         IsUpgradeAvailable = true;
-                        AvailableReleases = updateInfo;
-
-                        // ReSharper disable once ExplicitCallerInfoArgument
-                        OnPropertyChanged(nameof(AvailableRelease));
+                        availableReleases = updateInfo;
                     }
                     else
                     {
@@ -207,24 +195,22 @@
 
         public void DownloadReleases()
         {
-            if (AvailableReleases?.ReleasesToApply?.Any() ?? false)
+            if (availableReleases?.ReleasesToApply?.Any() ?? false)
             {
                 using (var updateManager = new UpdateManager(upgradeLocation))
                 {
-                    var mgr = updateManager;
-
                     updateManager.DownloadReleases(
-                        AvailableReleases.ReleasesToApply,
+                        availableReleases.ReleasesToApply,
                         i => Status = $"Download progress {i}").Wait();
 
-                    updateManager.ApplyReleases(AvailableReleases, i => Status = $"Update progress {i}").Wait();
+                    updateManager.ApplyReleases(availableReleases, i => Status = $"Update progress {i}").Wait();
 
                     var key = updateManager.CreateUninstallerRegistryEntry().Result;
 
                     Status = "Upgrade installed, please 'Restart' to use upgraded application";
                     Trace.WriteLine(key);
 
-                    CanRestart = true;
+                    IsReadyForRestart = true;
                     IsUpgradeAvailable = false;
                     CommandManager.InvalidateRequerySuggested();
                 }

@@ -422,7 +422,7 @@
                 // Determine whether anything passed on the command line, limited options
                 // may be supplied and they will suppress the prompting of the new listener wizard.
                 commandLine = UpgradeService.ParseCommandLine(commandLine);
-                UpgradeService.Dispatcher = this.Dispatcher;
+                UpgradeService.DispatcherUiThread = this.Dispatcher;
 
 
             }
