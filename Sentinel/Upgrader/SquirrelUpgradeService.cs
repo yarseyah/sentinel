@@ -1,10 +1,9 @@
-﻿using System.IO;
-
-namespace Sentinel.Upgrader
+﻿namespace Sentinel.Upgrader
 {
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
@@ -24,20 +23,11 @@ namespace Sentinel.Upgrader
 
         private bool showPanel = true;
 
-#if DEBUG_UPGRADE
-        // A copy of update.exe is required to be placed in the sentinel\bin folder
-        // in order to be able to debug the upgrade process.
-        // Use the the file in ./packages/squirrel.windows.n.n.n/tools/squirrel.exe
-        // renamed as update.exe
-        private string applicationName = "Bin";
-#else
-        private string applicationName = "Sentinel";
-#endif
-
         //// = "https://github.com/yarseyah/sentinel/updates";
-        private string location = @"..\..\..\Releases";
+        //// private string upgradeLocation = @"..\..\..\Releases";
+        private string upgradeLocation = "http://localhost:5000";
 
-        private ReleaseEntry availableRelease;
+        private UpdateInfo availableReleases;
 
         public SquirrelUpgradeService()
         {
@@ -79,9 +69,15 @@ namespace Sentinel.Upgrader
             }
         }
 
+        public UpdateInfo AvailableReleases { get; private set; }
+
         public string AvailableRelease
         {
-            get => availableRelease?.Version?.ToString();
+            get
+            {
+                return AvailableReleases?.ReleasesToApply?.OrderByDescending(r => r.Version)
+                    .FirstOrDefault()?.Version?.ToString();
+            }
         }
 
         public bool ShowPanel
@@ -117,14 +113,14 @@ namespace Sentinel.Upgrader
             {
                 Status = "Checking for updates..";
 
-                // For portability, if the location is a relative location, make into
-                // an absolute location (this will allow development to avoid being hardcoded
+                // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+                // an absolute upgradeLocation (this will allow development to avoid being hardcoded
                 // to a specific folder).
-                location = location.StartsWith("..")
-                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, location))
-                    : location;
+                upgradeLocation = upgradeLocation.StartsWith("..")
+                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                    : upgradeLocation;
 
-                using (var updateManager = new UpdateManager(location))
+                using (var updateManager = new UpdateManager(upgradeLocation))
                 {
                     var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                                                   .Result;
@@ -137,7 +133,7 @@ namespace Sentinel.Upgrader
                         Status = msg;
 
                         IsUpgradeAvailable = true;
-                        availableRelease = updateInfo.FutureReleaseEntry;
+                        AvailableReleases = updateInfo;
 
                         // ReSharper disable once ExplicitCallerInfoArgument
                         OnPropertyChanged(nameof(AvailableRelease));
@@ -176,27 +172,31 @@ namespace Sentinel.Upgrader
 
         public void DownloadReleases()
         {
-            if (availableRelease != null)
+            if (AvailableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                using (var updateManager = new UpdateManager(location))
+                using (var updateManager = new UpdateManager(upgradeLocation))
                 {
                     var mgr = updateManager;
 
-                    updateManager.UpdateApp(i => Status = $"Update progress {i}")
-                                 .ContinueWith(t => mgr.CreateUninstallerRegistryEntry())
-                                 .ContinueWith(
-                                     t =>
-                                         {
-                                             var x = mgr;
-                                             if (t.IsCompleted)
-                                             {
-                                                 UpdateManager.RestartApp("sentinel.exe");
-                                             }
-                                             else
-                                             {
-                                                 Status = t.Status.ToString();
-                                             }
-                                         });
+                    updateManager.DownloadReleases(
+                            AvailableReleases.ReleasesToApply,
+                            i => Status = $"Download progress {i}")
+                        .ContinueWith(t2 =>
+                            mgr.ApplyReleases(AvailableReleases, i => Status = $"Update progress {i}"))
+                        .ContinueWith(t => mgr.CreateUninstallerRegistryEntry())
+                        .ContinueWith(
+                            t =>
+                            {
+                                var x = mgr;
+                                if (t.IsCompleted)
+                                {
+                                    UpdateManager.RestartApp("sentinel.exe");
+                                }
+                                else
+                                {
+                                    Status = t.Status.ToString();
+                                }
+                            });
                 }
             }
         }
