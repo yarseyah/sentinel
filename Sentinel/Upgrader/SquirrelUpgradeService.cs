@@ -25,6 +25,8 @@
 
         private bool showPanel;
 
+        private bool inhibitUpdateCheck = false;
+
         //// = "https://github.com/yarseyah/sentinel/updates";
         //// private string upgradeLocation = @"..\..\..\Releases";
         private string upgradeLocation = "http://localhost:5000";
@@ -135,61 +137,65 @@
 
         public void CheckForUpgrades()
         {
-            try
+            if (!inhibitUpdateCheck)
             {
-                Status = "Checking for updates..";
-
-                // For portability, if the upgradeLocation is a relative upgradeLocation, make into
-                // an absolute upgradeLocation (this will allow development to avoid being hardcoded
-                // to a specific folder).
-                upgradeLocation = upgradeLocation.StartsWith("..")
-                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
-                    : upgradeLocation;
-
-                using (var updateManager = new UpdateManager(upgradeLocation))
+                try
                 {
-                    var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
-                                                  .Result;
+                    Status = "Checking for updates..";
 
-                    if (updateInfo?.ReleasesToApply?.Any() ?? false)
+                    // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+                    // an absolute upgradeLocation (this will allow development to avoid being hardcoded
+                    // to a specific folder).
+                    upgradeLocation = upgradeLocation.StartsWith("..")
+                        ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                        : upgradeLocation;
+
+                    using (var updateManager = new UpdateManager(upgradeLocation))
                     {
-                        ShowPanel = true;
+                        var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
+                            .Result;
 
-                        var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ?? "Unknown version";
-                        var available = updateInfo.FutureReleaseEntry?.Version.ToString();
-                        var msg = $"New version available (Intalled: {installed}, available: {available})";
-                        Status = msg;
+                        if (updateInfo?.ReleasesToApply?.Any() ?? false)
+                        {
+                            ShowPanel = true;
 
-                        IsUpgradeAvailable = true;
-                        availableReleases = updateInfo;
-                    }
-                    else
-                    {
-                        Status = "No updates available";
+                            var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ??
+                                            "Unknown version";
+                            var available = updateInfo.FutureReleaseEntry?.Version.ToString();
+                            var msg = $"New version available (Intalled: {installed}, available: {available})";
+                            Status = msg;
+
+                            IsUpgradeAvailable = true;
+                            availableReleases = updateInfo;
+                        }
+                        else
+                        {
+                            Status = "No updates available";
+                        }
                     }
                 }
-            }
-            catch (AggregateException aggregateException)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("Squirrel upgrader had the following errors");
-                foreach (var e in aggregateException.InnerExceptions)
+                catch (AggregateException aggregateException)
                 {
+                    var sb = new StringBuilder();
+                    sb.AppendLine("Squirrel upgrader had the following errors");
+                    foreach (var e in aggregateException.InnerExceptions)
+                    {
+                        sb.AppendLine(e.Message);
+                    }
+
+                    var error = sb.ToString();
+                    Trace.WriteLine(error);
+                    Status = error;
+                }
+                catch (Exception e)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine("Squirrel upgrader had the following errors");
                     sb.AppendLine(e.Message);
+                    var error = sb.ToString();
+                    Trace.WriteLine(error);
+                    Status = error;
                 }
-
-                var error = sb.ToString();
-                Trace.WriteLine(error);
-                Status = error;
-            }
-            catch (Exception e)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("Squirrel upgrader had the following errors");
-                sb.AppendLine(e.Message);
-                var error = sb.ToString();
-                Trace.WriteLine(error);
-                Status = error;
             }
         }
 
@@ -219,15 +225,27 @@
 
         public void RestartApplication()
         {
-            UpdateManager.RestartApp("sentinel.exe");
+            if (!inhibitUpdateCheck)
+            {
+                UpdateManager.RestartApp("sentinel.exe");
+            }
         }
 
         public string[] ParseCommandLine(string[] commandLineArguments)
         {
-            IsFirstRun = commandLineArguments.Any(a => a == "--squirrel-firstrun");
+            var specialDirectives = new[]
+            {
+                "--squirrel-firstrun",
+                "--inhibit-upgrade"
+            };
+
+            IsFirstRun = commandLineArguments.Any(a => a == specialDirectives[0]);
             Trace.WriteLine("SQUIRREL INSTALLER: 'FirstRun'");
 
-            return commandLineArguments.Where(a => a != "--squirrel-firstrun")
+            inhibitUpdateCheck = commandLineArguments.Any(a => a == specialDirectives[1]);
+            Trace.WriteLine($"SQUIRREL INSTALLER: Upgrade check {(inhibitUpdateCheck ? "dis" : "en")}abled");
+
+            return commandLineArguments.Where(a => !specialDirectives.Contains(a))
                                        .ToArray();
         }
 
