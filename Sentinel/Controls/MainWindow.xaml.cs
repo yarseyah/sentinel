@@ -130,7 +130,7 @@
 
         public IUpgradeService UpgradeService => ServiceLocator.Instance.Get<IUpgradeService>();
 
-        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(1);
+        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
