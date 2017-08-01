@@ -1,9 +1,9 @@
-﻿
-namespace Sentinel.Upgrader
+﻿namespace Sentinel.Upgrader
 {
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
@@ -24,9 +24,10 @@ namespace Sentinel.Upgrader
         private bool showPanel = true;
 
         //// = "https://github.com/yarseyah/sentinel/updates";
-        private string location = @"..\..\..\Releases";
+        //// private string upgradeLocation = @"..\..\..\Releases";
+        private string upgradeLocation = "http://localhost:5000";
 
-        private ReleaseEntry[] availableReleases;
+        private UpdateInfo availableReleases;
 
         public SquirrelUpgradeService()
         {
@@ -68,6 +69,17 @@ namespace Sentinel.Upgrader
             }
         }
 
+        public UpdateInfo AvailableReleases { get; private set; }
+
+        public string AvailableRelease
+        {
+            get
+            {
+                return AvailableReleases?.ReleasesToApply?.OrderByDescending(r => r.Version)
+                    .FirstOrDefault()?.Version?.ToString();
+            }
+        }
+
         public bool ShowPanel
         {
             get => showPanel;
@@ -101,23 +113,32 @@ namespace Sentinel.Upgrader
             {
                 Status = "Checking for updates..";
 
-                // For portability, if the location is a relative location, make into
-                // an absolute location (this will allow development to avoid being hardcoded
+                // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+                // an absolute upgradeLocation (this will allow development to avoid being hardcoded
                 // to a specific folder).
-                location = location.StartsWith("..")
-                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, location))
-                    : location;
+                upgradeLocation = upgradeLocation.StartsWith("..")
+                    ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                    : upgradeLocation;
 
-                using (var updateManager = new UpdateManager(location))
+                using (var updateManager = new UpdateManager(upgradeLocation))
                 {
                     var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                                                   .Result;
 
                     if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
+                        var msg = "New version available!\n\n"
+                                  + $"Current version: {updateInfo.CurrentlyInstalledVersion?.Version}\n"
+                                  + $"New version: {updateInfo.FutureReleaseEntry?.Version}";
+                        Status = msg;
+
                         IsUpgradeAvailable = true;
-                        availableReleases = updateInfo.ReleasesToApply.ToArray();
-                        Status = $"{availableReleases.Length} update(s) available";
+                        AvailableReleases = updateInfo;
+
+                        // ReSharper disable once ExplicitCallerInfoArgument
+                        OnPropertyChanged(nameof(AvailableRelease));
+
+                        CommandManager.InvalidateRequerySuggested();
                     }
                     else
                     {
@@ -151,28 +172,31 @@ namespace Sentinel.Upgrader
 
         public void DownloadReleases()
         {
-            if (availableReleases != null && availableReleases.Any())
+            if (AvailableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                using (var updateManager = new UpdateManager(location))
+                using (var updateManager = new UpdateManager(upgradeLocation))
                 {
-                    updateManager.DownloadReleases(availableReleases, i => Status = $"Download progress {i}")
-                                 .ContinueWith(
-                                     t =>
-                                         {
-                                             if (t.IsFaulted)
-                                             {
-                                                 Trace.WriteLine("Download failure");
-                                                 Status = "Failure checking for downloads";
-                                             }
-                                             else if (t.IsCompleted)
-                                             {
-                                                 Trace.WriteLine("Download complete");
-                                                 Status = "Checking for downloads complete";
-                                             }
-                                         });
+                    var mgr = updateManager;
 
-                    updateManager.UpdateApp(i => Status = $"Update progress {i}")
-                                 .ContinueWith(t => Trace.WriteLine("Application updated"));
+                    updateManager.DownloadReleases(
+                            AvailableReleases.ReleasesToApply,
+                            i => Status = $"Download progress {i}")
+                        .ContinueWith(t2 =>
+                            mgr.ApplyReleases(AvailableReleases, i => Status = $"Update progress {i}"))
+                        .ContinueWith(t => mgr.CreateUninstallerRegistryEntry())
+                        .ContinueWith(
+                            t =>
+                            {
+                                var x = mgr;
+                                if (t.IsCompleted)
+                                {
+                                    UpdateManager.RestartApp("sentinel.exe");
+                                }
+                                else
+                                {
+                                    Status = t.Status.ToString();
+                                }
+                            });
                 }
             }
         }
