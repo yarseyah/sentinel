@@ -308,6 +308,8 @@
             locator.Register<IProviderManager>(new ProviderManager());
             locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
+
+            locator.Register<IUpgradeServicePreferences>(new UpgradeServicePreferences());
             locator.Register<IUpgradeService>(new SquirrelUpgradeService());
 
             locator.Register<INewProviderWizard>(new NewProviderWizard());
@@ -354,7 +356,10 @@
             locator.Register<IProviderManager>(new ProviderManager());
             locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
+
+            locator.Register<IUpgradeServicePreferences>(new UpgradeServicePreferences());
             locator.Register<IUpgradeService>(new SquirrelUpgradeService());
+
             locator.Register<INewProviderWizard>(new NewProviderWizard());
 
             LoadChangingViewModelBases();

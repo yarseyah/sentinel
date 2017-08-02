@@ -5,11 +5,15 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Input;
     using System.Windows.Threading;
+
+    using Sentinel.Services;
+
     using Squirrel;
     using WpfExtras;
 
@@ -25,20 +29,35 @@
 
         private bool showPanel;
 
-        private bool inhibitUpdateCheck = false;
-
-        //// = "https://github.com/yarseyah/sentinel/updates";
-        //// private string upgradeLocation = @"..\..\..\Releases";
-        private string upgradeLocation = "http://localhost:5000";
+        private bool userInhibitUpdateCheck = false;
 
         private UpdateInfo availableReleases;
+
+        private Dispatcher dispatcherUiThread;
+
+        private IUpgradeServicePreferences preferences;
+
+        private string error;
 
         /// <summary>
         /// Gets or sets the Dispatcher for the UI thread, this is useful because a lot of the
         /// activity here is run in a background thread and is unable to make the UI detect
         /// changes.  Need this dispatcher to force the UI thread to see changes.
         /// </summary>
-        public Dispatcher DispatcherUiThread { get; set; }
+        public Dispatcher DispatcherUiThread
+        {
+            get => dispatcherUiThread;
+            set
+            {
+                if (dispatcherUiThread != value)
+                {
+                    dispatcherUiThread = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
 
         public SquirrelUpgradeService()
         {
@@ -47,6 +66,8 @@
                 a => Task.Run(() => DownloadReleases()),
                 o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
             Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => IsReadyForRestart);
+
+            bool showErrors = true;
 
             PropertyChanged += (s, e) =>
             {
@@ -57,8 +78,27 @@
                     case nameof(IsFirstRun):
                         DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
                         break;
+                    case nameof(DispatcherUiThread):
+                        if (!preferences?.IsDisabled ?? false)
+                        {
+                            // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
+                            Task.Delay(preferences?.DelayBeforeCheckingForUpgrades ?? TimeSpan.Zero)
+                                .ContinueWith(t => CheckForUpgrades());
+                        }
+
+                        break;
+                    case nameof(Error):
+                        if (showErrors && !string.IsNullOrWhiteSpace(Error))
+                        {
+                            ShowPanel = true;
+                        }
+
+                        break;
                 }
             };
+
+            // Load preferences
+            preferences = ServiceLocator.Instance.Get<IUpgradeServicePreferences>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -135,22 +175,29 @@
             }
         }
 
+        public string Error
+        {
+            get => error;
+            set
+            {
+                if (error != value)
+                {
+                    error = value;
+                    Trace.WriteLine($"Squirrel upgrade error: {status}");
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public void CheckForUpgrades()
         {
-            if (!inhibitUpdateCheck)
+            if (!userInhibitUpdateCheck)
             {
                 try
                 {
                     Status = "Checking for updates..";
 
-                    // For portability, if the upgradeLocation is a relative upgradeLocation, make into
-                    // an absolute upgradeLocation (this will allow development to avoid being hardcoded
-                    // to a specific folder).
-                    upgradeLocation = upgradeLocation.StartsWith("..")
-                        ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
-                        : upgradeLocation;
-
-                    using (var updateManager = new UpdateManager(upgradeLocation))
+                    using (var updateManager = new UpdateManager(GetUpgradeLocation()))
                     {
                         var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                             .Result;
@@ -174,6 +221,12 @@
                         }
                     }
                 }
+                catch (AggregateException ae) when (ae.InnerExceptions?.All(e => e is WebException) ?? false)
+                {
+                    Error = "Unable to reach upgrade server";
+                    Status = null;
+                    IsUpgradeAvailable = false;
+                }
                 catch (AggregateException aggregateException)
                 {
                     var sb = new StringBuilder();
@@ -183,27 +236,43 @@
                         sb.AppendLine(e.Message);
                     }
 
-                    var error = sb.ToString();
-                    Trace.WriteLine(error);
-                    Status = error;
+                    var message = sb.ToString();
+                    Trace.WriteLine(message);
+                    Status = null;
+                    Error = message;
                 }
                 catch (Exception e)
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine("Squirrel upgrader had the following errors");
                     sb.AppendLine(e.Message);
-                    var error = sb.ToString();
-                    Trace.WriteLine(error);
-                    Status = error;
+
+                    var message = sb.ToString();
+                    Trace.WriteLine(message);
+                    Status = null;
+                    Error = message;
                 }
             }
+        }
+
+        private string GetUpgradeLocation()
+        {
+            var upgradeLocation = preferences?.UpgradeRepository ?? string.Empty;
+
+            // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+            // an absolute upgradeLocation (this will allow development to avoid being hardcoded
+            // to a specific folder).
+            upgradeLocation = upgradeLocation.StartsWith("..")
+                                  ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                                  : upgradeLocation;
+            return upgradeLocation;
         }
 
         public void DownloadReleases()
         {
             if (availableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                using (var updateManager = new UpdateManager(upgradeLocation))
+                using (var updateManager = new UpdateManager(GetUpgradeLocation()))
                 {
                     updateManager.DownloadReleases(
                         availableReleases.ReleasesToApply,
@@ -225,7 +294,7 @@
 
         public void RestartApplication()
         {
-            if (!inhibitUpdateCheck)
+            if (!userInhibitUpdateCheck)
             {
                 UpdateManager.RestartApp("sentinel.exe");
             }
@@ -242,8 +311,8 @@
             IsFirstRun = commandLineArguments.Any(a => a == specialDirectives[0]);
             Trace.WriteLine("SQUIRREL INSTALLER: 'FirstRun'");
 
-            inhibitUpdateCheck = commandLineArguments.Any(a => a == specialDirectives[1]);
-            Trace.WriteLine($"SQUIRREL INSTALLER: Upgrade check {(inhibitUpdateCheck ? "dis" : "en")}abled");
+            userInhibitUpdateCheck = commandLineArguments.Any(a => a == specialDirectives[1]);
+            Trace.WriteLine($"SQUIRREL INSTALLER: Upgrade check {(userInhibitUpdateCheck ? "dis" : "en")}abled");
 
             return commandLineArguments.Where(a => !specialDirectives.Contains(a))
                                        .ToArray();
