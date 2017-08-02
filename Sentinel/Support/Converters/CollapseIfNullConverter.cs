@@ -9,7 +9,15 @@ namespace Sentinel.Support.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? Visibility.Collapsed : Visibility.Visible;
+            var s = value as string;
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                value = null;
+            }
+
+            return value == null
+                       ? (parameter == null ? Visibility.Collapsed : Visibility.Visible)
+                       : (parameter == null ? Visibility.Visible : Visibility.Collapsed);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

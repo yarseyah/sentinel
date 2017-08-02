@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
              xmlns:upgrader="clr-namespace:Sentinel.Upgrader"
+             xmlns:converters1="clr-namespace:Sentinel.Support.Converters"
              mc:Ignorable="d">
 
     <!--<UserControl.DataContext>
@@ -13,11 +14,38 @@
 
     <UserControl.Resources>
         <converters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
+        <converters1:CollapseIfNullConverter x:Key="collapseIfNullConverter" />
     </UserControl.Resources>
 
-    <DockPanel Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-               Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
-        <StackPanel DockPanel.Dock="Right"
+          
+    <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+          Visibility="{Binding Converter={StaticResource boolCollapseConverter}, Path=ShowPanel}">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="*"/>
+            <ColumnDefinition  Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.RowSpan="2"
+              Grid.ColumnSpan="2">
+            <Label VerticalContentAlignment="Center"
+                   Content="{Binding Path=Error}"
+                   Visibility="{Binding Converter={StaticResource collapseIfNullConverter}, Path=Error}"
+                   Background="Red"
+                   Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Label VerticalContentAlignment="Center"
+                   Content="{Binding Path=Status, FallbackValue='Checking for upgrades'}"
+                   Visibility="{Binding Converter={StaticResource collapseIfNullConverter}, Path=Status}"
+                   Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        </Grid>
+
+        <StackPanel Grid.Column="1"
+                    Grid.RowSpan="2"
                     VerticalAlignment="Center"
                     Margin="5"
                     Orientation="Horizontal">
@@ -30,8 +58,5 @@
             <Button Margin="5"
                     Command="{Binding HidePanel}">x</Button>
         </StackPanel>
-        <Label VerticalContentAlignment="Center"
-               Content="{Binding Path=Status, FallbackValue='Checking for upgrades'}"
-               Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-    </DockPanel>
+    </Grid>
 </UserControl>

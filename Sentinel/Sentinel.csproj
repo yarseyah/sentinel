@@ -289,10 +289,12 @@
     <Compile Include="Support\Wpf\FixedWidthColumn.cs" />
     <Compile Include="Support\Wpf\ObservableDictionary.cs" />
     <Compile Include="Support\Wpf\ThemeInfo.cs" />
+    <Compile Include="Upgrader\IUpgradeServicePreferences.cs" />
     <Compile Include="Upgrader\SquirrelUpgradeService.cs" />
     <Compile Include="Upgrader\UpgradeNotification.xaml.cs">
       <DependentUpon>UpgradeNotification.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Upgrader\UpgradeServicePreferences.cs" />
     <Compile Include="Views\Gui\LogMessages.cs" />
     <Compile Include="Views\Gui\LogMessagesControl.xaml.cs">
       <DependentUpon>LogMessagesControl.xaml</DependentUpon>

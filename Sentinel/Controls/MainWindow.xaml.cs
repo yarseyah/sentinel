@@ -130,8 +130,6 @@
 
         public IUpgradeService UpgradeService => ServiceLocator.Instance.Get<IUpgradeService>();
 
-        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
-
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
 
@@ -422,9 +420,6 @@
                 // Determine whether anything passed on the command line, limited options
                 // may be supplied and they will suppress the prompting of the new listener wizard.
                 commandLine = UpgradeService.ParseCommandLine(commandLine);
-                UpgradeService.DispatcherUiThread = this.Dispatcher;
-
-
             }
 
             if (commandLine.Length == 1)
@@ -451,9 +446,12 @@
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
             }
 
-            // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
-            Task.Delay(CheckForUpgradesPeriod)
-                .ContinueWith(t => UpgradeService?.CheckForUpgrades());
+            // Provide the upgrade service with a Dispatcher for the main UI thread
+            // which is needed for providing UI updates.
+            if (UpgradeService != null)
+            {
+                UpgradeService.DispatcherUiThread = Dispatcher;
+            }
         }
 
         private void ProcessCommandLine(IEnumerable<string> commandLine)
