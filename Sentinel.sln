@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel", "Sentinel\Sentinel.csproj", "{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}"
 EndProject
@@ -30,6 +30,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.EventLogMonitor", "Sentinel.EventLogMonitor\Sentinel.EventLogMonitor.csproj", "{3F2AF0E8-2B22-45C5-AB62-27C42C506325}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.EventLogMonitor.Interfaces", "Sentinel.EventLogMonitor.Interfaces\Sentinel.EventLogMonitor.Interfaces.csproj", "{43D710A0-7805-4B0A-B38F-4A4D772800F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{5D931689-37BB-44D7-95AA-50A01E42567A}"
+	ProjectSection(SolutionItems) = preProject
+		Make-Installer.ps1 = Make-Installer.ps1
+		Sentinel.nuspec = Sentinel.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
