@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Sentinel</id>
+    <!-- version will be replaced by MSBuild -->
+    <version>0.0.0.0</version>
+    <title>Sentinel Log-Viewer</title>
+    <authors>Ray Hayes</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Log-file viewer for nLog and log4net</description>
+    <copyright>Ray Hayes, 2009-2017</copyright>
+    <dependencies />
+  </metadata>
+  <files>
+    <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*;*.xml"/>
+  </files>
+</package>
