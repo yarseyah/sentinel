@@ -1,4 +1,6 @@
-﻿namespace Sentinel.Upgrader
+﻿#define GITHUB_RELEASE
+
+namespace Sentinel.Upgrader
 {
     using System;
     using System.ComponentModel;
@@ -197,7 +199,7 @@
                 {
                     Status = "Checking for updates..";
 
-                    using (var updateManager = new UpdateManager(GetUpgradeLocation()))
+                    using (var updateManager = UpdateManager())
                     {
                         var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
                             .Result;
@@ -272,7 +274,7 @@
         {
             if (availableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                using (var updateManager = new UpdateManager(GetUpgradeLocation()))
+                using (var updateManager = UpdateManager())
                 {
                     updateManager.DownloadReleases(
                         availableReleases.ReleasesToApply,
@@ -292,11 +294,20 @@
             }
         }
 
+        private UpdateManager UpdateManager()
+        {
+#if GITHUB_RELEASE
+            return Squirrel.UpdateManager.GitHubUpdateManager("https://github.com/yarseyah/sentinel").Result;
+#else
+            return new UpdateManager(GetUpgradeLocation());
+#endif
+        }
+
         public void RestartApplication()
         {
             if (!userInhibitUpdateCheck)
             {
-                UpdateManager.RestartApp("sentinel.exe");
+                Squirrel.UpdateManager.RestartApp("sentinel.exe");
             }
         }
 
