@@ -27,6 +27,7 @@
     <Grid x:Name="LayoutRoot">
         <ListView x:Name="messages"
                   Grid.Column="0"
+                  ScrollViewer.CanContentScroll="True"
                   ItemsSource="{Binding Messages}">
             <ListView.View>
                 <GridView>
