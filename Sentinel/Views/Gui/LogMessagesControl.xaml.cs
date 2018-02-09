@@ -51,8 +51,7 @@
             messages.ItemContainerStyleSelector = new HighlightingSelector(Messages_OnMouseDoubleClick);
 
             Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
-            var preferenceChanged = Preferences as INotifyPropertyChanged;
-            if (preferenceChanged != null)
+            if (Preferences is INotifyPropertyChanged preferenceChanged)
             {
                 preferenceChanged.PropertyChanged += PreferencesChanged;
             }
@@ -68,8 +67,7 @@
         ~LogMessagesControl()
         {
             // Unregister observer of Preferences changing.
-            var preferences = Preferences as INotifyPropertyChanged;
-            if (preferences != null)
+            if (Preferences is INotifyPropertyChanged preferences)
             {
                 preferences.PropertyChanged -= PreferencesChanged;
             }
@@ -108,8 +106,6 @@
                         break;
                     case 3:
                         fixedColumn.FixedWidth = 90;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -157,15 +153,13 @@
 
             if (DoubleClickToShowExceptions)
             {
-                var item = sender as ListViewItem;
-                if (item != null)
+                if (sender is ListViewItem item)
                 {
                     Log.Trace("Double click performed on entry");
 
                     if (item.HasContent)
                     {
-                        var entry = item.Content as ILogEntry;
-                        if (entry != null)
+                        if (item.Content is ILogEntry entry)
                         {
                             Log.Trace(entry.Type);
                             Log.Trace(entry.Description);
@@ -183,7 +177,7 @@
                 foreach (ILogEntry item in messages.SelectedItems)
                 {
                     sb.AppendLine(
-                        $"{item.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff")}|{item.Type}|{item.System}|{item.Description}");
+                        $"{item.DateTime.ToLocalTime():yyyy-MM-dd HH:mm:ss.ffff}|{item.Type}|{item.System}|{item.Description}");
                 }
 
                 try
@@ -199,11 +193,14 @@
 
         private void AddCopyCommandBinding()
         {
-            ExecutedRoutedEventHandler handler = (s, a) => { CopySelectedLogEntries(); };
+            void Handler(object s, ExecutedRoutedEventArgs a)
+            {
+                CopySelectedLogEntries();
+            }
 
             var command = new RoutedCommand("Copy", typeof(GridView));
             command.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control, "Copy"));
-            messages.CommandBindings.Add(new CommandBinding(command, handler));
+            messages.CommandBindings.Add(new CommandBinding(command, Handler));
 
             try
             {

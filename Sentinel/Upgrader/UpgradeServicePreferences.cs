@@ -2,7 +2,7 @@ namespace Sentinel.Upgrader
 {
     using System;
 
-    class UpgradeServicePreferences : IUpgradeServicePreferences
+    public class UpgradeServicePreferences : IUpgradeServicePreferences
     {
         //// = "https://github.com/yarseyah/sentinel/updates";
         //// private string upgradeLocation = @"..\..\..\Releases";
