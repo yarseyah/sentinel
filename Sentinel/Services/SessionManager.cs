@@ -1,4 +1,6 @@
-﻿namespace Sentinel.Services
+﻿using Sentinel.Log4Net;
+
+namespace Sentinel.Services
 {
     using System;
     using System.Collections.Generic;
@@ -290,11 +292,20 @@
                             if (providerSetting["$type"].ToString().Contains(typeof(NetworkSettings).Name))
                             {
                                 var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(providerSetting.ToString());
-                                pendingProviderRecords.Add(new PendingProviderRecord()
-                                {
-                                    Info = thisSetting.Info,
-                                    Settings = thisSetting
-                                });
+                                pendingProviderRecords.Add(new PendingProviderRecord
+                                                               {
+                                                                   Info = thisSetting.Info,
+                                                                   Settings = thisSetting
+                                                               });
+                            }
+                            else if (providerSetting["$type"].ToString().Contains(typeof(UdpAppenderSettings).Name))
+                            {
+                                var thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(providerSetting.ToString());
+                                pendingProviderRecords.Add(new PendingProviderRecord
+                                                               {
+                                                                   Info = thisSetting.Info,
+                                                                   Settings = thisSetting
+                                                               });
                             }
                         }
                     }
