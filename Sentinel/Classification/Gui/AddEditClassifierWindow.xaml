@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:SentinelInterfaces="clr-namespace:Sentinel.Interfaces"
+        xmlns:i="clr-namespace:Sentinel.Interfaces"
         Title="Add / Edit Classifier"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
@@ -12,19 +12,19 @@
 
     <Window.Resources>
 
-        <ObjectDataProvider x:Key="logEntryField"
+        <ObjectDataProvider x:Key="LogEntryField"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="SentinelInterfaces:LogEntryField" />
+                <x:Type TypeName="i:LogEntryField" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <ObjectDataProvider x:Key="matchMode"
+        <ObjectDataProvider x:Key="MatchMode"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="SentinelInterfaces:MatchMode" />
+                <x:Type TypeName="i:MatchMode" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
@@ -66,14 +66,16 @@
 
             <Label Content="Classifier name : "
                    Margin="5" />
-            <TextBox Grid.Column="1"
+            <TextBox Grid.Row="0"
+                     Grid.Column="1"
                      Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      VerticalContentAlignment="Center" />
 
             <Label Content="Type to classify : "
                    Margin="5"
-                   Grid.Row="1"/>
+                   Grid.Row="1"
+                   Grid.Column="0" />
             <TextBox Grid.Column="1"
                      Grid.Row="1"
                      Text="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -82,34 +84,37 @@
 
             <Label Content="Field to match against : "
                    Grid.Row="2"
+                   Grid.Column="0"
                    Margin="5" />
             <ComboBox Grid.Column="1"
                       Grid.Row="2"
                       SelectedItem="{Binding Field, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding Source={StaticResource logEntryField}}"
+                      ItemsSource="{Binding Source={StaticResource LogEntryField}}"
                       Margin="5"
                       VerticalContentAlignment="Center" />
 
             <Label Content="Match method : "
                    Margin="5"
-                   Grid.Row="3" />
+                   Grid.Row="3"
+                   Grid.Column="0" />
             <ComboBox Grid.Column="1"
                       Grid.Row="3"
                       SelectedItem="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding Source={StaticResource matchMode}}"
+                      ItemsSource="{Binding Source={StaticResource MatchMode}}"
                       Margin="5"
                       VerticalContentAlignment="Center" />
 
             <Label Content="Match string :"
                    Margin="5"
-                   Grid.Row="4" />
-            <TextBox x:Name="matchText"
+                   Grid.Row="4"
+                   Grid.Column="0" />
+            <TextBox x:Name="MatchText"
                      Margin="5"
                      MinWidth="205"
                      Grid.Row="4"
                      Grid.Column="1"
                      Text="{Binding Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     VerticalContentAlignment="Center" />                 
+                     VerticalContentAlignment="Center" />
         </Grid>
     </DockPanel>
 </Window>

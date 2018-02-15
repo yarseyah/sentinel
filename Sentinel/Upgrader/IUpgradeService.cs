@@ -1,7 +1,7 @@
-using System.Windows.Threading;
-
 namespace Sentinel.Upgrader
 {
+    using System.Windows.Threading;
+
     public interface IUpgradeService
     {
         /// <summary>

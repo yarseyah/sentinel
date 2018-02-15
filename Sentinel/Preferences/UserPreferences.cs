@@ -1,16 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-
-using Common.Logging;
-
-namespace Sentinel.Preferences
+﻿namespace Sentinel.Preferences
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-
+    using Common.Logging;
     using Interfaces;
     using Support.Wpf;
-
     using WpfExtras;
 
     /// <summary>

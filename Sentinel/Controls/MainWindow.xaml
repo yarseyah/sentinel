@@ -249,13 +249,13 @@
 
                             <RibbonToggleButton x:Name="HighlightToggleButton" Margin="5,0,0,0" Label="Highlight"
                                               HorizontalAlignment="Left"                                               
-                                              VerticalContentAlignment="Center" Checked="SearchToggleButton_Checked"/>
+                                              VerticalContentAlignment="Center" Checked="SearchToggleButtonChecked"/>
                             <RibbonToggleButton x:Name="FilterToggleButton" Margin="20,0,0,0" Label="Filter"
                                               HorizontalAlignment="Left"                                              
-                                              VerticalContentAlignment="Center" Checked="SearchToggleButton_Checked" />
+                                              VerticalContentAlignment="Center" Checked="SearchToggleButtonChecked" />
                             <RibbonToggleButton x:Name="ExtractToggleButton" Margin="20,0,0,0" Label="Extract"
                                               HorizontalAlignment="Left"                                              
-                                              VerticalContentAlignment="Center" Checked="SearchToggleButton_Checked" />                            
+                                              VerticalContentAlignment="Center" Checked="SearchToggleButtonChecked" />                            
                         </StackPanel>
                     </StackPanel>
                     

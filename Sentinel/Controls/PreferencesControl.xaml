@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:Controls="clr-namespace:Sentinel.Controls"
-             xmlns:Highlighters="clr-namespace:Sentinel.Highlighters.Gui"
-             xmlns:ClassificationControls="clr-namespace:Sentinel.Classification.Gui"
-             xmlns:Filters="clr-namespace:Sentinel.Filters.Gui"
-             xmlns:Extractors="clr-namespace:Sentinel.Extractors.Gui"
+             xmlns:controls="clr-namespace:Sentinel.Controls"
+             xmlns:highlighters="clr-namespace:Sentinel.Highlighters.Gui"
+             xmlns:classificationControls="clr-namespace:Sentinel.Classification.Gui"
+             xmlns:filters="clr-namespace:Sentinel.Filters.Gui"
+             xmlns:extractors="clr-namespace:Sentinel.Extractors.Gui"
              xmlns:wpfExtras="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
              mc:Ignorable="d"
              x:Class="Sentinel.Controls.PreferencesControl"
@@ -172,7 +172,7 @@
                                        Margin="0,5,0,5"
                                        Text="The classifiers are evaluated in the order shown below and the last enabled match wins:" />
                         </StackPanel>
-                        <ClassificationControls:ClassificationsControl />
+                        <classificationControls:ClassificationsControl />
                     </DockPanel>
                 </GroupBox>
             </TabItem>
@@ -191,7 +191,7 @@
                                        Margin="0,5,0,5"
                                        Text="The highlighters are evaluated in the order shown below and the first enabled match wins:" />
                         </StackPanel>
-                        <Highlighters:HighlightersControl />
+                        <highlighters:HighlightersControl />
                     </DockPanel>
                 </GroupBox>
             </TabItem>
@@ -209,7 +209,7 @@
                                    Margin="0,5,0,5"
                                    Text="The list below indicates the available filters that may be applied:" />
                         </StackPanel>
-                        <Filters:FiltersControl Height="Auto"
+                        <filters:FiltersControl Height="Auto"
                                                 VerticalAlignment="Stretch" />
                     </DockPanel>
                 </GroupBox>
@@ -228,7 +228,7 @@
                                    Margin="0,5,0,5"
                                    Text="The list below indicates the available extractors that may be applied:" />
                         </StackPanel>
-                        <Extractors:ExtractorsControl Height="Auto"
+                        <extractors:ExtractorsControl Height="Auto"
                                                 VerticalAlignment="Stretch" />
                     </DockPanel>
                 </GroupBox>
@@ -248,7 +248,7 @@
                                    Margin="0,5,0,5"
                                    Text="The list below indicates the registered images:" />
                         </StackPanel>
-                        <Controls:ImageTypesControl />
+                        <controls:ImageTypesControl />
                     </DockPanel>
                 </GroupBox>
             </TabItem>

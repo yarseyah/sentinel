@@ -4,8 +4,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:Support="clr-namespace:Sentinel.Support"
-    xmlns:Converters1="clr-namespace:Sentinel.Support.Converters"
+    xmlns:support="clr-namespace:Sentinel.Support"
+    xmlns:converters="clr-namespace:Sentinel.Support.Converters"
     x:Class="Sentinel.Controls.LogActivityControl"
     x:Name="UserControl"
     d:DesignWidth="376.654"
@@ -36,7 +36,7 @@
             </Style.Triggers>
         </Style>
 
-        <Converters1:TimeSinceDateTimeConverter
+        <converters:TimeSinceDateTimeConverter
             x:Key="TimeSinceDateTimeConverter" />
 
     </UserControl.Resources>
@@ -46,14 +46,14 @@
 
         <ListView
             x:Name="Updates"
-            Support:GridViewSort.AutoSort="True"
-            Support:GridViewSort.SortGlyphAscending="/Resources/Glyphs/SortUpArrow.png"
-            Support:GridViewSort.SortGlyphDescending="/Resources/Glyphs/SortDownArrow.png"
+            support:GridViewSort.AutoSort="True"
+            support:GridViewSort.SortGlyphAscending="/Resources/Glyphs/SortUpArrow.png"
+            support:GridViewSort.SortGlyphDescending="/Resources/Glyphs/SortDownArrow.png"
             ItemContainerStyle="{StaticResource ActivityRowStyle}"
             ItemsSource="{Binding Activity.Details}">
             <ListView.ContextMenu>
                 <ContextMenu
-                    x:Name="activityLBContextMenu">
+                    x:Name="ActivityLbContextMenu">
                     <MenuItem
                         Header="Clear"
                         Command="{Binding ClearActivity}" />
@@ -70,15 +70,15 @@
                         DisplayMemberBinding="{Binding Classification}" />
                     <GridViewColumn
                         Header="Since last seen"
-                        Support:GridViewSort.PropertyName="LastActivity"
+                        support:GridViewSort.PropertyName="LastActivity"
                         DisplayMemberBinding="{Binding LastActivity, Converter={StaticResource TimeSinceDateTimeConverter}}" />
                     <GridViewColumn
                         Header="Since Error"
-                        Support:GridViewSort.PropertyName="LastError"
+                        support:GridViewSort.PropertyName="LastError"
                         DisplayMemberBinding="{Binding LastError, Converter={StaticResource TimeSinceDateTimeConverter}}" />
                     <GridViewColumn
                         Header="Since Warning"
-                        Support:GridViewSort.PropertyName="LastWarning"
+                        support:GridViewSort.PropertyName="LastWarning"
                         DisplayMemberBinding="{Binding LastWarning, Converter={StaticResource TimeSinceDateTimeConverter}}" />
                 </GridView>
             </ListView.View>

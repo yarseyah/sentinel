@@ -1,4 +1,5 @@
-﻿namespace nLog4Tester
+﻿// ReSharper disable once StyleCop.SA1300
+namespace nLog4Tester
 {
     using System;
     using System.Collections.Generic;
@@ -28,12 +29,12 @@
                                                                "Kernel32"
                                                            };
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             const int SmallestSleep = 1000;
             const int BiggestSleep = 2000;
 
-            for (var i=0;;i++)
+            for (var i = 0;; i++)
             {
                 // Randomly generate a message:
                 var text = RandomMessage(i);
@@ -42,9 +43,10 @@
                 LogMessage(text);
 
                 Thread.Sleep(Random.Next(SmallestSleep, BiggestSleep));
-            }  
-        }
+            }
 
+            // ReSharper disable once FunctionNeverReturns
+        }
 
         private static void LogMessage(string text)
         {

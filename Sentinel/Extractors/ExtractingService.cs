@@ -47,11 +47,14 @@
             SearchExtractors.CollectionChanged += collectionHelper.AttachDetach;
 
             var searchExtractor = ServiceLocator.Instance.Get<ISearchExtractor>();
-            Debug.Assert(searchExtractor != null, "The search extractor is null.");
 
             if (searchExtractor != null)
             {
                 SearchExtractors.Add(searchExtractor as T);
+            }
+            else
+            {
+                Debug.Fail("The search extractor is null.");
             }
         }
 

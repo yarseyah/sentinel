@@ -28,7 +28,6 @@
                                                                "Kernel32"
                                                            };
 
-
         public static void Main()
         {
             var i = 0;
@@ -114,4 +113,3 @@
         }
     }
 }
-

@@ -100,10 +100,7 @@
         /// </summary>
         public int SelectedIndex
         {
-            get
-            {
-                return selectedIndex;
-            }
+            get => selectedIndex;
 
             set
             {

@@ -41,6 +41,48 @@ namespace Sentinel.Upgrader
 
         private string error;
 
+        public SquirrelUpgradeService()
+        {
+            HidePanel = new DelegateCommand(o => ShowPanel = false);
+            Upgrade = new DelegateCommand(
+                a => Task.Run(() => DownloadReleases()),
+                o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
+            Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => IsReadyForRestart);
+
+            bool showErrors = true;
+
+            PropertyChanged += (s, e) =>
+                {
+                    switch (e.PropertyName)
+                    {
+                        case nameof(IsReadyForRestart):
+                        case nameof(IsUpgradeAvailable):
+                        case nameof(IsFirstRun):
+                            DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
+                            break;
+                        case nameof(DispatcherUiThread):
+                            if (!preferences?.IsDisabled ?? false)
+                            {
+                                // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
+                                Task.Delay(preferences?.DelayBeforeCheckingForUpgrades ?? TimeSpan.Zero)
+                                    .ContinueWith(t => CheckForUpgrades());
+                            }
+
+                            break;
+                        case nameof(Error):
+                            if (showErrors && !string.IsNullOrWhiteSpace(Error))
+                            {
+                                ShowPanel = true;
+                            }
+
+                            break;
+                    }
+                };
+
+            // Load preferences
+            preferences = ServiceLocator.Instance.Get<IUpgradeServicePreferences>();
+        }
+
         /// <summary>
         /// Gets or sets the Dispatcher for the UI thread, this is useful because a lot of the
         /// activity here is run in a background thread and is unable to make the UI detect
@@ -59,51 +101,9 @@ namespace Sentinel.Upgrader
             }
         }
 
-        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
-
-        public SquirrelUpgradeService()
-        {
-            HidePanel = new DelegateCommand(o => ShowPanel = false);
-            Upgrade = new DelegateCommand(
-                a => Task.Run(() => DownloadReleases()),
-                o => IsUpgradeAvailable != null && (bool)IsUpgradeAvailable);
-            Restart = new DelegateCommand(a => Task.Run(() => RestartApplication()), o => IsReadyForRestart);
-
-            bool showErrors = true;
-
-            PropertyChanged += (s, e) =>
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(IsReadyForRestart):
-                    case nameof(IsUpgradeAvailable):
-                    case nameof(IsFirstRun):
-                        DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
-                        break;
-                    case nameof(DispatcherUiThread):
-                        if (!preferences?.IsDisabled ?? false)
-                        {
-                            // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
-                            Task.Delay(preferences?.DelayBeforeCheckingForUpgrades ?? TimeSpan.Zero)
-                                .ContinueWith(t => CheckForUpgrades());
-                        }
-
-                        break;
-                    case nameof(Error):
-                        if (showErrors && !string.IsNullOrWhiteSpace(Error))
-                        {
-                            ShowPanel = true;
-                        }
-
-                        break;
-                }
-            };
-
-            // Load preferences
-            preferences = ServiceLocator.Instance.Get<IUpgradeServicePreferences>();
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
 
         public ICommand HidePanel { get; private set; }
 
@@ -257,19 +257,6 @@ namespace Sentinel.Upgrader
             }
         }
 
-        private string GetUpgradeLocation()
-        {
-            var upgradeLocation = preferences?.UpgradeRepository ?? string.Empty;
-
-            // For portability, if the upgradeLocation is a relative upgradeLocation, make into
-            // an absolute upgradeLocation (this will allow development to avoid being hardcoded
-            // to a specific folder).
-            upgradeLocation = upgradeLocation.StartsWith("..")
-                                  ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
-                                  : upgradeLocation;
-            return upgradeLocation;
-        }
-
         public void DownloadReleases()
         {
             if (availableReleases?.ReleasesToApply?.Any() ?? false)
@@ -294,13 +281,17 @@ namespace Sentinel.Upgrader
             }
         }
 
-        private UpdateManager UpdateManager()
+        private string GetUpgradeLocation()
         {
-#if GITHUB_RELEASE
-            return Squirrel.UpdateManager.GitHubUpdateManager("https://github.com/yarseyah/sentinel").Result;
-#else
-            return new UpdateManager(GetUpgradeLocation());
-#endif
+            var upgradeLocation = preferences?.UpgradeRepository ?? string.Empty;
+
+            // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+            // an absolute upgradeLocation (this will allow development to avoid being hardcoded
+            // to a specific folder).
+            upgradeLocation = upgradeLocation.StartsWith("..")
+                                  ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                                  : upgradeLocation;
+            return upgradeLocation;
         }
 
         public void RestartApplication()
@@ -333,6 +324,15 @@ namespace Sentinel.Upgrader
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Trace.WriteLine($"OnPropertyChanged: {propertyName}");
+        }
+
+        private UpdateManager UpdateManager()
+        {
+#if GITHUB_RELEASE
+            return Squirrel.UpdateManager.GitHubUpdateManager("https://github.com/yarseyah/sentinel").Result;
+#else
+            return new UpdateManager(GetUpgradeLocation());
+#endif
         }
     }
 }

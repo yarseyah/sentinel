@@ -1,7 +1,6 @@
 ﻿namespace Sentinel.Controls
 {
     using System;
-    using System.Windows;
 
     using Sentinel.Interfaces;
     using Sentinel.Services;
@@ -9,7 +8,7 @@
     /// <summary>
     /// Interaction logic for PreferencesWindow.xaml
     /// </summary>
-    public partial class PreferencesWindow : Window
+    public partial class PreferencesWindow
     {
         public PreferencesWindow()
             : this(0)
@@ -30,7 +29,7 @@
         // ReSharper disable once MemberCanBePrivate.Global
         public IUserPreferences Preferences { get; private set; }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void WindowClosed(object sender, EventArgs e)
         {
             Preferences.Show = false;
         }

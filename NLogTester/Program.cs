@@ -20,7 +20,6 @@
 
         private static readonly List<string> Sources = new List<string> { "Foo", "Bar", "LongSystemName", "Kernel32" };
 
-
         public static void Main()
         {
             var i = 0;
@@ -63,7 +62,7 @@
                 case 5:
                     var embeddedException = new NotSupportedException();
                     var keyNotFoundException = new KeyNotFoundException("Something is embedded", embeddedException);
-                    Log.Error(text,keyNotFoundException);
+                    Log.Error(text, keyNotFoundException);
                     break;
                 default:
                     Log.Debug(text);

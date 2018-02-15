@@ -9,7 +9,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -37,8 +36,6 @@
     using Sentinel.Support;
     using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
-
-    using Squirrel;
 
     using WpfExtras;
     using WpfExtras.Converters;
@@ -482,7 +479,7 @@
                     }))
             {
                 var filePath = commandLineArguments.FirstOrDefault();
-                if (!File.Exists(filePath) || Path.GetExtension(filePath).ToUpper() != ".SNTL")
+                if (!File.Exists(filePath) || Path.GetExtension(filePath)?.ToUpper() != ".SNTL")
                 {
                     unknownCommandLine = true;
                 }
@@ -651,29 +648,33 @@
 
         private void RetainOnlyStandardFilters(object sender, FilterEventArgs e)
         {
+            sender.ThrowIfNull(nameof(sender));
             e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingFilter;
         }
 
         private void ExcludeStandardFilters(object sender, FilterEventArgs e)
         {
+            sender.ThrowIfNull(nameof(sender));
             e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingFilter || e.Item is ISearchFilter);
         }
 
         private void RetainOnlyStandardHighlighters(object sender, FilterEventArgs e)
         {
+            sender.ThrowIfNull(nameof(sender));
             e.ThrowIfNull(nameof(e));
             e.Accepted = e.Item is IStandardDebuggingHighlighter;
         }
 
         private void ExcludeStandardHighlighters(object sender, FilterEventArgs e)
         {
+            sender.ThrowIfNull(nameof(sender));
             e.ThrowIfNull(nameof(e));
             e.Accepted = !(e.Item is IStandardDebuggingHighlighter);
         }
 
-        private void SearchToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void SearchToggleButtonChecked(object sender, RoutedEventArgs e)
         {
             Debug.Assert(
                 sender.GetType() == typeof(RibbonToggleButton),

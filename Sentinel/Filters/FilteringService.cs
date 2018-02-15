@@ -48,10 +48,13 @@
 
             var searchFilter = ServiceLocator.Instance.Get<ISearchFilter>();
 
-            Debug.Assert(searchFilter != null, "The search filter is null.");
             if (searchFilter != null)
             {
                 SearchFilters.Add(searchFilter as T);
+            }
+            else
+            {
+                Debug.Fail("The search filter is null.");
             }
         }
 

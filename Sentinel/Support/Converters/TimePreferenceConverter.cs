@@ -30,9 +30,7 @@ namespace Sentinel.Support.Converters
                 throw new ArgumentException("Parameter must be an instance of IUserPreferences", nameof(parameter));
             }
 
-            var message = value as ILogEntry;
-
-            if (message == null)
+            if (!(value is ILogEntry message))
             {
                 Log.Warn("Not supplied an ILogEntry as the value parameter");
                 return string.Empty;

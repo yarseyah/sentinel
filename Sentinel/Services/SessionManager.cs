@@ -1,6 +1,4 @@
-﻿using Sentinel.Log4Net;
-
-namespace Sentinel.Services
+﻿namespace Sentinel.Services
 {
     using System;
     using System.Collections.Generic;
@@ -25,6 +23,7 @@ namespace Sentinel.Services
     using Sentinel.Images.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.Providers;
+    using Sentinel.Log4Net;
     using Sentinel.Logger;
     using Sentinel.Logs;
     using Sentinel.Logs.Gui;

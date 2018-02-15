@@ -1,6 +1,6 @@
 namespace Sentinel.Filters
 {
-    using System.Diagnostics;
+    using System;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -176,12 +176,7 @@ namespace Sentinel.Filters
 
         public bool IsMatch(ILogEntry logEntry)
         {
-            Debug.Assert(logEntry != null, "LogEntry can not be null.");
-
-            if (logEntry == null)
-            {
-                return false;
-            }
+            logEntry = logEntry ?? throw new ArgumentNullException(nameof(logEntry));
 
             if (string.IsNullOrWhiteSpace(Pattern))
             {

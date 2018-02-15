@@ -17,12 +17,14 @@ namespace Sentinel.Support.Converters
                 throw new ArgumentException("Must have two values", nameof(values));
             }
 
-            if (!(values[0] is IDictionary<string, object> meta))
+            var meta = values[0] as IDictionary<string, object>;
+            if (meta == null)
             {
                 throw new ArgumentException("First value in values needs to be IDictionary<string, object>");
             }
 
-            if (!(values[1] is string member))
+            var member = values[1] as string;
+            if (member == null)
             {
                 throw new ArgumentException("Second value in values[] must be a string");
             }
