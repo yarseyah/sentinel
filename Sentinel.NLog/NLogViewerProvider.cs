@@ -222,50 +222,62 @@
             var description = record.Element(log4J + "message").Value;
 
             var classification = string.Empty;
-            var system = record.Attribute("logger").Value;
-            var type = record.Attribute("level").Value;
-            var host = "???";
+            var system = record.Attribute("logger")?.Value ?? string.Empty;
+            var type = record.Attribute("level")?.Value ?? string.Empty;
+            var host = "Unknown";
 
-            foreach (var propertyElement in record.Element(log4J + "properties").Elements())
+            var meta = new Dictionary<string, object>();
+
+            foreach (var propertyElement in record.Element(log4J + "properties")?.Elements() ?? Enumerable.Empty<XElement>())
             {
-                if (propertyElement.Name == log4J + "data" && propertyElement.Attribute("name") != null
-                    && propertyElement.Attribute("name").Value == "log4jmachinename")
+                if (propertyElement.Name == log4J + "data")
                 {
-                    host = propertyElement.Attribute("value").Value;
+                    var name = propertyElement.Attribute("name")?.Value;
+                    var value = propertyElement.Attribute("value")?.Value;
+
+                    if (name == "log4jmachinename")
+                    {
+                        host = value;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        if (meta.ContainsKey(name))
+                        {
+                            Log.Warn($"Already have property of {name}, overwriting");
+                        }
+
+                        meta.Add(name, value);
+                    }
                 }
             }
 
-            var className = string.Empty;
-            var methodName = string.Empty;
-            var sourceFile = string.Empty;
-            var line = string.Empty;
+            var source = record.Element(log4J + "locationInfo");
 
             // Any source information
-            var source = record.Element(log4J + "locationInfo");
-            if (source != null)
+            var className = source?.Attribute("class")?.Value ?? string.Empty;
+            var methodName = source?.Attribute("method")?.Value ?? string.Empty;
+            var sourceFile = source?.Attribute("file")?.Value ?? string.Empty;
+            var line = source?.Attribute("line")?.Value ?? string.Empty;
+
+            var timestampValue = record.Attribute("timestamp")?.Value;
+            var date = DateTime.UtcNow;
+            if (timestampValue != null)
             {
-                className = source.Attribute("class").Value;
-                methodName = source.Attribute("method").Value;
-                sourceFile = source.Attribute("file").Value;
-                line = source.Attribute("line").Value;
+                var timestamp = double.Parse(timestampValue);
+                date = Log4JDateBase + TimeSpan.FromMilliseconds(timestamp);
             }
 
-            var timestamp = double.Parse(record.Attribute("timestamp").Value);
-            var date = Log4JDateBase + TimeSpan.FromMilliseconds(timestamp);
+            meta["Classification"] = classification;
+            meta["Host"] = host;
 
             var entry = new LogEntry
                             {
                                 DateTime = date,
                                 System = system,
-                                Thread = record.Attribute("thread").Value,
+                                Thread = record.Attribute("thread")?.Value ?? string.Empty,
                                 Description = description,
                                 Type = type,
-                                MetaData =
-                                    new Dictionary<string, object>
-                                        {
-                                            { "Classification", classification },
-                                            { "Host", host }
-                                        }
+                                MetaData = meta
                             };
             if (entry.Description.ToUpper().Contains("EXCEPTION"))
             {
@@ -275,13 +287,13 @@
             if (!string.IsNullOrWhiteSpace(className))
             {
                 // TODO: use an object for these?
-                entry.MetaData.Add("ClassName", className);
-                entry.MetaData.Add("MethodName", methodName);
-                entry.MetaData.Add("SourceFile", sourceFile);
-                entry.MetaData.Add("SourceLine", line);
+                meta.Add("ClassName", className);
+                meta.Add("MethodName", methodName);
+                meta.Add("SourceFile", sourceFile);
+                meta.Add("SourceLine", line);
             }
 
-            entry.MetaData.Add("ReceivedTime", receivedTime);
+            meta.Add("ReceivedTime", receivedTime);
 
             return entry;
         }

@@ -458,8 +458,6 @@
         {
             commandLine.ThrowIfNull(nameof(commandLine));
 
-            MessageBox.Show(string.Join(" ", commandLine));
-
             var commandLineArguments = commandLine as string[] ?? commandLine.ToArray();
             if (!commandLineArguments.Any())
             {
@@ -852,6 +850,9 @@
             DebugSourceRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
                 new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns") });
+            ContextRibbonToggleButton.SetBinding(
+                ToggleButton.IsCheckedProperty,
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowContextColumn") });
         }
 
         private void BindToSearchElements()

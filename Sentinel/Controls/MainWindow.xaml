@@ -296,6 +296,15 @@
                                         ToolTipTitle="Show source code debug information"
                                         ToolTipDescription="Shows the debugging columns when enabled."
                                         ToolTipImageSource="../Resources/Small/DebugSource.png" />
+                    <RibbonToggleButton Name="ContextRibbonToggleButton"
+                                        Label="Context"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Bottom"
+                                        SmallImageSource="../Resources/Small/Context.png"
+                                        LargeImageSource="../Resources/Large/Context.png"
+                                        ToolTipTitle="Show context (hardcoded to property UnitTest)"
+                                        ToolTipDescription="Shows the debugging columns when enabled."
+                                        ToolTipImageSource="../Resources/Small/Context.png" />
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Classifiers">

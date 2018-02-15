@@ -116,6 +116,20 @@
                                               Margin="0,0,0,5"
                                               ToolTip="Shows/hides the columns with the source-code information (nLog only)"
                                               Content="Show source debugging information" />
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <CheckBox IsChecked="{Binding Preferences.ShowContextColumn}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Bottom"
+                                                  Margin="0,0,0,5"
+                                                  ToolTip="Shows/hides the context column (nLog only)"
+                                                  Content="Show the context column" />
+                                        <Label Margin="20,0,0,0">Property for context: </Label>
+                                        <TextBox Text="{Binding Preferences.ContextProperty, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Margin="10,0,0,0"
+                                                 Width="200"
+                                                 VerticalAlignment="Center" />
+                                    </StackPanel>
                                     <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
                                               HorizontalAlignment="Left"
                                               ToolTip="Enables/disables live resorting of sortable columns"

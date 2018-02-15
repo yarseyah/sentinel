@@ -53,5 +53,11 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         bool ShowSourceInformationColumns { get; set; }
+
+        [DataMember]
+        bool ShowContextColumn { get; set; }
+
+        [DataMember]
+        string ContextProperty { get; set; }
     }
 }

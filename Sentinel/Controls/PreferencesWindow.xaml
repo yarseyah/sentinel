@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:Sentinel.Controls"
         Title="Preferences"
-        Height="520"
+        Height="548.644"
         Width="662"
         ResizeMode="CanResizeWithGrip"
         ShowInTaskbar="False"

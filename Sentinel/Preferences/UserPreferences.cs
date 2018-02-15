@@ -1,4 +1,9 @@
-﻿namespace Sentinel.Preferences
+﻿using System;
+using System.ComponentModel;
+
+using Common.Logging;
+
+namespace Sentinel.Preferences
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
@@ -17,6 +22,8 @@
     [DataContract]
     public class UserPreferences : ViewModelBase, IUserPreferences
     {
+        private static readonly ILog Log = LogManager.GetLogger(nameof(UserPreferences));
+
         private int selectedDateOption;
 
         private int selectedTimeFormatOption;
@@ -45,6 +52,21 @@
 
         private bool showSourceInformationColumns;
 
+        private bool showContextColumn;
+
+        private string contextProperty = "UnitTest";
+
+        public UserPreferences()
+        {
+            PropertyChanged += (s, a) =>
+                {
+                    if (a.PropertyName == nameof(ContextProperty))
+                    {
+                        Log.Debug($"{a.PropertyName}={ContextProperty}");
+                    }
+                };
+        }
+
         /// <summary>
         /// Gets the name of the current Windows theme.
         /// </summary>
@@ -67,10 +89,7 @@
         /// <see cref="DateFormatOptions"/>
         public int SelectedDateOption
         {
-            get
-            {
-                return selectedDateOption;
-            }
+            get => selectedDateOption;
 
             set
             {
@@ -88,10 +107,7 @@
         /// <see cref="DateFormatOptions"/>
         public int SelectedTimeFormatOption
         {
-            get
-            {
-                return selectedTimeFormatOption;
-            }
+            get => selectedTimeFormatOption;
 
             set
             {
@@ -105,10 +121,7 @@
 
         public bool ConvertUtcTimesToLocalTimeZone
         {
-            get
-            {
-                return convertUtcTimesToLocalTimeZone;
-            }
+            get => convertUtcTimesToLocalTimeZone;
 
             set
             {
@@ -125,10 +138,7 @@
         /// </summary>
         public bool UseArrivalDateTime
         {
-            get
-            {
-                return useArrivalDateTime;
-            }
+            get => useArrivalDateTime;
 
             set
             {
@@ -146,10 +156,7 @@
         /// <seealso cref="TypeOptions"/>
         public int SelectedTypeOption
         {
-            get
-            {
-                return selectedTypeOption;
-            }
+            get => selectedTypeOption;
 
             set
             {
@@ -166,17 +173,14 @@
         /// </summary>
         public bool Show
         {
-            get
-            {
-                return show;
-            }
+            get => show;
 
             set
             {
                 if (show != value)
                 {
                     show = value;
-                    OnPropertyChanged("Show");
+                    OnPropertyChanged(nameof(Show));
                 }
             }
         }
@@ -186,17 +190,14 @@
         /// </summary>
         public bool ShowThreadColumn
         {
-            get
-            {
-                return showThreadColumn;
-            }
+            get => showThreadColumn;
 
             set
             {
                 if (showThreadColumn != value)
                 {
                     showThreadColumn = value;
-                    OnPropertyChanged("ShowThreadColumn");
+                    OnPropertyChanged(nameof(ShowThreadColumn));
                 }
             }
         }
@@ -206,10 +207,7 @@
         /// </summary>
         public bool ShowSourceColumn
         {
-            get
-            {
-                return showSourceColumn;
-            }
+            get => showSourceColumn;
 
             set
             {
@@ -226,17 +224,14 @@
         /// </summary>
         public bool ShowExceptionColumn
         {
-            get
-            {
-                return showExceptionColumn;
-            }
+            get => showExceptionColumn;
 
             set
             {
                 if (showExceptionColumn != value)
                 {
                     showExceptionColumn = value;
-                    OnPropertyChanged("ShowExceptionColumn");
+                    OnPropertyChanged(nameof(ShowExceptionColumn));
                 }
             }
         }
@@ -258,17 +253,14 @@
         /// </remarks>
         public bool UseLazyRebuild
         {
-            get
-            {
-                return useLazyRebuild;
-            }
+            get => useLazyRebuild;
 
             set
             {
                 if (useLazyRebuild != value)
                 {
                     useLazyRebuild = value;
-                    OnPropertyChanged("UseLazyRebuild");
+                    OnPropertyChanged(nameof(UseLazyRebuild));
                 }
             }
         }
@@ -279,17 +271,14 @@
         /// </summary>
         public bool UseStackedLayout
         {
-            get
-            {
-                return useStackedLayout;
-            }
+            get => useStackedLayout;
 
             set
             {
                 if (useStackedLayout != value)
                 {
                     useStackedLayout = value;
-                    OnPropertyChanged("UseStackedLayout");
+                    OnPropertyChanged(nameof(UseStackedLayout));
                 }
             }
         }
@@ -301,51 +290,70 @@
         /// </summary>
         public bool UseTighterRows
         {
-            get
-            {
-                return useTighterRows;
-            }
+            get => useTighterRows;
 
             set
             {
                 if (useTighterRows != value)
                 {
                     useTighterRows = value;
-                    OnPropertyChanged("UseTighterRows");
+                    OnPropertyChanged(nameof(UseTighterRows));
                 }
             }
         }
 
         public bool DoubleClickToShowExceptions
         {
-            get
-            {
-                return doubleClickToShowExceptions;
-            }
+            get => doubleClickToShowExceptions;
 
             set
             {
                 if (doubleClickToShowExceptions != value)
                 {
                     doubleClickToShowExceptions = value;
-                    OnPropertyChanged("DoubleClickToShowExceptions");
+                    OnPropertyChanged(nameof(DoubleClickToShowExceptions));
                 }
             }
         }
 
         public bool ShowSourceInformationColumns
         {
-            get
-            {
-                return showSourceInformationColumns;
-            }
+            get => showSourceInformationColumns;
 
             set
             {
                 if (showSourceInformationColumns != value)
                 {
                     showSourceInformationColumns = value;
-                    OnPropertyChanged("ShowSourceInformationColumns");
+                    OnPropertyChanged(nameof(ShowSourceInformationColumns));
+                }
+            }
+        }
+
+        public bool ShowContextColumn
+        {
+            get => showContextColumn;
+
+            set
+            {
+                if (showContextColumn != value)
+                {
+                    showContextColumn = value;
+                    OnPropertyChanged(nameof(ShowContextColumn));
+                }
+            }
+        }
+
+        public string ContextProperty
+        {
+            get => contextProperty;
+
+            set
+            {
+                if (contextProperty != value)
+                {
+                    contextProperty = value;
+                    OnPropertyChanged(nameof(ContextProperty));
                 }
             }
         }

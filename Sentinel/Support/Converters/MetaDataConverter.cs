@@ -15,12 +15,10 @@ namespace Sentinel.Support.Converters
             value.ThrowIfNull(nameof(value));
 
             var member = parameter as string;
-            var metaData = value as IDictionary<string, object>;
 
-            if (metaData != null && !string.IsNullOrWhiteSpace(member))
+            if (value is IDictionary<string, object> metaData && !string.IsNullOrWhiteSpace(member))
             {
-                object metaDataValue;
-                metaData.TryGetValue(member, out metaDataValue);
+                metaData.TryGetValue(member, out var metaDataValue);
                 return metaDataValue;
             }
 

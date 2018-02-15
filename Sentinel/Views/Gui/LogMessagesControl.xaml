@@ -16,6 +16,8 @@
         <Converters:BooleanToWidthConverter x:Key="BooleanToWidthConverter" />
         <Converters:MessageHasExceptionMetadataConverter x:Key="MessageHasExceptionMetadata" />
         <Converters:MetaDataConverter x:Key="MetaDataConverter" />
+        <Converters:MetaDataParameterConverter x:Key="MetaDataParameterConverter" />
+
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment"
                     Value="Stretch" />
@@ -130,6 +132,18 @@
                     <GridViewColumn Width="{Binding Preferences.ShowSourceInformationColumns, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=130}"
                                     Header="Method"
                                     DisplayMemberBinding="{Binding MetaData, Converter={StaticResource MetaDataConverter}, ConverterParameter='MethodName'}" />
+                    <GridViewColumn Width="{Binding Preferences.ShowContextColumn, RelativeSource={RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}, Converter={StaticResource BooleanToWidthConverter}, ConverterParameter=300}"
+                                    Header="Context">
+                        <GridViewColumn.DisplayMemberBinding>
+                            <MultiBinding Converter="{StaticResource MetaDataParameterConverter}">
+                                <Binding Path="MetaData" />
+                                <Binding Path="Preferences.ContextProperty"
+                                         RelativeSource="{RelativeSource AncestorType={x:Type Windows:MainWindow}, Mode=FindAncestor}" />
+                            </MultiBinding>
+                            
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+
                 </GridView>
             </ListView.View>
         </ListView>

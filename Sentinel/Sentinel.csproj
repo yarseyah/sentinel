@@ -244,6 +244,7 @@
     <Compile Include="Interfaces\CollectionChangeHelper.cs" />
     <Compile Include="Interfaces\EnumerableExtensions.cs" />
     <Compile Include="Interfaces\IHighlighterStyle.cs" />
+    <Compile Include="Support\Converters\MetaDataParameterConverter.cs" />
     <Compile Include="Upgrader\IUpgradeService.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
     <Compile Include="Interfaces\LinqHelpers.cs" />
@@ -768,6 +769,12 @@
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Large\Context.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Small\Context.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
