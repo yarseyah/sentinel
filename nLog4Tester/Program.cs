@@ -52,6 +52,9 @@ namespace nLog4Tester
         {
             var randomType = Random.Next(0, 6);
 
+            var context = $"Context{randomType}";
+            MappedDiagnosticsContext.Set("UnitTest", context);
+
             switch (randomType)
             {
                 case 0:
@@ -73,6 +76,8 @@ namespace nLog4Tester
                     Log.Debug(text);
                     break;
             }
+
+            MappedDiagnosticsContext.Remove("UnitTest");
         }
 
         private static string RandomMessage(int i)
