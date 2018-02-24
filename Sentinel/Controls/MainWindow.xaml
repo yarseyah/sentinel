@@ -77,27 +77,22 @@
 
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu>
-                    
+
                     <RibbonApplicationMenu.SmallImageSource>
                         <DrawingImage>
                             <DrawingImage.Drawing>
-                                <GlyphRunDrawing ForegroundBrush="White">
-                                    <GlyphRunDrawing.GlyphRun>
-                                        <GlyphRun
-                            CaretStops="{x:Null}" 
-                            ClusterMap="{x:Null}" 
-                            IsSideways="False" 
-                            GlyphOffsets="{x:Null}" 
-                            GlyphIndices="41 76 79 72" 
-                            FontRenderingEmSize="18" 
-                            DeviceFontName="{x:Null}" 
-                            AdvanceWidths="5.859375 3.90625 3.90625 10.275390625">
-                                            <GlyphRun.GlyphTypeface>
-                                                <GlyphTypeface FontUri="C:\WINDOWS\Fonts\SEGOEUI.TTF"/>
-                                            </GlyphRun.GlyphTypeface>
-                                        </GlyphRun>
-                                    </GlyphRunDrawing.GlyphRun>
-                                </GlyphRunDrawing>
+                                <GeometryDrawing>
+                                    <GeometryDrawing.Geometry>
+                                        <RectangleGeometry Rect="0,0,20,20"></RectangleGeometry>
+                                    </GeometryDrawing.Geometry>
+                                    <GeometryDrawing.Brush>
+                                        <VisualBrush Stretch="Uniform">
+                                            <VisualBrush.Visual>
+                                                <TextBlock Text="File" FontSize="16" Foreground="White" />
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </GeometryDrawing.Brush>
+                                </GeometryDrawing>
                             </DrawingImage.Drawing>
                         </DrawingImage>
                     </RibbonApplicationMenu.SmallImageSource>

@@ -2,8 +2,8 @@ using System;
 using System.Reflection;
 using System.Resources;
 
-[assembly: AssemblyVersion("0.13.1")]
-[assembly: AssemblyFileVersion("0.13.1")]
+[assembly: AssemblyVersion("0.13.2")]
+[assembly: AssemblyFileVersion("0.13.2")]
 
 // Ensure all assemblies have a neutral language defined.
 [assembly: NeutralResourcesLanguage("en")]
