@@ -199,28 +199,25 @@ namespace Sentinel.Upgrader
                 {
                     Status = "Checking for updates..";
 
-                    using (var updateManager = UpdateManager())
+                    var updateManager = UpdateManager();
+
+                    var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true).Result;
+
+                    if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
-                        var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true)
-                            .Result;
+                        ShowPanel = true;
 
-                        if (updateInfo?.ReleasesToApply?.Any() ?? false)
-                        {
-                            ShowPanel = true;
+                        var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ?? "Unknown version";
+                        var available = updateInfo.FutureReleaseEntry?.Version.ToString();
+                        var msg = $"New version available (Intalled: {installed}, available: {available})";
+                        Status = msg;
 
-                            var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ??
-                                            "Unknown version";
-                            var available = updateInfo.FutureReleaseEntry?.Version.ToString();
-                            var msg = $"New version available (Intalled: {installed}, available: {available})";
-                            Status = msg;
-
-                            IsUpgradeAvailable = true;
-                            availableReleases = updateInfo;
-                        }
-                        else
-                        {
-                            Status = "No updates available";
-                        }
+                        IsUpgradeAvailable = true;
+                        availableReleases = updateInfo;
+                    }
+                    else
+                    {
+                        Status = "No updates available";
                     }
                 }
                 catch (AggregateException ae) when (ae.InnerExceptions?.All(e => e is WebException) ?? false)
@@ -261,37 +258,23 @@ namespace Sentinel.Upgrader
         {
             if (availableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                using (var updateManager = UpdateManager())
-                {
-                    updateManager.DownloadReleases(
-                        availableReleases.ReleasesToApply,
-                        i => Status = $"Download progress {i}").Wait();
+                var updateManager = UpdateManager();
 
-                    updateManager.ApplyReleases(availableReleases, i => Status = $"Update progress {i}").Wait();
+                updateManager.DownloadReleases(
+                    availableReleases.ReleasesToApply,
+                    i => Status = $"Download progress {i}").Wait();
 
-                    var key = updateManager.CreateUninstallerRegistryEntry().Result;
+                updateManager.ApplyReleases(availableReleases, i => Status = $"Update progress {i}").Wait();
 
-                    Status = "Upgrade installed, please 'Restart' to use upgraded application";
-                    Trace.WriteLine(key);
+                var key = updateManager.CreateUninstallerRegistryEntry().Result;
 
-                    IsReadyForRestart = true;
-                    IsUpgradeAvailable = false;
-                    CommandManager.InvalidateRequerySuggested();
-                }
+                Status = "Upgrade installed, please 'Restart' to use upgraded application";
+                Trace.WriteLine(key);
+
+                IsReadyForRestart = true;
+                IsUpgradeAvailable = false;
+                CommandManager.InvalidateRequerySuggested();
             }
-        }
-
-        private string GetUpgradeLocation()
-        {
-            var upgradeLocation = preferences?.UpgradeRepository ?? string.Empty;
-
-            // For portability, if the upgradeLocation is a relative upgradeLocation, make into
-            // an absolute upgradeLocation (this will allow development to avoid being hardcoded
-            // to a specific folder).
-            upgradeLocation = upgradeLocation.StartsWith("..")
-                                  ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
-                                  : upgradeLocation;
-            return upgradeLocation;
         }
 
         public void RestartApplication()
@@ -324,6 +307,19 @@ namespace Sentinel.Upgrader
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Trace.WriteLine($"OnPropertyChanged: {propertyName}");
+        }
+
+        private string GetUpgradeLocation()
+        {
+            var upgradeLocation = preferences?.UpgradeRepository ?? string.Empty;
+
+            // For portability, if the upgradeLocation is a relative upgradeLocation, make into
+            // an absolute upgradeLocation (this will allow development to avoid being hardcoded
+            // to a specific folder).
+            upgradeLocation = upgradeLocation.StartsWith("..")
+                                  ? Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, upgradeLocation))
+                                  : upgradeLocation;
+            return upgradeLocation;
         }
 
         private UpdateManager UpdateManager()
