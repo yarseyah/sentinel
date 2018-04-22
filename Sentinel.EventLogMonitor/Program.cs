@@ -1,6 +1,7 @@
 ﻿namespace Sentinel.EventLogMonitor
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
 
@@ -16,15 +17,17 @@
 
         public static void Main(string[] args)
         {
-            var options = new CommandLineOptions();
-            var isCommandLineValid = ParseCommandLine(args, options);
+            var options = ParseCommandLine(args);
 
-            if (isCommandLineValid)
+            if (options != null)
             {
                 DisplayBanner(options);
 
-                var eventLog = new EventLog { // TODO: pass this on the command line
-                                                Log = "Application" };
+                // TODO: pass this on the command line
+                var eventLog = new EventLog
+                                   {
+                                       Log = "Application"
+                                   };
 
                 eventLog.EntryWritten += NewLogEntryWrittenHandler;
                 eventLog.EnableRaisingEvents = true;
@@ -35,7 +38,6 @@
                     Console.WriteLine("Press any key to exit...");
                     Console.ReadKey();
                 }
-
             }
         }
 
@@ -62,27 +64,38 @@
             }
         }
 
-        private static bool ParseCommandLine(string[] args, CommandLineOptions options)
+        private static CommandLineOptions ParseCommandLine(string[] args)
         {
             try
             {
-                var parseResult = Parser.Default.ParseArguments(args, options);
+                CommandLineOptions options = null;
+                Parser.Default.ParseArguments<CommandLineOptions>(args)
+                                        .WithParsed(o => options = o)
+                                        .WithNotParsed(HandleParseErrors);
 
-                if (parseResult)
+                if (options != null)
                 {
                     Log.Trace("Command line parsing was successful");
-                }
-                else
-                {
-                    Log.Warn("Command line parsing was unsuccessful");
+                    return options;
                 }
 
-                return parseResult;
+                Log.Warn("Command line parsing was unsuccessful");
+
             }
             catch (Exception e)
             {
                 Log.Error("Parsing error caught", e);
-                return false;
+            }
+
+            return null;
+
+        }
+
+        private static void HandleParseErrors(IEnumerable<Error> errors)
+        {
+            foreach (var error in errors)
+            {
+                Log.Trace(error);
             }
         }
     }
