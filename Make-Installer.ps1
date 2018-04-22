@@ -36,7 +36,8 @@ function Get-NugetCommand() {
         return "nuget"
     }
 
-    $installedNuget = ".\packages\NuGet.CommandLine.4.1.0\tools\NuGet.exe"
+    # $installedNuget = ".\packages\NuGet.CommandLine.4.6.2\tools\NuGet.exe"
+    $installedNuget = (Get-ChildItem -Path .\packages\ -Recurse -Include NuGet.exe | Select-Object -First 1)
     if ( Test-Path $installedNuget ) {
         return $installedNuget
     } else {
@@ -50,7 +51,7 @@ function Get-SquirrelCommand() {
         return "squirrel.exe"
     }
 
-    $squirrel = ".\packages\squirrel.windows.1.7.7\tools\Squirrel.exe"
+    $squirrel = (Get-ChildItem -Path .\packages\ -Recurse -Include squirrel.exe | Select-Object -First 1)
     if ( Test-Path $squirrel ) {
         return $squirrel
     } else {
@@ -107,7 +108,9 @@ if ($LASTEXITCODE -eq 0) {
 
         if ( $LASTEXITCODE -eq 0) {
             # Give the installer a sensible name
-            Rename-Item (Join-Path $releasesLocation "setup.exe") "Sentinel-Setup-$version.exe"
+            Move-Item (Join-Path $releasesLocation "setup.exe") `
+                      (Join-Path $releasesLocation "Sentinel-Setup-$version.exe") `
+                      -Force
         }
     } else {
         Write-Error "Problem creating package"
