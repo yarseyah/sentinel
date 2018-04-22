@@ -2,7 +2,8 @@
 {
     using CommandLine;
 
-    public class NLogOptions
+    [Verb("nlog", HelpText = "Use nlog listener")]
+    public class NLogOptions : IOptions
     {
         public NLogOptions()
         {
@@ -10,24 +11,15 @@
             Port = 9999;
         }
 
-        [Option('u', "udp", MutuallyExclusiveSet = "protocols")]
-        public bool IsUdp { get; set; }
-
-        [Option('t', "tcp", MutuallyExclusiveSet = "protocols")]
+        [Option('t', "tcp", SetName = "protocols")]
         public bool IsTcp
         {
-            get
-            {
-                return !IsUdp;
-            }
-
-            set
-            {
-                IsUdp = !IsUdp;
-            }
+            get => !IsUdp;
+            set => IsUdp = !value;
         }
 
-        [Option('p', "port")]
         public int Port { get; set; }
+
+        public bool IsUdp { get; set; }
     }
 }

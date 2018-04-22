@@ -90,9 +90,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CommandLine, Version=2.2.1.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.2.1\lib\net45\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -141,6 +140,10 @@
       <HintPath>..\packages\squirrel.windows.1.7.9\lib\Net45\Squirrel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -148,6 +151,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Primitives.4.3.0\lib\net45\System.Drawing.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.4.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Controls.Ribbon" />
@@ -246,6 +252,7 @@
     <Compile Include="Interfaces\CollectionChangeHelper.cs" />
     <Compile Include="Interfaces\EnumerableExtensions.cs" />
     <Compile Include="Interfaces\IHighlighterStyle.cs" />
+    <Compile Include="StartUp\IOptions.cs" />
     <Compile Include="Support\Converters\MetaDataParameterConverter.cs" />
     <Compile Include="Upgrader\IUpgradeService.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
@@ -257,7 +264,6 @@
     <Compile Include="Logs\Interfaces\ILogManager.cs" />
     <Compile Include="Logs\LogFileExporter.cs" />
     <Compile Include="StartUp\NLogOptions.cs" />
-    <Compile Include="StartUp\Options.cs" />
     <Compile Include="Providers\Interfaces\INewProviderWizard.cs" />
     <Compile Include="Providers\Interfaces\IProviderManager.cs" />
     <Compile Include="Providers\Interfaces\PendingProviderRecord.cs" />

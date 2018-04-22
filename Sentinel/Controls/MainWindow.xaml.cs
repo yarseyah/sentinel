@@ -16,6 +16,8 @@
     using System.Windows.Data;
     using System.Windows.Input;
 
+    using CommandLine;
+
     using Common.Logging;
 
     using Microsoft.Win32;
@@ -463,20 +465,17 @@
 
             var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
 
-            var invokedVerb = string.Empty;
-            object invokedVerbInstance = null;
-
-            var options = new Options();
             var unknownCommandLine = false;
+            var args = commandLineArguments.ToArray();
 
-            if (!CommandLine.Parser.Default.ParseArguments(
-                commandLineArguments.ToArray(),
-                options,
-                (v, s) =>
-                    {
-                        invokedVerb = v;
-                        invokedVerbInstance = s;
-                    }))
+            var options = Parser.Default.ParseArguments<Log4NetOptions, NLogOptions>(args).MapResult(
+                (Log4NetOptions o) => Tuple.Create<string, IOptions>("log4net", o),
+                (NLogOptions o) => Tuple.Create<string, IOptions>("nlog", o),
+                _ => Tuple.Create<string, IOptions>(string.Empty, null));
+
+            var verb = options.Item1;
+
+            if (string.IsNullOrWhiteSpace(options.Item1))
             {
                 var filePath = commandLineArguments.FirstOrDefault();
                 if (!File.Exists(filePath) || Path.GetExtension(filePath)?.ToUpper() != ".SNTL")
@@ -498,17 +497,17 @@
 
             RemoveBindingReferences();
 
-            if (invokedVerb == "nlog")
+            switch (verb)
             {
-                CreateDefaultNLogListener((NLogOptions)invokedVerbInstance, sessionManager);
-            }
-            else if (invokedVerb == "log4net")
-            {
-                CreateDefaultLog4NetListener((Log4NetOptions)invokedVerbInstance, sessionManager);
-            }
-            else
-            {
-                sessionManager.LoadSession(commandLineArguments.FirstOrDefault());
+                case "nlog":
+                    CreateDefaultNLogListener((NLogOptions)options.Item2, sessionManager);
+                    break;
+                case "log4net":
+                    CreateDefaultLog4NetListener((Log4NetOptions)options.Item2, sessionManager);
+                    break;
+                default:
+                    sessionManager.LoadSession(commandLineArguments.FirstOrDefault());
+                    break;
             }
 
             BindViewToViewModel();

@@ -2,7 +2,8 @@ namespace Sentinel.StartUp
 {
     using CommandLine;
 
-    public class Log4NetOptions
+    [Verb("log4net", HelpText = "Use log4net listener")]
+    public class Log4NetOptions : IOptions
     {
         public Log4NetOptions()
         {
@@ -10,10 +11,8 @@ namespace Sentinel.StartUp
             Port = 9998;
         }
 
-        [Option('p', "port")]
         public int Port { get; set; }
 
-        [Option('u', "udp", MutuallyExclusiveSet = "protocols")]
         public bool IsUdp { get; set; }
     }
 }
