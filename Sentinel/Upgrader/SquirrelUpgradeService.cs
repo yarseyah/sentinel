@@ -199,25 +199,27 @@ namespace Sentinel.Upgrader
                 {
                     Status = "Checking for updates..";
 
-                    var updateManager = UpdateManager();
-
-                    var updateInfo = updateManager.CheckForUpdate().Result;
-
-                    if (updateInfo?.ReleasesToApply?.Any() ?? false)
+                    using (var updateManager = UpdateManager())
                     {
-                        ShowPanel = true;
+                        var updateInfo = updateManager.CheckForUpdate().Result;
 
-                        var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString() ?? "Unknown version";
-                        var available = updateInfo.FutureReleaseEntry?.Version.ToString();
-                        var msg = $"New version available (Intalled: {installed}, available: {available})";
-                        Status = msg;
+                        if (updateInfo?.ReleasesToApply?.Any() ?? false)
+                        {
+                            ShowPanel = true;
 
-                        IsUpgradeAvailable = true;
-                        availableReleases = updateInfo;
-                    }
-                    else
-                    {
-                        Status = "No updates available";
+                            var installed = updateInfo.CurrentlyInstalledVersion?.Version.ToString()
+                                            ?? "Unknown version";
+                            var available = updateInfo.FutureReleaseEntry?.Version.ToString();
+                            var msg = $"New version available (Intalled: {installed}, available: {available})";
+                            Status = msg;
+
+                            IsUpgradeAvailable = true;
+                            availableReleases = updateInfo;
+                        }
+                        else
+                        {
+                            Status = "No updates available";
+                        }
                     }
                 }
                 catch (AggregateException ae) when (ae.InnerExceptions?.All(e => e is WebException) ?? false)
@@ -258,22 +260,23 @@ namespace Sentinel.Upgrader
         {
             if (availableReleases?.ReleasesToApply?.Any() ?? false)
             {
-                var updateManager = UpdateManager();
+                using (var updateManager = UpdateManager())
+                {
+                    updateManager.DownloadReleases(
+                        availableReleases.ReleasesToApply,
+                        i => Status = $"Download progress {i}").Wait();
 
-                updateManager.DownloadReleases(
-                    availableReleases.ReleasesToApply,
-                    i => Status = $"Download progress {i}").Wait();
+                    updateManager.ApplyReleases(availableReleases, i => Status = $"Update progress {i}").Wait();
 
-                updateManager.ApplyReleases(availableReleases, i => Status = $"Update progress {i}").Wait();
+                    var key = updateManager.CreateUninstallerRegistryEntry().Result;
 
-                var key = updateManager.CreateUninstallerRegistryEntry().Result;
+                    Status = "Upgrade installed, please 'Restart' to use upgraded application";
+                    Trace.WriteLine(key);
 
-                Status = "Upgrade installed, please 'Restart' to use upgraded application";
-                Trace.WriteLine(key);
-
-                IsReadyForRestart = true;
-                IsUpgradeAvailable = false;
-                CommandManager.InvalidateRequerySuggested();
+                    IsReadyForRestart = true;
+                    IsUpgradeAvailable = false;
+                    CommandManager.InvalidateRequerySuggested();
+                }
             }
         }
 
