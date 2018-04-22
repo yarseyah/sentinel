@@ -201,7 +201,7 @@ namespace Sentinel.Upgrader
 
                     var updateManager = UpdateManager();
 
-                    var updateInfo = updateManager.CheckForUpdate(ignoreDeltaUpdates: true).Result;
+                    var updateInfo = updateManager.CheckForUpdate().Result;
 
                     if (updateInfo?.ReleasesToApply?.Any() ?? false)
                     {
