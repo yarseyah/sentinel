@@ -202,7 +202,7 @@
                     fi.Refresh();
 
                     var length = fi.Length;
-                    if (length < bytesRead)
+                    if (length > bytesRead)
                     {
                         using (var fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
                         {
