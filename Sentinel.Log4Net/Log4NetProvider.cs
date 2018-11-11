@@ -232,7 +232,7 @@
                     var system = entryEvent.GetAttribute("logger", string.Empty);
                     var type = entryEvent.GetAttribute("level", string.Empty);
                     var host = string.Empty;
-
+                    var props = new Dictionary<string, object>();
                     foreach (var propertyElement in entryEvent.Element(log4Net + "properties").Elements())
                     {
                         if (propertyElement.Name == log4Net + "data")
@@ -246,7 +246,10 @@
                                     host = value;
                                     break;
                                 default:
-                                    Log.WarnFormat("Found unknown property named '{0}' with value '{1}'", name, value);
+                                    if (props.ContainsKey(name))
+                                        props[name] = value;
+                                    else
+                                        props.Add(name, value);
                                     break;
                             }
                         }
@@ -267,11 +270,21 @@
                         line = source.Attribute("line").Value;
                     }
 
-                    var metaData = new Dictionary<string, object>
-                                       {
-                                           ["Classification"] = classification,
-                                           ["Host"] = host
-                                       };
+                    var metaData = new Dictionary<string, object> {
+                        ["Classification"] = classification,
+                        ["Host"] = host
+                    };
+
+                    foreach (var prop in props)
+                    {
+                        if (metaData.ContainsKey(prop.Key))
+                        {
+                            Log.Warn($"Already have property of {prop.Key}, overwriting");
+                            metaData[prop.Key] = prop.Value;
+                        }
+                        else
+                            metaData.Add(prop.Key, prop.Value);
+                    }
 
                     AddExceptionIfFound(entryEvent, metaData);
 
