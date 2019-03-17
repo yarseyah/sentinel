@@ -51,6 +51,7 @@
         public void Dispose()
         {
             OnDispose();
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

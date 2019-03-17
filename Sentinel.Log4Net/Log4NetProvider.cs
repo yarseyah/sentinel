@@ -23,7 +23,7 @@
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
-        protected readonly Queue<string> PendingQueue = new Queue<string>();
+        private readonly Queue<string> pendingQueue = new Queue<string>();
 
         private const int PumpFrequency = 100;
 
@@ -134,9 +134,9 @@
                             Log.Debug($"Received {bytes.Length} bytes from {remoteEndPoint.Address}");
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-                            lock (PendingQueue)
+                            lock (pendingQueue)
                             {
-                                PendingQueue.Enqueue(message);
+                                pendingQueue.Enqueue(message);
                             }
                         }
                         catch (SocketException socketException)
@@ -175,13 +175,13 @@
                 {
                     if (Logger != null)
                     {
-                        lock (PendingQueue)
+                        lock (pendingQueue)
                         {
                             var processedQueue = new Queue<ILogEntry>();
 
-                            while (PendingQueue.Count > 0)
+                            while (pendingQueue.Count > 0)
                             {
-                                var message = PendingQueue.Dequeue();
+                                var message = pendingQueue.Dequeue();
 
                                 // TODO: validate
                                 if (IsValidMessage(message))

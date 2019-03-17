@@ -22,7 +22,7 @@ namespace Sentinel.Filters.Interfaces
         string Description { get; }
 
         [DataMember]
-        LogEntryField Field { get; set; }
+        LogEntryFields Field { get; set; }
 
         [DataMember]
         MatchMode Mode { get; set; }

@@ -265,7 +265,7 @@
     <Compile Include="Upgrader\IUpgradeService.cs" />
     <Compile Include="Interfaces\IUserPreferences.cs" />
     <Compile Include="Interfaces\LinqHelpers.cs" />
-    <Compile Include="Interfaces\LogEntryField.cs" />
+    <Compile Include="Interfaces\LogEntryFields.cs" />
     <Compile Include="Interfaces\MatchMode.cs" />
     <Compile Include="StartUp\Log4NetOptions.cs" />
     <Compile Include="Logs\Interfaces\ILogFileExporter.cs" />
@@ -325,6 +325,7 @@
       <DependentUpon>HeartbeatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Heartbeat\MessageHeatbeat.cs" />
+    <Compile Include="Views\Heartbeat\ViewInformation.cs" />
     <Compile Include="Views\Interfaces\ILogViewer.cs" />
     <Compile Include="Views\Interfaces\ILogViewerToolbarButton.cs" />
     <Compile Include="Views\Interfaces\IViewInformation.cs" />

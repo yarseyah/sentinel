@@ -16,7 +16,7 @@ namespace Sentinel.Interfaces
     [Flags]
     [DataContract]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum LogEntryField
+    public enum LogEntryFields
     {
         /// <summary>
         /// Not a field enumeration, default.

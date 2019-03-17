@@ -65,7 +65,7 @@
             }
         }
 
-        protected ObservableDictionary(SerializationInfo info, StreamingContext context)
+        protected ObservableDictionary(SerializationInfo info, StreamingContext _)
         {
             siInfo = info;
         }

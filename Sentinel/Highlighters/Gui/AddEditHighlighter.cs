@@ -32,7 +32,7 @@ namespace Sentinel.Highlighters.Gui
 
         private string pattern = "pattern";
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -143,7 +143,7 @@ namespace Sentinel.Highlighters.Gui
 
         public IEnumerable<string> ForegroundColours => colours.Keys;
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {

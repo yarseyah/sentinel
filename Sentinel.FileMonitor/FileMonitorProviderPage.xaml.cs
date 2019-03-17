@@ -230,8 +230,7 @@
             try
             {
                 reason = null;
-                // ReSharper disable once ObjectCreationAsStatement
-                new FileInfo(fileNameToValidate);
+                var _ = new FileInfo(fileNameToValidate);
                 return true;
             }
             catch (UnauthorizedAccessException)

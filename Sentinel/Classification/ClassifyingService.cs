@@ -115,9 +115,9 @@
 
         public void Initialise()
         {
-            Classifiers.Add(new Classifier("Timing messages", true, LogEntryField.Description, MatchMode.RegularExpression, @"^\[SimulationTime\] (?<description>[^$]+)$", "TIMING") as T);
-            Classifiers.Add(new Classifier("Smp messages", true, LogEntryField.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
-            Classifiers.Add(new Classifier("SimSat messages", true, LogEntryField.Description, MatchMode.RegularExpression, "SIMSAT:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
+            Classifiers.Add(new Classifier("Timing messages", true, LogEntryFields.Description, MatchMode.RegularExpression, @"^\[SimulationTime\] (?<description>[^$]+)$", "TIMING") as T);
+            Classifiers.Add(new Classifier("Smp messages", true, LogEntryFields.Description, MatchMode.RegularExpression, "Src:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
+            Classifiers.Add(new Classifier("SimSat messages", true, LogEntryFields.Description, MatchMode.RegularExpression, "SIMSAT:'(?<system>[^']+)', Msg:'(?<description>.*)'$", "TIMING") as T);
         }
 
         public ILogEntry Classify(ILogEntry entry)

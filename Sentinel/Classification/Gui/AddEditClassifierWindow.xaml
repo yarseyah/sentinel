@@ -12,11 +12,11 @@
 
     <Window.Resources>
 
-        <ObjectDataProvider x:Key="LogEntryField"
+        <ObjectDataProvider x:Key="LogEntryFields"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="i:LogEntryField" />
+                <x:Type TypeName="i:LogEntryFields" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
@@ -89,7 +89,7 @@
             <ComboBox Grid.Column="1"
                       Grid.Row="2"
                       SelectedItem="{Binding Field, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding Source={StaticResource LogEntryField}}"
+                      ItemsSource="{Binding Source={StaticResource LogEntryFields}}"
                       Margin="5"
                       VerticalContentAlignment="Center" />
 

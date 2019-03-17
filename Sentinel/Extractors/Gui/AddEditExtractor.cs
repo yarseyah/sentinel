@@ -15,7 +15,7 @@
 
         private string pattern = "pattern";
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -33,7 +33,7 @@
 
         public ICommand Accept { get; private set; }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
