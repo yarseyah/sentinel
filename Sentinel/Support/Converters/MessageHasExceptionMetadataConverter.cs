@@ -3,15 +3,10 @@ namespace Sentinel.Support.Converters
     using System;
     using System.Globalization;
     using System.Windows.Data;
-
-    using Common.Logging;
-
     using Sentinel.Interfaces;
 
     public class MessageHasExceptionMetadataConverter : IValueConverter
     {
-        private readonly ILog log = LogManager.GetLogger<MessageHasExceptionMetadataConverter>();
-
         /// <summary>
         /// Converts a value.
         /// </summary>
