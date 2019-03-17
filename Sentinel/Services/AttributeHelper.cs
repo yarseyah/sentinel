@@ -17,11 +17,11 @@ namespace Sentinel.Services
             return attributes.Any();
         }
 
-        public static bool HasAttribute<T>(this object obj)
+        public static bool HasAttribute<T>(this object source)
         {
-            obj.ThrowIfNull(nameof(obj));
+            source.ThrowIfNull(nameof(source));
 
-            return obj.GetType().HasAttribute<T>();
+            return source.GetType().HasAttribute<T>();
         }
     }
 }
