@@ -217,7 +217,7 @@ namespace Sentinel.Highlighters.Gui
                 if (value != overrideForegroundColour)
                 {
                     overrideForegroundColour = value;
-                    OnPropertyChanged(nameof(OverrideForegroundColour);
+                    OnPropertyChanged(nameof(OverrideForegroundColour));
                 }
             }
         }
