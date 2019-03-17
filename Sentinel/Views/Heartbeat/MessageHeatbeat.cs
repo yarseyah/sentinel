@@ -84,7 +84,7 @@
                     }
 
                     logger = value;
-                    OnPropertyChanged("Logger");
+                    OnPropertyChanged(nameof(Logger));
                 }
 
                 // TODO: Unregister from existing logger (if not null)
@@ -180,7 +180,7 @@
                 // Empty the collection
                 liveData.Clear();
 
-                OnPropertyChanged("Data");
+                OnPropertyChanged(nameof(Data));
             }
         }
 

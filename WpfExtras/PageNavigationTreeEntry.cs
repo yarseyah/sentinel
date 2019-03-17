@@ -44,7 +44,7 @@
                 if (isCurrent != value)
                 {
                     isCurrent = value;
-                    OnPropertyChanged("IsCurrent");
+                    OnPropertyChanged(nameof(IsCurrent));
                 }
             }
         }

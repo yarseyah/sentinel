@@ -32,7 +32,7 @@
             {
                 if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    OnPropertyChanged("Description");
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
@@ -56,7 +56,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -76,7 +76,7 @@
                 if (value != enabled)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -93,7 +93,7 @@
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -110,7 +110,7 @@
                 if (field != value)
                 {
                     field = value;
-                    OnPropertyChanged("Field");
+                    OnPropertyChanged(nameof(Field));
                 }
             }
         }
@@ -127,7 +127,7 @@
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }

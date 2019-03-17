@@ -80,7 +80,7 @@
                 if (value != selectedIndex)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                 }
             }
         }

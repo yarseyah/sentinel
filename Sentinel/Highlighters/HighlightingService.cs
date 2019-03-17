@@ -79,7 +79,7 @@
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                 }
             }
         }

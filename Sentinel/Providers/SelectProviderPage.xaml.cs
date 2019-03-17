@@ -95,7 +95,7 @@
                     Log.DebugFormat("Selected provider index changed to {0}", value);
 
                     selectedProvider = value;
-                    OnPropertyChanged("SelectedProvider");
+                    OnPropertyChanged(nameof(SelectedProvider));
                 }
             }
         }
@@ -120,7 +120,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("LoggerName");
+                    OnPropertyChanged(nameof(LoggerName));
                 }
             }
         }
@@ -142,7 +142,7 @@
                 if (selectedProviderDescription != value)
                 {
                     selectedProviderDescription = value;
-                    OnPropertyChanged("SelectedProviderDescription");
+                    OnPropertyChanged(nameof(SelectedProviderDescription));
                 }
             }
         }
@@ -159,7 +159,7 @@
                 if (isValid != value)
                 {
                     isValid = value;
-                    OnPropertyChanged("IsValid");
+                    OnPropertyChanged(nameof(IsValid));
                 }
             }
         }

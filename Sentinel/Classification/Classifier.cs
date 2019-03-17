@@ -37,7 +37,7 @@
                             regex = new Regex(Pattern);
                         }
 
-                        OnPropertyChanged("Description");
+                        OnPropertyChanged(nameof(Description));
                     }
                 };
         }
@@ -61,7 +61,7 @@
                             regex = new Regex(Pattern);
                         }
 
-                        OnPropertyChanged("Description");
+                        OnPropertyChanged(nameof(Description));
                     }
                 };
         }
@@ -101,7 +101,7 @@
                 if (enabled != value)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -116,7 +116,7 @@
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
@@ -134,7 +134,7 @@
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }
@@ -151,7 +151,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -168,7 +168,7 @@
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -185,7 +185,7 @@
                 if (type != value)
                 {
                     type = value;
-                    OnPropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }

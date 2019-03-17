@@ -171,7 +171,7 @@ namespace Sentinel.Highlighters
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace Sentinel.Highlighters
                 if (style != value)
                 {
                     style = value;
-                    OnPropertyChanged("Style");
+                    OnPropertyChanged(nameof(Style));
                 }
             }
         }

@@ -46,7 +46,7 @@
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
@@ -60,7 +60,7 @@
             set
             {
                 mode = value;
-                OnPropertyChanged("Mode");
+                OnPropertyChanged(nameof(Mode));
             }
         }
 
@@ -76,7 +76,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -93,7 +93,7 @@
                 if (value != pattern)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -110,7 +110,7 @@
                 if (value != type)
                 {
                     type = value;
-                    OnPropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }

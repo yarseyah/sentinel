@@ -73,7 +73,7 @@
                 }
 
                 horizontal = value;
-                OnPropertyChanged("Horizontal");
+                OnPropertyChanged(nameof(Horizontal));
             }
         }
 
@@ -89,7 +89,7 @@
                 if (vertical != value)
                 {
                     vertical = value;
-                    OnPropertyChanged("Vertical");
+                    OnPropertyChanged(nameof(Vertical));
                 }
             }
         }
@@ -106,7 +106,7 @@
                 if (multipleViewsSupported != value)
                 {
                     multipleViewsSupported = value;
-                    OnPropertyChanged("MultipleViewsSupported");
+                    OnPropertyChanged(nameof(MultipleViewsSupported));
                 }
             }
         }
@@ -123,7 +123,7 @@
                 if (multipleView != value)
                 {
                     multipleView = value;
-                    OnPropertyChanged("MultipleView");
+                    OnPropertyChanged(nameof(MultipleView));
                 }
             }
         }
@@ -140,7 +140,7 @@
                 if (singleView != value)
                 {
                     singleView = value;
-                    OnPropertyChanged("SingleView");
+                    OnPropertyChanged(nameof(SingleView));
                 }
             }
         }
@@ -157,7 +157,7 @@
                 if (!Equals(registeredViews, value))
                 {
                     registeredViews = value;
-                    OnPropertyChanged("RegisteredViews");
+                    OnPropertyChanged(nameof(RegisteredViews));
                 }
             }
         }
@@ -174,7 +174,7 @@
                 if (primaryIndex != value)
                 {
                     primaryIndex = value;
-                    OnPropertyChanged("PrimaryIndex");
+                    OnPropertyChanged(nameof(PrimaryIndex));
                 }
             }
         }
@@ -191,7 +191,7 @@
                 if (secondaryIndex != value)
                 {
                     secondaryIndex = value;
-                    OnPropertyChanged("SecondaryIndex");
+                    OnPropertyChanged(nameof(SecondaryIndex));
                 }
             }
         }
@@ -209,13 +209,13 @@
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public void RemoveChild(IWizardPage item)
         {
             children.Remove(item);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public object Save(object saveData)

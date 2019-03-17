@@ -67,7 +67,7 @@
                 {
                     Log.DebugFormat("Selected provider index is {0}", value);
                     selectedProviderIndex = value;
-                    OnPropertyChanged("SelectedProviderIndex");
+                    OnPropertyChanged(nameof(SelectedProviderIndex));
                 }
             }
         }
@@ -90,7 +90,7 @@
                 if (isValid != value)
                 {
                     isValid = value;
-                    OnPropertyChanged("IsValid");
+                    OnPropertyChanged(nameof(IsValid));
                 }
             }
         }
@@ -265,12 +265,12 @@
 
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
-            OnPropertyChanged("Providers");
+            OnPropertyChanged(nameof(Providers));
         }
 
         private void ProvidersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("Providers");
+            OnPropertyChanged(nameof(Providers));
             IsValid = Error == null;
         }
     }

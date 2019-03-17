@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.6.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.6.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Text.Analyzers.2.6.3\build\Text.Analyzers.props" Condition="Exists('..\packages\Text.Analyzers.2.6.3\build\Text.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.6.3\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.6.3\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.6.3\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.6.3\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\build\Microsoft.CodeQuality.Analyzers.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -46,6 +51,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,8 +97,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine, Version=2.2.1.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommandLineParser.2.2.1\lib\net45\CommandLine.dll</HintPath>
+    <Reference Include="CommandLine, Version=2.4.3.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.4.3\lib\netstandard2.0\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -121,11 +128,11 @@
     <Reference Include="Mono.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.10.0\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NodaTime, Version=2.2.5.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NodaTime.2.2.5\lib\net45\NodaTime.dll</HintPath>
+    <Reference Include="NodaTime, Version=2.4.4.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.2.4.4\lib\net45\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.7.9\lib\Net45\NuGet.Squirrel.dll</HintPath>
@@ -152,8 +159,9 @@
     <Reference Include="System.Drawing.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Primitives.4.3.0\lib\net45\System.Drawing.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.TypeExtensions.4.4.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.5.1\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Controls.Ribbon" />
@@ -780,8 +788,17 @@
     <Resource Include="Resources\Small\Context.png" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.6.3\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\Text.Analyzers.2.6.3\analyzers\dotnet\cs\Text.Analyzers.dll" />
+    <Analyzer Include="..\packages\Text.Analyzers.2.6.3\analyzers\dotnet\cs\Text.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
@@ -792,4 +809,14 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.6.3\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.6.3\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.6.3\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.6.3\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.6.3\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Text.Analyzers.2.6.3\build\Text.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Text.Analyzers.2.6.3\build\Text.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.6.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.6.3\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
 </Project>

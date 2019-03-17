@@ -30,7 +30,7 @@ namespace Sentinel.Support.Converters
                 throw new ArgumentException("Parameter must be an instance of IUserPreferences", nameof(parameter));
             }
 
-            if (!(value is ILogEntry message))
+            if (!(value is ILogEntry))
             {
                 Log.Warn("Not supplied an ILogEntry as the value parameter");
                 return string.Empty;
@@ -39,11 +39,11 @@ namespace Sentinel.Support.Converters
             object displayDateTime = null;
             if (Preferences.UseArrivalDateTime)
             {
-                message.MetaData.TryGetValue("ReceivedTime", out displayDateTime);
+                (value as ILogEntry).MetaData.TryGetValue("ReceivedTime", out displayDateTime);
             }
 
             // Fallback if message does not contain meta-data.
-            var dt = (DateTime)(displayDateTime ?? message.DateTime);
+            var dt = (DateTime)(displayDateTime ?? (value as ILogEntry).DateTime);
             var isUtc = dt.Kind == DateTimeKind.Utc;
             if (isUtc && Preferences.ConvertUtcTimesToLocalTimeZone)
             {

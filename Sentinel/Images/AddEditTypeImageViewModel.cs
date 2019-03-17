@@ -191,7 +191,7 @@ namespace Sentinel.Images
                 if (fileName != value)
                 {
                     fileName = value;
-                    OnPropertyChanged("FileName");
+                    OnPropertyChanged(nameof(FileName));
                 }
             }
         }
@@ -292,8 +292,8 @@ namespace Sentinel.Images
                 if (errorMessage != value)
                 {
                     errorMessage = value;
-                    OnPropertyChanged("Error");
-                    OnPropertyChanged("IsValid");
+                    OnPropertyChanged(nameof(Error));
+                    OnPropertyChanged(nameof(IsValid));
                 }
             }
         }

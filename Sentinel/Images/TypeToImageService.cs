@@ -50,7 +50,7 @@ namespace Sentinel.Images
                 if (value != selectedIndex)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                     CommandManager.InvalidateRequerySuggested();
                 }
             }
@@ -87,7 +87,7 @@ namespace Sentinel.Images
 
             if (updated)
             {
-                OnPropertyChanged("ImageMappings");
+                OnPropertyChanged(nameof(ImageMappings));
             }
         }
 
