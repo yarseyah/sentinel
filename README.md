@@ -86,6 +86,7 @@ To allow a log4net application transmit its log messages to Sentinel, use a conf
       <RemoteAddress value="127.0.0.2"/>
       <RemotePort value="9999"/>
       <layout type="log4net.Layout.XmlLayout"/>
+      <encoding value="utf-8" />
     </appender>
 
     <root>
