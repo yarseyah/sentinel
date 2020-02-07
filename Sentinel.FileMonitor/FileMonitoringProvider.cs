@@ -1,4 +1,7 @@
-﻿namespace Sentinel.FileMonitor
+﻿using System.Linq.Expressions;
+using System.Windows;
+
+namespace Sentinel.FileMonitor
 {
     using System;
     using System.Collections.Generic;
@@ -68,8 +71,10 @@
 
             // Chain up callbacks to the workers.
             Worker.DoWork += DoWork;
+            Worker.WorkerSupportsCancellation = true;
             Worker.RunWorkerCompleted += DoWorkComplete;
             PurgeWorker.DoWork += PurgeWorkerDoWork;
+            PurgeWorker.WorkerSupportsCancellation = true;
         }
 
         ~FileMonitoringProvider()
@@ -204,38 +209,46 @@
                     var length = fi.Length;
                     if (length > bytesRead)
                     {
-                        using (var fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
+                        try
                         {
-                            var position = fs.Seek(bytesRead, SeekOrigin.Begin);
-                            Debug.Assert(position == bytesRead, "Seek did not go to where we asked.");
-
-                            // Calculate length of file.
-                            var bytesToRead = length - position;
-                            Debug.Assert(bytesToRead < int.MaxValue, "Too much data to read using this method!");
-
-                            var buffer = new byte[bytesToRead];
-
-                            var bytesSuccessfullyRead = fs.Read(buffer, 0, (int)bytesToRead);
-                            Debug.Assert(bytesSuccessfullyRead == bytesToRead, "Did not get as much as expected!");
-
-                            // Put results into a buffer (prepend any unprocessed data retained from last read).
-                            sb.Length = 0;
-                            sb.Append(incomplete);
-                            sb.Append(Encoding.ASCII.GetString(buffer, 0, bytesSuccessfullyRead));
-
-                            using (var sr = new StringReader(sb.ToString()))
+                            using (var fs = fi.Open(FileMode.Open, FileAccess.Read, FileShare.Write))
                             {
-                                while (sr.Peek() != -1)
+                                var position = fs.Seek(bytesRead, SeekOrigin.Begin);
+                                Debug.Assert(position == bytesRead, "Seek did not go to where we asked.");
+
+                                // Calculate length of file.
+                                var bytesToRead = length - position;
+                                Debug.Assert(bytesToRead < int.MaxValue, "Too much data to read using this method!");
+
+                                var buffer = new byte[bytesToRead];
+
+                                var bytesSuccessfullyRead = fs.Read(buffer, 0, (int) bytesToRead);
+                                Debug.Assert(bytesSuccessfullyRead == bytesToRead, "Did not get as much as expected!");
+
+                                // Put results into a buffer (prepend any unprocessed data retained from last read).
+                                sb.Length = 0;
+                                sb.Append(incomplete);
+                                sb.Append(Encoding.ASCII.GetString(buffer, 0, bytesSuccessfullyRead));
+
+                                using (var sr = new StringReader(sb.ToString()))
                                 {
-                                    var line = sr.ReadLine();
+                                    while (sr.Peek() != -1)
+                                    {
+                                        var line = sr.ReadLine();
 
-                                    // Trace.WriteLine("Read: " + line);
-                                    DecodeAndQueueMessage(line);
+                                        // Trace.WriteLine("Read: " + line);
+                                        DecodeAndQueueMessage(line);
+                                    }
                                 }
-                            }
 
-                            // Can we determine whether any tailing data was unprocessed?
-                            bytesRead = position + bytesSuccessfullyRead;
+                                // Can we determine whether any tailing data was unprocessed?
+                                bytesRead = position + bytesSuccessfullyRead;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error in FileMonitorProvider: {ex}", "Error in FileMonitorProvider",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
