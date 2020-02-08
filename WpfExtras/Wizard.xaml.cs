@@ -297,13 +297,13 @@
             {
                 Debug.Assert(pages != null, "Pages collection has not been constructed");
                 pages.Add(newItem);
-                OnPropertyChanged("Children");
+                OnPropertyChanged(nameof(Children));
             }
 
             public void RemoveChild(IWizardPage item)
             {
                 pages.Remove(item);
-                OnPropertyChanged("Children");
+                OnPropertyChanged(nameof(Children));
             }
 
             public object Save(object saveData)

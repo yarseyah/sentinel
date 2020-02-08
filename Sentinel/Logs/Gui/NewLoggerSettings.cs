@@ -176,7 +176,7 @@
             SecondaryView = Views.Count >= 2 ? LookupViewInformation(Views.ElementAt(1)) : "Not used.";
         }
 
-        public class InternalSettings
+        private class InternalSettings
         {
             public string LogName { get; set; }
 

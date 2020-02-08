@@ -29,7 +29,7 @@ namespace nLog4Tester
                                                                "Kernel32"
                                                            };
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             const int SmallestSleep = 1000;
             const int BiggestSleep = 2000;

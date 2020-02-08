@@ -55,7 +55,7 @@
             {
                 if (selectedDecoderIndex == value) return;
                 selectedDecoderIndex = value;
-                OnPropertyChanged("SelectedDecoderIndex");
+                OnPropertyChanged(nameof(SelectedDecoderIndex));
             }
         }
 
@@ -73,7 +73,7 @@
                 if (showCustomWarning != value)
                 {
                     showCustomWarning = value;
-                    OnPropertyChanged("ShowCustomWarning");
+                    OnPropertyChanged(nameof(ShowCustomWarning));
                 }
             }
         }
@@ -133,13 +133,13 @@
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public void RemoveChild(IWizardPage item)
         {
             children.Remove(item);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public object Save(object saveData)
@@ -204,7 +204,7 @@
                     if (Children.Any())
                     {
                         children.Clear();
-                        OnPropertyChanged("Children");
+                        OnPropertyChanged(nameof(Children));
                     }
                 }
             }
@@ -213,7 +213,7 @@
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             // Trigger the validation on these fields (work around a WPF 3.x issue).
-            OnPropertyChanged("SelectedDecoderIndex");
+            OnPropertyChanged(nameof(SelectedDecoderIndex));
         }
     }
 }

@@ -147,7 +147,7 @@
                 if (unfilteredCount != value)
                 {
                     unfilteredCount = value;
-                    OnPropertyChanged("UnfilteredCount");
+                    OnPropertyChanged(nameof(UnfilteredCount));
                 }
             }
         }
@@ -167,7 +167,7 @@
                 }
 
                 status = value;
-                OnPropertyChanged("Status");
+                OnPropertyChanged(nameof(Status));
             }
         }
 

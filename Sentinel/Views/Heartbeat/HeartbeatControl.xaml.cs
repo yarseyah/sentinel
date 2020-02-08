@@ -45,7 +45,7 @@
                 if (data != value)
                 {
                     data = value;
-                    OnPropertyChanged("Data");
+                    OnPropertyChanged(nameof(Data));
                 }
             }
         }

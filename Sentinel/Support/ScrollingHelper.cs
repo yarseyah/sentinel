@@ -6,7 +6,7 @@
     using System.Windows.Media;
     using System.Windows.Threading;
 
-    public class ScrollingHelper
+    public static class ScrollingHelper
     {
         public delegate void VoidFunctionHandler(ListBox listBox);
 

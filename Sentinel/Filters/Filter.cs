@@ -21,7 +21,7 @@ namespace Sentinel.Filters
 
         private string pattern;
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode = MatchMode.Exact;
 
@@ -43,7 +43,7 @@ namespace Sentinel.Filters
             };
         }
 
-        public Filter(string name, LogEntryField field, string pattern)
+        public Filter(string name, LogEntryFields field, string pattern)
         {
             Name = name;
             Pattern = pattern;
@@ -118,7 +118,7 @@ namespace Sentinel.Filters
             }
         }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -187,28 +187,28 @@ namespace Sentinel.Filters
 
             switch (Field)
             {
-                case LogEntryField.None:
+                case LogEntryFields.None:
                     target = string.Empty;
                     break;
-                case LogEntryField.Type:
+                case LogEntryFields.Type:
                     target = logEntry.Type;
                     break;
-                case LogEntryField.System:
+                case LogEntryFields.System:
                     target = logEntry.System;
                     break;
-                case LogEntryField.Classification:
+                case LogEntryFields.Classification:
                     target = string.Empty;
                     break;
-                case LogEntryField.Thread:
+                case LogEntryFields.Thread:
                     target = logEntry.Thread;
                     break;
-                case LogEntryField.Source:
+                case LogEntryFields.Source:
                     target = logEntry.Source;
                     break;
-                case LogEntryField.Description:
+                case LogEntryFields.Description:
                     target = logEntry.Description;
                     break;
-                case LogEntryField.Host:
+                case LogEntryFields.Host:
                     target = string.Empty;
                     break;
                 default:

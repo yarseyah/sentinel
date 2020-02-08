@@ -6,9 +6,9 @@ namespace Sentinel.Highlighters.Interfaces
 
     public interface ISearchHighlighter
     {
-        IEnumerable<LogEntryField> Fields { get; }
+        IEnumerable<LogEntryFields> Fields { get; }
 
-        LogEntryField Field { get; set; }
+        LogEntryFields Field { get; set; }
 
         bool Enabled { get; set; }
 

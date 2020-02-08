@@ -64,7 +64,7 @@
                 if (fileName != value)
                 {
                     fileName = value;
-                    OnPropertyChanged("FileName");
+                    OnPropertyChanged(nameof(FileName));
                 }
             }
         }
@@ -81,7 +81,7 @@
                 {
                     Trace.WriteLine("Setting WarnFileNotFound to " + value);
                     warnFileNotFound = value;
-                    OnPropertyChanged("WarnFileNotFound");
+                    OnPropertyChanged(nameof(WarnFileNotFound));
                 }
             }
         }
@@ -98,7 +98,7 @@
                 if (Math.Abs(refresh - value) > 0.01)
                 {
                     refresh = value;
-                    OnPropertyChanged("Refresh");
+                    OnPropertyChanged(nameof(Refresh));
                 }
             }
         }
@@ -156,7 +156,7 @@
                 if (isValid != value)
                 {
                     isValid = value;
-                    OnPropertyChanged("IsValid");
+                    OnPropertyChanged(nameof(IsValid));
                 }
             }
         }
@@ -164,13 +164,13 @@
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public void RemoveChild(IWizardPage item)
         {
             children.Remove(item);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public object Save(object saveData)
@@ -230,8 +230,7 @@
             try
             {
                 reason = null;
-                // ReSharper disable once ObjectCreationAsStatement
-                new FileInfo(fileNameToValidate);
+                var _ = new FileInfo(fileNameToValidate);
                 return true;
             }
             catch (UnauthorizedAccessException)

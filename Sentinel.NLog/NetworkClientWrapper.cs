@@ -51,6 +51,8 @@ namespace Sentinel.NLog
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
+
             udpClient?.Close();
             tcpClient?.Close();
         }

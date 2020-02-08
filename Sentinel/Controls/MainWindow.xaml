@@ -47,7 +47,7 @@
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="SentinelInterfaces:LogEntryField" />
+                <x:Type TypeName="SentinelInterfaces:LogEntryFields" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="matchMode"

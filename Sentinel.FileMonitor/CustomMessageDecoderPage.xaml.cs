@@ -52,7 +52,7 @@
             {
                 if (customFormat == value) return;
                 customFormat = value;
-                OnPropertyChanged("CustomFormat");
+                OnPropertyChanged(nameof(CustomFormat));
             }
         }
 
@@ -108,7 +108,7 @@
             {
                 if (isValid == value) return;
                 isValid = value;
-                OnPropertyChanged("IsValid");
+                OnPropertyChanged(nameof(IsValid));
             }
         }
 
@@ -124,13 +124,13 @@
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public void RemoveChild(IWizardPage item)
         {
             children.Remove(item);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public object Save(object saveData)
@@ -224,7 +224,7 @@
             {
                 if (error == value) return;
                 error = value;
-                OnPropertyChanged("Error");
+                OnPropertyChanged(nameof(Error));
             }
         }
 
@@ -234,7 +234,7 @@
         {
             // Set the custom format after the constructor to force the validation
             // to show immediately, this will retrigger the validation.
-            OnPropertyChanged("CustomFormat");
+            OnPropertyChanged(nameof(CustomFormat));
         }
     }
 }
