@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Classification.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;

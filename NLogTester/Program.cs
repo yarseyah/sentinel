@@ -15,7 +15,7 @@
                                                                "Starting system",
                                                                "Closing system",
                                                                "Data exchange started",
-                                                               "Unknown issue encountered"
+                                                               "Unknown issue encountered",
                                                            };
 
         private static readonly List<string> Sources = new List<string> { "Foo", "Bar", "LongSystemName", "Kernel32" };

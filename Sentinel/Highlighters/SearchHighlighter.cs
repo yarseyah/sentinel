@@ -85,17 +85,17 @@ namespace Sentinel.Highlighters
         public void Initialise()
         {
             Highlighter = new Highlighter
-                              {
-                                  Name = "Search",
-                                  Style =
-                                      new HighlighterStyle
-                                          {
-                                              Background = Colors.Lime,
-                                              Foreground = Colors.Fuchsia
-                                          },
-                                  Field = LogEntryFields.System,
-                                  Mode = MatchMode.CaseSensitive,
-                              };
+            {
+                Name = "Search",
+                Style =
+                    new HighlighterStyle
+                    {
+                        Background = Colors.Lime,
+                        Foreground = Colors.Fuchsia,
+                    },
+                Field = LogEntryFields.System,
+                Mode = MatchMode.CaseSensitive,
+            };
 
             Search = string.Empty;
         }

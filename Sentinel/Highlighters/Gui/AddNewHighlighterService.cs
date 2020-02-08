@@ -39,7 +39,7 @@
                                       Field = data.Field,
                                       Pattern = data.Pattern,
                                       Mode = data.Mode,
-                                      Enabled = true
+                                      Enabled = true,
                                   };
 
             if (data.OverrideBackgroundColour)

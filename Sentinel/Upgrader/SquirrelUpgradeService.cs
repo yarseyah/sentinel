@@ -293,7 +293,7 @@ namespace Sentinel.Upgrader
             var specialDirectives = new[]
             {
                 "--squirrel-firstrun",
-                "--inhibit-upgrade"
+                "--inhibit-upgrade",
             };
 
             IsFirstRun = commandLineArguments.Any(a => a == specialDirectives[0]);

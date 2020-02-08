@@ -16,6 +16,7 @@
     <WarningLevel>4</WarningLevel>
     <ExpressionBlendVersion>3.0.1927.0</ExpressionBlendVersion>
     <ApplicationIcon>Sentinel.ico</ApplicationIcon>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

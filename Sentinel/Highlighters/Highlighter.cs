@@ -4,7 +4,7 @@ namespace Sentinel.Highlighters
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;

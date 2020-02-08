@@ -2,8 +2,8 @@
 {
     using System.Windows;
 
-    using Interfaces;
-    using Services;
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Services;
 
     public class RemoveClassifier : IRemoveClassifyingService
     {

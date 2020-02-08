@@ -66,6 +66,6 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Host field of message, usually the originating machine's name.
         /// </summary>
-        Host = 64
+        Host = 64,
     }
 }

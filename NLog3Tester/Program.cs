@@ -14,18 +14,18 @@
 
         private static readonly List<string> Reasons = new List<string>
                                                            {
-                                                               "Starting system", 
-                                                               "Closing system", 
-                                                               "Data exchange started", 
-                                                               "Unknown issue encountered"
+                                                               "Starting system",
+                                                               "Closing system",
+                                                               "Data exchange started",
+                                                               "Unknown issue encountered",
                                                            };
 
         private static readonly List<string> Sources = new List<string>
                                                            {
-                                                               "Foo", 
-                                                               "Bar", 
-                                                               "LongSystemName", 
-                                                               "Kernel32"
+                                                               "Foo",
+                                                               "Bar",
+                                                               "LongSystemName",
+                                                               "Kernel32",
                                                            };
 
         public static void Main()

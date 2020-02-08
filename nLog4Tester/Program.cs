@@ -1,4 +1,5 @@
 ﻿// ReSharper disable once StyleCop.SA1300
+// ReSharper disable SA1300
 namespace nLog4Tester
 {
     using System;
@@ -18,7 +19,7 @@ namespace nLog4Tester
                                                                "Starting system",
                                                                "Closing system",
                                                                "Data exchange started",
-                                                               "Unknown issue encountered"
+                                                               "Unknown issue encountered",
                                                            };
 
         private static readonly List<string> Sources = new List<string>
@@ -26,15 +27,15 @@ namespace nLog4Tester
                                                                "Foo",
                                                                "Bar",
                                                                "LongSystemName",
-                                                               "Kernel32"
+                                                               "Kernel32",
                                                            };
 
         public static void Main()
         {
-            const int SmallestSleep = 1000;
-            const int BiggestSleep = 2000;
+            const int smallestSleep = 1000;
+            const int biggestSleep = 2000;
 
-            for (var i = 0;; i++)
+            for (var i = 0; ; i++)
             {
                 // Randomly generate a message:
                 var text = RandomMessage(i);
@@ -42,7 +43,7 @@ namespace nLog4Tester
                 // Randomly assign a message
                 LogMessage(text);
 
-                Thread.Sleep(Random.Next(SmallestSleep, BiggestSleep));
+                Thread.Sleep(Random.Next(smallestSleep, biggestSleep));
             }
 
             // ReSharper disable once FunctionNeverReturns

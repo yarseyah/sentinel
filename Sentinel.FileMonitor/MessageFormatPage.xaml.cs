@@ -8,7 +8,6 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-
     using WpfExtras;
 
     /// <summary>
@@ -33,24 +32,17 @@
             PropertyChanged += PropertyChangedHandler;
 
             DecodingStyles = new List<string>
-                                 {
-                                     "nLog default message format decoder",
-                                     "Custom"
-                                 };
+            {
+                "nLog default message format decoder",
+                "Custom"
+            };
         }
 
-        public IEnumerable<string> DecodingStyles
-        {
-            get;
-            private set;
-        }
+        public IEnumerable<string> DecodingStyles { get; private set; }
 
         public int SelectedDecoderIndex
         {
-            get
-            {
-                return selectedDecoderIndex;
-            }
+            get { return selectedDecoderIndex; }
             set
             {
                 if (selectedDecoderIndex == value) return;
@@ -63,10 +55,7 @@
 
         public bool ShowCustomWarning
         {
-            get
-            {
-                return showCustomWarning;
-            }
+            get { return showCustomWarning; }
 
             private set
             {
@@ -92,42 +81,27 @@
 
         public string Title
         {
-            get
-            {
-                return "Message Part Identification";
-            }
+            get { return "Message Part Identification"; }
         }
 
         public ReadOnlyObservableCollection<IWizardPage> Children
         {
-            get
-            {
-                return readonlyChildren;
-            }
+            get { return readonlyChildren; }
         }
 
         public string Description
         {
-            get
-            {
-                return "Define how the entries in the log file are categorised.";
-            }
+            get { return "Define how the entries in the log file are categorised."; }
         }
 
         public bool IsValid
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public Control PageContent
         {
-            get
-            {
-                return this;
-            }
+            get { return this; }
         }
 
         public void AddChild(IWizardPage newItem)
@@ -147,9 +121,7 @@
             Debug.Assert(saveData != null, "Expecting a valid save-data instance");
             Debug.Assert(saveData is IFileMonitoringProviderSettings, "Should be an IFileMonitoringProviderSettings");
 
-            IFileMonitoringProviderSettings settings = saveData as IFileMonitoringProviderSettings;
-
-            if ( settings != null )
+            if (saveData is IFileMonitoringProviderSettings settings)
             {
                 if (!IsCustom)
                 {
@@ -162,15 +134,12 @@
 
         protected bool IsCustom
         {
-            get
-            {
-                return SelectedDecoderIndex == DecodingStyles.Count() - 1;
-            }
+            get { return SelectedDecoderIndex == DecodingStyles.Count() - 1; }
         }
 
         private string GetDecoder()
         {
-            switch ( SelectedDecoderIndex )
+            switch (SelectedDecoderIndex)
             {
                 case 0:
                     return "^(?<DateTime>[^|]+)\\|(?<Type>[^|]+)\\|(?<Logger>[^|]+)\\|(?<Description>[^$]*)$";

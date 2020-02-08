@@ -6,8 +6,7 @@
     using System.Linq;
     using System.Windows.Controls;
 
-    using Interfaces;
-
+    using Sentinel.Logs.Interfaces;
     using WpfExtras;
 
     /// <summary>

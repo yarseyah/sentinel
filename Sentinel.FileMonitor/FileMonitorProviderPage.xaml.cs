@@ -28,11 +28,11 @@
         private string fileName = string.Empty;
 
         private bool loadExisting;
-        
+
         private double refresh;
-        
+
         private bool warnFileNotFound;
-        
+
         private bool isValid;
 
         public FileMonitorProviderPage()

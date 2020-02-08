@@ -58,23 +58,24 @@
             }
             set
             {
-                if (port == value) return;
-                port = value;
-                OnPropertyChanged(nameof(Port));
+                if (port != value)
+                {
+                    port = value;
+                    OnPropertyChanged(nameof(Port));
+                }
             }
         }
-					
+
         public bool IsUdp
         {
-            get
-            {
-                return isUdp;
-            }
+            get => isUdp;
             set
             {
-                if (isUdp == value) return;
-                isUdp = value;
-                OnPropertyChanged(nameof(IsUdp));
+                if (isUdp != value)
+                {
+                    isUdp = value;
+                    OnPropertyChanged(nameof(IsUdp));
+                }
             }
         }
 
@@ -93,9 +94,11 @@
 
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged(nameof(IsValid));
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged(nameof(IsValid));
+                }
             }
         }
 
@@ -125,7 +128,7 @@
                            Name = previousInfo.Name,
                            Info = previousInfo.Info,
                            Port = Port,
-                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp
+                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp,
                        };
         }
 

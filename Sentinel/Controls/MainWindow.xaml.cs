@@ -197,7 +197,7 @@
                                    FileName = frame.Log.Name,
                                    DefaultExt = ".log",
                                    Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
-                                   FilterIndex = 0
+                                   FilterIndex = 0,
                                };
 
             if (savefile.ShowDialog(this) == true)
@@ -219,7 +219,7 @@
                                    FileName = sessionManager.Name,
                                    DefaultExt = ".sntl",
                                    Filter = "Sentinel session (.sntl)|*.sntl",
-                                   FilterIndex = 0
+                                   FilterIndex = 0,
                                };
 
             if (savefile.ShowDialog(this) == true)
@@ -324,7 +324,7 @@
                                        FileName = sessionManager.Name,
                                        DefaultExt = ".sntl",
                                        Filter = "Sentinel session (.sntl)|*.sntl",
-                                       FilterIndex = 0
+                                       FilterIndex = 0,
                                    };
 
                 if (openFile.ShowDialog(this) == true)
@@ -529,7 +529,7 @@
                                        {
                                            Port = log4NetOptions.Port,
                                            Name = info,
-                                           Info = Log4NetProvider.ProviderRegistrationInformation.Info
+                                           Info = Log4NetProvider.ProviderRegistrationInformation.Info,
                                        };
 
             var providers =
@@ -537,7 +537,7 @@
                     new PendingProviderRecord
                         {
                             Info = Log4NetProvider.ProviderRegistrationInformation.Info,
-                            Settings = providerSettings
+                            Settings = providerSettings,
                         },
                     1);
 
@@ -558,7 +558,7 @@
                                                    : NetworkProtocol.Tcp,
                                            Port = verbOptions.Port,
                                            Name = name,
-                                           Info = info
+                                           Info = info,
                                        };
             var providers = Enumerable.Repeat(new PendingProviderRecord { Info = info, Settings = providerSettings }, 1);
 
@@ -634,7 +634,7 @@
                                      Top = (int)Top,
                                      Left = (int)Left,
                                      Width = (int)Width,
-                                     WindowState = WindowState
+                                     WindowState = WindowState,
                                  };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
@@ -710,7 +710,7 @@
                        {
                            Source = source,
                            Path = new PropertyPath(path),
-                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                        };
         }
 
@@ -785,7 +785,7 @@
                                         {
                                             Source = standardHighlighters,
                                             Path = new PropertyPath("Count"),
-                                            Converter = collapseIfZero
+                                            Converter = collapseIfZero,
                                         };
             StandardHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingStandardHighlightersBinding);
 
@@ -797,7 +797,7 @@
                                                           {
                                                               Source = customHighlighters,
                                                               Path = new PropertyPath("Count"),
-                                                              Converter = collapseIfZero
+                                                              Converter = collapseIfZero,
                                                           };
             CustomHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingCustomHighlightersBinding);
 

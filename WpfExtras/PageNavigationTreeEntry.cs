@@ -21,7 +21,6 @@
             page.PropertyChanged += PagePropertyChanged;
             (page.Children as INotifyCollectionChanged).CollectionChanged += PageChildCollectionChanged;
 
-
             foreach (var c in page.Children)
             {
                 children.Add(new PageNavigationTreeEntry(c));
@@ -34,10 +33,7 @@
 
         public bool IsCurrent
         {
-            get
-            {
-                return isCurrent;
-            }
+            get => isCurrent;
 
             private set
             {

@@ -127,7 +127,7 @@ namespace Sentinel.Images
                                          {
                                              Quality = newQuality,
                                              AcceptLowerQuality = options.AcceptLowerQuality,
-                                             ImageMustExist = options.ImageMustExist
+                                             ImageMustExist = options.ImageMustExist,
                                          };
 
                     // Recursive

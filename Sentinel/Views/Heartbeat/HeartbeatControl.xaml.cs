@@ -9,7 +9,7 @@
     using System.Windows.Media;
     using System.Windows.Shapes;
     using System.Windows.Threading;
-    using Support.Wpf;
+    using Sentinel.Support.Wpf;
 
     /// <summary>
     ///   Interaction logic for HeartbeatControl.xaml
@@ -23,10 +23,10 @@
             InitializeComponent();
             DataContext = this;
 
-            DispatcherTimer samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
-                                                    {
-                                                        Interval = TimeSpan.FromMilliseconds(1000)
-                                                    };
+            var samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
+            {
+                Interval = TimeSpan.FromMilliseconds(1000),
+            };
             samplePeriodTimer.Tick += SampleTick;
             samplePeriodTimer.Start();
         }
@@ -35,11 +35,7 @@
 
         public ObservableDictionary<string, ObservableCollection<int>> Data
         {
-            get
-            {
-                return data;
-            }
-
+            get => data;
             set
             {
                 if (data != value)
@@ -54,24 +50,24 @@
         {
             IList<Point> returnCollection = new List<Point>();
 
-            int stride = width / (values.Count() - 1);
+            var stride = width / (values.Count() - 1);
 
-            int xPosition = -stride;
+            var x = -stride;
 
-            // Prepoulate structure with entry off to side and down to origin.
-            returnCollection.Add(new Point(xPosition, height));
-            returnCollection.Add(new Point(xPosition, height - (values.ElementAt(0) * heightScale)));
-            xPosition += stride;
+            // Populate structure with entry off to side and down to origin.
+            returnCollection.Add(new Point(x, height));
+            returnCollection.Add(new Point(x, height - (values.ElementAt(0) * heightScale)));
+            x += stride;
 
-            foreach (int value in values)
+            foreach (var value in values)
             {
-                int yPosition = (int)(value * heightScale);
-                returnCollection.Add(new Point(xPosition, height - yPosition));
-                xPosition += stride;
+                var y = (int)(value * heightScale);
+                returnCollection.Add(new Point(x, height - y));
+                x += stride;
             }
 
             // Post populate with values right off to the side (so null values don't enter visibility).
-            returnCollection.Add(new Point(xPosition, height));
+            returnCollection.Add(new Point(x, height));
 
             return returnCollection;
         }
@@ -97,20 +93,23 @@
             if (Data != null)
             {
                 int maxValue = Data.Count() > 0
-                                   ? Data.Max(kvp => kvp.Value != null && kvp.Value.Count() > 0 ? kvp.Value.Max() : 0)
-                                   : 0;
+                    ? Data.Max(kvp => kvp.Value != null && kvp.Value.Count() > 0 ? kvp.Value.Max() : 0)
+                    : 0;
                 double scale = maxValue > 0 ? canvas.Height / maxValue : 1.0d;
 
                 foreach (KeyValuePair<string, ObservableCollection<int>> d in Data)
                 {
-                    PointCollection pc =
-                        new PointCollection(CreatePoints(d.Value, (int)canvas.Width, (int)canvas.Height, scale));
-
-                    Polyline pl = new Polyline
-                                      {
-                                          Points = pc,
-                                          StrokeThickness = 3.0d
-                                      };
+                    var pc = new PointCollection(
+                        CreatePoints(
+                            d.Value,
+                            (int)canvas.Width,
+                            (int)canvas.Height,
+                            scale));
+                    var pl = new Polyline
+                    {
+                        Points = pc,
+                        StrokeThickness = 3.0d,
+                    };
 
                     switch (d.Key)
                     {

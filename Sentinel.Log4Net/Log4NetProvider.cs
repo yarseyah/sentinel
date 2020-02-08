@@ -10,22 +10,19 @@
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Linq;
-
     using Common.Logging;
-
-    using Interfaces;
-    using Interfaces.Providers;
-
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
+    using Sentinel.Interfaces.Providers;
 
     public class Log4NetProvider : INetworkProvider
     {
+        private const int PumpFrequency = 100;
+
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
-
-        private const int PumpFrequency = 100;
 
         private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
 
@@ -213,10 +210,9 @@
 
         private ILogEntry DeserializeMessage(string message)
         {
-
             try
             {
-                // Record the current date/time 
+                // Record the current date/time
                 var receivedTime = DateTime.UtcNow;
 
                 var payload = $@"<entry xmlns:log4net=""{log4Net}"">{message}</entry>";
@@ -247,9 +243,14 @@
                                     break;
                                 default:
                                     if (props.ContainsKey(name))
+                                    {
                                         props[name] = value;
+                                    }
                                     else
+                                    {
                                         props.Add(name, value);
+                                    }
+
                                     break;
                             }
                         }
@@ -270,9 +271,10 @@
                         line = source.Attribute("line").Value;
                     }
 
-                    var metaData = new Dictionary<string, object> {
+                    var metaData = new Dictionary<string, object>
+                    {
                         ["Classification"] = classification,
-                        ["Host"] = host
+                        ["Host"] = host,
                     };
 
                     foreach (var prop in props)
@@ -283,7 +285,9 @@
                             metaData[prop.Key] = prop.Value;
                         }
                         else
+                        {
                             metaData.Add(prop.Key, prop.Value);
+                        }
                     }
 
                     AddExceptionIfFound(entryEvent, metaData);
@@ -298,7 +302,7 @@
                                            Thread = entryEvent.GetAttribute("thread", string.Empty),
                                            Description = description,
                                            Type = type,
-                                           MetaData = metaData
+                                           MetaData = metaData,
                                        };
 
                     if (logEntry.Description.ToUpper().Contains("EXCEPTION"))

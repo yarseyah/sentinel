@@ -5,13 +5,9 @@ namespace Sentinel.Support.Converters
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
-
     using Common.Logging;
-
-    using Interfaces;
-
     using NodaTime;
-
+    using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 
     public class TimePreferenceConverter : IValueConverter

@@ -8,8 +8,8 @@
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using Gui;
-    using Interfaces;
+    using Sentinel.Highlighters.Gui;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;

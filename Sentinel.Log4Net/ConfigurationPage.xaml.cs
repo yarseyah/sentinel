@@ -10,7 +10,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for ConfigurationPage.xaml
+    /// Interaction logic for ConfigurationPage.xaml.
     /// </summary>
     public partial class ConfigurationPage : IWizardPage
     {

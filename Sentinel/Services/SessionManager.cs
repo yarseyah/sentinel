@@ -294,7 +294,7 @@
                                 pendingProviderRecords.Add(new PendingProviderRecord
                                                                {
                                                                    Info = thisSetting.Info,
-                                                                   Settings = thisSetting
+                                                                   Settings = thisSetting,
                                                                });
                             }
                             else if (providerSetting["$type"].ToString().Contains(typeof(UdpAppenderSettings).Name))
@@ -303,7 +303,7 @@
                                 pendingProviderRecords.Add(new PendingProviderRecord
                                                                {
                                                                    Info = thisSetting.Info,
-                                                                   Settings = thisSetting
+                                                                   Settings = thisSetting,
                                                                });
                             }
                         }

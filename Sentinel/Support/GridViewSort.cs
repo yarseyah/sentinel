@@ -367,7 +367,7 @@
                 var pathSegmentCollection = new PathSegmentCollection
                                                 {
                                                     new LineSegment(new Point(x2, y1), true),
-                                                    new LineSegment(new Point(x3, y2), true)
+                                                    new LineSegment(new Point(x3, y2), true),
                                                 };
 
                 var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);

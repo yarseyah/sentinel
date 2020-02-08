@@ -7,8 +7,8 @@
     using System.Runtime.Serialization;
     using System.Windows.Input;
 
-    using Gui;
-    using Interfaces;
+    using Sentinel.Classification.Gui;
+    using Sentinel.Classification.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;

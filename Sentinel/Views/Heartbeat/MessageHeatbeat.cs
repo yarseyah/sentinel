@@ -45,7 +45,7 @@
 
             var samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
                                         {
-                                            Interval = TimeSpan.FromMilliseconds(SamplePeriod)
+                                            Interval = TimeSpan.FromMilliseconds(SamplePeriod),
                                         };
             samplePeriodTimer.Tick += SampleTick;
             samplePeriodTimer.Start();

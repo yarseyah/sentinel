@@ -17,6 +17,5 @@ namespace Sentinel.Interfaces.Providers
         void Pause();
 
         void Close();
-
     }
 }

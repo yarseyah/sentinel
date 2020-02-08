@@ -73,7 +73,7 @@
       <DependentUpon>NetworkConfigurationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="NetworkProtocol.cs" />
-    <Compile Include="NLogSettings.cs" />
+    <Compile Include="NetworkSettings.cs" />
     <Compile Include="NLogViewerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

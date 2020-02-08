@@ -7,7 +7,7 @@
     public class BooleanInvertingValueConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a value. 
+        /// Converts a value.
         /// </summary>
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
@@ -23,7 +23,7 @@
         }
 
         /// <summary>
-        /// Converts a value. 
+        /// Converts a value.
         /// </summary>
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.

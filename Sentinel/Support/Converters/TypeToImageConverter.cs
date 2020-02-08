@@ -5,7 +5,6 @@ namespace Sentinel.Support.Converters
     using System.Windows.Data;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-
     using Sentinel.Images;
     using Sentinel.Images.Interfaces;
     using Sentinel.Services;
@@ -23,11 +22,12 @@ namespace Sentinel.Support.Converters
             if (!string.IsNullOrWhiteSpace(valueAsString))
             {
                 var imageOptions = new ImageOptions
-                                       {
-                                           Quality = Quality,
-                                           AcceptLowerQuality = true,
-                                           ImageMustExist = true
-                                       };
+                {
+                    Quality = Quality,
+                    AcceptLowerQuality = true,
+                    ImageMustExist = true,
+                };
+
                 var record = imageService?.Get(valueAsString, imageOptions);
 
                 if (!string.IsNullOrEmpty(record?.Image))

@@ -5,7 +5,7 @@
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Extractors.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;

@@ -11,16 +11,14 @@
 
     using Common.Logging;
 
-    using Highlighters;
-    using Highlighters.Interfaces;
-
+    using Sentinel.Highlighters;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 
-    using Services;
-
-    using Support;
-    using Support.Wpf;
+    using Sentinel.Services;
+    using Sentinel.Support;
+    using Sentinel.Support.Wpf;
 
     /// <summary>
     /// Interaction logic for LogMessagesControl.xaml

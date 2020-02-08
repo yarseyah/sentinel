@@ -11,8 +11,8 @@
         string Summary { get; }
 
         /// <summary>
-        /// Reference back to the provider this setting is appropriate to.
-        /// </summary>       
+        /// Gets reference back to the provider this setting is appropriate to.
+        /// </summary>
         [DataMember]
         IProviderInfo Info { get; }
     }

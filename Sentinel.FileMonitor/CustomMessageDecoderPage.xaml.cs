@@ -6,7 +6,6 @@
     using System.Text.RegularExpressions;
     using System.Windows;
     using System.Windows.Controls;
-
     using WpfExtras;
 
     /// <summary>
@@ -34,20 +33,10 @@
             PropertyChanged += PropertyChangedHandler;
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            if ( e.PropertyName == "CustomFormat")
-            {
-                IsValid = this["CustomFormat"] == null;
-            }
-        }
-
         public string CustomFormat
         {
-            get
-            {
-                return customFormat;
-            }
+            get { return customFormat; }
+
             set
             {
                 if (customFormat == value) return;
@@ -56,7 +45,13 @@
             }
         }
 
-        #region Implementation of INotifyPropertyChanged
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CustomFormat")
+            {
+                IsValid = this["CustomFormat"] == null;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -70,40 +65,24 @@
             }
         }
 
-        #endregion
-
-        #region Implementation of IWizardPage
-
         public string Title
         {
-            get
-            {
-                return "Custom Message Decoder";
-            }
+            get { return "Custom Message Decoder"; }
         }
 
         public ReadOnlyObservableCollection<IWizardPage> Children
         {
-            get
-            {
-                return readonlyChildren;
-            }
+            get { return readonlyChildren; }
         }
 
         public string Description
         {
-            get
-            {
-                return "Specify how to decompose the message into its individual fields.";
-            }
+            get { return "Specify how to decompose the message into its individual fields."; }
         }
 
         public bool IsValid
         {
-            get
-            {
-                return isValid;
-            }
+            get { return isValid; }
             set
             {
                 if (isValid == value) return;
@@ -114,12 +93,8 @@
 
         public Control PageContent
         {
-            get
-            {
-                return this;
-            }
+            get { return this; }
         }
-
 
         public void AddChild(IWizardPage newItem)
         {
@@ -138,16 +113,13 @@
             // Todo: Implement page save....
             return saveData;
 
-            //Debug.Assert(settings != null,
-            //             "Settings not set, did the previous page not provide this?  " +
-            //             "Was SuggestPreviousPage not called by the caller of this class?");
-            //settings.MessageDecoder = CustomFormat;
-            //return settings;
+            //// Debug.Assert(settings != null,
+            ////             "Settings not set, did the previous page not provide this?  " +
+            ////             "Was SuggestPreviousPage not called by the caller of this class?");
+            //// settings.MessageDecoder = CustomFormat;
+            //// return settings;
         }
 
-        #endregion
-
-        #region Implementation of IDataErrorInfo
 
         /// <summary>
         /// Gets the error message for the property with the given name.
@@ -163,7 +135,7 @@
                 {
                     string err = null;
 
-                    if ( String.IsNullOrEmpty(CustomFormat) )
+                    if (string.IsNullOrEmpty(CustomFormat))
                     {
                         err = "Pattern can not be empty";
                     }
@@ -172,10 +144,10 @@
                         // See whether the string validates as a Regex
                         try
                         {
-                            Regex r = new Regex(CustomFormat);
+                            var r = new Regex(CustomFormat);
 
                             // See if it contains the minimal fields
-                            if ( !ContainsKeyFields(CustomFormat))
+                            if (!ContainsKeyFields(CustomFormat))
                             {
                                 err = "The pattern does not define any of the core fields, Description, Type or " +
                                       "DateTime.  At least one of these should be defined.";
@@ -216,10 +188,8 @@
         /// An error message indicating what is wrong with this object. The default is a null.</returns>
         public string Error
         {
-            get
-            {
-                return error;
-            }
+            get => error;
+
             private set
             {
                 if (error == value) return;
@@ -227,8 +197,6 @@
                 OnPropertyChanged(nameof(Error));
             }
         }
-
-        #endregion
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {

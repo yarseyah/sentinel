@@ -4,7 +4,7 @@
     using System.ComponentModel;
     using System.Windows.Controls;
 
-    public interface IWizardPage  
+    public interface IWizardPage
         : INotifyPropertyChanged
     {
         ReadOnlyObservableCollection<IWizardPage> Children { get; }
