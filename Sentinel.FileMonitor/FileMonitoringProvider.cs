@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Windows;
-
-namespace Sentinel.FileMonitor
+﻿namespace Sentinel.FileMonitor
 {
     using System;
     using System.Collections.Generic;
@@ -13,9 +10,8 @@ namespace Sentinel.FileMonitor
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
-
+    using System.Windows;
     using Common.Logging;
-
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
@@ -46,8 +42,8 @@ namespace Sentinel.FileMonitor
         private long bytesRead;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Reliability", 
-            "CA2000: DisposeObjectsBeforeLosingScope", 
+            "Microsoft.Reliability",
+            "CA2000: DisposeObjectsBeforeLosingScope",
             Justification = "Both Worker and PurgeWorker are disposed in the IDispose implementation (or finalizer)")]
         public FileMonitoringProvider(IProviderSettings settings)
         {

@@ -32,7 +32,7 @@ namespace Sentinel.Highlighters.Gui
 
         private string pattern = "pattern";
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -82,7 +82,7 @@ namespace Sentinel.Highlighters.Gui
                 if (value != backgroundColourIndex)
                 {
                     backgroundColourIndex = value;
-                    OnPropertyChanged("BackgroundColourIndex");
+                    OnPropertyChanged(nameof(BackgroundColourIndex));
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace Sentinel.Highlighters.Gui
                 if (coloursAreClose != value)
                 {
                     coloursAreClose = value;
-                    OnPropertyChanged("ColoursClose");
+                    OnPropertyChanged(nameof(ColoursClose));
                 }
             }
         }
@@ -136,14 +136,14 @@ namespace Sentinel.Highlighters.Gui
                 if (value != foregroundColourIndex)
                 {
                     foregroundColourIndex = value;
-                    OnPropertyChanged("ForegroundColourIndex");
+                    OnPropertyChanged(nameof(ForegroundColourIndex));
                 }
             }
         }
 
         public IEnumerable<string> ForegroundColours => colours.Keys;
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -153,7 +153,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
@@ -167,7 +167,7 @@ namespace Sentinel.Highlighters.Gui
             set
             {
                 mode = value;
-                OnPropertyChanged("Mode");
+                OnPropertyChanged(nameof(Mode));
             }
         }
 
@@ -183,7 +183,7 @@ namespace Sentinel.Highlighters.Gui
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace Sentinel.Highlighters.Gui
                 if (value != overrideBackgroundColour)
                 {
                     overrideBackgroundColour = value;
-                    OnPropertyChanged("OverrideBackgroundColour");
+                    OnPropertyChanged(nameof(OverrideBackgroundColour));
                 }
             }
         }
@@ -217,7 +217,7 @@ namespace Sentinel.Highlighters.Gui
                 if (value != overrideForegroundColour)
                 {
                     overrideForegroundColour = value;
-                    OnPropertyChanged("OverrideForegroundColour");
+                    OnPropertyChanged(nameof(OverrideForegroundColour));
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace Sentinel.Highlighters.Gui
                 if (value != pattern)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }

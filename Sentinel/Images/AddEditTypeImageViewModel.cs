@@ -7,11 +7,8 @@ namespace Sentinel.Images
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
-
-    using Interfaces;
-
     using Microsoft.Win32;
-
+    using Sentinel.Images.Interfaces;
     using WpfExtras;
 
     public class AddEditTypeImageViewModel
@@ -43,7 +40,7 @@ namespace Sentinel.Images
                                                                                          ImageError
                                                                                          .NoError,
                                                                                          null
-                                                                                     }
+                                                                                     },
                                                                                  };
 
         private readonly Dictionary<TypeError, string> typeErrorMessages = new Dictionary<TypeError, string>
@@ -62,7 +59,7 @@ namespace Sentinel.Images
                                                                                        TypeError
                                                                                        .NoError,
                                                                                        null
-                                                                                   }
+                                                                                   },
                                                                                };
 
         private string errorMessage = "No image selected.";
@@ -140,7 +137,7 @@ namespace Sentinel.Images
             /// <summary>
             /// No error condition encountered.
             /// </summary>
-            NoError
+            NoError,
         }
 
         /// <summary>
@@ -161,7 +158,7 @@ namespace Sentinel.Images
             /// <summary>
             /// No error encountered.
             /// </summary>
-            NoError
+            NoError,
         }
 
         public Window Window { get; }
@@ -191,7 +188,7 @@ namespace Sentinel.Images
                 if (fileName != value)
                 {
                     fileName = value;
-                    OnPropertyChanged("FileName");
+                    OnPropertyChanged(nameof(FileName));
                 }
             }
         }
@@ -292,8 +289,8 @@ namespace Sentinel.Images
                 if (errorMessage != value)
                 {
                     errorMessage = value;
-                    OnPropertyChanged("Error");
-                    OnPropertyChanged("IsValid");
+                    OnPropertyChanged(nameof(Error));
+                    OnPropertyChanged(nameof(IsValid));
                 }
             }
         }
@@ -321,7 +318,7 @@ namespace Sentinel.Images
                     var options = new ImageOptions
                                       {
                                           Quality = (ImageQuality)Enum.Parse(typeof(ImageQuality), Size),
-                                          AcceptLowerQuality = true
+                                          AcceptLowerQuality = true,
                                       };
                     if (!string.IsNullOrEmpty(Type) && ImageService?.Get(Type, options) != null)
                     {
@@ -359,7 +356,7 @@ namespace Sentinel.Images
                                          Filter = "Images files|*.png;*.bmp|All Files|*.*",
                                          InitialDirectory =
                                              Environment.GetFolderPath(
-                                                 Environment.SpecialFolder.MyPictures)
+                                                 Environment.SpecialFolder.MyPictures),
                                      };
 
             var dialogResult = openFileDialog.ShowDialog(Window);

@@ -16,7 +16,7 @@ namespace Sentinel.Interfaces
     [Flags]
     [DataContract]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum LogEntryField
+    public enum LogEntryFields
     {
         /// <summary>
         /// Not a field enumeration, default.
@@ -66,6 +66,6 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Host field of message, usually the originating machine's name.
         /// </summary>
-        Host = 64
+        Host = 64,
     }
 }

@@ -8,8 +8,8 @@
     using System.Windows.Input;
     using System.Windows.Media;
 
-    using Gui;
-    using Interfaces;
+    using Sentinel.Highlighters.Gui;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;
@@ -79,7 +79,7 @@
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                 }
             }
         }
@@ -97,7 +97,7 @@
                 new StandardHighlighter(
                     "Trace",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "TRACE",
                     new HighlighterStyle { Background = Colors.LightGray }) as T);
@@ -105,7 +105,7 @@
                 new StandardHighlighter(
                     "Debug",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "DEBUG",
                     new HighlighterStyle { Background = Colors.LightGreen }) as T);
@@ -113,7 +113,7 @@
                 new StandardHighlighter(
                     "Info",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "INFO",
                     new HighlighterStyle { Foreground = Colors.White, Background = Colors.Blue }) as T);
@@ -121,7 +121,7 @@
                 new StandardHighlighter(
                     "Warn",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "WARN",
                     new HighlighterStyle { Background = Colors.Yellow }) as T);
@@ -129,7 +129,7 @@
                 new StandardHighlighter(
                     "Error",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "ERROR",
                     new HighlighterStyle { Foreground = Colors.White, Background = Colors.Red }) as T);
@@ -137,7 +137,7 @@
                 new StandardHighlighter(
                     "Fatal",
                     true,
-                    LogEntryField.Type,
+                    LogEntryFields.Type,
                     MatchMode.Exact,
                     "FATAL",
                     new HighlighterStyle { Foreground = Colors.Yellow, Background = Colors.Black }) as T);

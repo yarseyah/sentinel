@@ -26,7 +26,7 @@
                 // TODO: pass this on the command line
                 var eventLog = new EventLog
                                    {
-                                       Log = "Application"
+                                       Log = "Application",
                                    };
 
                 eventLog.EntryWritten += NewLogEntryWrittenHandler;

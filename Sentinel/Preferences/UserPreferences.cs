@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Common.Logging;
-    using Interfaces;
-    using Support.Wpf;
+    using Sentinel.Interfaces;
+    using Sentinel.Support.Wpf;
     using WpfExtras;
 
     /// <summary>
@@ -70,10 +70,14 @@
         /// Gets an enumerable list of the available date formatting options.
         /// </summary>
         public IEnumerable<string> DateFormatOptions { get; } = new[]
-                                                                    {
-                                                                        "yyyy-MM-dd", "MMM-dd", "dd-MM-yyyy", "dd-MMM",
-                                                                        "MM-dd-yyyy", "dddd"
-                                                                    };
+        {
+            "yyyy-MM-dd",
+            "MMM-dd",
+            "dd-MM-yyyy",
+            "dd-MMM",
+            "MM-dd-yyyy",
+            "dddd",
+        };
 
         public IEnumerable<string> TimeFormatOptions { get; } = new[] { "HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm" };
 

@@ -8,7 +8,7 @@ namespace WpfExtras.Converters
     public class CollapseIfZeroConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a value. 
+        /// Converts a value.
         /// </summary>
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
@@ -20,7 +20,7 @@ namespace WpfExtras.Converters
         }
 
         /// <summary>
-        /// Converts a value. 
+        /// Converts a value.
         /// </summary>
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.

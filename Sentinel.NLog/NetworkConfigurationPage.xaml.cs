@@ -58,23 +58,24 @@
             }
             set
             {
-                if (port == value) return;
-                port = value;
-                OnPropertyChanged("Port");
+                if (port != value)
+                {
+                    port = value;
+                    OnPropertyChanged(nameof(Port));
+                }
             }
         }
-					
+
         public bool IsUdp
         {
-            get
-            {
-                return isUdp;
-            }
+            get => isUdp;
             set
             {
-                if (isUdp == value) return;
-                isUdp = value;
-                OnPropertyChanged("IsUdp");
+                if (isUdp != value)
+                {
+                    isUdp = value;
+                    OnPropertyChanged(nameof(IsUdp));
+                }
             }
         }
 
@@ -93,9 +94,11 @@
 
             private set
             {
-                if (isValid == value) return;
-                isValid = value;
-                OnPropertyChanged("IsValid");
+                if (isValid != value)
+                {
+                    isValid = value;
+                    OnPropertyChanged(nameof(IsValid));
+                }
             }
         }
 
@@ -104,13 +107,13 @@
         public void AddChild(IWizardPage newItem)
         {
             children.Add(newItem);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public void RemoveChild(IWizardPage item)
         {
             children.Remove(item);
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public object Save(object saveData)
@@ -125,7 +128,7 @@
                            Name = previousInfo.Name,
                            Info = previousInfo.Info,
                            Port = Port,
-                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp
+                           Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp,
                        };
         }
 

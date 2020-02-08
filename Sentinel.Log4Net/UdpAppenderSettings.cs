@@ -1,6 +1,6 @@
 namespace Sentinel.Log4Net
 {
-    using Interfaces.Providers;
+    using Sentinel.Interfaces.Providers;
 
     public class UdpAppenderSettings : IUdpAppenderListenerSettings
     {
@@ -22,10 +22,6 @@ namespace Sentinel.Log4Net
 
         public IProviderInfo Info { get; set; }
 
-        public int Port
-        {
-            get; 
-            set;
-        }
+        public int Port { get; set; }
     }
 }

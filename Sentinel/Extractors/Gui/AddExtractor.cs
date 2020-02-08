@@ -40,7 +40,7 @@
                            Field = data.Field,
                            Mode = data.Mode,
                            Pattern = data.Pattern,
-                           Enabled = true
+                           Enabled = true,
                        };
         }
     }

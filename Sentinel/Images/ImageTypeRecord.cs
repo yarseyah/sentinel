@@ -31,7 +31,7 @@ namespace Sentinel.Images
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace Sentinel.Images
                 if (quality != value)
                 {
                     quality = value;
-                    OnPropertyChanged("Quality");
+                    OnPropertyChanged(nameof(Quality));
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace Sentinel.Images
                 if (image != value)
                 {
                     image = value;
-                    OnPropertyChanged("Image");
+                    OnPropertyChanged(nameof(Image));
                 }
             }
         }

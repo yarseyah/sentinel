@@ -52,36 +52,38 @@ namespace Sentinel.Upgrader
             bool showErrors = true;
 
             PropertyChanged += (s, e) =>
+            {
+                switch (e.PropertyName)
                 {
-                    switch (e.PropertyName)
-                    {
-                        case nameof(IsReadyForRestart):
-                        case nameof(IsUpgradeAvailable):
-                        case nameof(IsFirstRun):
-                            DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
-                            break;
-                        case nameof(DispatcherUiThread):
-                            if (!preferences?.IsDisabled ?? false)
-                            {
-                                // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
-                                Task.Delay(preferences?.DelayBeforeCheckingForUpgrades ?? TimeSpan.Zero)
-                                    .ContinueWith(t => CheckForUpgrades());
-                            }
+                    case nameof(IsReadyForRestart):
+                    case nameof(IsUpgradeAvailable):
+                    case nameof(IsFirstRun):
+                        DispatcherUiThread?.Invoke(CommandManager.InvalidateRequerySuggested);
+                        break;
+                    case nameof(DispatcherUiThread):
+                        if (!preferences?.IsDisabled ?? false)
+                        {
+                            // Set up an upgrade check to take place after 'CheckForUpgradesPeriod' seconds
+                            Task.Delay(preferences?.DelayBeforeCheckingForUpgrades ?? TimeSpan.Zero)
+                                .ContinueWith(t => CheckForUpgrades());
+                        }
 
-                            break;
-                        case nameof(Error):
-                            if (showErrors && !string.IsNullOrWhiteSpace(Error))
-                            {
-                                ShowPanel = true;
-                            }
+                        break;
+                    case nameof(Error):
+                        if (showErrors && !string.IsNullOrWhiteSpace(Error))
+                        {
+                            ShowPanel = true;
+                        }
 
-                            break;
-                    }
-                };
+                        break;
+                }
+            };
 
             // Load preferences
             preferences = ServiceLocator.Instance.Get<IUpgradeServicePreferences>();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets or sets the Dispatcher for the UI thread, this is useful because a lot of the
@@ -100,8 +102,6 @@ namespace Sentinel.Upgrader
                 }
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public TimeSpan CheckForUpgradesPeriod => TimeSpan.FromSeconds(10);
 
@@ -293,7 +293,7 @@ namespace Sentinel.Upgrader
             var specialDirectives = new[]
             {
                 "--squirrel-firstrun",
-                "--inhibit-upgrade"
+                "--inhibit-upgrade",
             };
 
             IsFirstRun = commandLineArguments.Any(a => a == specialDirectives[0]);

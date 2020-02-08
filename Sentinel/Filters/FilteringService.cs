@@ -76,7 +76,7 @@
                 if (value != selectedIndex)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
+                    OnPropertyChanged(nameof(SelectedIndex));
                 }
             }
         }
@@ -88,12 +88,12 @@
         public void Initialise()
         {
             // Add the standard debugging filters
-            Filters.Add(new StandardFilter("Trace", LogEntryField.Type, "TRACE") as T);
-            Filters.Add(new StandardFilter("Debug", LogEntryField.Type, "DEBUG") as T);
-            Filters.Add(new StandardFilter("Info", LogEntryField.Type, "INFO") as T);
-            Filters.Add(new StandardFilter("Warn", LogEntryField.Type, "WARN") as T);
-            Filters.Add(new StandardFilter("Error", LogEntryField.Type, "ERROR") as T);
-            Filters.Add(new StandardFilter("Fatal", LogEntryField.Type, "FATAL") as T);
+            Filters.Add(new StandardFilter("Trace", LogEntryFields.Type, "TRACE") as T);
+            Filters.Add(new StandardFilter("Debug", LogEntryFields.Type, "DEBUG") as T);
+            Filters.Add(new StandardFilter("Info", LogEntryFields.Type, "INFO") as T);
+            Filters.Add(new StandardFilter("Warn", LogEntryFields.Type, "WARN") as T);
+            Filters.Add(new StandardFilter("Error", LogEntryFields.Type, "ERROR") as T);
+            Filters.Add(new StandardFilter("Fatal", LogEntryFields.Type, "FATAL") as T);
         }
 
         public bool IsFiltered(ILogEntry entry)

@@ -2,8 +2,8 @@
 {
     using System.Windows;
 
-    using Interfaces;
-    using Services;
+    using Sentinel.Classification.Interfaces;
+    using Sentinel.Services;
 
     public class AddClassifier : IAddClassifyingService
     {
@@ -37,7 +37,7 @@
                            Field = data.Field,
                            Mode = data.Mode,
                            Pattern = data.Pattern,
-                           Enabled = true
+                           Enabled = true,
                        };
         }
     }

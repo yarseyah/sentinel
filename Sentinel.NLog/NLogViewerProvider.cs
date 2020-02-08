@@ -209,7 +209,7 @@
 
         private LogEntry DecodeEntry(string m)
         {
-            // Record the current date/time 
+            // Record the current date/time
             var receivedTime = DateTime.UtcNow;
 
             XNamespace log4J = "unique";
@@ -277,7 +277,7 @@
                                 Thread = record.Attribute("thread")?.Value ?? string.Empty,
                                 Description = description,
                                 Type = type,
-                                MetaData = meta
+                                MetaData = meta,
                             };
             if (entry.Description.ToUpper().Contains("EXCEPTION"))
             {

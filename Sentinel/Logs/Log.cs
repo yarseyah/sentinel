@@ -47,7 +47,7 @@ namespace Sentinel.Logs
                 if (enabled != value)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace Sentinel.Logs
                 if (value != name)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -83,8 +83,8 @@ namespace Sentinel.Logs
                 newEntries.Clear();
             }
 
-            OnPropertyChanged("Entries");
-            OnPropertyChanged("NewEntries");
+            OnPropertyChanged(nameof(Entries));
+            OnPropertyChanged(nameof(NewEntries));
             GC.Collect();
         }
 
@@ -111,7 +111,7 @@ namespace Sentinel.Logs
                 newEntries.AddRange(processed);
             }
 
-            OnPropertyChanged("NewEntries");
+            OnPropertyChanged(nameof(NewEntries));
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -125,7 +125,7 @@ namespace Sentinel.Logs
                         entries.AddRange(newEntries);
                     }
 
-                    OnPropertyChanged("Entries");
+                    OnPropertyChanged(nameof(Entries));
                 }
             }
         }

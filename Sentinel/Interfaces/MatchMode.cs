@@ -30,6 +30,6 @@ namespace Sentinel.Interfaces
         /// <summary>
         /// Regular expression matching.
         /// </summary>
-        RegularExpression
+        RegularExpression,
     }
 }

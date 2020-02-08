@@ -49,9 +49,9 @@ namespace Sentinel.Highlighters
                                                     {
                                                         ConverterParameter = highlighter,
                                                         Converter = new HighlighterConverter(highlighter),
-                                                        Mode = BindingMode.OneWay
+                                                        Mode = BindingMode.OneWay,
                                                     },
-                                      Value = "Match"
+                                      Value = "Match",
                                   };
 
                 if (highlighter.Style != null)
@@ -95,16 +95,16 @@ namespace Sentinel.Highlighters
                             var style = new Style(typeof(ListViewItem));
 
                             var trigger = new DataTrigger
-                                              {
-                                                  Binding =
-                                                      new Binding
-                                                          {
-                                                              ConverterParameter = highlighter,
-                                                              Converter = new HighlighterConverter(highlighter),
-                                                              Mode = BindingMode.OneWay
-                                                          },
-                                                  Value = "Match"
-                                              };
+                            {
+                                Binding =
+                                    new Binding
+                                    {
+                                        ConverterParameter = highlighter,
+                                        Converter = new HighlighterConverter(highlighter),
+                                        Mode = BindingMode.OneWay,
+                                    },
+                                Value = "Match",
+                            };
 
                             if (highlighter.Style != null)
                             {

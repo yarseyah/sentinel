@@ -5,7 +5,7 @@ namespace Sentinel.Filters
 
     public class StandardFilter : Filter, IStandardDebuggingFilter
     {
-        public StandardFilter(string name, LogEntryField field, string pattern)
+        public StandardFilter(string name, LogEntryFields field, string pattern)
             : base(name, field, pattern)
         {
         }

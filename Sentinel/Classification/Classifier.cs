@@ -4,7 +4,7 @@
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Classification.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;
@@ -14,7 +14,7 @@
     {
         private bool enabled = true;
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -37,12 +37,12 @@
                             regex = new Regex(Pattern);
                         }
 
-                        OnPropertyChanged("Description");
+                        OnPropertyChanged(nameof(Description));
                     }
                 };
         }
 
-        public Classifier(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, string type)
+        public Classifier(string name, bool enabled, LogEntryFields field, MatchMode mode, string pattern, string type)
         {
             Name = name;
             Enabled = enabled;
@@ -61,7 +61,7 @@
                             regex = new Regex(Pattern);
                         }
 
-                        OnPropertyChanged("Description");
+                        OnPropertyChanged(nameof(Description));
                     }
                 };
         }
@@ -101,12 +101,12 @@
                 if (enabled != value)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -116,7 +116,7 @@
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
@@ -134,7 +134,7 @@
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }
@@ -151,7 +151,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -168,7 +168,7 @@
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -185,7 +185,7 @@
                 if (type != value)
                 {
                     type = value;
-                    OnPropertyChanged("Type");
+                    OnPropertyChanged(nameof(Type));
                 }
             }
         }
@@ -216,28 +216,28 @@
 
             switch (Field)
             {
-                case LogEntryField.None:
+                case LogEntryFields.None:
                     target = string.Empty;
                     break;
-                case LogEntryField.Type:
+                case LogEntryFields.Type:
                     target = logEntry.Type;
                     break;
-                case LogEntryField.System:
+                case LogEntryFields.System:
                     target = logEntry.System;
                     break;
-                case LogEntryField.Classification:
+                case LogEntryFields.Classification:
                     target = string.Empty;
                     break;
-                case LogEntryField.Thread:
+                case LogEntryFields.Thread:
                     target = logEntry.Thread;
                     break;
-                case LogEntryField.Source:
+                case LogEntryFields.Source:
                     target = logEntry.Source;
                     break;
-                case LogEntryField.Description:
+                case LogEntryFields.Description:
                     target = logEntry.Description;
                     break;
-                case LogEntryField.Host:
+                case LogEntryFields.Host:
                     target = string.Empty;
                     break;
                 default:

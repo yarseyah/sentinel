@@ -8,6 +8,6 @@
 
         Next,
 
-        Last
+        Last,
     }
 }

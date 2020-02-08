@@ -24,7 +24,7 @@
                                  Owner = parent,
                                  ShowNavigationTree = false,
                                  SavedData = settings,
-                                 Title = "Add New Log Provider"
+                                 Title = "Add New Log Provider",
                              };
 
             wizard.AddPage(new SelectProviderPage());

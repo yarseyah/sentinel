@@ -8,8 +8,6 @@
     using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
-
-    using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 
     [Serializable]
@@ -21,7 +19,7 @@
                                                       INotifyPropertyChanged
     {
         [NonSerialized]
-        private readonly SerializationInfo siInfo;
+        private readonly SerializationInfo serializationInfo;
 
         private readonly Dictionary<TKey, TValue> dictionaryCache = new Dictionary<TKey, TValue>();
 
@@ -67,7 +65,7 @@
 
         protected ObservableDictionary(SerializationInfo info, StreamingContext context)
         {
-            siInfo = info;
+            serializationInfo = info;
         }
 
         protected virtual event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -153,41 +151,20 @@
 
         public TValue this[TKey key]
         {
-            get
-            {
-                return (TValue)KeyedEntryCollection[key].Value;
-            }
-
-            set
-            {
-                DoSetEntry(key, value);
-            }
+            get => (TValue)KeyedEntryCollection[key].Value;
+            set => DoSetEntry(key, value);
         }
 
         object IDictionary.this[object key]
         {
-            get
-            {
-                return KeyedEntryCollection[(TKey)key].Value;
-            }
-
-            set
-            {
-                DoSetEntry((TKey)key, (TValue)value);
-            }
+            get => KeyedEntryCollection[(TKey)key].Value;
+            set => DoSetEntry((TKey)key, (TValue)value);
         }
 
         TValue IDictionary<TKey, TValue>.this[TKey key]
         {
-            get
-            {
-                return (TValue)KeyedEntryCollection[key].Value;
-            }
-
-            set
-            {
-                DoSetEntry(key, value);
-            }
+            get => (TValue)KeyedEntryCollection[key].Value;
+            set => DoSetEntry(key, value);
         }
 
         public void Add(TKey key, TValue value)
@@ -200,20 +177,11 @@
             DoClearEntries();
         }
 
-        public bool ContainsKey(TKey key)
-        {
-            return KeyedEntryCollection.Contains(key);
-        }
+        public bool ContainsKey(TKey key) => KeyedEntryCollection.Contains(key);
 
-        public bool ContainsValue(TValue value)
-        {
-            return TrueDictionary.ContainsValue(value);
-        }
+        public bool ContainsValue(TValue value) => TrueDictionary.ContainsValue(value);
 
-        public IEnumerator GetEnumerator()
-        {
-            return new Enumerator(this, false);
-        }
+        public IEnumerator GetEnumerator() => new Enumerator(this, false);
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -230,10 +198,9 @@
 
         public virtual void OnDeserialization(object sender)
         {
-            if (siInfo != null)
+            if (serializationInfo != null)
             {
-                var entries =
-                    (Collection<DictionaryEntry>)siInfo.GetValue("entries", typeof(Collection<DictionaryEntry>));
+                var entries = (Collection<DictionaryEntry>)serializationInfo.GetValue("entries", typeof(Collection<DictionaryEntry>));
                 foreach (var entry in entries)
                 {
                     AddEntry((TKey)entry.Key, (TValue)entry.Value);
@@ -241,10 +208,7 @@
             }
         }
 
-        public bool Remove(TKey key)
-        {
-            return DoRemoveEntry(key);
-        }
+        public bool Remove(TKey key) => DoRemoveEntry(key);
 
         public bool TryGetValue(TKey key, out TValue value)
         {

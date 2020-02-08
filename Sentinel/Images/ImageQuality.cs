@@ -20,6 +20,6 @@ namespace Sentinel.Images
         /// <summary>
         /// Let the system select the best available image
         /// </summary>
-        BestAvailable
+        BestAvailable,
     }
 }

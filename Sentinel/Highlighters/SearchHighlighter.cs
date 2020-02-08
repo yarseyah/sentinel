@@ -16,17 +16,17 @@ namespace Sentinel.Highlighters
         [DataMember]
         public IHighlighter Highlighter { get; set; }
 
-        public IEnumerable<LogEntryField> Fields
+        public IEnumerable<LogEntryFields> Fields
         {
             get
             {
-                var entries = Enum.GetValues(typeof(LogEntryField)).Cast<LogEntryField>();
+                var entries = Enum.GetValues(typeof(LogEntryFields)).Cast<LogEntryFields>();
                 return entries;
             }
         }
 
         [DataMember]
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -85,17 +85,17 @@ namespace Sentinel.Highlighters
         public void Initialise()
         {
             Highlighter = new Highlighter
-                              {
-                                  Name = "Search",
-                                  Style =
-                                      new HighlighterStyle
-                                          {
-                                              Background = Colors.Lime,
-                                              Foreground = Colors.Fuchsia
-                                          },
-                                  Field = LogEntryField.System,
-                                  Mode = MatchMode.CaseSensitive,
-                              };
+            {
+                Name = "Search",
+                Style =
+                    new HighlighterStyle
+                    {
+                        Background = Colors.Lime,
+                        Foreground = Colors.Fuchsia,
+                    },
+                Field = LogEntryFields.System,
+                Mode = MatchMode.CaseSensitive,
+            };
 
             Search = string.Empty;
         }

@@ -19,7 +19,7 @@
         string Name { get; set; }
 
         /// <summary>
-        /// Indicates whether new entries are added to the Entries collection.
+        /// Gets or sets a value indicating whether new entries are added to the Entries collection.
         /// </summary>
         bool Enabled { get; set; }
 

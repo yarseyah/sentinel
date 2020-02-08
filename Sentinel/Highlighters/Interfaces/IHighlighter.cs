@@ -13,7 +13,7 @@ namespace Sentinel.Highlighters.Interfaces
         bool Enabled { get; set; }
 
         [DataMember]
-        LogEntryField Field { get; set; }
+        LogEntryFields Field { get; set; }
 
         [DataMember]
         MatchMode Mode { get; set; }

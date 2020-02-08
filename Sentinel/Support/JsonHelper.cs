@@ -13,7 +13,7 @@ namespace Sentinel.Support
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
                                                                       {
-                                                                          TypeNameHandling = TypeNameHandling.All
+                                                                          TypeNameHandling = TypeNameHandling.All,
                                                                       };
 
         public static void SerializeToFile<T>(T objectToSerialize, string filename)

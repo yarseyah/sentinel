@@ -4,7 +4,7 @@ namespace Sentinel.Highlighters
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;
@@ -14,7 +14,7 @@ namespace Sentinel.Highlighters
     {
         private bool enabled = true;
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -45,7 +45,7 @@ namespace Sentinel.Highlighters
             };
         }
 
-        protected Highlighter(string name, bool enabled, LogEntryField field, MatchMode mode, string pattern, IHighlighterStyle style)
+        protected Highlighter(string name, bool enabled, LogEntryFields field, MatchMode mode, string pattern, IHighlighterStyle style)
         {
             Name = name;
             Enabled = enabled;
@@ -104,7 +104,7 @@ namespace Sentinel.Highlighters
             }
         }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -171,7 +171,7 @@ namespace Sentinel.Highlighters
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace Sentinel.Highlighters
                 if (style != value)
                 {
                     style = value;
-                    OnPropertyChanged("Style");
+                    OnPropertyChanged(nameof(Style));
                 }
             }
         }
@@ -211,19 +211,19 @@ namespace Sentinel.Highlighters
 
             switch (Field)
             {
-                case LogEntryField.Type:
+                case LogEntryFields.Type:
                     target = logEntry.Type;
                     break;
-                case LogEntryField.System:
+                case LogEntryFields.System:
                     target = logEntry.System;
                     break;
-                case LogEntryField.Thread:
+                case LogEntryFields.Thread:
                     target = logEntry.Thread;
                     break;
-                case LogEntryField.Source:
+                case LogEntryFields.Source:
                     target = logEntry.Source;
                     break;
-                case LogEntryField.Description:
+                case LogEntryFields.Description:
                     target = logEntry.Description;
                     break;
                 ////case LogEntryField.Classification:

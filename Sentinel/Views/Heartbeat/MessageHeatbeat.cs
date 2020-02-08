@@ -45,7 +45,7 @@
 
             var samplePeriodTimer = new DispatcherTimer(DispatcherPriority.Normal)
                                         {
-                                            Interval = TimeSpan.FromMilliseconds(SamplePeriod)
+                                            Interval = TimeSpan.FromMilliseconds(SamplePeriod),
                                         };
             samplePeriodTimer.Tick += SampleTick;
             samplePeriodTimer.Start();
@@ -84,7 +84,7 @@
                     }
 
                     logger = value;
-                    OnPropertyChanged("Logger");
+                    OnPropertyChanged(nameof(Logger));
                 }
 
                 // TODO: Unregister from existing logger (if not null)
@@ -180,7 +180,7 @@
                 // Empty the collection
                 liveData.Clear();
 
-                OnPropertyChanged("Data");
+                OnPropertyChanged(nameof(Data));
             }
         }
 
@@ -195,21 +195,6 @@
             {
                 liveData.Clear();
             }
-        }
-
-        public class ViewInformation : IViewInformation
-        {
-            public ViewInformation(string identifier, string name)
-            {
-                Identifier = identifier;
-                Name = name;
-            }
-
-            public string Identifier { get; private set; }
-
-            public string Name { get; private set; }
-
-            public string Description { get; set; }
         }
     }
 }

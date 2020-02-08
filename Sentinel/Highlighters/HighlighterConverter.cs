@@ -6,7 +6,7 @@ namespace Sentinel.Highlighters
 
     using Common.Logging;
 
-    using Interfaces;
+    using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
 
     public class HighlighterConverter : IValueConverter

@@ -15,7 +15,7 @@ namespace Sentinel.Filters.Gui
 
         private string pattern = "pattern";
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode;
 
@@ -33,7 +33,7 @@ namespace Sentinel.Filters.Gui
 
         public ICommand Accept { get; private set; }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Sentinel.Filters.Gui
             set
             {
                 field = value;
-                OnPropertyChanged("Field");
+                OnPropertyChanged(nameof(Field));
             }
         }
 
@@ -57,7 +57,7 @@ namespace Sentinel.Filters.Gui
             set
             {
                 mode = value;
-                OnPropertyChanged("Mode");
+                OnPropertyChanged(nameof(Mode));
             }
         }
 
@@ -73,7 +73,7 @@ namespace Sentinel.Filters.Gui
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace Sentinel.Filters.Gui
                 if (value != pattern)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }

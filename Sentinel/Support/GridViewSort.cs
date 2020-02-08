@@ -174,80 +174,80 @@
         }
 
         // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
-        public static bool GetAutoSort(DependencyObject obj)
+        public static bool GetAutoSort(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (bool)obj.GetValue(AutoSortProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (bool)dependencyObject.GetValue(AutoSortProperty);
         }
 
-        public static ICommand GetCommand(DependencyObject obj)
+        public static ICommand GetCommand(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (ICommand)obj.GetValue(CommandProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (ICommand)dependencyObject.GetValue(CommandProperty);
         }
 
         // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
-        public static string GetPropertyName(DependencyObject obj)
+        public static string GetPropertyName(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (string)obj.GetValue(PropertyNameProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (string)dependencyObject.GetValue(PropertyNameProperty);
         }
 
         // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
-        public static bool GetShowSortGlyph(DependencyObject obj)
+        public static bool GetShowSortGlyph(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (bool)obj.GetValue(ShowSortGlyphProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (bool)dependencyObject.GetValue(ShowSortGlyphProperty);
         }
 
         // Using a DependencyProperty as the backing store for ShowSortGlyph.  This enables animation, styling, binding, etc...
-        public static ImageSource GetSortGlyphAscending(DependencyObject obj)
+        public static ImageSource GetSortGlyphAscending(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (ImageSource)obj.GetValue(SortGlyphAscendingProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (ImageSource)dependencyObject.GetValue(SortGlyphAscendingProperty);
         }
 
         // Using a DependencyProperty as the backing store for SortGlyphAscending.  This enables animation, styling, binding, etc...
-        public static ImageSource GetSortGlyphDescending(DependencyObject obj)
+        public static ImageSource GetSortGlyphDescending(DependencyObject dependencyObject)
         {
-            obj.ThrowIfNull(nameof(obj));
-            return (ImageSource)obj.GetValue(SortGlyphDescendingProperty);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            return (ImageSource)dependencyObject.GetValue(SortGlyphDescendingProperty);
         }
 
-        public static void SetAutoSort(DependencyObject obj, bool value)
+        public static void SetAutoSort(DependencyObject dependencyObject, bool value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(AutoSortProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(AutoSortProperty, value);
         }
 
-        public static void SetCommand(DependencyObject obj, ICommand value)
+        public static void SetCommand(DependencyObject dependencyObject, ICommand value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(CommandProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(CommandProperty, value);
         }
 
-        public static void SetPropertyName(DependencyObject obj, string value)
+        public static void SetPropertyName(DependencyObject dependencyObject, string value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(PropertyNameProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(PropertyNameProperty, value);
         }
 
-        public static void SetShowSortGlyph(DependencyObject obj, bool value)
+        public static void SetShowSortGlyph(DependencyObject dependencyObject, bool value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(ShowSortGlyphProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(ShowSortGlyphProperty, value);
         }
 
-        public static void SetSortGlyphAscending(DependencyObject obj, ImageSource value)
+        public static void SetSortGlyphAscending(DependencyObject dependencyObject, ImageSource value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(SortGlyphAscendingProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(SortGlyphAscendingProperty, value);
         }
 
-        public static void SetSortGlyphDescending(DependencyObject obj, ImageSource value)
+        public static void SetSortGlyphDescending(DependencyObject dependencyObject, ImageSource value)
         {
-            obj.ThrowIfNull(nameof(obj));
-            obj.SetValue(SortGlyphDescendingProperty, value);
+            dependencyObject.ThrowIfNull(nameof(dependencyObject));
+            dependencyObject.SetValue(SortGlyphDescendingProperty, value);
         }
 
         private static void AddSortGlyph(
@@ -367,7 +367,7 @@
                 var pathSegmentCollection = new PathSegmentCollection
                                                 {
                                                     new LineSegment(new Point(x2, y1), true),
-                                                    new LineSegment(new Point(x3, y2), true)
+                                                    new LineSegment(new Point(x3, y2), true),
                                                 };
 
                 var pathFigure = new PathFigure(new Point(x1, y1), pathSegmentCollection, true);

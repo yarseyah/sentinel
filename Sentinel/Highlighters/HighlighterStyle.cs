@@ -30,7 +30,7 @@ namespace Sentinel.Highlighters
                 if (value != background)
                 {
                     background = value;
-                    OnPropertyChanged("Background");
+                    OnPropertyChanged(nameof(Background));
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Sentinel.Highlighters
                 if (value != foreground)
                 {
                     foreground = value;
-                    OnPropertyChanged("Foreground");
+                    OnPropertyChanged(nameof(Foreground));
                 }
             }
         }

@@ -21,7 +21,7 @@
                                  Owner = parent,
                                  ShowNavigationTree = false,
                                  Title = "Sentinel - Add new logger",
-                                 SavedData = Settings
+                                 SavedData = Settings,
                              };
 
             wizard.AddPage(new AddNewLoggerWelcomePage());

@@ -8,17 +8,11 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Threading;
-
-    using Extractors.Interfaces;
-
-    using Filters.Interfaces;
-
-    using Interfaces;
-
+    using Sentinel.Extractors.Interfaces;
+    using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
-
-    using Services;
-
+    using Sentinel.Services;
+    using Sentinel.Views.Interfaces;
     using WpfExtras;
 
     public class LogMessages : ViewModelBase, ILogViewer
@@ -147,7 +141,7 @@
                 if (unfilteredCount != value)
                 {
                     unfilteredCount = value;
-                    OnPropertyChanged("UnfilteredCount");
+                    OnPropertyChanged(nameof(UnfilteredCount));
                 }
             }
         }
@@ -167,7 +161,7 @@
                 }
 
                 status = value;
-                OnPropertyChanged("Status");
+                OnPropertyChanged(nameof(Status));
             }
         }
 
@@ -220,7 +214,7 @@
                 new DelegateCommand(e => autoscroll = !autoscroll))
                                        {
                                            IsChecked = autoscroll,
-                                           ImageIdentifier = "ScrollDown"
+                                           ImageIdentifier = "ScrollDown",
                                        };
 
             var clearButton = new LogViewerToolbarButton(
@@ -239,7 +233,7 @@
                               {
                                   autoscrollButton,
                                   clearButton,
-                                  pauseButton
+                                  pauseButton,
                               };
 
             ToolbarItems = toolbar;

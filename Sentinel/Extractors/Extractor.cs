@@ -5,7 +5,7 @@
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
-    using Interfaces;
+    using Sentinel.Extractors.Interfaces;
     using Sentinel.Interfaces;
 
     using WpfExtras;
@@ -22,7 +22,7 @@
 
         private string pattern;
 
-        private LogEntryField field;
+        private LogEntryFields field;
 
         private MatchMode mode = MatchMode.Exact;
 
@@ -32,12 +32,12 @@
             {
                 if (e.PropertyName == "Field" || e.PropertyName == "Mode" || e.PropertyName == "Pattern")
                 {
-                    OnPropertyChanged("Description");
+                    OnPropertyChanged(nameof(Description));
                 }
             };
         }
 
-        public Extractor(string name, LogEntryField field, string pattern)
+        public Extractor(string name, LogEntryFields field, string pattern)
         {
             Name = name;
             Pattern = pattern;
@@ -56,7 +56,7 @@
                 if (name != value)
                 {
                     name = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -76,7 +76,7 @@
                 if (value != enabled)
                 {
                     enabled = value;
-                    OnPropertyChanged("Enabled");
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
         }
@@ -93,12 +93,12 @@
                 if (pattern != value)
                 {
                     pattern = value;
-                    OnPropertyChanged("Pattern");
+                    OnPropertyChanged(nameof(Pattern));
                 }
             }
         }
 
-        public LogEntryField Field
+        public LogEntryFields Field
         {
             get
             {
@@ -110,7 +110,7 @@
                 if (field != value)
                 {
                     field = value;
-                    OnPropertyChanged("Field");
+                    OnPropertyChanged(nameof(Field));
                 }
             }
         }
@@ -127,7 +127,7 @@
                 if (mode != value)
                 {
                     mode = value;
-                    OnPropertyChanged("Mode");
+                    OnPropertyChanged(nameof(Mode));
                 }
             }
         }
@@ -164,28 +164,28 @@
 
             switch (Field)
             {
-                case LogEntryField.None:
+                case LogEntryFields.None:
                     target = string.Empty;
                     break;
-                case LogEntryField.Type:
+                case LogEntryFields.Type:
                     target = logEntry.Type;
                     break;
-                case LogEntryField.System:
+                case LogEntryFields.System:
                     target = logEntry.System;
                     break;
-                case LogEntryField.Classification:
+                case LogEntryFields.Classification:
                     target = string.Empty;
                     break;
-                case LogEntryField.Thread:
+                case LogEntryFields.Thread:
                     target = logEntry.Thread;
                     break;
-                case LogEntryField.Source:
+                case LogEntryFields.Source:
                     target = logEntry.Source;
                     break;
-                case LogEntryField.Description:
+                case LogEntryFields.Description:
                     target = logEntry.Description;
                     break;
-                case LogEntryField.Host:
+                case LogEntryFields.Host:
                     target = string.Empty;
                     break;
                 default:

@@ -3,7 +3,7 @@
     using System.Diagnostics;
     using System.Windows;
 
-    using Interfaces;
+    using Sentinel.Classification.Interfaces;
 
     public class EditClassifier : IEditClassifyingService
     {

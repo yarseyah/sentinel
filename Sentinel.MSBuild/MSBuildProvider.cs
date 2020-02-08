@@ -235,6 +235,7 @@ namespace Sentinel.MSBuild
 
         private bool IsValidMessage(string message)
         {
+            // TODO: validation logic required.
             return true;
         }
     }

@@ -11,13 +11,13 @@
 
     internal class EventLogEntry : IEventLogEntry
     {
-        private System.Diagnostics.EventLogEntry Entry { get; }
-
         public EventLogEntry(System.Diagnostics.EventLogEntry entry)
         {
             entry.ThrowIfNull(nameof(entry));
             Entry = entry;
         }
+
+        private System.Diagnostics.EventLogEntry Entry { get; }
 
         public string MachineName => Entry.MachineName;
 

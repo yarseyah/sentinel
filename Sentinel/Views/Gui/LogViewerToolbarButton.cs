@@ -42,7 +42,7 @@
                 if (imageIdentifier != value)
                 {
                     imageIdentifier = value;
-                    OnPropertyChanged("ImageIdentifier");
+                    OnPropertyChanged(nameof(ImageIdentifier));
                 }
             }
         }
@@ -61,7 +61,7 @@
                 if (isChecked != value)
                 {
                     isChecked = value;
-                    OnPropertyChanged("IsChecked");
+                    OnPropertyChanged(nameof(IsChecked));
                 }
             }
         }
