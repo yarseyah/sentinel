@@ -1,8 +1,10 @@
 namespace Sentinel.Logs
 {
     using System;
+    using System.Diagnostics;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
 
     using Sentinel.Classification.Interfaces;
     using Sentinel.Interfaces;
@@ -13,6 +15,8 @@ namespace Sentinel.Logs
     public class Log : ViewModelBase, ILogger
     {
         private readonly IClassifyingService<IClassifier> classifier;
+
+        private readonly IUserPreferences preferences;
 
         private readonly List<ILogEntry> entries = new List<ILogEntry>();
 
@@ -28,6 +32,7 @@ namespace Sentinel.Logs
             NewEntries = newEntries;
 
             classifier = ServiceLocator.Instance.Get<IClassifyingService<IClassifier>>();
+            preferences = ServiceLocator.Instance.Get<IUserPreferences>();
 
             // Observe the NewEntries to maintain a full history.
             PropertyChanged += OnPropertyChanged;
@@ -37,10 +42,7 @@ namespace Sentinel.Logs
 
         public bool Enabled
         {
-            get
-            {
-                return enabled;
-            }
+            get => enabled;
 
             set
             {
@@ -54,10 +56,7 @@ namespace Sentinel.Logs
 
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get => name;
 
             set
             {
@@ -88,19 +87,19 @@ namespace Sentinel.Logs
             GC.Collect();
         }
 
-        public void AddBatch(Queue<ILogEntry> entries)
+        public void AddBatch(Queue<ILogEntry> incomingEntries)
         {
-            if (!enabled || entries.Count <= 0)
+            if (!enabled || incomingEntries.Count <= 0)
             {
                 return;
             }
 
             var processed = new Queue<ILogEntry>();
-            while (entries.Count > 0)
+            while (incomingEntries.Count > 0)
             {
                 if (classifier != null)
                 {
-                    var entry = classifier.Classify(entries.Dequeue());
+                    var entry = classifier.Classify(incomingEntries.Dequeue());
                     processed.Enqueue(entry);
                 }
             }
@@ -122,7 +121,38 @@ namespace Sentinel.Logs
                 {
                     lock (entries)
                     {
-                        entries.AddRange(newEntries);
+                        var entriesToAppend = newEntries.ToList();
+
+                        // Look for any special command
+                        if (preferences != null && preferences.EnableClearCommand)
+                        {
+                            if (entriesToAppend.Any(entry => entry.Description == preferences.ClearCommandMatchText))
+                            {
+                                Trace.WriteLine("!!!!!!!!!!!! CLEAR COMMAND FOUND !!!!!!!!!!");
+                            }
+
+                            var indexOfClear = entriesToAppend.FindLastIndex(entry => entry.Description == preferences.ClearCommandMatchText);
+                            if (indexOfClear != -1)
+                            {
+                                Trace.WriteLine($"Clear command found (message {indexOfClear} of {newEntries.Count} incoming messages)");
+                                entriesToAppend = newEntries.Skip(indexOfClear + 1)
+                                                            .ToList();
+                                Trace.WriteLine($"Message buffer of {entries.Count} messages being cleared");
+
+                                entries.Clear();
+                                OnPropertyChanged(nameof(Entries));
+
+                                Debug.Assert(entries.Count == 0);
+
+                                newEntries.Clear();
+                                newEntries.AddRange(entriesToAppend);
+                                OnPropertyChanged(nameof(NewEntries));
+
+                                return;
+                            }
+                        }
+
+                        entries.AddRange(entriesToAppend);
                     }
 
                     OnPropertyChanged(nameof(Entries));

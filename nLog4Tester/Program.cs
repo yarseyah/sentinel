@@ -32,16 +32,23 @@ namespace nLog4Tester
 
         public static void Main()
         {
-            const int smallestSleep = 1000;
-            const int biggestSleep = 2000;
+            const int smallestSleep = 100;
+            const int biggestSleep = 200;
+            const int clear = 100;
 
             for (var i = 0; ; i++)
             {
                 // Randomly generate a message:
                 var text = RandomMessage(i);
 
+                if (clear > 0 && i % clear == 0)
+                {
+                    Log.Warn("Sending clear command '#!Clear'");
+                    text = "#!Clear";
+                }
+
                 // Randomly assign a message
-                LogMessage(text);
+                LogMessage(text, i);
 
                 Thread.Sleep(Random.Next(smallestSleep, biggestSleep));
             }
@@ -49,13 +56,11 @@ namespace nLog4Tester
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static void LogMessage(string text)
+        private static void LogMessage(string text, int sequence)
         {
+            MappedDiagnosticsContext.Set("UnitTest", $"Sequence = {sequence}");
+
             var randomType = Random.Next(0, 6);
-
-            var context = $"Context{randomType}";
-            MappedDiagnosticsContext.Set("UnitTest", context);
-
             switch (randomType)
             {
                 case 0:

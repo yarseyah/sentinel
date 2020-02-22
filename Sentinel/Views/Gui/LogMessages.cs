@@ -8,11 +8,13 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Threading;
+
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
     using Sentinel.Views.Interfaces;
+
     using WpfExtras;
 
     public class LogMessages : ViewModelBase, ILogViewer
@@ -45,25 +47,31 @@
 
         private int unfilteredCount;
 
-        private bool autoscroll = true;
+        private bool autoScroll = true;
 
         public LogMessages()
         {
             ((ViewInformation)Info).Description = DESCRIPTION;
-            presenter = new LogMessagesControl { DataContext = this };
+            presenter = new LogMessagesControl
+                            {
+                                DataContext = this
+                            };
 
             Messages = new ObservableCollection<ILogEntry>();
+
             PropertyChanged += PropertyChangedHandler;
 
-            var dt = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(200) };
+            var dt = new DispatcherTimer(DispatcherPriority.Normal)
+                         {
+                             Interval = TimeSpan.FromMilliseconds(200)
+                         };
             dt.Tick += UpdateTick;
             dt.Start();
 
             filteringService = ServiceLocator.Instance.Get<IFilteringService<IFilter>>();
             if (filteringService != null)
             {
-                var notify = filteringService as INotifyPropertyChanged;
-                if (notify != null)
+                if (filteringService is INotifyPropertyChanged notify)
                 {
                     notify.PropertyChanged += (sender, e) => ApplyFiltering();
                 }
@@ -72,8 +80,7 @@
             extractingService = ServiceLocator.Instance.Get<IExtractingService<IExtractor>>();
             if (extractingService != null)
             {
-                var notify = extractingService as INotifyPropertyChanged;
-                if (notify != null)
+                if (extractingService is INotifyPropertyChanged notify)
                 {
                     notify.PropertyChanged += (sender, e) => ApplyExtracting();
                 }
@@ -82,8 +89,7 @@
             var preferences = ServiceLocator.Instance.Get<IUserPreferences>();
             if (preferences != null)
             {
-                var notify = preferences as INotifyPropertyChanged;
-                if (notify != null)
+                if (preferences is INotifyPropertyChanged notify)
                 {
                     notify.PropertyChanged += (sender, args) =>
                         {
@@ -110,10 +116,7 @@
         /// </summary>
         public int FilteredCount
         {
-            get
-            {
-                return filteredCount;
-            }
+            get => filteredCount;
 
             set
             {
@@ -128,13 +131,11 @@
         /// <summary>
         /// Gets or sets the count of unfiltered entries.
         /// </summary>
+
         // ReSharper disable once MemberCanBePrivate.Global - used in view model
         public int UnfilteredCount
         {
-            get
-            {
-                return unfilteredCount;
-            }
+            get => unfilteredCount;
 
             set
             {
@@ -148,10 +149,7 @@
 
         public string Status
         {
-            get
-            {
-                return status;
-            }
+            get => status;
 
             private set
             {
@@ -174,10 +172,7 @@
 
         public ILogger Logger
         {
-            get
-            {
-                return logger;
-            }
+            get => logger;
 
             private set
             {
@@ -207,31 +202,30 @@
 
         private void InitialiseToolbar()
         {
-            var autoscrollButton = new LogViewerToolbarButton(
-                "Auto-Scroll",
-                "Automatically scroll to show the newest entry",
-                true,
-                new DelegateCommand(e => autoscroll = !autoscroll))
+            var autoScrollButton = new LogViewerToolbarButton(
+                                       "Auto-Scroll",
+                                       "Automatically scroll to show the newest entry",
+                                       true,
+                                       new DelegateCommand(e => autoScroll = !autoScroll))
                                        {
-                                           IsChecked = autoscroll,
+                                           IsChecked = autoScroll,
                                            ImageIdentifier = "ScrollDown",
                                        };
 
-            var clearButton = new LogViewerToolbarButton(
-                "Clear",
-                "Clear the log messages from the display",
-                false,
-                new DelegateCommand(e => clearPending = true)) { ImageIdentifier = "Clear" };
+            var clearButton = new LogViewerToolbarButton("Clear", "Clear the log messages from the display", false, new DelegateCommand(e => clearPending = true))
+                                  {
+                                      ImageIdentifier = "Clear"
+                                  };
 
-            var pauseButton = new LogViewerToolbarButton(
-                "Pause",
-                "Pause the addition of messages to the display",
-                true,
-                new DelegateCommand(PauseMessagesHandler)) { IsChecked = false, ImageIdentifier = "Pause" };
+            var pauseButton = new LogViewerToolbarButton("Pause", "Pause the addition of messages to the display", true, new DelegateCommand(PauseMessagesHandler))
+                                  {
+                                      IsChecked = false,
+                                      ImageIdentifier = "Pause"
+                                  };
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
                               {
-                                  autoscrollButton,
+                                  autoScrollButton,
                                   clearButton,
                                   pauseButton,
                               };
@@ -248,7 +242,7 @@
             {
                 Trace.WriteLine("Applying filters...");
 
-                // About to get the full dataset from the LogEntriesManager,
+                // About to get the full data set from the LogEntriesManager,
                 // therefore anything in the pendingQueue is unneeded as it
                 // will already be in the complete collection and the incomplete
                 // filtered copy of that list is going to be disposed.
@@ -267,16 +261,19 @@
         /// <param name="entry">Entry to add.</param>
         private void AddIfPassesFilters(ILogEntry entry)
         {
-            // If no filtering service or no extracting service, then assume it passes.
-            if (filteringService == null || extractingService == null)
+            lock (Messages)
             {
-                Messages.Add(entry);
-            }
-            else
-            {
-                if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
+                // If no filtering service or no extracting service, then assume it passes.
+                if (filteringService == null || extractingService == null)
                 {
                     Messages.Add(entry);
+                }
+                else
+                {
+                    if (!filteringService.IsFiltered(entry) && !extractingService.IsFiltered(entry))
+                    {
+                        Messages.Add(entry);
+                    }
                 }
             }
         }
@@ -363,7 +360,7 @@
                     }
                 }
 
-                if (autoscroll)
+                if (autoScroll)
                 {
                     presenter.ScrollToEnd();
                 }
@@ -388,6 +385,17 @@
                     }
                 }
             }
+            else if (e.PropertyName == "Entries")
+            {
+                lock (Messages)
+                {
+                    // Determine whether a clear has been instigated
+                    if (Messages.Count > Logger.Entries.Count())
+                    {
+                        Messages.Clear();
+                    }
+                }
+            }
             else if (e.PropertyName == "Enabled")
             {
                 var pauseButton = ToolbarItems.FirstOrDefault(c => c.Label == "Pause");
@@ -402,24 +410,28 @@
         {
             if (e.PropertyName == "Logger")
             {
-                // Get rid of any existing messages and populate with messages
-                // from newly bound structure (if any).
-                Messages.Clear();
+                lock (Messages)
+                {
+                    // Get rid of any existing messages and populate with messages
+                    // from newly bound structure (if any).
+                    Messages.Clear();
+                }
 
                 // Register to the logger.
                 logger.PropertyChanged += LoggerPropertyChanged;
             }
             else if (e.PropertyName == "FilteredCount" || e.PropertyName == "UnfilteredCount")
             {
-                if (!Logger.Entries.Any())
+                lock (Messages)
                 {
-                    Messages.Clear();
-                }
+                    if (!Logger.Entries.Any())
+                    {
+                        Messages.Clear();
+                    }
 
-                var filtered = FilteredCount < UnfilteredCount;
-                Status = filtered
-                             ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]"
-                             : $"{UnfilteredCount} Messages";
+                    var filtered = FilteredCount < UnfilteredCount;
+                    Status = filtered ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]" : $"{UnfilteredCount} Messages";
+                }
             }
         }
     }
