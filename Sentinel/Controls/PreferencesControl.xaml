@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <wpfExtras:BooleanInvertingValueConverter x:Key="BooleanInverterConverter" />
     </UserControl.Resources>
-    
+
     <Grid x:Name="LayoutRoot">
         <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="General">
@@ -124,7 +124,7 @@
                                                   Margin="0,0,0,5"
                                                   ToolTip="Shows/hides the context column (nLog only)"
                                                   Content="Show the context column" />
-                                        <Label Margin="20,0,0,0">Property for context: </Label>
+                                        <Label Margin="20,0,0,0">Property for context:</Label>
                                         <TextBox Text="{Binding Preferences.ContextProperty, UpdateSourceTrigger=PropertyChanged}" 
                                                  Margin="10,0,0,0"
                                                  Width="200"
@@ -249,6 +249,32 @@
                                    Text="The list below indicates the registered images:" />
                         </StackPanel>
                         <controls:ImageTypesControl />
+                    </DockPanel>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Commands">
+                <GroupBox Header="Experimental Commands"
+                          Margin="5">
+                    <DockPanel>
+                        <StackPanel Margin="5"
+                                    DockPanel.Dock="Top">
+                            <TextBlock TextWrapping="WrapWithOverflow">
+                                <Run Text="When specific logging messages are sent, interpret them as commands for controlling Sentinel." />
+                            </TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="200" />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Content="Clear the log"
+                                          VerticalAlignment="Center"></CheckBox>
+                                <Label Grid.Column="1">Text to match:</Label>
+                                <TextBox Grid.Column="2"
+                                         VerticalAlignment="Center"></TextBox>
+                            </Grid>
+                        </StackPanel>
                     </DockPanel>
                 </GroupBox>
             </TabItem>
