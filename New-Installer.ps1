@@ -12,7 +12,7 @@
 .OUTPUTS
     Installers should be generated in the Releases folder
 .NOTES
-    
+
 .COMPONENT
     NCCIS Checker
 .ROLE
@@ -23,11 +23,11 @@
 [CmdletBinding()]
 param (
     [Alias("b")]
-    [Switch] 
+    [Switch]
     $NoBuild = $false,
 
     [Alias("v")]
-    [Switch] 
+    [Switch]
     $NoVersionUpdate = $false
 )
 
@@ -42,8 +42,8 @@ function Get-MsBuildCommand() {
     }
 
     # Since VS2017, there is a bundled command called vswhere
-    # - vswhere is included with the installer as of Visual Studio 2017 version 15.2 and later, 
-    #   and can be found at the following location: 
+    # - vswhere is included with the installer as of Visual Studio 2017 version 15.2 and later,
+    #   and can be found at the following location:
     #   %ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
 
     Write-Verbose "Get-MsBuildCommand() - using vswhere to find"
@@ -100,6 +100,21 @@ function Get-SquirrelCommand() {
     }
 }
 
+function Get-GitVerionsCommand() {
+    $findCommand = Get-Command nuget -ErrorAction SilentlyContinue
+    if ( $null -ne $findCommand ) {
+        return "gitversion"
+    }
+    # $installedNuget = ".\packages\GitVersion.CommandLine.4.0.0\tools\GitVersion.exe"
+    $installedGitVersion = (Get-ChildItem -Path .\packages\ -Recurse -Include GitVersion.exe | Select-Object -First 1)
+    if ( Test-Path $installedGitVersion ) {
+        return $installedGitVersion
+    }
+    else {
+        return $null;
+    }
+}
+
 $msbuild = Get-MsBuildCommand
 if ( $null -eq $msbuild ) {
     Write-Error "Unable to locate MSBuild"
@@ -126,6 +141,17 @@ if ( $null -eq $squirrel ) {
 }
 
 Write-Output "Squirrel = $squirrel"
+
+if ( -not $NoVersionUpdate ) {
+    $gitversion = Get-GitVerionsCommand
+    if ( $null -eq $gitversion ) {
+        Write-Error "Unable to locate GitVersion"
+        Exit
+    }
+
+    Write-Output "GitVersion = $gitversion"
+    & $gitversion /updateAssemblyInfo SharedAssemblyInfo.cs
+}
 
 # ===========================================================================
 $productName = "Sentinel"
@@ -180,7 +206,7 @@ if ( Test-Path $package ) {
 
     if ( $LASTEXITCODE -eq 0) {
         $srcFile = Join-Path $releasesLocation "setup.exe"
-        $destFile = Join-Path $releasesLocation "$($productName)-Setup-$version.exe" 
+        $destFile = Join-Path $releasesLocation "$($productName)-Setup-$version.exe"
         Write-Verbose "Renaming output file: src: $srcFile dest: $destFile"
 
         # Give the installer a sensible name
