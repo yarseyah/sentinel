@@ -269,10 +269,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <CheckBox Content="Clear the log"
-                                          VerticalAlignment="Center"></CheckBox>
+                                          VerticalAlignment="Center"
+                                          IsChecked="{Binding Preferences.EnableClearCommand}" />
                                 <Label Grid.Column="1">Text to match:</Label>
                                 <TextBox Grid.Column="2"
-                                         VerticalAlignment="Center"></TextBox>
+                                         VerticalAlignment="Center"
+                                         Text="{Binding Preferences.ClearCommandMatchText}" />
                             </Grid>
                         </StackPanel>
                     </DockPanel>

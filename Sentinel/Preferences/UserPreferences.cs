@@ -50,6 +50,10 @@
 
         private string contextProperty = "UnitTest";
 
+        private bool enableClearCommand = true;
+
+        private string clearCommandMatchText = "#!Clear";
+
         public UserPreferences()
         {
             PropertyChanged += (s, a) =>
@@ -352,6 +356,32 @@
                 {
                     contextProperty = value;
                     OnPropertyChanged(nameof(ContextProperty));
+                }
+            }
+        }
+
+        public bool EnableClearCommand
+        {
+            get => enableClearCommand;
+            set
+            {
+                if (enableClearCommand != value)
+                {
+                    enableClearCommand = value;
+                    OnPropertyChanged(nameof(EnableClearCommand));
+                }
+            }
+        }
+
+        public string ClearCommandMatchText
+        {
+            get => clearCommandMatchText;
+            set
+            {
+                if (clearCommandMatchText != value)
+                {
+                    clearCommandMatchText = value;
+                    OnPropertyChanged(nameof(ClearCommandMatchText));
                 }
             }
         }

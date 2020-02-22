@@ -59,5 +59,11 @@ namespace Sentinel.Interfaces
 
         [DataMember]
         string ContextProperty { get; set; }
+
+        [DataMember]
+        bool EnableClearCommand { get; set; }
+
+        [DataMember]
+        string ClearCommandMatchText { get; set; }
     }
 }
