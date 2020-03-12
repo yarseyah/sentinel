@@ -3,7 +3,7 @@
     using System.Windows;
 
     /// <summary>
-    /// Interaction logic for AddEditHighlighterWindow.xaml
+    /// Interaction logic for AddEditHighlighterWindow.xaml.
     /// </summary>
     public partial class AddEditHighlighterWindow : Window
     {

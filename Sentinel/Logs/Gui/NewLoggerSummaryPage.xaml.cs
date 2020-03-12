@@ -7,7 +7,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for NewLoggerSummaryPage.xaml
+    /// Interaction logic for NewLoggerSummaryPage.xaml.
     /// </summary>
     public partial class NewLoggerSummaryPage : IWizardPage
     {

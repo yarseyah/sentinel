@@ -288,7 +288,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether a visual padding correction should be used to
         /// tighten the rows in a list view.  Windows Vista and Windows 7 both use much more padding
-        /// around each row than Windows XP does.  Sometimes the XP look works better!
+        /// around each row than Windows XP does.  Sometimes the XP look works better.
         /// </summary>
         public bool UseTighterRows
         {

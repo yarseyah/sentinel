@@ -4,7 +4,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for LogActivityControl.xaml
+    /// Interaction logic for LogActivityControl.xaml.
     /// </summary>
     public partial class LogActivityControl
     {

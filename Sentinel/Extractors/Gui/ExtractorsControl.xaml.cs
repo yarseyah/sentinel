@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for ExtractorsControl.xaml
+    /// Interaction logic for ExtractorsControl.xaml.
     /// </summary>
     public partial class ExtractorsControl : UserControl
     {

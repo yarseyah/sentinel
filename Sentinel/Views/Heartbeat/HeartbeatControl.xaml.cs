@@ -12,7 +12,7 @@
     using Sentinel.Support.Wpf;
 
     /// <summary>
-    ///   Interaction logic for HeartbeatControl.xaml
+    ///   Interaction logic for HeartbeatControl.xaml.
     /// </summary>
     public partial class HeartbeatControl : INotifyPropertyChanged
     {

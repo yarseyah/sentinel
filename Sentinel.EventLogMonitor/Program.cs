@@ -24,10 +24,7 @@
                 DisplayBanner(options);
 
                 // TODO: pass this on the command line
-                var eventLog = new EventLog
-                                   {
-                                       Log = "Application",
-                                   };
+                var eventLog = new EventLog { Log = "Application", };
 
                 eventLog.EntryWritten += NewLogEntryWrittenHandler;
                 eventLog.EnableRaisingEvents = true;
@@ -69,9 +66,8 @@
             try
             {
                 CommandLineOptions options = null;
-                Parser.Default.ParseArguments<CommandLineOptions>(args)
-                                        .WithParsed(o => options = o)
-                                        .WithNotParsed(HandleParseErrors);
+                Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(o => options = o)
+                    .WithNotParsed(HandleParseErrors);
 
                 if (options != null)
                 {
@@ -80,7 +76,6 @@
                 }
 
                 Log.Warn("Command line parsing was unsuccessful");
-
             }
             catch (Exception e)
             {
@@ -88,7 +83,6 @@
             }
 
             return null;
-
         }
 
         private static void HandleParseErrors(IEnumerable<Error> errors)

@@ -13,7 +13,7 @@
     using Sentinel.Views.Interfaces;
 
     /// <summary>
-    /// Interaction logic for MultipleViewFrame.xaml
+    /// Interaction logic for MultipleViewFrame.xaml.
     /// </summary>
     public partial class MultipleViewFrame : INotifyPropertyChanged, IWindowFrame
     {

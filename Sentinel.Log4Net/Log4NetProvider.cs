@@ -17,16 +17,16 @@
 
     public class Log4NetProvider : INetworkProvider
     {
-        private const int PumpFrequency = 100;
-
         public static readonly IProviderRegistrationRecord ProviderRegistrationInformation =
             new ProviderRegistrationInformation(new ProviderInfo());
 
-        private readonly Queue<string> pendingQueue = new Queue<string>();
+        private const int PumpFrequency = 100;
 
         private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
 
         private static readonly ILog Log = LogManager.GetLogger<Log4NetProvider>();
+
+        private readonly Queue<string> pendingQueue = new Queue<string>();
 
         private readonly IUdpAppenderListenerSettings udpSettings;
 

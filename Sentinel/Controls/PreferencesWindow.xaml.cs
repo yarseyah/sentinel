@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for PreferencesWindow.xaml
+    /// Interaction logic for PreferencesWindow.xaml.
     /// </summary>
     public partial class PreferencesWindow
     {

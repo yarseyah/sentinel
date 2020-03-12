@@ -3,7 +3,7 @@
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for UpgradeNotification.xaml
+    /// Interaction logic for UpgradeNotification.xaml.
     /// </summary>
     public partial class UpgradeNotification : UserControl
     {

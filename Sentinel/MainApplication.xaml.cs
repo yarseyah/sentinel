@@ -11,7 +11,7 @@
     using Sentinel.Services.Interfaces;
 
     /// <summary>
-    /// Interaction logic for MainApplication.xaml
+    /// Interaction logic for MainApplication.xaml.
     /// </summary>
     public partial class MainApplication : Application
     {

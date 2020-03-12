@@ -13,7 +13,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for ViewSelectionPage.xaml
+    /// Interaction logic for ViewSelectionPage.xaml.
     /// </summary>
     public partial class ViewSelectionPage : IWizardPage
     {
