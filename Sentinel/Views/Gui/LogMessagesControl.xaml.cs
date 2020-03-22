@@ -21,7 +21,7 @@
     using Sentinel.Support.Wpf;
 
     /// <summary>
-    /// Interaction logic for LogMessagesControl.xaml
+    /// Interaction logic for LogMessagesControl.xaml.
     /// </summary>
     public partial class LogMessagesControl : UserControl
     {

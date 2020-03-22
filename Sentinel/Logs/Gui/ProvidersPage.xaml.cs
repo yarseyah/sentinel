@@ -19,7 +19,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for ProvidersPage.xaml
+    /// Interaction logic for ProvidersPage.xaml.
     /// </summary>
     public partial class ProvidersPage : IWizardPage, IDataErrorInfo
     {

@@ -1,6 +1,4 @@
-﻿// ReSharper disable once StyleCop.SA1300
-// ReSharper disable SA1300
-namespace nLog4Tester
+﻿namespace NLog4Tester
 {
     using System;
     using System.Collections.Generic;

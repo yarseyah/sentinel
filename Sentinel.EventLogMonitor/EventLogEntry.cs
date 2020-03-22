@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Text;
+
     using Sentinel.EventLogMonitor.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 

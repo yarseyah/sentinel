@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for StyleCop.Analyzers" Description="Code analysis rules for StyleCop.Analyzers.csproj." ToolsVersion="14.0">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for StyleCop.Analyzers" Description="Code analysis rules for StyleCop.Analyzers.csproj." ToolsVersion="16.0">
   <Rules AnalyzerId="AsyncUsageAnalyzers" RuleNamespace="AsyncUsageAnalyzers">
     <Rule Id="UseConfigureAwait" Action="Warning" />
   </Rules>
@@ -67,21 +67,21 @@
     <Rule Id="CA2241" Action="Warning" />
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
-  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
-    <Rule Id="IDE0003" Action="None" />
-  </Rules>
-    <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="CS1573" Action="None" />
     <Rule Id="CS1591" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0003" Action="None" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1305" Action="Warning" />
-    <Rule Id="SA1412" Action="None" /> <!-- Make files UTF-8 with BOM -->
-    <Rule Id="SA1600" Action="None" />
-    <Rule Id="SA1609" Action="Warning" />
-    <Rule Id="SA1101" Action="None" /> <!-- Prefix with this. -->
-    <Rule Id="SA1633" Action="None" /> <!-- File Header -->
     <Rule Id="SA0001" Action="None" />
-    <Rule Id="SA1652" Action="None" /> <!-- Requirement to enable XML documentation -->
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1305" Action="Warning" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
+    <Rule Id="SA1623" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1652" Action="None" />
   </Rules>
 </RuleSet>

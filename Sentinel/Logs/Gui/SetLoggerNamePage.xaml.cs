@@ -10,7 +10,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for SetLoggerNamePage.xaml
+    /// Interaction logic for SetLoggerNamePage.xaml.
     /// </summary>
     public partial class SetLoggerNamePage : IWizardPage, IDataErrorInfo
     {

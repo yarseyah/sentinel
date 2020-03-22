@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for ClassificationsControl.xaml
+    /// Interaction logic for ClassificationsControl.xaml.
     /// </summary>
     public partial class ClassificationsControl : UserControl
     {

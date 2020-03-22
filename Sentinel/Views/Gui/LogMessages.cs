@@ -54,7 +54,7 @@
             ((ViewInformation)Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl
                             {
-                                DataContext = this
+                                DataContext = this,
                             };
 
             Messages = new ObservableCollection<ILogEntry>();
@@ -63,7 +63,7 @@
 
             var dt = new DispatcherTimer(DispatcherPriority.Normal)
                          {
-                             Interval = TimeSpan.FromMilliseconds(200)
+                             Interval = TimeSpan.FromMilliseconds(200),
                          };
             dt.Tick += UpdateTick;
             dt.Start();
@@ -131,8 +131,6 @@
         /// <summary>
         /// Gets or sets the count of unfiltered entries.
         /// </summary>
-
-        // ReSharper disable once MemberCanBePrivate.Global - used in view model
         public int UnfilteredCount
         {
             get => unfilteredCount;
@@ -214,13 +212,13 @@
 
             var clearButton = new LogViewerToolbarButton("Clear", "Clear the log messages from the display", false, new DelegateCommand(e => clearPending = true))
                                   {
-                                      ImageIdentifier = "Clear"
+                                      ImageIdentifier = "Clear",
                                   };
 
             var pauseButton = new LogViewerToolbarButton("Pause", "Pause the addition of messages to the display", true, new DelegateCommand(PauseMessagesHandler))
                                   {
                                       IsChecked = false,
-                                      ImageIdentifier = "Pause"
+                                      ImageIdentifier = "Pause",
                                   };
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
@@ -284,7 +282,7 @@
             {
                 Trace.WriteLine("Applying extractors...");
 
-                // About to get the full dataset from the LogEntriesManager,
+                // About to get the full data set from the LogEntriesManager,
                 // therefore anything in the pendingQueue is unneeded as it
                 // will already be in the complete collection and the incomplete
                 // filtered copy of that list is going to be disposed.

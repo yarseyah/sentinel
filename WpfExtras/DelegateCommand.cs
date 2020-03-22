@@ -28,13 +28,11 @@
 
         private Action<object> ExecuteAction { get; set; }
 
-        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public bool CanExecute(object parameter)
         {
             return CanExecutePredicate == null || CanExecutePredicate.Invoke(parameter);
         }
 
-        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public void Execute(object parameter)
         {
             ExecuteAction.Invoke(parameter);

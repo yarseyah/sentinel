@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for ImageTypesControl.xaml
+    /// Interaction logic for ImageTypesControl.xaml.
     /// </summary>
     public partial class ImageTypesControl : UserControl
     {

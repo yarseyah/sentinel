@@ -11,7 +11,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for NetworkConfigurationPage.xaml
+    /// Interaction logic for NetworkConfigurationPage.xaml.
     /// </summary>
     public partial class NetworkConfigurationPage : IWizardPage
     {
@@ -22,10 +22,6 @@
         private int port;
 
         private bool isUdp = true;
-
-        public virtual bool SupportsTcp => true;
-
-        public virtual bool SupportsUdp => true;
 
         public NetworkConfigurationPage()
         {
@@ -40,22 +36,15 @@
             Port = 9999;
         }
 
-        private void SelectProviderPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Port")
-            {
-                bool state = port > 2000;
-                Trace.WriteLine($"Setting PageValidates to {state}");
-                IsValid = state;
-            }
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public virtual bool SupportsTcp => true;
+
+        public virtual bool SupportsUdp => true;
 
         public int Port
         {
-            get
-            {
-                return port;
-            }
+            get => port;
             set
             {
                 if (port != value)
@@ -87,10 +76,7 @@
 
         public bool IsValid
         {
-            get
-            {
-                return isValid;
-            }
+            get => isValid;
 
             private set
             {
@@ -118,8 +104,12 @@
 
         public object Save(object saveData)
         {
-            Debug.Assert(saveData != null, "Expecting the save-data component to have details from the previous pages.");
-            Debug.Assert(saveData is IProviderSettings, "Expecting the save-data component to be of an IProviderSettings type.");
+            Debug.Assert(
+                saveData != null,
+                "Expecting the save-data component to have details from the previous pages.");
+            Debug.Assert(
+                saveData is IProviderSettings,
+                "Expecting the save-data component to be of an IProviderSettings type.");
 
             var previousInfo = (IProviderSettings)saveData;
 
@@ -131,8 +121,6 @@
                            Protocol = IsUdp ? NetworkProtocol.Udp : NetworkProtocol.Tcp,
                        };
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -149,6 +137,16 @@
             // Establish default selection
             Debug.Assert(SupportsUdp || SupportsTcp, "The provider needs to support at least one of UDP or TCP");
             IsUdp = SupportsUdp;
+        }
+
+        private void SelectProviderPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Port")
+            {
+                bool state = port > 2000;
+                Trace.WriteLine($"Setting PageValidates to {state}");
+                IsValid = state;
+            }
         }
     }
 }

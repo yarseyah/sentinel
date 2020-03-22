@@ -11,13 +11,16 @@
     using WpfExtras;
 
     /// <summary>
-    ///   Interaction logic for MessageFormatPage.xaml
+    ///   Interaction logic for MessageFormatPage.xaml.
     /// </summary>
     public partial class MessageFormatPage : IWizardPage
     {
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 
         private readonly ReadOnlyObservableCollection<IWizardPage> readonlyChildren;
+
+        private bool showCustomWarning = false;
+
         private int selectedDecoderIndex;
 
         private IWizardPage customPage = null;
@@ -34,28 +37,30 @@
             DecodingStyles = new List<string>
             {
                 "nLog default message format decoder",
-                "Custom"
+                "Custom",
             };
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public IEnumerable<string> DecodingStyles { get; private set; }
 
         public int SelectedDecoderIndex
         {
-            get { return selectedDecoderIndex; }
+            get => selectedDecoderIndex;
             set
             {
-                if (selectedDecoderIndex == value) return;
-                selectedDecoderIndex = value;
-                OnPropertyChanged(nameof(SelectedDecoderIndex));
+                if (selectedDecoderIndex != value)
+                {
+                    selectedDecoderIndex = value;
+                    OnPropertyChanged(nameof(SelectedDecoderIndex));
+                }
             }
         }
 
-        private bool showCustomWarning = false;
-
         public bool ShowCustomWarning
         {
-            get { return showCustomWarning; }
+            get => showCustomWarning;
 
             private set
             {
@@ -67,42 +72,17 @@
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public string Title => "Message Part Identification";
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
-            }
-        }
+        public ReadOnlyObservableCollection<IWizardPage> Children => readonlyChildren;
 
-        public string Title
-        {
-            get { return "Message Part Identification"; }
-        }
+        public string Description => "Define how the entries in the log file are categorised.";
 
-        public ReadOnlyObservableCollection<IWizardPage> Children
-        {
-            get { return readonlyChildren; }
-        }
+        public bool IsValid => true;
 
-        public string Description
-        {
-            get { return "Define how the entries in the log file are categorised."; }
-        }
+        public Control PageContent => this;
 
-        public bool IsValid
-        {
-            get { return true; }
-        }
-
-        public Control PageContent
-        {
-            get { return this; }
-        }
+        protected bool IsCustom => SelectedDecoderIndex == DecodingStyles.Count() - 1;
 
         public void AddChild(IWizardPage newItem)
         {
@@ -132,9 +112,11 @@
             return saveData;
         }
 
-        protected bool IsCustom
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            get { return SelectedDecoderIndex == DecodingStyles.Count() - 1; }
+            var handler = PropertyChanged;
+            var e = new PropertyChangedEventArgs(propertyName);
+            handler?.Invoke(this, e);
         }
 
         private string GetDecoder()

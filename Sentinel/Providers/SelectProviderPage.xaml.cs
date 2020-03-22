@@ -16,7 +16,7 @@
     using WpfExtras;
 
     /// <summary>
-    /// Interaction logic for SelectProviderPage.xaml
+    /// Interaction logic for SelectProviderPage.xaml.
     /// </summary>
     public partial class SelectProviderPage : IWizardPage
     {
@@ -33,7 +33,7 @@
         /// based upon the providers selection.  The indexes will match that of
         /// the providers collection.  This is purely being done so that if a setting
         /// is made on the child page, the provider changed (by going back) and then
-        /// reverted, the original settings will still be there!
+        /// reverted, the original settings will still be there.
         /// </summary>
         private readonly List<IWizardPage> additionalPages = new List<IWizardPage>();
 

@@ -51,7 +51,7 @@
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/>
         /// that can be used to iterate through the collection.
         /// </returns>
-        /// <filterpriority>1</filterpriority>
+        /// <filterpriority>1.</filterpriority>
         public IEnumerator<ILogger> GetEnumerator()
         {
             return loggers.Values.GetEnumerator();
@@ -64,7 +64,7 @@
         /// An <see cref="T:System.Collections.IEnumerator"/>
         /// object that can be used to iterate through the collection.
         /// </returns>
-        /// <filterpriority>2</filterpriority>
+        /// <filterpriority>2.</filterpriority>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

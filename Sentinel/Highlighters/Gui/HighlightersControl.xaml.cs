@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for HighlightersControl.xaml
+    /// Interaction logic for HighlightersControl.xaml.
     /// </summary>
     public partial class HighlightersControl : UserControl
     {

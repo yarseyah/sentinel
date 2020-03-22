@@ -3,7 +3,7 @@ namespace Sentinel.NLog
     using System;
     using System.Collections.Generic;
 
-    using Interfaces;
+    using Sentinel.Interfaces;
 
     public class LogEntry : ILogEntry
     {

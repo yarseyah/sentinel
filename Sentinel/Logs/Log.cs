@@ -1,9 +1,9 @@
 namespace Sentinel.Logs
 {
     using System;
-    using System.Diagnostics;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
 
     using Sentinel.Classification.Interfaces;
@@ -131,18 +131,19 @@ namespace Sentinel.Logs
                                 Trace.WriteLine("!!!!!!!!!!!! CLEAR COMMAND FOUND !!!!!!!!!!");
                             }
 
-                            var indexOfClear = entriesToAppend.FindLastIndex(entry => entry.Description == preferences.ClearCommandMatchText);
+                            var indexOfClear = entriesToAppend.FindLastIndex(
+                                entry => entry.Description == preferences.ClearCommandMatchText);
                             if (indexOfClear != -1)
                             {
-                                Trace.WriteLine($"Clear command found (message {indexOfClear} of {newEntries.Count} incoming messages)");
-                                entriesToAppend = newEntries.Skip(indexOfClear + 1)
-                                                            .ToList();
+                                Trace.WriteLine(
+                                    $"Clear command found (message {indexOfClear} of {newEntries.Count} incoming messages)");
+                                entriesToAppend = newEntries.Skip(indexOfClear + 1).ToList();
                                 Trace.WriteLine($"Message buffer of {entries.Count} messages being cleared");
 
                                 entries.Clear();
                                 OnPropertyChanged(nameof(Entries));
 
-                                Debug.Assert(entries.Count == 0);
+                                Debug.Assert(entries.Count == 0, "should have cleared entries");
 
                                 newEntries.Clear();
                                 newEntries.AddRange(entriesToAppend);

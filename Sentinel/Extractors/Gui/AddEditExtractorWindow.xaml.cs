@@ -3,7 +3,7 @@
     using System.Windows;
 
     /// <summary>
-    /// Interaction logic for AddEditExtractorWindow.xaml
+    /// Interaction logic for AddEditExtractorWindow.xaml.
     /// </summary>
     public partial class AddEditExtractorWindow : Window
     {

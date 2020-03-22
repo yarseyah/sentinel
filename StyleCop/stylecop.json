@@ -1,0 +1,33 @@
+{
+    "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+    
+    "settings": {
+        "orderingRules": {
+            "usingDirectivesPlacement": "insideNamespace",
+            "blankLinesBetweenUsingGroups": "require"
+        },
+        "documentationRules": {
+            "documentInterfaces": false,
+            "documentPrivateFields": false,
+            "documentExposedElements": false,
+            "documentInternalElements": false,
+            "documentPrivateElements": false
+        },
+        "namingRules": {
+            "allowCommonHungarianPrefixes": true,
+            "allowedHungarianPrefixes": [
+            ]
+        },
+        "maintainabilityRules": {
+            "topLevelTypes": [
+                "class",
+                "delegate",
+                "interface",
+                "struct"
+            ]
+        },
+        "layoutRules": {
+            "allowConsecutiveUsings": true
+        }
+    }
+}

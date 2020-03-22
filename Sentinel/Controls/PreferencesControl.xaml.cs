@@ -1,7 +1,7 @@
 ﻿namespace Sentinel.Controls
 {
     /// <summary>
-    /// Interaction logic for PreferencesControl.xaml
+    /// Interaction logic for PreferencesControl.xaml.
     /// </summary>
     public partial class PreferencesControl
     {

@@ -11,7 +11,9 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows;
+
     using Common.Logging;
+
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
@@ -22,9 +24,6 @@
 
         private static readonly ILog Log = LogManager.GetLogger(nameof(FileMonitoringProvider));
 
-        public static IProviderRegistrationRecord ProviderRegistrationInformation { get; } =
-            new ProviderRegistrationInformation(new ProviderInfo());
-
         private readonly bool loadExistingContent;
 
         private readonly Regex patternMatching;
@@ -34,10 +33,6 @@
         private readonly int refreshInterval = 250;
 
         private readonly List<string> usedGroupNames = new List<string>();
-
-        private BackgroundWorker Worker { get; set; } = new BackgroundWorker();
-
-        private BackgroundWorker PurgeWorker { get; set; } = new BackgroundWorker { WorkerReportsProgress = true };
 
         private long bytesRead;
 
@@ -51,10 +46,9 @@
 
             var fileSettings = settings as IFileMonitoringProviderSettings;
 
-            Debug.Assert(
-                fileSettings != null,
-                "The FileMonitoringProvider class expects configuration information "
-                + "to be of IFileMonitoringProviderSettings type");
+            var message = "The FileMonitoringProvider class expects configuration information "
+                          + "to be of IFileMonitoringProviderSettings type";
+            Debug.Assert(fileSettings != null, message);
 
             ProviderSettings = fileSettings;
             FileName = fileSettings.FileName;
@@ -78,32 +72,30 @@
             Dispose(false);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public static IProviderRegistrationRecord ProviderRegistrationInformation { get; } =
+            new ProviderRegistrationInformation(new ProviderInfo());
 
-        protected virtual void Dispose(bool disposing)
-        {
-            Worker?.Dispose();
-            Worker = null;
-            PurgeWorker?.Dispose();
-            PurgeWorker = null;
-        }
-
-        // ReSharper disable once MemberCanBePrivate.Global used from view
         public string FileName { get; }
 
         public IProviderInfo Information { get; }
 
-        public IProviderSettings ProviderSettings { get;  }
+        public IProviderSettings ProviderSettings { get; }
 
         public ILogger Logger { get; set; }
 
         public string Name { get; set; }
 
         public bool IsActive => Worker.IsBusy;
+
+        private BackgroundWorker Worker { get; set; } = new BackgroundWorker();
+
+        private BackgroundWorker PurgeWorker { get; set; } = new BackgroundWorker { WorkerReportsProgress = true };
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         public void Start()
         {
@@ -132,6 +124,14 @@
                 // TODO: need a better pause mechanism...
                 Close();
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            Worker?.Dispose();
+            Worker = null;
+            PurgeWorker?.Dispose();
+            PurgeWorker = null;
         }
 
         private void PurgeWorkerDoWork(object sender, DoWorkEventArgs e)
@@ -218,7 +218,7 @@
 
                                 var buffer = new byte[bytesToRead];
 
-                                var bytesSuccessfullyRead = fs.Read(buffer, 0, (int) bytesToRead);
+                                var bytesSuccessfullyRead = fs.Read(buffer, 0, (int)bytesToRead);
                                 Debug.Assert(bytesSuccessfullyRead == bytesToRead, "Did not get as much as expected!");
 
                                 // Put results into a buffer (prepend any unprocessed data retained from last read).
@@ -243,8 +243,11 @@
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show($"Error in FileMonitorProvider: {ex}", "Error in FileMonitorProvider",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(
+                                $"Error in FileMonitorProvider: {ex}",
+                                "Error in FileMonitorProvider",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
                         }
                     }
                 }
@@ -284,6 +287,7 @@
                                 "Failed to parse date {0}",
                                 m.Groups["DateTime"].Value));
                     }
+
                     entry.DateTime = dt;
                 }
 
@@ -300,8 +304,7 @@
 
                 entry.MetaData = new Dictionary<string, object>
                                      {
-                                         { "Classification", string.Empty },
-                                         { "Host", FileName }
+                                         { "Classification", string.Empty }, { "Host", FileName },
                                      };
 
                 if (entry.Description.ToUpper(CultureInfo.InvariantCulture).Contains("EXCEPTION"))

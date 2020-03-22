@@ -11,7 +11,7 @@
     using System.Windows.Input;
 
     /// <summary>
-    ///   Interaction logic for Wizard.xaml
+    ///   Interaction logic for Wizard.xaml.
     /// </summary>
     public partial class Wizard
     {

@@ -6,7 +6,7 @@
     using Sentinel.Services;
 
     /// <summary>
-    /// Interaction logic for FiltersControl.xaml
+    /// Interaction logic for FiltersControl.xaml.
     /// </summary>
     public partial class FiltersControl : UserControl
     {

@@ -24,7 +24,7 @@
 
         /// <summary>
         /// Gets or sets a value indicating whether the current session has been saved
-        /// in its current state (e.g. true if not dirty)
+        /// in its current state (e.g. true if not dirty).
         /// </summary>
         bool IsSaved { get; set; }
 
@@ -35,15 +35,15 @@
         void LoadNewSession(Window parent);
 
         /// <summary>
-        /// Initialise the session manager from supplied providers
+        /// Initialise the session manager from supplied providers.
         /// </summary>
-        /// <param name="providers">Providers collection to load</param>
+        /// <param name="providers">Providers collection to load.</param>
         void LoadProviders(IEnumerable<PendingProviderRecord> providers);
 
         /// <summary>
         /// Called when loading a session that has been saved to disk.
         /// </summary>
-        /// <param name="filePath">Directory where the session is saved</param>
+        /// <param name="filePath">Directory where the session is saved.</param>
         void LoadSession(string filePath);
 
         /// <summary>

@@ -32,8 +32,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.EventLogMonitor.Interfaces", "Sentinel.EventLogMonitor.Interfaces\Sentinel.EventLogMonitor.Interfaces.csproj", "{43D710A0-7805-4B0A-B38F-4A4D772800F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{5D931689-37BB-44D7-95AA-50A01E42567A}"
-	ProjectSection(SolutionItems) = preProject
-		Make-Installer.ps1 = Make-Installer.ps1
+	ProjectSection(SolutionItemss) = preProject
+		New-Installer.ps1 = New-Installer.ps1
 		Sentinel.nuspec = Sentinel.nuspec
 	EndProjectSection
 EndProject
