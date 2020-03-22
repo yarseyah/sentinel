@@ -40,7 +40,7 @@ namespace Sentinel.MSBuild
             Settings = settings as IMsBuildListenerSettings;
             Settings.ThrowIfNull(nameof(Settings));
 
-            ProviderSettings = settings; 
+            ProviderSettings = settings;
         }
 
         public IProviderInfo Information { get; private set; }

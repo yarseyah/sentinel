@@ -144,7 +144,7 @@
                         // See whether the string validates as a Regex
                         try
                         {
-                            var r = new Regex(CustomFormat);
+                            _ = new Regex(CustomFormat);
 
                             // See if it contains the minimal fields
                             if (!ContainsKeyFields(CustomFormat))
