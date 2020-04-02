@@ -54,15 +54,19 @@
 
         private string clearCommandMatchText = "#!Clear";
 
+        private bool limitMessages = false;
+
+        private string maximumMessageCount;
+
         public UserPreferences()
         {
             PropertyChanged += (s, a) =>
+            {
+                if (a.PropertyName == nameof(ContextProperty))
                 {
-                    if (a.PropertyName == nameof(ContextProperty))
-                    {
-                        Log.Debug($"{a.PropertyName}={ContextProperty}");
-                    }
-                };
+                    Log.Debug($"{a.PropertyName}={ContextProperty}");
+                }
+            };
         }
 
         /// <summary>
@@ -83,7 +87,7 @@
             "dddd",
         };
 
-        public IEnumerable<string> TimeFormatOptions { get; } = new[] { "HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm" };
+        public IEnumerable<string> TimeFormatOptions { get; } = new[] {"HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm"};
 
         /// <summary>
         /// Gets or sets the selected date option, as a index of the available options.
@@ -241,7 +245,7 @@
         /// <summary>
         /// Gets a list of the available type column options, such as hidden, icons, text, etc.
         /// </summary>
-        public IEnumerable<string> TypeOptions => new[] { "Hidden", "Icons", "Text", "Icon and text" };
+        public IEnumerable<string> TypeOptions => new[] {"Hidden", "Icons", "Text", "Icon and text"};
 
         /// <summary>
         /// Gets or sets a value indicating whether the lazy rebuilding option should be used
@@ -382,6 +386,32 @@
                 {
                     clearCommandMatchText = value;
                     OnPropertyChanged(nameof(ClearCommandMatchText));
+                }
+            }
+        }
+
+        public bool LimitMessages
+        {
+            get => limitMessages;
+            set
+            {
+                if (value != limitMessages)
+                {
+                    limitMessages = value;
+                    OnPropertyChanged(nameof(LimitMessages));
+                }
+            }
+        }
+
+        public string MaximumMessageCount
+        {
+            get => maximumMessageCount;
+            set
+            {
+                if (maximumMessageCount != value)
+                {
+                    maximumMessageCount = value;
+                    OnPropertyChanged(nameof(MaximumMessageCount));
                 }
             }
         }
