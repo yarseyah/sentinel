@@ -49,7 +49,7 @@
 
         public LogMessages()
         {
-            ((ViewInformation) Info).Description = DESCRIPTION;
+            ((ViewInformation)Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl
             {
                 DataContext = this,
@@ -108,8 +108,6 @@
         }
 
         public ObservableCollection<ILogEntry> Messages { get; private set; }
-
-        private IUserPreferences Preferences { get; }
 
         /// <summary>
         /// Gets or sets the count of filtered entries.
@@ -187,6 +185,8 @@
         /// </summary>
         public Control Presenter => presenter;
 
+        private IUserPreferences Preferences { get; }
+
         public void SetLogger(ILogger newLogger)
         {
             Logger = newLogger;
@@ -210,13 +210,19 @@
                 ImageIdentifier = "ScrollDown",
             };
 
-            var clearButton = new LogViewerToolbarButton("Clear", "Clear the log messages from the display", false,
+            var clearButton = new LogViewerToolbarButton(
+                "Clear",
+                "Clear the log messages from the display",
+                false,
                 new DelegateCommand(e => clearPending = true))
             {
                 ImageIdentifier = "Clear",
             };
 
-            var pauseButton = new LogViewerToolbarButton("Pause", "Pause the addition of messages to the display", true,
+            var pauseButton = new LogViewerToolbarButton(
+                "Pause",
+                "Pause the addition of messages to the display",
+                true,
                 new DelegateCommand(PauseMessagesHandler))
             {
                 IsChecked = false,

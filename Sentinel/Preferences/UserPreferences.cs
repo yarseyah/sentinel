@@ -87,7 +87,7 @@
             "dddd",
         };
 
-        public IEnumerable<string> TimeFormatOptions { get; } = new[] {"HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm"};
+        public IEnumerable<string> TimeFormatOptions { get; } = new[] { "HH:mm:ss;FFFF", "HH:mm:ss", "HH:mm" };
 
         /// <summary>
         /// Gets or sets the selected date option, as a index of the available options.
@@ -245,7 +245,7 @@
         /// <summary>
         /// Gets a list of the available type column options, such as hidden, icons, text, etc.
         /// </summary>
-        public IEnumerable<string> TypeOptions => new[] {"Hidden", "Icons", "Text", "Icon and text"};
+        public IEnumerable<string> TypeOptions => new[] { "Hidden", "Icons", "Text", "Icon and text" };
 
         /// <summary>
         /// Gets or sets a value indicating whether the lazy rebuilding option should be used

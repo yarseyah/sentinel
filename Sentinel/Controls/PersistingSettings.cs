@@ -41,7 +41,6 @@
                         return DeserializeFromV1(fileContents);
                     case "{\"$type\":\"Sentinel.Controls.PersistingSettings,":
                         return DeserializeFromV2(fileContents);
-                        break;
                     default:
                         return null;
                 }
@@ -83,7 +82,7 @@
             {
                 wrapper = new PersistingSettings
                 {
-                    WindowPlacementInfo = JsonHelper.DeserializeFromString<WindowPlacementInfo>(fileContents)
+                    WindowPlacementInfo = JsonHelper.DeserializeFromString<WindowPlacementInfo>(fileContents),
                 };
             }
             catch (Exception e)

@@ -80,7 +80,6 @@
             GetRecentlyOpenedFiles();
         }
 
-
         // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
 
@@ -174,8 +173,8 @@
         private void ExportLogsAction(object obj)
         {
             // Get Log
-            var tab = (TabItem) tabControl.SelectedItem;
-            var frame = (IWindowFrame) tab.Content;
+            var tab = (TabItem)tabControl.SelectedItem;
+            var frame = (IWindowFrame)tab.Content;
             var restartLogging = false;
 
             // Notify user that log messages will be paused during this operation
@@ -297,7 +296,7 @@
         private void LoadSessionAction(object obj)
         {
             var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
-            var fileNameToLoad = (string) obj;
+            var fileNameToLoad = (string)obj;
 
             if (!sessionManager.IsSaved)
             {
@@ -367,7 +366,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var newTab = new TabItem {Header = sessionManager.Name, Content = frame};
+            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
             tabControl.Items.Add(newTab);
             tabControl.SelectedItem = newTab;
         }
@@ -396,7 +395,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var tab = new TabItem {Header = sessionManager.Name, Content = frame};
+            var tab = new TabItem { Header = sessionManager.Name, Content = frame };
             tabControl.Items.Add(tab);
             tabControl.SelectedItem = tab;
         }
@@ -508,10 +507,10 @@
             switch (verb)
             {
                 case "nlog":
-                    CreateDefaultNLogListener((NLogOptions) options.Item2, sessionManager);
+                    CreateDefaultNLogListener((NLogOptions)options.Item2, sessionManager);
                     break;
                 case "log4net":
-                    CreateDefaultLog4NetListener((Log4NetOptions) options.Item2, sessionManager);
+                    CreateDefaultLog4NetListener((Log4NetOptions)options.Item2, sessionManager);
                     break;
                 default:
                     sessionManager.LoadSession(commandLineArguments.FirstOrDefault());
@@ -523,7 +522,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var newTab = new TabItem {Header = sessionManager.Name, Content = frame};
+            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
             tabControl.Items.Add(newTab);
             tabControl.SelectedItem = newTab;
         }
@@ -568,7 +567,9 @@
                 Name = name,
                 Info = info,
             };
-            var providers = Enumerable.Repeat(new PendingProviderRecord {Info = info, Settings = providerSettings}, 1);
+            var providers = Enumerable.Repeat(
+                new PendingProviderRecord { Info = info, Settings = providerSettings },
+                1);
 
             sessionManager.LoadProviders(providers);
         }
@@ -608,7 +609,7 @@
                 {
                     if (Preferences.Show)
                     {
-                        preferencesWindow = new PreferencesWindow(preferencesWindowTabSelected) {Owner = this};
+                        preferencesWindow = new PreferencesWindow(preferencesWindowTabSelected) { Owner = this };
                         preferencesWindow.Show();
                     }
                     else if (preferencesWindow != null)
@@ -632,17 +633,17 @@
         {
             var windowInfo = new WindowPlacementInfo
             {
-                Height = (int) Height,
-                Top = (int) Top,
-                Left = (int) Left,
-                Width = (int) Width,
+                Height = (int)Height,
+                Top = (int)Top,
+                Left = (int)Left,
+                Width = (int)Width,
                 WindowState = WindowState,
             };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
             PersistingSettings.Save(filename, windowInfo, Preferences);
 
-            var recentFileInfo = new RecentFileInfo {RecentFilePaths = RecentFiles.ToList()};
+            var recentFileInfo = new RecentFileInfo { RecentFilePaths = RecentFiles.ToList() };
 
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
         }
@@ -681,7 +682,7 @@
                 sender.GetType() == typeof(RibbonToggleButton),
                 $"A {sender.GetType()} accessed the wrong method");
 
-            var button = (RibbonToggleButton) sender;
+            var button = (RibbonToggleButton)sender;
             switch (button.Label)
             {
                 case "Highlight":
@@ -780,19 +781,19 @@
             // View-specific bindings
             var collapseIfZero = new CollapseIfZeroConverter();
 
-            var standardHighlighters = new CollectionViewSource {Source = Highlighters.Highlighters};
+            var standardHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
             standardHighlighters.View.Filter = c => c is IStandardDebuggingHighlighter;
 
-            var customHighlighters = new CollectionViewSource {Source = Highlighters.Highlighters};
+            var customHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
             customHighlighters.View.Filter = c => !(c is IStandardDebuggingHighlighter);
 
             StandardHighlightersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardHighlighters});
+                new Binding { Source = standardHighlighters });
 
             StandardHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardHighlighters});
+                new Binding { Source = standardHighlighters });
             var collapsingStandardHighlightersBinding = new Binding
             {
                 Source = standardHighlighters,
@@ -803,7 +804,7 @@
 
             CustomHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customHighlighters});
+                new Binding { Source = customHighlighters });
 
             var collapsingCustomHighlightersBinding = new Binding
             {
@@ -813,58 +814,58 @@
             };
             CustomHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingCustomHighlightersBinding);
 
-            var standardFilters = new CollectionViewSource {Source = Filters.Filters};
+            var standardFilters = new CollectionViewSource { Source = Filters.Filters };
             standardFilters.View.Filter = c => c is IStandardDebuggingFilter;
 
-            var customFilters = new CollectionViewSource {Source = Filters.Filters};
+            var customFilters = new CollectionViewSource { Source = Filters.Filters };
             customFilters.View.Filter = c => !(c is IStandardDebuggingFilter);
 
             StandardFiltersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardFilters});
+                new Binding { Source = standardFilters });
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = standardFilters});
+                new Binding { Source = standardFilters });
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding {Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
+                new Binding { Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customFilters});
+                new Binding { Source = customFilters });
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding {Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
+                new Binding { Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
 
             var customExtractors = Extractors.Extractors;
             CustomExtractorsRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customExtractors});
+                new Binding { Source = customExtractors });
 
             var customClassifyiers = ClassifyingService.Classifiers;
             CustomClassifiersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding {Source = customClassifyiers});
+                new Binding { Source = customClassifyiers });
 
             BindToSearchElements();
 
             // Column view buttons
             ExceptionRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowExceptionColumn")});
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowExceptionColumn") });
             ThreadRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowThreadColumn")});
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowThreadColumn") });
             SourceHostRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowSourceColumn")});
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceColumn") });
             DebugSourceRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns")});
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns") });
             ContextRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding {Source = Preferences, Path = new PropertyPath("ShowContextColumn")});
+                new Binding { Source = Preferences, Path = new PropertyPath("ShowContextColumn") });
         }
 
         private void BindToSearchElements()
