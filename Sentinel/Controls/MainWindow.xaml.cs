@@ -70,6 +70,12 @@
                 RestoreWindowPosition(settings.WindowPlacementInfo);
             }
 
+            if (settings?.UserPreferences != null)
+            {
+                // TODO: is this already set?
+                Preferences = settings.UserPreferences;
+            }
+
             // Get recently opened files
             GetRecentlyOpenedFiles();
         }
@@ -634,7 +640,7 @@
             };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
-            JsonHelper.SerializeToFile(windowInfo, filename);
+            PersistingSettings.Save(filename, windowInfo, Preferences);
 
             var recentFileInfo = new RecentFileInfo {RecentFilePaths = RecentFiles.ToList()};
 
@@ -746,14 +752,24 @@
                 $"{Assembly.GetExecutingAssembly().GetName().Name} ({Assembly.GetExecutingAssembly().GetName().Version})"
                 + $" {ServiceLocator.Instance.Get<ISessionManager>().Name}";
 
-            Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            // Preferences, if initialised, has come from persistence, so register current copy
+            // otherwise, ask for one that will be shared.
+            if (Preferences != null)
+            {
+                ServiceLocator.Instance.Register<IUserPreferences>(Preferences);
+            }
+            else
+            {
+                Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            }
+
             ViewManager = ServiceLocator.Instance.Get<IViewManager>();
 
             // Maintaining column widths is proving difficult in Xaml alone, so
             // add an observer here and deal with it in code.
-            if (Preferences is INotifyPropertyChanged)
+            if (Preferences is INotifyPropertyChanged changed)
             {
-                (Preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
+                changed.PropertyChanged += PreferencesChanged;
             }
 
             DataContext = this;
