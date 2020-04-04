@@ -15,13 +15,9 @@
     using System.Windows.Controls.Ribbon;
     using System.Windows.Data;
     using System.Windows.Input;
-
     using CommandLine;
-
     using Common.Logging;
-
     using Microsoft.Win32;
-
     using Sentinel.Classification.Interfaces;
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Filters.Interfaces;
@@ -38,7 +34,6 @@
     using Sentinel.Support;
     using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
-
     using WpfExtras;
     using WpfExtras.Converters;
 
@@ -65,13 +60,20 @@
             var savingDirectory = ServiceLocator.Instance.SaveLocation;
             persistingFilename = Path.Combine(savingDirectory, "MainWindow");
             persistingRecentFileName = Path.Combine(savingDirectory, "RecentFiles");
+            var fileName = Path.ChangeExtension(persistingFilename, ".json");
 
-            // Restore persisted window placement
-            RestoreWindowPosition();
+            var settings = PersistingSettings.Load(fileName);
+
+            // Restore persisted window placement if provided
+            if (settings?.WindowPlacementInfo != null)
+            {
+                RestoreWindowPosition(settings.WindowPlacementInfo);
+            }
 
             // Get recently opened files
             GetRecentlyOpenedFiles();
         }
+
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ICommand Add { get; private set; }
@@ -166,8 +168,8 @@
         private void ExportLogsAction(object obj)
         {
             // Get Log
-            var tab = (TabItem)tabControl.SelectedItem;
-            var frame = (IWindowFrame)tab.Content;
+            var tab = (TabItem) tabControl.SelectedItem;
+            var frame = (IWindowFrame) tab.Content;
             var restartLogging = false;
 
             // Notify user that log messages will be paused during this operation
@@ -193,12 +195,12 @@
 
             // Open a save file dialog
             var savefile = new SaveFileDialog
-                               {
-                                   FileName = frame.Log.Name,
-                                   DefaultExt = ".log",
-                                   Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
-                                   FilterIndex = 0,
-                               };
+            {
+                FileName = frame.Log.Name,
+                DefaultExt = ".log",
+                Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
+                FilterIndex = 0,
+            };
 
             if (savefile.ShowDialog(this) == true)
             {
@@ -215,12 +217,12 @@
 
             // Open a save file dialog
             var savefile = new SaveFileDialog
-                               {
-                                   FileName = sessionManager.Name,
-                                   DefaultExt = ".sntl",
-                                   Filter = "Sentinel session (.sntl)|*.sntl",
-                                   FilterIndex = 0,
-                               };
+            {
+                FileName = sessionManager.Name,
+                DefaultExt = ".sntl",
+                Filter = "Sentinel session (.sntl)|*.sntl",
+                FilterIndex = 0,
+            };
 
             if (savefile.ShowDialog(this) == true)
             {
@@ -289,7 +291,7 @@
         private void LoadSessionAction(object obj)
         {
             var sessionManager = ServiceLocator.Instance.Get<ISessionManager>();
-            var fileNameToLoad = (string)obj;
+            var fileNameToLoad = (string) obj;
 
             if (!sessionManager.IsSaved)
             {
@@ -320,12 +322,12 @@
             {
                 // open a save file dialog
                 var openFile = new OpenFileDialog
-                                   {
-                                       FileName = sessionManager.Name,
-                                       DefaultExt = ".sntl",
-                                       Filter = "Sentinel session (.sntl)|*.sntl",
-                                       FilterIndex = 0,
-                                   };
+                {
+                    FileName = sessionManager.Name,
+                    DefaultExt = ".sntl",
+                    Filter = "Sentinel session (.sntl)|*.sntl",
+                    FilterIndex = 0,
+                };
 
                 if (openFile.ShowDialog(this) == true)
                 {
@@ -359,7 +361,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
+            var newTab = new TabItem {Header = sessionManager.Name, Content = frame};
             tabControl.Items.Add(newTab);
             tabControl.SelectedItem = newTab;
         }
@@ -388,7 +390,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var tab = new TabItem { Header = sessionManager.Name, Content = frame };
+            var tab = new TabItem {Header = sessionManager.Name, Content = frame};
             tabControl.Items.Add(tab);
             tabControl.SelectedItem = tab;
         }
@@ -398,10 +400,10 @@
             Exit = new DelegateCommand(ee => Close());
             About = new DelegateCommand(
                 ee =>
-                    {
-                        var about = new AboutWindow(this);
-                        about.ShowDialog();
-                    });
+                {
+                    var about = new AboutWindow(this);
+                    about.ShowDialog();
+                });
 
             Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
@@ -500,10 +502,10 @@
             switch (verb)
             {
                 case "nlog":
-                    CreateDefaultNLogListener((NLogOptions)options.Item2, sessionManager);
+                    CreateDefaultNLogListener((NLogOptions) options.Item2, sessionManager);
                     break;
                 case "log4net":
-                    CreateDefaultLog4NetListener((Log4NetOptions)options.Item2, sessionManager);
+                    CreateDefaultLog4NetListener((Log4NetOptions) options.Item2, sessionManager);
                     break;
                 default:
                     sessionManager.LoadSession(commandLineArguments.FirstOrDefault());
@@ -515,7 +517,7 @@
             var frame = ServiceLocator.Instance.Get<IWindowFrame>();
 
             // Add to the tab control.
-            var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
+            var newTab = new TabItem {Header = sessionManager.Name, Content = frame};
             tabControl.Items.Add(newTab);
             tabControl.SelectedItem = newTab;
         }
@@ -526,19 +528,19 @@
             Log.Debug(info);
 
             var providerSettings = new UdpAppenderSettings
-                                       {
-                                           Port = log4NetOptions.Port,
-                                           Name = info,
-                                           Info = Log4NetProvider.ProviderRegistrationInformation.Info,
-                                       };
+            {
+                Port = log4NetOptions.Port,
+                Name = info,
+                Info = Log4NetProvider.ProviderRegistrationInformation.Info,
+            };
 
             var providers =
                 Enumerable.Repeat(
                     new PendingProviderRecord
-                        {
-                            Info = Log4NetProvider.ProviderRegistrationInformation.Info,
-                            Settings = providerSettings,
-                        },
+                    {
+                        Info = Log4NetProvider.ProviderRegistrationInformation.Info,
+                        Settings = providerSettings,
+                    },
                     1);
 
             sessionManager.LoadProviders(providers);
@@ -551,29 +553,23 @@
             Log.Debug(name);
 
             var providerSettings = new NetworkSettings
-                                       {
-                                           Protocol =
-                                               verbOptions.IsUdp
-                                                   ? NetworkProtocol.Udp
-                                                   : NetworkProtocol.Tcp,
-                                           Port = verbOptions.Port,
-                                           Name = name,
-                                           Info = info,
-                                       };
-            var providers = Enumerable.Repeat(new PendingProviderRecord { Info = info, Settings = providerSettings }, 1);
+            {
+                Protocol =
+                    verbOptions.IsUdp
+                        ? NetworkProtocol.Udp
+                        : NetworkProtocol.Tcp,
+                Port = verbOptions.Port,
+                Name = name,
+                Info = info,
+            };
+            var providers = Enumerable.Repeat(new PendingProviderRecord {Info = info, Settings = providerSettings}, 1);
 
             sessionManager.LoadProviders(providers);
         }
 
-        private void RestoreWindowPosition()
+        private void RestoreWindowPosition(WindowPlacementInfo wp)
         {
-            if (string.IsNullOrWhiteSpace(persistingFilename))
-            {
-                return;
-            }
-
-            var fileName = Path.ChangeExtension(persistingFilename, ".json");
-            var wp = JsonHelper.DeserializeFromFile<WindowPlacementInfo>(fileName);
+            _ = wp ?? throw new ArgumentNullException(nameof(wp));
 
             // Validation routine will cope with Null being passed and if it finds an error, it returns null.
             wp = ValidateScreenPosition(wp);
@@ -606,7 +602,7 @@
                 {
                     if (Preferences.Show)
                     {
-                        preferencesWindow = new PreferencesWindow(preferencesWindowTabSelected) { Owner = this };
+                        preferencesWindow = new PreferencesWindow(preferencesWindowTabSelected) {Owner = this};
                         preferencesWindow.Show();
                     }
                     else if (preferencesWindow != null)
@@ -629,18 +625,18 @@
         private void OnClosed(object sender, CancelEventArgs e)
         {
             var windowInfo = new WindowPlacementInfo
-                                 {
-                                     Height = (int)Height,
-                                     Top = (int)Top,
-                                     Left = (int)Left,
-                                     Width = (int)Width,
-                                     WindowState = WindowState,
-                                 };
+            {
+                Height = (int) Height,
+                Top = (int) Top,
+                Left = (int) Left,
+                Width = (int) Width,
+                WindowState = WindowState,
+            };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
             JsonHelper.SerializeToFile(windowInfo, filename);
 
-            var recentFileInfo = new RecentFileInfo { RecentFilePaths = RecentFiles.ToList() };
+            var recentFileInfo = new RecentFileInfo {RecentFilePaths = RecentFiles.ToList()};
 
             JsonHelper.SerializeToFile(recentFileInfo, Path.ChangeExtension(persistingRecentFileName, ".json"));
         }
@@ -679,7 +675,7 @@
                 sender.GetType() == typeof(RibbonToggleButton),
                 $"A {sender.GetType()} accessed the wrong method");
 
-            var button = (RibbonToggleButton)sender;
+            var button = (RibbonToggleButton) sender;
             switch (button.Label)
             {
                 case "Highlight":
@@ -707,11 +703,11 @@
         private Binding CreateBinding(string path, object source)
         {
             return new Binding
-                       {
-                           Source = source,
-                           Path = new PropertyPath(path),
-                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                       };
+            {
+                Source = source,
+                Path = new PropertyPath(path),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            };
         }
 
         private void BindSearchToSearchFilter()
@@ -768,91 +764,91 @@
             // View-specific bindings
             var collapseIfZero = new CollapseIfZeroConverter();
 
-            var standardHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
+            var standardHighlighters = new CollectionViewSource {Source = Highlighters.Highlighters};
             standardHighlighters.View.Filter = c => c is IStandardDebuggingHighlighter;
 
-            var customHighlighters = new CollectionViewSource { Source = Highlighters.Highlighters };
+            var customHighlighters = new CollectionViewSource {Source = Highlighters.Highlighters};
             customHighlighters.View.Filter = c => !(c is IStandardDebuggingHighlighter);
 
             StandardHighlightersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = standardHighlighters });
+                new Binding {Source = standardHighlighters});
 
             StandardHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = standardHighlighters });
+                new Binding {Source = standardHighlighters});
             var collapsingStandardHighlightersBinding = new Binding
-                                        {
-                                            Source = standardHighlighters,
-                                            Path = new PropertyPath("Count"),
-                                            Converter = collapseIfZero,
-                                        };
+            {
+                Source = standardHighlighters,
+                Path = new PropertyPath("Count"),
+                Converter = collapseIfZero,
+            };
             StandardHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingStandardHighlightersBinding);
 
             CustomHighlighterRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = customHighlighters });
+                new Binding {Source = customHighlighters});
 
             var collapsingCustomHighlightersBinding = new Binding
-                                                          {
-                                                              Source = customHighlighters,
-                                                              Path = new PropertyPath("Count"),
-                                                              Converter = collapseIfZero,
-                                                          };
+            {
+                Source = customHighlighters,
+                Path = new PropertyPath("Count"),
+                Converter = collapseIfZero,
+            };
             CustomHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingCustomHighlightersBinding);
 
-            var standardFilters = new CollectionViewSource { Source = Filters.Filters };
+            var standardFilters = new CollectionViewSource {Source = Filters.Filters};
             standardFilters.View.Filter = c => c is IStandardDebuggingFilter;
 
-            var customFilters = new CollectionViewSource { Source = Filters.Filters };
+            var customFilters = new CollectionViewSource {Source = Filters.Filters};
             customFilters.View.Filter = c => !(c is IStandardDebuggingFilter);
 
             StandardFiltersRibbonGroup.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = standardFilters });
+                new Binding {Source = standardFilters});
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = standardFilters });
+                new Binding {Source = standardFilters});
 
             StandardFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding { Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
+                new Binding {Source = standardFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = customFilters });
+                new Binding {Source = customFilters});
             CustomFiltersRibbonGroupOnTab.SetBinding(
                 VisibilityProperty,
-                new Binding { Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero });
+                new Binding {Source = customFilters, Path = new PropertyPath("Count"), Converter = collapseIfZero});
 
             var customExtractors = Extractors.Extractors;
             CustomExtractorsRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = customExtractors });
+                new Binding {Source = customExtractors});
 
             var customClassifyiers = ClassifyingService.Classifiers;
             CustomClassifiersRibbonGroupOnTab.SetBinding(
                 ItemsControl.ItemsSourceProperty,
-                new Binding { Source = customClassifyiers });
+                new Binding {Source = customClassifyiers});
 
             BindToSearchElements();
 
             // Column view buttons
             ExceptionRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding { Source = Preferences, Path = new PropertyPath("ShowExceptionColumn") });
+                new Binding {Source = Preferences, Path = new PropertyPath("ShowExceptionColumn")});
             ThreadRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding { Source = Preferences, Path = new PropertyPath("ShowThreadColumn") });
+                new Binding {Source = Preferences, Path = new PropertyPath("ShowThreadColumn")});
             SourceHostRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceColumn") });
+                new Binding {Source = Preferences, Path = new PropertyPath("ShowSourceColumn")});
             DebugSourceRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding { Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns") });
+                new Binding {Source = Preferences, Path = new PropertyPath("ShowSourceInformationColumns")});
             ContextRibbonToggleButton.SetBinding(
                 ToggleButton.IsCheckedProperty,
-                new Binding { Source = Preferences, Path = new PropertyPath("ShowContextColumn") });
+                new Binding {Source = Preferences, Path = new PropertyPath("ShowContextColumn")});
         }
 
         private void BindToSearchElements()
