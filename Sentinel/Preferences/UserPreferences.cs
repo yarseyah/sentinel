@@ -54,15 +54,19 @@
 
         private string clearCommandMatchText = "#!Clear";
 
+        private bool limitMessages = false;
+
+        private string maximumMessageCount;
+
         public UserPreferences()
         {
             PropertyChanged += (s, a) =>
+            {
+                if (a.PropertyName == nameof(ContextProperty))
                 {
-                    if (a.PropertyName == nameof(ContextProperty))
-                    {
-                        Log.Debug($"{a.PropertyName}={ContextProperty}");
-                    }
-                };
+                    Log.Debug($"{a.PropertyName}={ContextProperty}");
+                }
+            };
         }
 
         /// <summary>
@@ -382,6 +386,32 @@
                 {
                     clearCommandMatchText = value;
                     OnPropertyChanged(nameof(ClearCommandMatchText));
+                }
+            }
+        }
+
+        public bool LimitMessages
+        {
+            get => limitMessages;
+            set
+            {
+                if (value != limitMessages)
+                {
+                    limitMessages = value;
+                    OnPropertyChanged(nameof(LimitMessages));
+                }
+            }
+        }
+
+        public string MaximumMessageCount
+        {
+            get => maximumMessageCount;
+            set
+            {
+                if (maximumMessageCount != value)
+                {
+                    maximumMessageCount = value;
+                    OnPropertyChanged(nameof(MaximumMessageCount));
                 }
             }
         }

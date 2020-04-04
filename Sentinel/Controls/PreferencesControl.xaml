@@ -20,143 +20,173 @@
     <Grid x:Name="LayoutRoot">
         <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <TabItem Header="General">
-                <DockPanel Margin="5">
-                    <StackPanel DockPanel.Dock="Top">
-                        <GroupBox Header="Column options">
-                            <Grid Margin="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Auto">
+                    <DockPanel Margin="5">
+                        <StackPanel DockPanel.Dock="Top">
+                            <GroupBox Header="Column options">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           VerticalAlignment="Center"
-                                           Text="Issue Types column :" />
-                                <ComboBox Grid.Row="0"
-                                          Grid.Column="2"
-                                          SelectedIndex="{Binding Preferences.SelectedTypeOption}"
-                                          Width="Auto"
-                                          HorizontalAlignment="Left"
-                                          Margin="0,5,0,5"
-                                          ItemsSource="{Binding Preferences.TypeOptions}"
-                                          MinWidth="100" />
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="0"
-                                           VerticalAlignment="Center"
-                                           Text="Date Format :" />
-                                <ComboBox Grid.Row="1"
-                                          Grid.Column="2"
-                                          SelectedIndex="{Binding Preferences.SelectedDateOption}"
-                                          HorizontalAlignment="Left"
-                                          Margin="0,5,0,5"
-                                          ItemsSource="{Binding Preferences.DateFormatOptions}"
-                                          MinWidth="100" />
-                                <TextBlock Grid.Row="2"
-                                           Grid.Column="0"
-                                           Margin="0,8"
-                                           VerticalAlignment="Top"
-                                           Text="Time Format :" />
-                                <StackPanel Grid.Row="2"
-                                            Grid.Column="2"
-                                            Orientation="Vertical">
-                                    <ComboBox SelectedIndex="{Binding Preferences.SelectedTimeFormatOption}"
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               Text="Issue Types column :" />
+                                    <ComboBox Grid.Row="0"
+                                              Grid.Column="2"
+                                              SelectedIndex="{Binding Preferences.SelectedTypeOption}"
+                                              Width="Auto"
+                                              HorizontalAlignment="Left"
                                               Margin="0,5,0,5"
+                                              ItemsSource="{Binding Preferences.TypeOptions}"
+                                              MinWidth="100" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               Text="Date Format :" />
+                                    <ComboBox Grid.Row="1"
+                                              Grid.Column="2"
+                                              SelectedIndex="{Binding Preferences.SelectedDateOption}"
                                               HorizontalAlignment="Left"
-                                          ItemsSource="{Binding Preferences.TimeFormatOptions}"
-                                          MinWidth="100" />
-                                    <CheckBox Margin="0,5,0,5"
-                                              IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimeZone}">Convert UTC times to local timezone</CheckBox>
-                                </StackPanel>
-                                <TextBlock Grid.Row="3"
-                                           Grid.Column="0"
-                                           Margin="0,4"
-                                           VerticalAlignment="Top"
-                                           Text="Message Date/Time value :" />
-                                <StackPanel Grid.Row="3"
-                                            Grid.Column="2">
-                                    <RadioButton Margin="0,5,0,5"
-                                                 IsChecked="{Binding Preferences.UseArrivalDateTime}">Use time of message receipt by Sentinel</RadioButton>
-                                    <RadioButton Margin="0,0,0,5"
-                                                 IsChecked="{Binding Preferences.UseArrivalDateTime, Converter={StaticResource BooleanInverterConverter}}">Use sender's time</RadioButton>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical"
-                                            Grid.Row="4"
-                                            Margin="0,5,0,5"
-                                            Grid.ColumnSpan="3"
-                                            Grid.Column="0">
-                                    <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"
-                                              HorizontalAlignment="Left"
-                                              MinWidth="100"
-                                              Margin="0,0,0,5"
-                                              ToolTip="Showing exceptions will become useful once it is fully implemented."
-                                              Content="Show the Exception column" />
-                                    <CheckBox IsChecked="{Binding Preferences.ShowThreadColumn}"
-                                              HorizontalAlignment="Left"
-                                              MinWidth="100"
-                                              Margin="0,0,0,5"
-                                              ToolTip="Showing the originating thread may not always be useful.  The thread identifier (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
-                                              Content="Show the Thread column" />
-                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceColumn}" 
-                                              HorizontalAlignment="Left"
-                                              MinWidth="100"
-                                              Margin="0,0,0,5"
-                                              ToolTip="Show the name of the machine from which the message was sourced"
-                                              Content="Show the message source host-name column"/>
-                                    <CheckBox IsChecked="{Binding Preferences.ShowSourceInformationColumns}"
-                                              HorizontalAlignment="Left"
-                                              Margin="0,0,0,5"
-                                              ToolTip="Shows/hides the columns with the source-code information (nLog only)"
-                                              Content="Show source debugging information" />
-                                    <StackPanel Orientation="Horizontal"
-                                                VerticalAlignment="Center">
-                                        <CheckBox IsChecked="{Binding Preferences.ShowContextColumn}"
+                                              Margin="0,5,0,5"
+                                              ItemsSource="{Binding Preferences.DateFormatOptions}"
+                                              MinWidth="100" />
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="0"
+                                               Margin="0,8"
+                                               VerticalAlignment="Top"
+                                               Text="Time Format :" />
+                                    <StackPanel Grid.Row="2"
+                                                Grid.Column="2"
+                                                Orientation="Vertical">
+                                        <ComboBox SelectedIndex="{Binding Preferences.SelectedTimeFormatOption}"
+                                                  Margin="0,5,0,5"
                                                   HorizontalAlignment="Left"
-                                                  VerticalAlignment="Bottom"
-                                                  Margin="0,0,0,5"
-                                                  ToolTip="Shows/hides the context column (nLog only)"
-                                                  Content="Show the context column" />
-                                        <Label Margin="20,0,0,0">Property for context:</Label>
-                                        <TextBox Text="{Binding Preferences.ContextProperty, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Margin="10,0,0,0"
-                                                 Width="200"
-                                                 VerticalAlignment="Center" />
+                                                  ItemsSource="{Binding Preferences.TimeFormatOptions}"
+                                                  MinWidth="100" />
+                                        <CheckBox Margin="0,5,0,5"
+                                                  IsChecked="{Binding Preferences.ConvertUtcTimesToLocalTimeZone}">
+                                            Convert UTC times to local timezone
+                                        </CheckBox>
                                     </StackPanel>
-                                    <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
+                                    <TextBlock Grid.Row="3"
+                                               Grid.Column="0"
+                                               Margin="0,4"
+                                               VerticalAlignment="Top"
+                                               Text="Message Date/Time value :" />
+                                    <StackPanel Grid.Row="3"
+                                                Grid.Column="2">
+                                        <RadioButton Margin="0,5,0,5"
+                                                     IsChecked="{Binding Preferences.UseArrivalDateTime}">
+                                            Use time of message receipt by Sentinel
+                                        </RadioButton>
+                                        <RadioButton Margin="0,0,0,5"
+                                                     IsChecked="{Binding Preferences.UseArrivalDateTime, Converter={StaticResource BooleanInverterConverter}}">
+                                            Use sender's time
+                                        </RadioButton>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical"
+                                                Grid.Row="4"
+                                                Margin="0,5,0,5"
+                                                Grid.ColumnSpan="3"
+                                                Grid.Column="0">
+                                        <CheckBox IsChecked="{Binding Preferences.ShowExceptionColumn}"
+                                                  HorizontalAlignment="Left"
+                                                  MinWidth="100"
+                                                  Margin="0,0,0,5"
+                                                  ToolTip="Showing exceptions will become useful once it is fully implemented."
+                                                  Content="Show the Exception column" />
+                                        <CheckBox IsChecked="{Binding Preferences.ShowThreadColumn}"
+                                                  HorizontalAlignment="Left"
+                                                  MinWidth="100"
+                                                  Margin="0,0,0,5"
+                                                  ToolTip="Showing the originating thread may not always be useful.  The thread identifier (a number) is unique only to the original application.  This can be misleading when multiple applications are being logged, additionally, a correctly named system will yield a more useful context."
+                                                  Content="Show the Thread column" />
+                                        <CheckBox IsChecked="{Binding Preferences.ShowSourceColumn}"
+                                                  HorizontalAlignment="Left"
+                                                  MinWidth="100"
+                                                  Margin="0,0,0,5"
+                                                  ToolTip="Show the name of the machine from which the message was sourced"
+                                                  Content="Show the message source host-name column" />
+                                        <CheckBox IsChecked="{Binding Preferences.ShowSourceInformationColumns}"
+                                                  HorizontalAlignment="Left"
+                                                  Margin="0,0,0,5"
+                                                  ToolTip="Shows/hides the columns with the source-code information (nLog only)"
+                                                  Content="Show source debugging information" />
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <CheckBox IsChecked="{Binding Preferences.ShowContextColumn}"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Bottom"
+                                                      Margin="0,0,0,5"
+                                                      ToolTip="Shows/hides the context column (nLog only)"
+                                                      Content="Show the context column" />
+                                            <Label Margin="20,0,0,0">Property for context:</Label>
+                                            <TextBox
+                                                Text="{Binding Preferences.ContextProperty, UpdateSourceTrigger=PropertyChanged}"
+                                                Margin="10,0,0,0"
+                                                Width="200"
+                                                VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <CheckBox IsChecked="{Binding Preferences.UseLazyRebuild}"
+                                                  HorizontalAlignment="Left"
+                                                  ToolTip="Enables/disables live resorting of sortable columns"
+                                                  Content="Enable live column resorting mode" />
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Row options">
+                                <CheckBox Margin="5"
+                                          Content="Use tighter row separation on Vista / Windows7"
+                                          ToolTip="Vista and Windows 7 put spacing around each row that takes up a fair amount of space, enabling this option tries to reduce the space to something like that used by Windows XP"
+                                          IsChecked="{Binding Preferences.UseTighterRows}" />
+                            </GroupBox>
+                            <GroupBox Header="Message limits">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="5"
+                                            VerticalAlignment="Center">
+                                    <CheckBox IsChecked="{Binding Preferences.LimitMessages}"
                                               HorizontalAlignment="Left"
-                                              ToolTip="Enables/disables live resorting of sortable columns"
-                                              Content="Enable live column resorting mode" />
+                                              VerticalAlignment="Bottom"
+                                              Margin="0,0,0,5"
+                                              Content="Limit the maximum number of messages retained" />
+                                    <StackPanel IsEnabled="{Binding Preferences.LimitMessages}"
+                                                Orientation="Horizontal">
+                                        <Label Margin="20,0,0,0">Message count:</Label>
+                                        <controls:IntegerTextBox
+                                            Text="{Binding Preferences.MaximumMessageCount, UpdateSourceTrigger=PropertyChanged}"
+                                            Margin="10,0,0,0"
+                                            Width="100"
+                                            VerticalAlignment="Center" />
+                                    </StackPanel>
                                 </StackPanel>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Row options">
-                            <CheckBox Margin="5"
-                                      Content="Use tighter row seperation on Vista / Windows7"
-                                      ToolTip="Vista and Windows 7 put spacing around each row that takes up a fair amount of space, enabling this option tries to reduce the space to something like that used by Windows XP" 
-                                      IsChecked="{Binding Preferences.UseTighterRows}"/>
-                        </GroupBox>
-                        <GroupBox Header="Layout">
-                            <CheckBox Margin="5"
-                                      Content="Use Stacked Layout"
-                                      ToolTip="Orientate the two windows as stacked rather than side-by-side."
-                                      IsChecked="{Binding Preferences.UseStackedLayout}" />
-                        </GroupBox>
-                        <GroupBox Header="Interactions">
-                            <CheckBox Margin="5"
-                                      Content="Show exceptions panel on double-click"
-                                      ToolTip="When a log entry has additional exception information, double-clicking will show the exception detail panel."
-                                      IsChecked="{Binding Preferences.DoubleClickToShowExceptions}" />
-                        </GroupBox>
-                    </StackPanel>
-                </DockPanel>
+                            </GroupBox>
+                            <GroupBox Header="Layout">
+                                <CheckBox Margin="5"
+                                          Content="Use Stacked Layout"
+                                          ToolTip="Orientate the two windows as stacked rather than side-by-side."
+                                          IsChecked="{Binding Preferences.UseStackedLayout}" />
+                            </GroupBox>
+                            <GroupBox Header="Interactions">
+                                <CheckBox Margin="5"
+                                          Content="Show exceptions panel on double-click"
+                                          ToolTip="When a log entry has additional exception information, double-clicking will show the exception detail panel."
+                                          IsChecked="{Binding Preferences.DoubleClickToShowExceptions}" />
+                            </GroupBox>
+                        </StackPanel>
+                    </DockPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Classifiers">
                 <GroupBox Header="Available Classifiers"
@@ -165,8 +195,9 @@
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Classifiers change the type of log messages when enabled." />
-                            <Run Text="Messages are classified as they are received and cannot be changed afterwards." />
+                                <Run Text="Classifiers change the type of log messages when enabled." />
+                                <Run
+                                    Text="Messages are classified as they are received and cannot be changed afterwards." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
                                        Margin="0,5,0,5"
@@ -183,9 +214,9 @@
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Highlighters change the appearance of matching log messages when enabled" />
-                            <Run Text="so that certain messages are made to stand out from others." />
-                            <Run Text="An example would be marking Error messages in a red background." />
+                                <Run Text="Highlighters change the appearance of matching log messages when enabled" />
+                                <Run Text="so that certain messages are made to stand out from others." />
+                                <Run Text="An example would be marking Error messages in a red background." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
                                        Margin="0,5,0,5"
@@ -202,12 +233,13 @@
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Filters remove matching log messages from view when enabled." />                            
-                            <Run Text="They do not prevent the messages from being recorded, just from being displayed." />
+                                <Run Text="Filters remove matching log messages from view when enabled." />
+                                <Run
+                                    Text="They do not prevent the messages from being recorded, just from being displayed." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
-                                   Margin="0,5,0,5"
-                                   Text="The list below indicates the available filters that may be applied:" />
+                                       Margin="0,5,0,5"
+                                       Text="The list below indicates the available filters that may be applied:" />
                         </StackPanel>
                         <filters:FiltersControl Height="Auto"
                                                 VerticalAlignment="Stretch" />
@@ -216,20 +248,21 @@
             </TabItem>
             <TabItem Header="Extractors">
                 <GroupBox Header="Available Extractors"
-                    Margin="5">
+                          Margin="5">
                     <DockPanel>
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Extractors remove unmatching log messages from view when enabled." />                            
-                            <Run Text="They do not prevent the messages from being recorded, just from being displayed." />
+                                <Run Text="Extractors remove unmatching log messages from view when enabled." />
+                                <Run
+                                    Text="They do not prevent the messages from being recorded, just from being displayed." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
-                                   Margin="0,5,0,5"
-                                   Text="The list below indicates the available extractors that may be applied:" />
+                                       Margin="0,5,0,5"
+                                       Text="The list below indicates the available extractors that may be applied:" />
                         </StackPanel>
                         <extractors:ExtractorsControl Height="Auto"
-                                                VerticalAlignment="Stretch" />
+                                                      VerticalAlignment="Stretch" />
                     </DockPanel>
                 </GroupBox>
             </TabItem>
@@ -240,13 +273,13 @@
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                            <Run Text="Images are displayed for log messages by matching types." />
-                            <Run Text="They are displayed for Classifiers, Highlighters, Filters, and Extractors" />                            
-                            <Run Text="by matching names." />
+                                <Run Text="Images are displayed for log messages by matching types." />
+                                <Run Text="They are displayed for Classifiers, Highlighters, Filters, and Extractors" />
+                                <Run Text="by matching names." />
                             </TextBlock>
                             <TextBlock TextWrapping="WrapWithOverflow"
-                                   Margin="0,5,0,5"
-                                   Text="The list below indicates the registered images:" />
+                                       Margin="0,5,0,5"
+                                       Text="The list below indicates the registered images:" />
                         </StackPanel>
                         <controls:ImageTypesControl />
                     </DockPanel>
@@ -259,7 +292,8 @@
                         <StackPanel Margin="5"
                                     DockPanel.Dock="Top">
                             <TextBlock TextWrapping="WrapWithOverflow">
-                                <Run Text="When specific logging messages are sent, interpret them as commands for controlling Sentinel." />
+                                <Run
+                                    Text="When specific logging messages are sent, interpret them as commands for controlling Sentinel." />
                             </TextBlock>
                             <Grid>
                                 <Grid.ColumnDefinitions>

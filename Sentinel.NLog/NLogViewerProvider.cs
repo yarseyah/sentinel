@@ -58,12 +58,6 @@
 
         public int Port { get; private set; }
 
-        ILogger Sentinel.Interfaces.Providers.ILogProvider.Logger
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
-
         public void Start()
         {
             Log.Debug("Start requested");

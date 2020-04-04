@@ -113,6 +113,20 @@ namespace Sentinel.Logs
             OnPropertyChanged(nameof(NewEntries));
         }
 
+        public void LimitMessageCount(int maximumMessages)
+        {
+            lock (entries)
+            {
+                var messages = entries.Count;
+                var excessMessages = messages - maximumMessages;
+
+                if (excessMessages > 0)
+                {
+                    entries.RemoveRange(0, excessMessages);
+                }
+            }
+        }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "NewEntries")

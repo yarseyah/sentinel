@@ -8,13 +8,11 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Threading;
-
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Interfaces;
     using Sentinel.Services;
     using Sentinel.Views.Interfaces;
-
     using WpfExtras;
 
     public class LogMessages : ViewModelBase, ILogViewer
@@ -53,18 +51,18 @@
         {
             ((ViewInformation)Info).Description = DESCRIPTION;
             presenter = new LogMessagesControl
-                            {
-                                DataContext = this,
-                            };
+            {
+                DataContext = this,
+            };
 
             Messages = new ObservableCollection<ILogEntry>();
 
             PropertyChanged += PropertyChangedHandler;
 
             var dt = new DispatcherTimer(DispatcherPriority.Normal)
-                         {
-                             Interval = TimeSpan.FromMilliseconds(200),
-                         };
+            {
+                Interval = TimeSpan.FromMilliseconds(200),
+            };
             dt.Tick += UpdateTick;
             dt.Start();
 
@@ -86,23 +84,23 @@
                 }
             }
 
-            var preferences = ServiceLocator.Instance.Get<IUserPreferences>();
-            if (preferences != null)
+            Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            if (Preferences != null)
             {
-                if (preferences is INotifyPropertyChanged notify)
+                if (Preferences is INotifyPropertyChanged notify)
                 {
                     notify.PropertyChanged += (sender, args) =>
+                    {
+                        var prop = args.PropertyName;
+                        switch (prop)
                         {
-                            var prop = args.PropertyName;
-                            switch (prop)
-                            {
-                                case "SelectedTimeFormatOption":
-                                case "ConvertUtcTimesToLocalTimeZone":
-                                case "SelectedDateOption":
-                                    rebuildList = true;
-                                    break;
-                            }
-                        };
+                            case "SelectedTimeFormatOption":
+                            case "ConvertUtcTimesToLocalTimeZone":
+                            case "SelectedDateOption":
+                                rebuildList = true;
+                                break;
+                        }
+                    };
                 }
             }
 
@@ -187,6 +185,8 @@
         /// </summary>
         public Control Presenter => presenter;
 
+        private IUserPreferences Preferences { get; }
+
         public void SetLogger(ILogger newLogger)
         {
             Logger = newLogger;
@@ -201,32 +201,40 @@
         private void InitialiseToolbar()
         {
             var autoScrollButton = new LogViewerToolbarButton(
-                                       "Auto-Scroll",
-                                       "Automatically scroll to show the newest entry",
-                                       true,
-                                       new DelegateCommand(e => autoScroll = !autoScroll))
-                                       {
-                                           IsChecked = autoScroll,
-                                           ImageIdentifier = "ScrollDown",
-                                       };
+                "Auto-Scroll",
+                "Automatically scroll to show the newest entry",
+                true,
+                new DelegateCommand(e => autoScroll = !autoScroll))
+            {
+                IsChecked = autoScroll,
+                ImageIdentifier = "ScrollDown",
+            };
 
-            var clearButton = new LogViewerToolbarButton("Clear", "Clear the log messages from the display", false, new DelegateCommand(e => clearPending = true))
-                                  {
-                                      ImageIdentifier = "Clear",
-                                  };
+            var clearButton = new LogViewerToolbarButton(
+                "Clear",
+                "Clear the log messages from the display",
+                false,
+                new DelegateCommand(e => clearPending = true))
+            {
+                ImageIdentifier = "Clear",
+            };
 
-            var pauseButton = new LogViewerToolbarButton("Pause", "Pause the addition of messages to the display", true, new DelegateCommand(PauseMessagesHandler))
-                                  {
-                                      IsChecked = false,
-                                      ImageIdentifier = "Pause",
-                                  };
+            var pauseButton = new LogViewerToolbarButton(
+                "Pause",
+                "Pause the addition of messages to the display",
+                true,
+                new DelegateCommand(PauseMessagesHandler))
+            {
+                IsChecked = false,
+                ImageIdentifier = "Pause",
+            };
 
             var toolbar = new ObservableCollection<ILogViewerToolbarButton>
-                              {
-                                  autoScrollButton,
-                                  clearButton,
-                                  pauseButton,
-                              };
+            {
+                autoScrollButton,
+                clearButton,
+                pauseButton,
+            };
 
             ToolbarItems = toolbar;
         }
@@ -355,6 +363,27 @@
                             var entry = pendingAdditions.Dequeue();
                             AddIfPassesFilters(entry);
                         }
+
+                        if (Preferences?.LimitMessages ?? false)
+                        {
+                            var limitAsString = Preferences?.MaximumMessageCount;
+                            if (int.TryParse(limitAsString, out var limit))
+                            {
+                                Logger.LimitMessageCount(limit);
+
+                                // Ensure filtered view is also limited.
+                                var messages = Messages.Count;
+                                var excessMessages = messages - limit;
+
+                                if (excessMessages > 0)
+                                {
+                                    for (; excessMessages > 0; excessMessages--)
+                                    {
+                                        Messages.RemoveAt(0);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -428,7 +457,9 @@
                     }
 
                     var filtered = FilteredCount < UnfilteredCount;
-                    Status = filtered ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]" : $"{UnfilteredCount} Messages";
+                    Status = filtered
+                        ? $"{FilteredCount} of {UnfilteredCount} Messages [Filters Applied]"
+                        : $"{UnfilteredCount} Messages";
                 }
             }
         }

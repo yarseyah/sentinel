@@ -15,13 +15,9 @@
     using System.Windows.Controls.Ribbon;
     using System.Windows.Data;
     using System.Windows.Input;
-
     using CommandLine;
-
     using Common.Logging;
-
     using Microsoft.Win32;
-
     using Sentinel.Classification.Interfaces;
     using Sentinel.Extractors.Interfaces;
     using Sentinel.Filters.Interfaces;
@@ -38,7 +34,6 @@
     using Sentinel.Support;
     using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
-
     using WpfExtras;
     using WpfExtras.Converters;
 
@@ -65,9 +60,21 @@
             var savingDirectory = ServiceLocator.Instance.SaveLocation;
             persistingFilename = Path.Combine(savingDirectory, "MainWindow");
             persistingRecentFileName = Path.Combine(savingDirectory, "RecentFiles");
+            var fileName = Path.ChangeExtension(persistingFilename, ".json");
 
-            // Restore persisted window placement
-            RestoreWindowPosition();
+            var settings = PersistingSettings.Load(fileName);
+
+            // Restore persisted window placement if provided
+            if (settings?.WindowPlacementInfo != null)
+            {
+                RestoreWindowPosition(settings.WindowPlacementInfo);
+            }
+
+            if (settings?.UserPreferences != null)
+            {
+                // TODO: is this already set?
+                Preferences = settings.UserPreferences;
+            }
 
             // Get recently opened files
             GetRecentlyOpenedFiles();
@@ -193,12 +200,12 @@
 
             // Open a save file dialog
             var savefile = new SaveFileDialog
-                               {
-                                   FileName = frame.Log.Name,
-                                   DefaultExt = ".log",
-                                   Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
-                                   FilterIndex = 0,
-                               };
+            {
+                FileName = frame.Log.Name,
+                DefaultExt = ".log",
+                Filter = "Log documents (.log)|*.log|Text documents (.txt)|*.txt",
+                FilterIndex = 0,
+            };
 
             if (savefile.ShowDialog(this) == true)
             {
@@ -215,12 +222,12 @@
 
             // Open a save file dialog
             var savefile = new SaveFileDialog
-                               {
-                                   FileName = sessionManager.Name,
-                                   DefaultExt = ".sntl",
-                                   Filter = "Sentinel session (.sntl)|*.sntl",
-                                   FilterIndex = 0,
-                               };
+            {
+                FileName = sessionManager.Name,
+                DefaultExt = ".sntl",
+                Filter = "Sentinel session (.sntl)|*.sntl",
+                FilterIndex = 0,
+            };
 
             if (savefile.ShowDialog(this) == true)
             {
@@ -320,12 +327,12 @@
             {
                 // open a save file dialog
                 var openFile = new OpenFileDialog
-                                   {
-                                       FileName = sessionManager.Name,
-                                       DefaultExt = ".sntl",
-                                       Filter = "Sentinel session (.sntl)|*.sntl",
-                                       FilterIndex = 0,
-                                   };
+                {
+                    FileName = sessionManager.Name,
+                    DefaultExt = ".sntl",
+                    Filter = "Sentinel session (.sntl)|*.sntl",
+                    FilterIndex = 0,
+                };
 
                 if (openFile.ShowDialog(this) == true)
                 {
@@ -398,10 +405,10 @@
             Exit = new DelegateCommand(ee => Close());
             About = new DelegateCommand(
                 ee =>
-                    {
-                        var about = new AboutWindow(this);
-                        about.ShowDialog();
-                    });
+                {
+                    var about = new AboutWindow(this);
+                    about.ShowDialog();
+                });
 
             Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
@@ -526,19 +533,19 @@
             Log.Debug(info);
 
             var providerSettings = new UdpAppenderSettings
-                                       {
-                                           Port = log4NetOptions.Port,
-                                           Name = info,
-                                           Info = Log4NetProvider.ProviderRegistrationInformation.Info,
-                                       };
+            {
+                Port = log4NetOptions.Port,
+                Name = info,
+                Info = Log4NetProvider.ProviderRegistrationInformation.Info,
+            };
 
             var providers =
                 Enumerable.Repeat(
                     new PendingProviderRecord
-                        {
-                            Info = Log4NetProvider.ProviderRegistrationInformation.Info,
-                            Settings = providerSettings,
-                        },
+                    {
+                        Info = Log4NetProvider.ProviderRegistrationInformation.Info,
+                        Settings = providerSettings,
+                    },
                     1);
 
             sessionManager.LoadProviders(providers);
@@ -551,29 +558,25 @@
             Log.Debug(name);
 
             var providerSettings = new NetworkSettings
-                                       {
-                                           Protocol =
-                                               verbOptions.IsUdp
-                                                   ? NetworkProtocol.Udp
-                                                   : NetworkProtocol.Tcp,
-                                           Port = verbOptions.Port,
-                                           Name = name,
-                                           Info = info,
-                                       };
-            var providers = Enumerable.Repeat(new PendingProviderRecord { Info = info, Settings = providerSettings }, 1);
+            {
+                Protocol =
+                    verbOptions.IsUdp
+                        ? NetworkProtocol.Udp
+                        : NetworkProtocol.Tcp,
+                Port = verbOptions.Port,
+                Name = name,
+                Info = info,
+            };
+            var providers = Enumerable.Repeat(
+                new PendingProviderRecord { Info = info, Settings = providerSettings },
+                1);
 
             sessionManager.LoadProviders(providers);
         }
 
-        private void RestoreWindowPosition()
+        private void RestoreWindowPosition(WindowPlacementInfo wp)
         {
-            if (string.IsNullOrWhiteSpace(persistingFilename))
-            {
-                return;
-            }
-
-            var fileName = Path.ChangeExtension(persistingFilename, ".json");
-            var wp = JsonHelper.DeserializeFromFile<WindowPlacementInfo>(fileName);
+            _ = wp ?? throw new ArgumentNullException(nameof(wp));
 
             // Validation routine will cope with Null being passed and if it finds an error, it returns null.
             wp = ValidateScreenPosition(wp);
@@ -629,16 +632,16 @@
         private void OnClosed(object sender, CancelEventArgs e)
         {
             var windowInfo = new WindowPlacementInfo
-                                 {
-                                     Height = (int)Height,
-                                     Top = (int)Top,
-                                     Left = (int)Left,
-                                     Width = (int)Width,
-                                     WindowState = WindowState,
-                                 };
+            {
+                Height = (int)Height,
+                Top = (int)Top,
+                Left = (int)Left,
+                Width = (int)Width,
+                WindowState = WindowState,
+            };
 
             var filename = Path.ChangeExtension(persistingFilename, ".json");
-            JsonHelper.SerializeToFile(windowInfo, filename);
+            PersistingSettings.Save(filename, windowInfo, Preferences);
 
             var recentFileInfo = new RecentFileInfo { RecentFilePaths = RecentFiles.ToList() };
 
@@ -707,11 +710,11 @@
         private Binding CreateBinding(string path, object source)
         {
             return new Binding
-                       {
-                           Source = source,
-                           Path = new PropertyPath(path),
-                           UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                       };
+            {
+                Source = source,
+                Path = new PropertyPath(path),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            };
         }
 
         private void BindSearchToSearchFilter()
@@ -750,14 +753,24 @@
                 $"{Assembly.GetExecutingAssembly().GetName().Name} ({Assembly.GetExecutingAssembly().GetName().Version})"
                 + $" {ServiceLocator.Instance.Get<ISessionManager>().Name}";
 
-            Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            // Preferences, if initialised, has come from persistence, so register current copy
+            // otherwise, ask for one that will be shared.
+            if (Preferences != null)
+            {
+                ServiceLocator.Instance.Register<IUserPreferences>(Preferences);
+            }
+            else
+            {
+                Preferences = ServiceLocator.Instance.Get<IUserPreferences>();
+            }
+
             ViewManager = ServiceLocator.Instance.Get<IViewManager>();
 
             // Maintaining column widths is proving difficult in Xaml alone, so
             // add an observer here and deal with it in code.
-            if (Preferences is INotifyPropertyChanged)
+            if (Preferences is INotifyPropertyChanged changed)
             {
-                (Preferences as INotifyPropertyChanged).PropertyChanged += PreferencesChanged;
+                changed.PropertyChanged += PreferencesChanged;
             }
 
             DataContext = this;
@@ -782,11 +795,11 @@
                 ItemsControl.ItemsSourceProperty,
                 new Binding { Source = standardHighlighters });
             var collapsingStandardHighlightersBinding = new Binding
-                                        {
-                                            Source = standardHighlighters,
-                                            Path = new PropertyPath("Count"),
-                                            Converter = collapseIfZero,
-                                        };
+            {
+                Source = standardHighlighters,
+                Path = new PropertyPath("Count"),
+                Converter = collapseIfZero,
+            };
             StandardHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingStandardHighlightersBinding);
 
             CustomHighlighterRibbonGroupOnTab.SetBinding(
@@ -794,11 +807,11 @@
                 new Binding { Source = customHighlighters });
 
             var collapsingCustomHighlightersBinding = new Binding
-                                                          {
-                                                              Source = customHighlighters,
-                                                              Path = new PropertyPath("Count"),
-                                                              Converter = collapseIfZero,
-                                                          };
+            {
+                Source = customHighlighters,
+                Path = new PropertyPath("Count"),
+                Converter = collapseIfZero,
+            };
             CustomHighlighterRibbonGroupOnTab.SetBinding(VisibilityProperty, collapsingCustomHighlightersBinding);
 
             var standardFilters = new CollectionViewSource { Source = Filters.Filters };

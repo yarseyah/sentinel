@@ -206,8 +206,10 @@
     <Compile Include="Controls\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PersistingSettings.cs" />
     <Compile Include="Controls\RecentFileInfo.cs" />
     <Compile Include="Controls\WindowPlacementInfo.cs" />
+    <Compile Include="Controls\IntegerTextBox.cs" />
     <Compile Include="Extractors\ExtractingService.cs" />
     <Compile Include="Extractors\Extractor.cs" />
     <Compile Include="Extractors\Gui\AddEditExtractor.cs" />
