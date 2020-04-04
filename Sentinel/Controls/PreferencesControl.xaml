@@ -164,7 +164,7 @@
                                     <StackPanel IsEnabled="{Binding Preferences.LimitMessages}"
                                                 Orientation="Horizontal">
                                         <Label Margin="20,0,0,0">Message count:</Label>
-                                        <TextBox
+                                        <controls:IntegerTextBox
                                             Text="{Binding Preferences.MaximumMessageCount, UpdateSourceTrigger=PropertyChanged}"
                                             Margin="10,0,0,0"
                                             Width="100"
