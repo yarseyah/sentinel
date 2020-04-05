@@ -15,6 +15,7 @@
     using Sentinel.Classification.Interfaces;
     using Sentinel.Extractors;
     using Sentinel.Extractors.Interfaces;
+    using Sentinel.FileMonitor;
     using Sentinel.Filters;
     using Sentinel.Filters.Interfaces;
     using Sentinel.Highlighters;
@@ -288,25 +289,42 @@
                         var providerInstances = providerSettingsObj.Last();
                         foreach (var providerSetting in providerInstances)
                         {
-                            if (providerSetting["$type"].ToString().Contains(typeof(NetworkSettings).Name))
+                            var settings = providerSetting.ToString();
+
+                            var name = providerSetting["$type"].ToString();
+                            if (name.Contains(typeof(NetworkSettings).Name))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(providerSetting.ToString());
+                                var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(settings);
                                 pendingProviderRecords.Add(new PendingProviderRecord
                                                                {
                                                                    Info = thisSetting.Info,
                                                                    Settings = thisSetting,
                                                                });
                             }
-                            else if (providerSetting["$type"].ToString().Contains(typeof(UdpAppenderSettings).Name))
+                            else if (name.Contains(typeof(UdpAppenderSettings).Name))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(providerSetting.ToString());
+                                var thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(settings);
                                 pendingProviderRecords.Add(new PendingProviderRecord
                                                                {
                                                                    Info = thisSetting.Info,
                                                                    Settings = thisSetting,
                                                                });
+                            }
+                            else if (name.Contains(typeof(FileMonitoringProviderSettings).Name))
+                            {
+                                var thisSetting =
+                                    JsonHelper.DeserializeFromString<FileMonitoringProviderSettings>(settings);
+                                pendingProviderRecords.Add(new PendingProviderRecord { Info = thisSetting.Info, Settings = thisSetting, });
+                            }
+                            else
+                            {
+                                Trace.TraceError($"No PendingProviderRecord for type of {name}");
                             }
                         }
+                    }
+                    else
+                    {
+                        Trace.TraceError($"No deconstruction supplied for type {typeString}");
                     }
                 }
             }
@@ -325,7 +343,7 @@
             locator.Register<INewProviderWizard>(new NewProviderWizard());
 
             // Do this last so that other services have registered, e.g. the
-            // TypeImageService is called by some classifiers!);););
+            // TypeImageService is called by some classifiers!
             if (!locator.IsRegistered<IClassifyingService<IClassifier>>())
             {
                 locator.Register(
