@@ -13,4 +13,4 @@ using System.Resources;
 
 [assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2020")]
 
-[assembly: AssemblyInformationalVersion("0.14.2-UpdateAllFrameWorks.1+2.Branch.UpdateAllFrameWorks.Sha.292e8fc2c2cc6853ec9df87ecfabe9da5e553adb")]
+[assembly: AssemblyInformationalVersion("0.14.2-UpdateAllFrameWorks.1+3.Branch.UpdateAllFrameWorks.Sha.e7fb89275e34f71af6537753a5a02f9a6fba29cf")]
