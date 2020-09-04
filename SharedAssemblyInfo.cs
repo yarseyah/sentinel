@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Resources;
 
-[assembly: AssemblyVersion("0.14.1.0")]
-[assembly: AssemblyFileVersion("0.14.1.0")]
+[assembly: AssemblyVersion("0.14.2.0")]
+[assembly: AssemblyFileVersion("0.14.2.0")]
 
 // Ensure all assemblies have a neutral language defined.
 [assembly: NeutralResourcesLanguage("en")]
@@ -13,4 +13,4 @@ using System.Resources;
 
 [assembly: AssemblyCopyright("Copyright � Ray Hayes 2009-2020")]
 
-[assembly: AssemblyInformationalVersion("0.14.1+Branch.UpdateAllFrameWorks.Sha.cf1def96bd59143606666ea7865e979ad60e19b0")]
+[assembly: AssemblyInformationalVersion("0.14.2-UpdateAllFrameWorks.1+1.Branch.UpdateAllFrameWorks.Sha.881141fb059740f646af304a2617dd98f5f0ddeb")]
