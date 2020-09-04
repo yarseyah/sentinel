@@ -11,6 +11,6 @@ using System.Resources;
 // Address CA1014 issues
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyCopyright("Copyright � Ray Hayes 2009-2020")]
+[assembly: AssemblyCopyright("Copyright © Ray Hayes 2009-2020")]
 
-[assembly: AssemblyInformationalVersion("0.14.2-UpdateAllFrameWorks.1+1.Branch.UpdateAllFrameWorks.Sha.881141fb059740f646af304a2617dd98f5f0ddeb")]
+[assembly: AssemblyInformationalVersion("0.14.2-UpdateAllFrameWorks.1+2.Branch.UpdateAllFrameWorks.Sha.292e8fc2c2cc6853ec9df87ecfabe9da5e553adb")]

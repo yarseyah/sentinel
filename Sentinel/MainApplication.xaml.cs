@@ -1,9 +1,5 @@
 ﻿namespace Sentinel
 {
-    using System;
-    using System.Net.Sockets;
-    using System.Runtime.ExceptionServices;
-    using System.Text;
     using System.Windows;
 
     using Sentinel.Properties;
