@@ -76,7 +76,7 @@ function Get-NugetCommand() {
     }
 
     # $installedNuget = ".\packages\NuGet.CommandLine.4.6.2\tools\NuGet.exe"
-    $installedNuget = (Get-ChildItem -Path .\packages\ -Recurse -Include NuGet.exe | Select-Object -First 1)
+    $installedNuget = (Get-ChildItem -Path $PSScriptRoot\packages\ -Recurse -Include NuGet.exe | Select-Object -First 1)
     if ( Test-Path $installedNuget ) {
         return $installedNuget
     }
@@ -91,7 +91,7 @@ function Get-SquirrelCommand() {
         return "squirrel.exe"
     }
 
-    $squirrel = (Get-ChildItem -Path .\packages\ -Recurse -Include squirrel.exe | Select-Object -First 1)
+    $squirrel = (Get-ChildItem -Path $PSScriptRoot\packages\ -Recurse -Include squirrel.exe | Select-Object -First 1)
     if ( Test-Path $squirrel ) {
         return $squirrel
     }
@@ -105,8 +105,8 @@ function Get-GitVerionsCommand() {
     if ( $null -ne $findCommand ) {
         return "gitversion"
     }
-    # $installedNuget = ".\packages\GitVersion.CommandLine.4.0.0\tools\GitVersion.exe"
-    $installedGitVersion = (Get-ChildItem -Path .\packages\ -Recurse -Include GitVersion.exe | Select-Object -First 1)
+    # $installedNuget = "$PSScriptRoot\packages\GitVersion.CommandLine.4.0.0\tools\GitVersion.exe"
+    $installedGitVersion = (Get-ChildItem -Path $PSScriptRoot\packages\ -Recurse -Include GitVersion.exe | Select-Object -First 1)
     if ( Test-Path $installedGitVersion ) {
         return $installedGitVersion
     }
