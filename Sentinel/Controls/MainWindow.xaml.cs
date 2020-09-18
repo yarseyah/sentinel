@@ -173,7 +173,7 @@
         private void ExportLogsAction(object obj)
         {
             // Get Log
-            var tab = (TabItem)tabControl.SelectedItem;
+            var tab = (TabItem)TabControl.SelectedItem;
             var frame = (IWindowFrame)tab.Content;
             var restartLogging = false;
 
@@ -284,10 +284,10 @@
             }
 
             // Remove the tab control.
-            if (tabControl.Items.Count > 0)
+            if (TabControl.Items.Count > 0)
             {
-                var tab = tabControl.SelectedItem;
-                tabControl.Items.Remove(tab);
+                var tab = TabControl.SelectedItem;
+                TabControl.Items.Remove(tab);
             }
 
             Add.Execute(null);
@@ -345,10 +345,10 @@
             }
 
             // Remove the tab control.
-            if (tabControl.Items.Count > 0)
+            if (TabControl.Items.Count > 0)
             {
-                var tab = tabControl.SelectedItem;
-                tabControl.Items.Remove(tab);
+                var tab = TabControl.SelectedItem;
+                TabControl.Items.Remove(tab);
             }
 
             RemoveBindingReferences();
@@ -367,8 +367,8 @@
 
             // Add to the tab control.
             var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(newTab);
-            tabControl.SelectedItem = newTab;
+            TabControl.Items.Add(newTab);
+            TabControl.SelectedItem = newTab;
         }
 
         /// <summary>
@@ -396,8 +396,8 @@
 
             // Add to the tab control.
             var tab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(tab);
-            tabControl.SelectedItem = tab;
+            TabControl.Items.Add(tab);
+            TabControl.SelectedItem = tab;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -410,9 +410,9 @@
                     about.ShowDialog();
                 });
 
-            Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
+            Add = new DelegateCommand(AddNewListenerAction, b => TabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
-            ExportLogs = new DelegateCommand(ExportLogsAction, b => tabControl.Items.Count > 0);
+            ExportLogs = new DelegateCommand(ExportLogsAction, b => TabControl.Items.Count > 0);
             SaveSession = new DelegateCommand(SaveSessionAction);
             NewSession = new DelegateCommand(NewSessionAction);
             LoadSession = new DelegateCommand(LoadSessionAction);
@@ -523,8 +523,8 @@
 
             // Add to the tab control.
             var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(newTab);
-            tabControl.SelectedItem = newTab;
+            TabControl.Items.Add(newTab);
+            TabControl.SelectedItem = newTab;
         }
 
         private void CreateDefaultLog4NetListener(Log4NetOptions log4NetOptions, ISessionManager sessionManager)
@@ -625,7 +625,7 @@
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                TabControl.SelectedIndex = TabControl.Items.Count - 1;
             }
         }
 

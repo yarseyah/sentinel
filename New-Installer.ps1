@@ -75,14 +75,12 @@ function Get-NugetCommand() {
         return "nuget"
     }
 
-    # $installedNuget = ".\packages\NuGet.CommandLine.4.6.2\tools\NuGet.exe"
-    $installedNuget = (Get-ChildItem -Path .\packages\ -Recurse -Include NuGet.exe | Select-Object -First 1)
-    if ( Test-Path $installedNuget ) {
+    $installedNuget = (Get-ChildItem -Path "~\.nuget\packages\" -Recurse -Include NuGet.exe -ErrorAction SilentlyContinue | Select-Object -First 1)
+    if ( Test-Path $installedNuget -ErrorAction SilentlyContinue) {
         return $installedNuget
     }
-    else {
-        return $null;
-    }
+    
+    return "dotnet nuget";
 }
 
 function Get-SquirrelCommand() {
@@ -91,7 +89,7 @@ function Get-SquirrelCommand() {
         return "squirrel.exe"
     }
 
-    $squirrel = (Get-ChildItem -Path .\packages\ -Recurse -Include squirrel.exe | Select-Object -First 1)
+    $squirrel = (Get-ChildItem -Path "~\.nuget\packages\" -Recurse -Include squirrel.exe | Select-Object -First 1)
     if ( Test-Path $squirrel ) {
         return $squirrel
     }
@@ -105,8 +103,8 @@ function Get-GitVerionsCommand() {
     if ( $null -ne $findCommand ) {
         return "gitversion"
     }
-    # $installedNuget = ".\packages\GitVersion.CommandLine.4.0.0\tools\GitVersion.exe"
-    $installedGitVersion = (Get-ChildItem -Path .\packages\ -Recurse -Include GitVersion.exe | Select-Object -First 1)
+
+    $installedGitVersion = (Get-ChildItem -Path "~\.nuget\packages\" -Recurse -Include GitVersion.exe | Select-Object -First 1)
     if ( Test-Path $installedGitVersion ) {
         return $installedGitVersion
     }
