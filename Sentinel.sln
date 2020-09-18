@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel", "Sentinel\Sentinel.csproj", "{152376B9-4CED-4671-9CCB-6BD9F06A1E0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogTester", "NLogTester\NLogTester.csproj", "{93081C58-433D-40D1-B0AD-524AA098D3B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog2Tester", "NLog2Tester\NLog2Tester.csproj", "{93081C58-433D-40D1-B0AD-524AA098D3B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log4NetTester", "Log4NetTester\Log4NetTester.csproj", "{336279C2-07D0-4119-B02A-6AEE8ECAF4BC}"
 EndProject
@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{5D931689
 		New-Installer.ps1 = New-Installer.ps1
 		Sentinel.nuspec = Sentinel.nuspec
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing Applications", "Testing Applications", "{D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,5 +104,15 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{93081C58-433D-40D1-B0AD-524AA098D3B2} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+		{336279C2-07D0-4119-B02A-6AEE8ECAF4BC} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+		{44D1E267-AE99-43BE-B824-980B4ABFF9CA} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+		{26533F90-3677-4565-84AE-928BCFDC7DFB} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+		{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28BEB7F3-F084-4255-BB5B-82292544AAA3}
 	EndGlobalSection
 EndGlobal

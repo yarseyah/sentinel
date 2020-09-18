@@ -62,9 +62,6 @@
     <PackageReference Include="NLog">
       <Version>4.7.4</Version>
     </PackageReference>
-    <PackageReference Include="NLog.Config">
-      <Version>4.7.4</Version>
-    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

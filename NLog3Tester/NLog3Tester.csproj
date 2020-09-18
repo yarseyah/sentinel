@@ -59,10 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog">
-      <Version>4.7.4</Version>
+      <Version>3.2.1</Version>
     </PackageReference>
     <PackageReference Include="NLog.Config">
-      <Version>4.7.4</Version>
+      <Version>3.2.1</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
