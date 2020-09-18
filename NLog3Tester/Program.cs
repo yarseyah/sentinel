@@ -31,8 +31,8 @@
         public static void Main()
         {
             var i = 0;
-            var smallestSleep = 1000;
-            var biggestSleep = 2000;
+            var smallestSleep = 100;
+            var biggestSleep = 500;
 
             while (i < 100000)
             {
