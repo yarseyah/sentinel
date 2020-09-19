@@ -75,10 +75,21 @@ steps:
     Contents: '**'
     RemoveSourceFolder: true
 
+- task: VSBuild@1
+  displayName: "Build standalone"
+  inputs:
+    solution: '**\*.sln'
+    platform: 'any cpu'
+    configuration: 'Release'
+    maximumCpuCount: true
+    msbuildArchitecture: 'x64'
+    createLogFile: true
+    logFileVerbosity: 'detailed'
+
 - task: PowerShell@2
-  displayName: "Build installer"
   inputs:
     filePath: 'New-Installer.ps1'
+    arguments: '--NoCompile --Version "$(GitVersion.AssemblySemFileVer)"'
     ignoreLASTEXITCODE: true
     pwsh: true
 
