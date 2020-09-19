@@ -45,6 +45,8 @@ steps:
       ls -recurse $env:Build.BinariesDirectory *.exe | Format-Table
       Write-Host "Build.Repository.LocalPath"
       ls -recurse $env:Build.Repository.LocalPath *.exe | Format-Table
+      Write-Host "GitVersion variables"
+      ls env:GitVersion*
 
 - task: CopyFiles@2
   inputs:
@@ -53,22 +55,28 @@ steps:
       *.config
       *.exe
       *.dll
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Standalone'
     CleanTargetFolder: true
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/Standalone'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/Sentinel-$(GitVersion.SemVer).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/Releases/Sentinel-$(GitVersion.SemVer).zip'
     replaceExistingArchive: true
     verbose: true
 
+- task: DeleteFiles@1
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)/Standalone'
+    Contents: '**'
+    RemoveSourceFolder: true
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Releases'
+    ArtifactName: 'Releases'
     publishLocation: 'Container'
 
 #- task: VSTest@2
