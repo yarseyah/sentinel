@@ -22,7 +22,7 @@
 
         private const int PumpFrequency = 100;
 
-        private static readonly XmlNamespaceManager NamespaceManager = new XmlNamespaceManager(new NameTable());
+        private const string ApacheNamespace = "http://logging.apache.org/log4net/schemas/log4net-events-1.2/";
 
         private static readonly ILog Log = LogManager.GetLogger<Log4NetProvider>();
 
@@ -30,18 +30,15 @@
 
         private readonly IUdpAppenderListenerSettings udpSettings;
 
-        private readonly XNamespace log4Net = "unique";
+        private readonly XNamespace log4NetNamespace = "unique";
+
+        private readonly XNamespace apacheNamespace = ApacheNamespace;
 
         private CancellationTokenSource cancellationTokenSource;
 
         private Task udpListenerTask;
 
         private Task messagePumpTask;
-
-        static Log4NetProvider()
-        {
-            NamespaceManager.AddNamespace("log4net", "http://logging.apache.org/log4net");
-        }
 
         public Log4NetProvider(IProviderSettings settings)
         {
@@ -215,23 +212,26 @@
                 // Record the current date/time
                 var receivedTime = DateTime.UtcNow;
 
-                var payload = $@"<entry xmlns:log4net=""{log4Net}"">{message}</entry>";
+                var payload = $@"<entry xmlns:log4net=""{log4NetNamespace}"">{message}</entry>";
                 var element = XElement.Parse(payload);
-                var entryEvent = element.Element(log4Net + "event");
+
+                var eventNamespace = payload.Contains(ApacheNamespace) ? apacheNamespace : log4NetNamespace;
+
+                var @event = element.Element(eventNamespace + "event");
 
                 // Establish whether a sub-system seems to be defined.
-                if (entryEvent != null)
+                if (@event != null)
                 {
-                    var description = entryEvent.Element(log4Net + "message").Value;
+                    var description = @event.Element(eventNamespace + "message")?.Value;
 
                     var classification = string.Empty;
-                    var system = entryEvent.GetAttribute("logger", string.Empty);
-                    var type = entryEvent.GetAttribute("level", string.Empty);
+                    var system = @event.GetAttribute("logger", string.Empty);
+                    var type = @event.GetAttribute("level", string.Empty);
                     var host = string.Empty;
                     var props = new Dictionary<string, object>();
-                    foreach (var propertyElement in entryEvent.Element(log4Net + "properties").Elements())
+                    foreach (var propertyElement in @event.Element(eventNamespace + "properties")?.Elements() ?? Enumerable.Empty<XElement>())
                     {
-                        if (propertyElement.Name == log4Net + "data")
+                        if (propertyElement.Name == eventNamespace + "data")
                         {
                             var name = propertyElement.GetAttribute("name", string.Empty);
                             var value = propertyElement.GetAttribute("value", string.Empty);
@@ -262,13 +262,13 @@
                     var line = string.Empty;
 
                     // Any source information
-                    var source = entryEvent.Element(log4Net + "locationInfo");
+                    var source = @event.Element(eventNamespace + "locationInfo");
                     if (source != null)
                     {
-                        className = source.Attribute("class").Value;
-                        methodName = source.Attribute("method").Value;
-                        sourceFile = source.Attribute("file").Value;
-                        line = source.Attribute("line").Value;
+                        className = source.Attribute("class")?.Value;
+                        methodName = source.Attribute("method")?.Value;
+                        sourceFile = source.Attribute("file")?.Value;
+                        line = source.Attribute("line")?.Value;
                     }
 
                     var metaData = new Dictionary<string, object>
@@ -290,22 +290,28 @@
                         }
                     }
 
-                    AddExceptionIfFound(entryEvent, metaData);
+                    AddExceptionIfFound(@event, metaData, eventNamespace);
 
                     // Extract from the source the originating date/time
-                    var sourceTime = entryEvent.GetAttributeDateTime("timestamp", DateTime.Now);
+                    var sourceTime = @event.GetAttributeDateTime("timestamp", DateTime.Now);
 
                     var logEntry = new LogEntry
                                        {
                                            DateTime = sourceTime,
                                            System = system,
-                                           Thread = entryEvent.GetAttribute("thread", string.Empty),
+                                           Thread = @event.GetAttribute("thread", string.Empty),
                                            Description = description,
                                            Type = type,
                                            MetaData = metaData,
                                        };
 
-                    if (logEntry.Description.ToUpper().Contains("EXCEPTION"))
+                    // Determine whether this constitutes an exception
+                    var throwable = @event.Element(eventNamespace + "throwable");
+                    if (throwable != null)
+                    {
+                        logEntry.MetaData.Add("Exception", throwable.Value);
+                    }
+                    else if (logEntry.Description.ToUpper().Contains("EXCEPTION"))
                     {
                         logEntry.MetaData.Add("Exception", true);
                     }
@@ -332,13 +338,13 @@
             return null;
         }
 
-        private void AddExceptionIfFound(XElement entryEvent, Dictionary<string, object> metaData)
+        private void AddExceptionIfFound(XElement entryEvent, Dictionary<string, object> metaData, XNamespace @namespace)
         {
             entryEvent.ThrowIfNull(nameof(entryEvent));
 
             metaData.ThrowIfNull(nameof(metaData));
 
-            var exceptionElement = entryEvent.Element(log4Net + "exception");
+            var exceptionElement = entryEvent.Element(@namespace + "exception");
             if (exceptionElement != null)
             {
                 metaData["Exception"] = exceptionElement.Value;

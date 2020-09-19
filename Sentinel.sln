@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{5D931689
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing Applications", "Testing Applications", "{D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerilogTester", "SerilogTester\SerilogTester.csproj", "{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D710A0-7805-4B0A-B38F-4A4D772800F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +117,7 @@ Global
 		{44D1E267-AE99-43BE-B824-980B4ABFF9CA} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
 		{26533F90-3677-4565-84AE-928BCFDC7DFB} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
 		{6E02A1CC-CFC2-48CD-95F5-3C0856AB9FF7} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
+		{A521BEE9-E9AA-49AA-9B9D-F98C4F95BD37} = {D85E5F34-4DD4-467C-A69B-C3312FDB6FBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28BEB7F3-F084-4255-BB5B-82292544AAA3}
