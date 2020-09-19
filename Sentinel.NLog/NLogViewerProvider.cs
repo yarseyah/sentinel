@@ -23,9 +23,17 @@
 
         private const int PumpFrequency = 100;
 
+        private const string ApacheNamespace = "http://jakarta.apache.org/log4j/";
+
         private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
+
+        private readonly XNamespace log4JNamespace = "unique";
+
+        private readonly XNamespace entryNamespace = "nlogUnique";
+
+        private readonly XNamespace apacheLog4JNamespace = ApacheNamespace;
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
 
@@ -217,26 +225,31 @@
             // Record the current date/time
             var receivedTime = DateTime.UtcNow;
 
-            XNamespace log4J = "unique";
-            XNamespace nlogNamespace = "nlogUnique";
-            var message = $@"<entry xmlns:log4j=""{log4J}"" xmlns:nlog=""{nlogNamespace}"">{m}</entry>";
+            var message = $@"<entry xmlns:log4j=""{log4JNamespace}"" xmlns:nlog=""{entryNamespace}"">{m}</entry>";
             var element = XElement.Parse(message);
-            var record = element.Element(log4J + "event");
+
+            // serilog nlogFormatting uses an explicit namespace, detect it when used.
+            var eventNamespace = message.Contains(ApacheNamespace) ? apacheLog4JNamespace : log4JNamespace;
+            var @event = element.Element(eventNamespace + "event");
+            if (@event == null)
+            {
+                return null;
+            }
 
             // Establish whether a sub-system seems to be defined.
-            var description = record.Element(log4J + "message").Value;
+            var description = @event.Element(eventNamespace + "message")?.Value ?? string.Empty;
 
             var classification = string.Empty;
-            var system = record.Attribute("logger")?.Value ?? string.Empty;
-            var type = record.Attribute("level")?.Value ?? string.Empty;
+            var system = @event.Attribute("logger")?.Value ?? string.Empty;
+            var type = @event.Attribute("level")?.Value ?? string.Empty;
             var host = "Unknown";
 
             var meta = new Dictionary<string, object>();
 
-            foreach (var propertyElement in record.Element(log4J + "properties")?.Elements()
+            foreach (var propertyElement in @event.Element(eventNamespace + "properties")?.Elements()
                                             ?? Enumerable.Empty<XElement>())
             {
-                if (propertyElement.Name == log4J + "data")
+                if (propertyElement.Name == eventNamespace + "data")
                 {
                     var name = propertyElement.Attribute("name")?.Value;
                     var value = propertyElement.Attribute("value")?.Value;
@@ -257,7 +270,7 @@
                 }
             }
 
-            var source = record.Element(log4J + "locationInfo");
+            var source = @event.Element(eventNamespace + "locationInfo");
 
             // Any source information
             var className = source?.Attribute("class")?.Value ?? string.Empty;
@@ -265,7 +278,7 @@
             var sourceFile = source?.Attribute("file")?.Value ?? string.Empty;
             var line = source?.Attribute("line")?.Value ?? string.Empty;
 
-            var timestampValue = record.Attribute("timestamp")?.Value;
+            var timestampValue = @event.Attribute("timestamp")?.Value;
             var date = DateTime.UtcNow;
             if (timestampValue != null)
             {
@@ -280,12 +293,19 @@
                             {
                                 DateTime = date,
                                 System = system,
-                                Thread = record.Attribute("thread")?.Value ?? string.Empty,
+                                Thread = @event.Attribute("thread")?.Value ?? string.Empty,
                                 Description = description,
                                 Type = type,
                                 MetaData = meta,
                             };
-            if (entry.Description.ToUpper().Contains("EXCEPTION"))
+
+            // Determine whether this constitutes an exception
+            var throwable = @event.Element(eventNamespace + "throwable");
+            if (throwable != null)
+            {
+                entry.MetaData.Add("Exception", throwable.Value);
+            }
+            else if (entry.Description.ToUpper().Contains("EXCEPTION"))
             {
                 entry.MetaData.Add("Exception", true);
             }

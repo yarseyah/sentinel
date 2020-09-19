@@ -15,7 +15,11 @@ namespace Sentinel.Upgrader
 
         public string UpgradeRepository { get; } = "http://localhost:5000";
 
+#if !STANDALONE_BUILD
         public bool IsDisabled => false;
+#else
+        public bool IsDisabled => true;
+#endif
 
         public TimeSpan DelayBeforeCheckingForUpgrades => TimeSpan.FromSeconds(30);
     }
