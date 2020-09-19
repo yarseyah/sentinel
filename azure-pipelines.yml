@@ -42,11 +42,13 @@ steps:
     script: |
       pwd
       Write-Host "Build.BinariesDirectory"
-      ls -recurse $env:Build.BinariesDirectory | Format-Table
+      ls -recurse $env:Build.BinariesDirectory *.exe | Format-Table
+      Write-Host "Build.Repository.LocalPath"
+      ls -recurse $env:Build.Repository.LocalPath *.exe | Format-Table
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.BinariesDirectory)/Sentinel/Bin/Standalone'
+    SourceFolder: '$(Build.Repository.LocalPath)/Sentinel/Bin/Standalone'
     Contents: |
       *.config
       *.exe
