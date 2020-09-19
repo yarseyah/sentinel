@@ -18,13 +18,20 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: GitVersion@5
+  inputs:
+    runtime: 'core'
+    configFilePath: 'GitVersion.yml'
+    updateAssemblyInfo: true
+    updateAssemblyInfoFilename: 'SharedAssemblyInfo.cs'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
