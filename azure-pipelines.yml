@@ -42,9 +42,9 @@ steps:
     script: |
       pwd
       Write-Host "Build.BinariesDirectory"
-      ls -recurse $(Build.BinariesDirectory)
+      ls -recurse $env:Build.BinariesDirectory
       Write-Host "Agent.BuildDirectory"
-      ls -recurse $(Agent.BinariesDirectory)
+      ls -recurse $env:Agent.BinariesDirectory
 
 - task: CopyFiles@2
   inputs:
@@ -63,9 +63,9 @@ steps:
     script: |
       pwd
       Write-Host "Build.BinariesDirectory"
-      ls -recurse $(Build.BinariesDirectory)
+      ls -recurse $env:Build.BinariesDirectory
       Write-Host "Agent.BuildDirectory"
-      ls -recurse $(Agent.BinariesDirectory)
+      ls -recurse $env:Agent.BinariesDirectory
 
 - task: ArchiveFiles@2
   inputs:
