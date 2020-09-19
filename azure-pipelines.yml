@@ -42,34 +42,21 @@ steps:
     script: |
       pwd
       Write-Host "Build.BinariesDirectory"
-      ls -recurse $env:Build.BinariesDirectory
-      Write-Host "Agent.BuildDirectory"
-      ls -recurse $env:Agent.BinariesDirectory
+      ls -recurse $env:Build.BinariesDirectory | Format-Table
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Agent.BinariesDirectory)'
+    SourceFolder: '$(Build.BinariesDirectory)/Sentinel/Bin/Standalone'
     Contents: |
-      *.dll
-      *.exe
       *.config
-    TargetFolder: '$(Build.BinariesDirectory)'
-    OverWrite: true
-
-- task: PowerShell@2
-  displayName: "Debug #2"
-  inputs:
-    targetType: 'inline'
-    script: |
-      pwd
-      Write-Host "Build.BinariesDirectory"
-      ls -recurse $env:Build.BinariesDirectory
-      Write-Host "Agent.BuildDirectory"
-      ls -recurse $env:Agent.BinariesDirectory
+      *.exe
+      *.dll
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)/'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/Sentinel-$(GitVersion.SemVer).zip'
