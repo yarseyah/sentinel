@@ -36,11 +36,36 @@ steps:
     logFileVerbosity: 'detailed'
 
 - task: PowerShell@2
+  displayName: "Debug #1"
   inputs:
     targetType: 'inline'
     script: |
       pwd
+      Write-Host "Build.BinariesDirectory"
       ls -recurse $(Build.BinariesDirectory)
+      Write-Host "Agent.BuildDirectory"
+      ls -recurse $(Agent.BinariesDirectory)
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Agent.BinariesDirectory)'
+    Contents: |
+      *.dll
+      *.exe
+      *.config
+    TargetFolder: '$(Build.BinariesDirectory)'
+    OverWrite: true
+
+- task: PowerShell@2
+  displayName: "Debug #2"
+  inputs:
+    targetType: 'inline'
+    script: |
+      pwd
+      Write-Host "Build.BinariesDirectory"
+      ls -recurse $(Build.BinariesDirectory)
+      Write-Host "Agent.BuildDirectory"
+      ls -recurse $(Agent.BinariesDirectory)
 
 - task: ArchiveFiles@2
   inputs:
