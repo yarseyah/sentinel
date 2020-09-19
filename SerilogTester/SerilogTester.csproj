@@ -7,6 +7,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <WarningsAsErrors />
+    <Configurations>Debug;Release;Standalone;Standalone (Debug)</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
