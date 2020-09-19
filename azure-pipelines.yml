@@ -26,6 +26,7 @@ steps:
     updateAssemblyInfoFilename: 'SharedAssemblyInfo.cs'
 
 - task: VSBuild@1
+  displayName: "Build standalone"
   inputs:
     solution: '**\*.sln'
     platform: 'any cpu'
@@ -59,6 +60,7 @@ steps:
     CleanTargetFolder: true
 
 - task: ArchiveFiles@2
+  displayName: "Zip standalone"
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/Standalone'
     includeRootFolder: false
@@ -72,6 +74,13 @@ steps:
     SourceFolder: '$(Build.ArtifactStagingDirectory)/Standalone'
     Contents: '**'
     RemoveSourceFolder: true
+
+- task: PowerShell@2
+  displayName: "Build installer"
+  inputs:
+    filePath: 'New-Installer.ps1'
+    ignoreLASTEXITCODE: true
+    pwsh: true
 
 - task: PublishBuildArtifacts@1
   inputs:
