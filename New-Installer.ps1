@@ -6,7 +6,7 @@
 .EXAMPLE
     New-Installer
 .EXAMPLE
-    New-Installer --NoCompile --Version 1.2.3
+    New-Installer --NoBuild --Version 1.2.3
 .INPUTS
     None
 .OUTPUTS
