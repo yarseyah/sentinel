@@ -89,7 +89,7 @@ steps:
 - task: PowerShell@2
   inputs:
     filePath: 'New-Installer.ps1'
-    arguments: '-NoBuild -Version "$(GitVersion.SemVer)"'
+    arguments: '-NoBuild -Version "$(GitVersion.MajorMinorPatch)"'
     ignoreLASTEXITCODE: true
     pwsh: true
 
