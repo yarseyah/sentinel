@@ -94,6 +94,16 @@ steps:
     ignoreLASTEXITCODE: true
     pwsh: true
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.Repository.LocalPath)/Releases'
+    Contents: |
+      *.exe
+      RELEASES
+      *-full.nupkg
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Releases'
+    CleanTargetFolder: true
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/Releases'
