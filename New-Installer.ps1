@@ -27,7 +27,6 @@ param (
     $NoBuild = $false,
 
     [Alias("v")]
-    [Switch]
     [string] $Version = $null
 )
 
