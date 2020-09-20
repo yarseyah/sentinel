@@ -76,7 +76,7 @@ steps:
     RemoveSourceFolder: true
 
 - task: VSBuild@1
-  displayName: "Build standalone"
+  displayName: "Build Squirrel aware"
   inputs:
     solution: '**\*.sln'
     platform: 'any cpu'
@@ -87,9 +87,10 @@ steps:
     logFileVerbosity: 'detailed'
 
 - task: PowerShell@2
+  displayName: "Create squirrel installer"
   inputs:
     filePath: 'New-Installer.ps1'
-    arguments: '-NoBuild -Version "$(GitVersion.MajorMinorPatch)"'
+    arguments: '-NoBuild -Version "$(GitVersion.MajorMinorPatch)" -verbose'
     ignoreLASTEXITCODE: true
     pwsh: true
 
