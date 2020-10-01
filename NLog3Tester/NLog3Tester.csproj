@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog">
-      <Version>3.2.1</Version>
+      <Version>4.7.5</Version>
     </PackageReference>
     <PackageReference Include="NLog.Config">
       <Version>3.2.1</Version>
