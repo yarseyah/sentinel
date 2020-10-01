@@ -85,7 +85,7 @@
       <Version>3.2.1</Version>
     </PackageReference>
     <PackageReference Include="NLog.Config">
-      <Version>3.2.1</Version>
+      <Version>4.7.5</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
