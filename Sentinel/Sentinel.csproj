@@ -631,7 +631,7 @@
       <Version>3.4.1</Version>
     </PackageReference>
     <PackageReference Include="GitVersion.CommandLine">
-      <Version>5.3.7</Version>
+      <Version>5.5.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
