@@ -7,7 +7,7 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    using Common.Logging;
+    using log4net;
 
     using Sentinel.Interfaces.Providers;
     using Sentinel.Providers.Interfaces;
@@ -20,7 +20,7 @@
     /// </summary>
     public partial class SelectProviderPage : IWizardPage
     {
-        private static readonly ILog Log = LogManager.GetLogger<SelectProviderPage>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SelectProviderPage));
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 

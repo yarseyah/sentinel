@@ -5,14 +5,17 @@ namespace Sentinel.Support.Converters
     using System.Globalization;
     using System.Linq;
     using System.Windows.Data;
-    using Common.Logging;
+
+    using log4net;
+    
     using NodaTime;
+    
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 
     public class TimePreferenceConverter : IValueConverter
     {
-        private static readonly ILog Log = LogManager.GetLogger<TimePreferenceConverter>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TimePreferenceConverter));
 
         private IUserPreferences Preferences { get; set; }
 

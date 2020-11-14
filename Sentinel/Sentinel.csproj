@@ -1,14 +1,84 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Sentinel</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="MainApplication.xaml" />
+    <ApplicationDefinition Include="MainApplication.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NodaTime" Version="3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Glyphs\SortDownArrow.png" />
+    <Resource Include="Resources\Glyphs\SortUpArrow.png" />
+    <Resource Include="Resources\Large\Add.png" />
+    <Resource Include="Resources\Large\Context.png" />
+    <Resource Include="Resources\Large\Debug.png" />
+    <Resource Include="Resources\Large\DebugSource.png" />
+    <Resource Include="Resources\Large\Error.png" />
+    <Resource Include="Resources\Large\Exception.png" />
+    <Resource Include="Resources\Large\Exit.png" />
+    <Resource Include="Resources\Large\Export.png" />
+    <Resource Include="Resources\Large\Fatal.png" />
+    <Resource Include="Resources\Large\Info.png" />
+    <Resource Include="Resources\Large\Network.png" />
+    <Resource Include="Resources\Large\Open.png" />
+    <Resource Include="Resources\Large\Save.png" />
+    <Resource Include="Resources\Large\Settings.png" />
+    <Resource Include="Resources\Large\Thread.png" />
+    <Resource Include="Resources\Large\Trace.png" />
+    <Resource Include="Resources\Large\Unknown.png" />
+    <Resource Include="Resources\Large\Warning.png" />
+    <Resource Include="Resources\Medium\Add.png" />
+    <Resource Include="Resources\Medium\Debug.png" />
+    <Resource Include="Resources\Medium\Error.png" />
+    <Resource Include="Resources\Medium\Exception.png" />
+    <Resource Include="Resources\Medium\Exit.png" />
+    <Resource Include="Resources\Medium\Export.png" />
+    <Resource Include="Resources\Medium\Fatal.png" />
+    <Resource Include="Resources\Medium\Info.png" />
+    <Resource Include="Resources\Medium\Network.png" />
+    <Resource Include="Resources\Medium\Open.png" />
+    <Resource Include="Resources\Medium\Save.png" />
+    <Resource Include="Resources\Medium\Settings.png" />
+    <Resource Include="Resources\Medium\Thread.png" />
+    <Resource Include="Resources\Medium\Trace.png" />
+    <Resource Include="Resources\Medium\Unknown.png" />
+    <Resource Include="Resources\Medium\Warning.png" />
+    <Resource Include="Resources\Small\Add.png" />
+    <Resource Include="Resources\Small\Clear.png" />
+    <Resource Include="Resources\Small\Clock.png" />
+    <Resource Include="Resources\Small\Context.png" />
+    <Resource Include="Resources\Small\Debug.png" />
+    <Resource Include="Resources\Small\DebugSource.png" />
+    <Resource Include="Resources\Small\Error.png" />
+    <Resource Include="Resources\Small\Exception.png" />
+    <Resource Include="Resources\Small\Exit.png" />
+    <Resource Include="Resources\Small\Export.png" />
+    <Resource Include="Resources\Small\Fatal.png" />
+    <Resource Include="Resources\Small\Info.png" />
+    <Resource Include="Resources\Small\Layout.png" />
+    <Resource Include="Resources\Small\MonoLightning.png" />
+    <Resource Include="Resources\Small\Network.png" />
+    <Resource Include="Resources\Small\Open.png" />
+    <Resource Include="Resources\Small\Pause.png" />
+    <Resource Include="Resources\Small\Save.png" />
+    <Resource Include="Resources\Small\ScrollDown.png" />
+    <Resource Include="Resources\Small\Settings.png" />
+    <Resource Include="Resources\Small\Thread.png" />
+    <Resource Include="Resources\Small\Trace.png" />
+    <Resource Include="Resources\Small\Unknown.png" />
+    <Resource Include="Resources\Small\Warning.png" />
   </ItemGroup>
 </Project>

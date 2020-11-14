@@ -3,7 +3,7 @@ namespace Sentinel.Support
     using System;
     using System.IO;
 
-    using Common.Logging;
+    using log4net;
 
     using Newtonsoft.Json;
 

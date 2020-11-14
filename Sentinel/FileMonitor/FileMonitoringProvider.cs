@@ -12,8 +12,7 @@
     using System.Threading;
     using System.Windows;
 
-    using Common.Logging;
-
+    using log4net;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
@@ -104,7 +103,7 @@
 
             lock (pendingQueue)
             {
-                Log.Trace(string.Format(CultureInfo.InvariantCulture, "Starting of file-monitor upon {0}", FileName));
+                Log.DebugFormat(CultureInfo.InvariantCulture, "Starting of file-monitor upon {0}", FileName);
             }
 
             Worker.RunWorkerAsync();
@@ -144,11 +143,7 @@
                 {
                     if (pendingQueue.Any())
                     {
-                        Log.Trace(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Adding a batch of {0} entries to the logger",
-                                pendingQueue.Count()));
+                        Log.DebugFormat(CultureInfo.InvariantCulture, "Adding a batch of {0} entries to the logger", pendingQueue.Count());
                         Logger.AddBatch(pendingQueue);
                         Trace.WriteLine("Done adding the batch");
                     }
@@ -281,11 +276,10 @@
                     DateTime dt;
                     if (!DateTime.TryParse(m.Groups["DateTime"].Value, out dt))
                     {
-                        Log.Trace(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Failed to parse date {0}",
-                                m.Groups["DateTime"].Value));
+                        Log.DebugFormat(
+                            CultureInfo.InvariantCulture,
+                            "Failed to parse date {0}",
+                            m.Groups["DateTime"].Value);
                     }
 
                     entry.DateTime = dt;

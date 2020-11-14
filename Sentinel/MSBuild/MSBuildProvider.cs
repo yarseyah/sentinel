@@ -8,9 +8,7 @@ namespace Sentinel.MSBuild
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Common.Logging;
-
+    using log4net;
     using Newtonsoft.Json.Linq;
 
     using Sentinel.Interfaces;
@@ -24,7 +22,7 @@ namespace Sentinel.MSBuild
 
         private const int PumpFrequency = 100;
 
-        private static readonly ILog Log = LogManager.GetLogger<MsBuildProvider>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MsBuildProvider));
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
 
