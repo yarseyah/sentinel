@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:WpfExtras.Converters;assembly=WpfExtras"
-             xmlns:upgrader="clr-namespace:Sentinel.Upgrader"
-             xmlns:converters1="clr-namespace:Sentinel.Support.Converters"
+             xmlns:converters="clr-namespace:Sentinel.Support.Converters"
+             xmlns:wpfExtraConverters="clr-namespace:Sentinel.WpfExtras.Converters"
              mc:Ignorable="d">
 
     <!--<UserControl.DataContext>
@@ -13,8 +12,8 @@
     </UserControl.DataContext>-->
 
     <UserControl.Resources>
-        <converters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
-        <converters1:CollapseIfNullConverter x:Key="collapseIfNullConverter" />
+        <wpfExtraConverters:VisibilityToCollapsedConverter x:Key="boolCollapseConverter" />
+        <converters:CollapseIfNullConverter x:Key="collapseIfNullConverter" />
     </UserControl.Resources>
 
           

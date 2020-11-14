@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Sentinel.FileMonitor.MessageFormatPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter  x:Key="visConv" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0"
+                   Margin="3"
+                   Grid.ColumnSpan="2"
+                   Text="Log entries read from a text file are generally in a flat and loosly structured format and may have lost important data."
+                   TextWrapping="WrapWithOverflow"
+                   Loaded="OnLoaded" />
+        <TextBlock Grid.Column="0"
+                   Margin="3"
+                   Grid.Row="1"
+                   Grid.ColumnSpan="2"
+                   Text="However by selecting an appropriate decoder, it is may be possible to extract the information and place it in the appropriate fields of the record.  If a non-standard pattern is used, it may be necessary to use the custom format."
+                   TextWrapping="WrapWithOverflow" />
+        <TextBlock Grid.Column="0"
+                   Grid.Row="2"
+                   Margin="3"
+                   Text="Decoder Format : "
+                   TextWrapping="WrapWithOverflow"
+                   VerticalAlignment="Center" />
+        <ComboBox ItemsSource="{Binding DecodingStyles}"
+                  Name="stylesCombo"
+                  VerticalAlignment="Center"
+                  Margin="3"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  SelectedIndex="{Binding SelectedDecoderIndex}" />
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Center"
+                   Foreground="Red"
+                   Visibility="{Binding ShowCustomWarning, Converter={StaticResource ResourceKey=visConv}}"
+                   Text="Custom format is very experimental and currently requires regular expressions to be used.  It is not recommended at the moment!"
+                   TextWrapping="WrapWithOverflow" />
+    </Grid>
+</UserControl>
