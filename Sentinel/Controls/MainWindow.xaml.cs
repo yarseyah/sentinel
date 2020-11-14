@@ -15,8 +15,7 @@
     using System.Windows.Controls.Ribbon;
     using System.Windows.Data;
     using System.Windows.Input;
-    using CommandLine;
-    using Common.Logging;
+    using log4net;
     using Microsoft.Win32;
     using Sentinel.Classification.Interfaces;
     using Sentinel.Extractors.Interfaces;
@@ -42,7 +41,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
+        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(MainWindow));
 
         private readonly string persistingFilename;
 

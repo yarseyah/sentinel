@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:Wpf="clr-namespace:Sentinel.Support.Wpf"
+             xmlns:wpf="clr-namespace:Sentinel.Support.Wpf"
              x:Class="Sentinel.Classification.Gui.ClassificationsControl"
              mc:Ignorable="d">
 
@@ -39,22 +39,22 @@
                   SelectionMode="Single">
             <ListView.View>
                 <GridView>
-                    <Wpf:FixedWidthColumn FixedWidth="28">
-                        <Wpf:FixedWidthColumn.HeaderTemplate>
+                    <wpf:FixedWidthColumn FixedWidth="28">
+                        <wpf:FixedWidthColumn.HeaderTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="True"
                                           IsEnabled="False"
                                           ToolTipService.ShowOnDisabled="True"
                                           ToolTip="Is the classifier enabled?" />
                             </DataTemplate>
-                        </Wpf:FixedWidthColumn.HeaderTemplate>
-                        <Wpf:FixedWidthColumn.CellTemplate>
+                        </wpf:FixedWidthColumn.HeaderTemplate>
+                        <wpf:FixedWidthColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding Enabled}"
                                           Margin="2,3,0,3" />
                             </DataTemplate>
-                        </Wpf:FixedWidthColumn.CellTemplate>
-                    </Wpf:FixedWidthColumn>
+                        </wpf:FixedWidthColumn.CellTemplate>
+                    </wpf:FixedWidthColumn>
                     <GridViewColumn Header="Name"
                                     DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Type"
