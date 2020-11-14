@@ -8,9 +8,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
-
-    using Common.Logging;
-
+    using log4net;
     using Sentinel.Highlighters;
     using Sentinel.Highlighters.Interfaces;
     using Sentinel.Interfaces;
@@ -25,7 +23,7 @@
     /// </summary>
     public partial class LogMessagesControl : UserControl
     {
-        private static readonly ILog Log = LogManager.GetLogger<LogMessagesControl>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LogMessagesControl));
 
         public LogMessagesControl()
         {
@@ -153,14 +151,14 @@
             {
                 if (sender is ListViewItem item)
                 {
-                    Log.Trace("Double click performed on entry");
+                    Log.Debug("Double click performed on entry");
 
                     if (item.HasContent)
                     {
                         if (item.Content is ILogEntry entry)
                         {
-                            Log.Trace(entry.Type);
-                            Log.Trace(entry.Description);
+                            Log.Debug(entry.Type);
+                            Log.Debug(entry.Description);
                         }
                     }
                 }

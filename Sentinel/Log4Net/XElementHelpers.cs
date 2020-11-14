@@ -4,8 +4,7 @@ namespace Sentinel.Log4Net
     using System.Globalization;
     using System.Xml.Linq;
 
-    using Common.Logging;
-
+    using log4net;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
 

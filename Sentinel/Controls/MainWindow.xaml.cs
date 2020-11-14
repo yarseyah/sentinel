@@ -15,6 +15,7 @@
     using System.Windows.Controls.Ribbon;
     using System.Windows.Data;
     using System.Windows.Input;
+    using CommandLine;
     using log4net;
     using Microsoft.Win32;
     using Sentinel.Classification.Interfaces;
@@ -31,7 +32,6 @@
     using Sentinel.Services.Interfaces;
     using Sentinel.StartUp;
     using Sentinel.Support;
-    using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
     using WpfExtras;
     using WpfExtras.Converters;
@@ -132,8 +132,6 @@
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ISearchExtractor SearchExtractor => ServiceLocator.Instance.Get<ISearchExtractor>();
-
-        public IUpgradeService UpgradeService => ServiceLocator.Instance.Get<IUpgradeService>();
 
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
@@ -420,13 +418,6 @@
             BindViewToViewModel();
 
             var commandLine = Environment.GetCommandLineArgs();
-            if (UpgradeService != null)
-            {
-                // Determine whether anything passed on the command line, limited options
-                // may be supplied and they will suppress the prompting of the new listener wizard.
-                commandLine = UpgradeService.ParseCommandLine(commandLine);
-            }
-
             if (commandLine.Length == 1)
             {
                 Add.Execute(null);
@@ -449,13 +440,6 @@
                 Log.DebugFormat("Provider: {0}", instance.Name);
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
-            }
-
-            // Provide the upgrade service with a Dispatcher for the main UI thread
-            // which is needed for providing UI updates.
-            if (UpgradeService != null)
-            {
-                UpgradeService.DispatcherUiThread = Dispatcher;
             }
         }
 
@@ -582,7 +566,7 @@
 
             if (wp != null)
             {
-                Log.TraceFormat(
+                Log.DebugFormat(
                     "Window position being restored to ({0},{1})-({2},{3}) {4}",
                     wp.Top,
                     wp.Left,

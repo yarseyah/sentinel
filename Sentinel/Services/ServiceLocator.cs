@@ -9,13 +9,13 @@
     using System.Linq;
     using System.Windows;
 
-    using Common.Logging;
+    using log4net;
 
     using Sentinel.Interfaces;
 
     public class ServiceLocator
     {
-        private static readonly ILog Log = LogManager.GetLogger<ServiceLocator>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ServiceLocator));
 
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
@@ -31,7 +31,7 @@
             var di = new DirectoryInfo(SaveLocation);
             if (!di.Exists)
             {
-                Log.TraceFormat("Creating folder {0}", SaveLocation);
+                Log.DebugFormat("Creating folder {0}", SaveLocation);
                 try
                 {
                     di.Create();
@@ -99,7 +99,7 @@
 
         public void Register(Type keyType, Type instanceType, bool replace)
         {
-            Log.TraceFormat(
+            Log.DebugFormat(
                 "Registering Type instance of '{0}' to signature of '{1}'",
                 instanceType.Name,
                 keyType.Name);

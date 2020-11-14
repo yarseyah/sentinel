@@ -6,7 +6,6 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:sentinelInterfaces="clr-namespace:Sentinel.Interfaces"
     xmlns:converters="clr-namespace:Sentinel.Support.Converters"
-    xmlns:upgrader="clr-namespace:Sentinel.Upgrader"
     x:Class="Sentinel.Controls.MainWindow"
     Title="Sentinel"
     Height="600"
@@ -467,7 +466,6 @@
         </Ribbon>
 
         <DockPanel>
-            <upgrader:UpgradeNotification DockPanel.Dock="Top" DataContext="{Binding UpgradeService}" />
             <TabControl x:Name="TabControl"
                         Grid.Row="1">
             </TabControl>

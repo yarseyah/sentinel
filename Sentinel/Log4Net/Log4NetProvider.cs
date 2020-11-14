@@ -8,9 +8,8 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml;
     using System.Xml.Linq;
-    using Common.Logging;
+    using log4net;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
@@ -24,7 +23,7 @@
 
         private const string ApacheNamespace = "http://logging.apache.org/log4net/schemas/log4net-events-1.2/";
 
-        private static readonly ILog Log = LogManager.GetLogger<Log4NetProvider>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Log4NetProvider));
 
         private readonly Queue<string> pendingQueue = new Queue<string>();
 

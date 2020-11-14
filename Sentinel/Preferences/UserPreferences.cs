@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using Common.Logging;
+    using log4net;
     using Sentinel.Interfaces;
     using Sentinel.Support.Wpf;
     using WpfExtras;

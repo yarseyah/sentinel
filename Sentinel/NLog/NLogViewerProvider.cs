@@ -9,9 +9,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Linq;
-
-    using Common.Logging;
-
+    using log4net;
     using Sentinel.Interfaces;
     using Sentinel.Interfaces.CodeContracts;
     using Sentinel.Interfaces.Providers;
@@ -27,7 +25,7 @@
 
         private static readonly DateTime Log4JDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        private static readonly ILog Log = LogManager.GetLogger<NLogViewerProvider>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NLogViewerProvider));
 
         private readonly XNamespace log4JNamespace = "unique";
 
