@@ -10,3 +10,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    version: 5.0.x
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'Sentinel/Sentinel.csproj'
