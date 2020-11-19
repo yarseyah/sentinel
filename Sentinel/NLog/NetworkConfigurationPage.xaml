@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="Sentinel.NLog.NetworkConfigurationPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Sentinel.WpfExtras.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:BooleanInvertingValueConverter x:Key="InvertConverter" />
+        <converters:VisibilityToHiddenConverter x:Key="visToHiddenConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Protocol : "
+                   Margin="3"
+                   VerticalAlignment="Top" />
+        <StackPanel Grid.Row="0"
+                    Grid.Column="1">
+            <RadioButton Content="UDP"
+                         Margin="3"
+                         IsEnabled="{Binding SupportsUdp}"
+                         IsChecked="{Binding IsUdp}" />
+            <RadioButton Content="TCP"
+                         Margin="3"
+                         IsEnabled="{Binding SupportsTcp}"
+                         IsChecked="{Binding IsUdp, Converter={StaticResource InvertConverter}}" />
+        </StackPanel>
+
+        <TextBlock Margin="3"
+                   Foreground="Red"
+                   Text="Caution: setting software up for TCP may have a performance impact."
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   VerticalAlignment="Top"
+                   Visibility="{Binding IsUdp, Converter={StaticResource visToHiddenConverter}, ConverterParameter=true}"
+                   TextWrapping="WrapWithOverflow" />
+
+        <TextBlock Text="Port : "
+                   Margin="3"
+                   Grid.Row="2"
+                   VerticalAlignment="Center" />
+        <TextBox x:Name="portText"
+                 Margin="3"
+                 Text="{Binding Port, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                 Grid.Row="2"
+                 Grid.Column="1"
+                 VerticalAlignment="Center" />
+        <TextBlock Margin="3"
+                   Grid.Row="3"
+                   Grid.Column="1"
+                   VerticalAlignment="Top"
+                   TextWrapping="WrapWithOverflow">
+            <Run>Please note that depending upon your firewall settings, you may be prompted to confirm the openning of a network port.</Run>
+            <LineBreak />
+            <Run>This normally only occurs the first time.</Run>
+        </TextBlock>
+    </Grid>
+
+</UserControl>

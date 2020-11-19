@@ -26,13 +26,13 @@ If no command line options are specified, the standard New Session wizard will l
 
 ### Launch with NLog listener enabled
 ```
-sentinel nlog [-p portNumber](-p-portNumber) [-udp](-tcp)
+sentinel nlog [--port <port-number>] [--tcp]
 ```
 Defaults to port 9999 and Udp if not specified.
 
 ### Launch with Log4Net listener enabled
 ```
-sentinel log4net [-p portNumber](-p-portNumber) 
+sentinel log4net [--port <port-number>]
 ```
 Defaults to port 9998 if not specified.
 

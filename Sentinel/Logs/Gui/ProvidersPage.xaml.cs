@@ -8,9 +8,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-
-    using Common.Logging;
-
+    using log4net;
     using Sentinel.Interfaces.Providers;
     using Sentinel.NLog;
     using Sentinel.Providers.Interfaces;
@@ -23,7 +21,7 @@
     /// </summary>
     public partial class ProvidersPage : IWizardPage, IDataErrorInfo
     {
-        private static readonly ILog Log = LogManager.GetLogger<ProvidersPage>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ProvidersPage));
 
         private readonly ObservableCollection<IWizardPage> children = new ObservableCollection<IWizardPage>();
 

@@ -3,8 +3,7 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Diagnostics;
-
-    using Common.Logging;
+    using log4net;
 
     public delegate string GetFriendlyNameDelegate<T>(T obj);
 

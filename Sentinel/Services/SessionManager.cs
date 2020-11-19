@@ -35,7 +35,6 @@
     using Sentinel.Providers.Interfaces;
     using Sentinel.Services.Interfaces;
     using Sentinel.Support;
-    using Sentinel.Upgrader;
     using Sentinel.Views;
     using Sentinel.Views.Gui;
     using Sentinel.Views.Interfaces;
@@ -337,9 +336,6 @@
             locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
 
-            locator.Register<IUpgradeServicePreferences>(new UpgradeServicePreferences());
-            locator.Register<IUpgradeService>(new SquirrelUpgradeService());
-
             locator.Register<INewProviderWizard>(new NewProviderWizard());
 
             // Do this last so that other services have registered, e.g. the
@@ -384,9 +380,6 @@
             locator.Register<IProviderManager>(new ProviderManager());
             locator.Register<IWindowFrame>(new MultipleViewFrame()); // needs IUserPreferences, IViewManager
             locator.Register<ILogFileExporter>(new LogFileExporter());
-
-            locator.Register<IUpgradeServicePreferences>(new UpgradeServicePreferences());
-            locator.Register<IUpgradeService>(new SquirrelUpgradeService());
 
             locator.Register<INewProviderWizard>(new NewProviderWizard());
 

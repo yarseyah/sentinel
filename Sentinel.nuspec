@@ -8,10 +8,10 @@
     <authors>Ray Hayes</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Log-file viewer for nLog and log4net</description>
-    <copyright>Ray Hayes, 2009-2017</copyright>
+    <copyright>Ray Hayes, 2009-2020</copyright>
     <dependencies />
   </metadata>
   <files>
-    <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*;*.xml"/>
+    <file src="*.*" target="lib\net48\" exclude="*.pdb;*.nupkg;*.vshost.*;*.xml"/>
   </files>
 </package>

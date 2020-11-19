@@ -16,7 +16,7 @@
     using System.Windows.Data;
     using System.Windows.Input;
     using CommandLine;
-    using Common.Logging;
+    using log4net;
     using Microsoft.Win32;
     using Sentinel.Classification.Interfaces;
     using Sentinel.Extractors.Interfaces;
@@ -32,7 +32,6 @@
     using Sentinel.Services.Interfaces;
     using Sentinel.StartUp;
     using Sentinel.Support;
-    using Sentinel.Upgrader;
     using Sentinel.Views.Interfaces;
     using WpfExtras;
     using WpfExtras.Converters;
@@ -42,7 +41,7 @@
     /// </summary>
     public partial class MainWindow
     {
-        private static readonly ILog Log = LogManager.GetLogger<MainWindow>();
+        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(MainWindow));
 
         private readonly string persistingFilename;
 
@@ -134,8 +133,6 @@
         // ReSharper disable once MemberCanBePrivate.Global
         public ISearchExtractor SearchExtractor => ServiceLocator.Instance.Get<ISearchExtractor>();
 
-        public IUpgradeService UpgradeService => ServiceLocator.Instance.Get<IUpgradeService>();
-
         // ReSharper disable once MemberCanBePrivate.Global
         public ObservableCollection<string> RecentFiles { get; private set; }
 
@@ -173,7 +170,7 @@
         private void ExportLogsAction(object obj)
         {
             // Get Log
-            var tab = (TabItem)tabControl.SelectedItem;
+            var tab = (TabItem)TabControl.SelectedItem;
             var frame = (IWindowFrame)tab.Content;
             var restartLogging = false;
 
@@ -284,10 +281,10 @@
             }
 
             // Remove the tab control.
-            if (tabControl.Items.Count > 0)
+            if (TabControl.Items.Count > 0)
             {
-                var tab = tabControl.SelectedItem;
-                tabControl.Items.Remove(tab);
+                var tab = TabControl.SelectedItem;
+                TabControl.Items.Remove(tab);
             }
 
             Add.Execute(null);
@@ -345,10 +342,10 @@
             }
 
             // Remove the tab control.
-            if (tabControl.Items.Count > 0)
+            if (TabControl.Items.Count > 0)
             {
-                var tab = tabControl.SelectedItem;
-                tabControl.Items.Remove(tab);
+                var tab = TabControl.SelectedItem;
+                TabControl.Items.Remove(tab);
             }
 
             RemoveBindingReferences();
@@ -367,8 +364,8 @@
 
             // Add to the tab control.
             var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(newTab);
-            tabControl.SelectedItem = newTab;
+            TabControl.Items.Add(newTab);
+            TabControl.SelectedItem = newTab;
         }
 
         /// <summary>
@@ -396,8 +393,8 @@
 
             // Add to the tab control.
             var tab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(tab);
-            tabControl.SelectedItem = tab;
+            TabControl.Items.Add(tab);
+            TabControl.SelectedItem = tab;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -410,9 +407,9 @@
                     about.ShowDialog();
                 });
 
-            Add = new DelegateCommand(AddNewListenerAction, b => tabControl.Items.Count < 1);
+            Add = new DelegateCommand(AddNewListenerAction, b => TabControl.Items.Count < 1);
             ShowPreferences = new DelegateCommand(ShowPreferencesAction);
-            ExportLogs = new DelegateCommand(ExportLogsAction, b => tabControl.Items.Count > 0);
+            ExportLogs = new DelegateCommand(ExportLogsAction, b => TabControl.Items.Count > 0);
             SaveSession = new DelegateCommand(SaveSessionAction);
             NewSession = new DelegateCommand(NewSessionAction);
             LoadSession = new DelegateCommand(LoadSessionAction);
@@ -421,13 +418,6 @@
             BindViewToViewModel();
 
             var commandLine = Environment.GetCommandLineArgs();
-            if (UpgradeService != null)
-            {
-                // Determine whether anything passed on the command line, limited options
-                // may be supplied and they will suppress the prompting of the new listener wizard.
-                commandLine = UpgradeService.ParseCommandLine(commandLine);
-            }
-
             if (commandLine.Length == 1)
             {
                 Add.Execute(null);
@@ -450,13 +440,6 @@
                 Log.DebugFormat("Provider: {0}", instance.Name);
                 Log.DebugFormat("   - is {0}active", instance.IsActive ? string.Empty : "not ");
                 Log.DebugFormat("   - logger = {0}", instance.Logger);
-            }
-
-            // Provide the upgrade service with a Dispatcher for the main UI thread
-            // which is needed for providing UI updates.
-            if (UpgradeService != null)
-            {
-                UpgradeService.DispatcherUiThread = Dispatcher;
             }
         }
 
@@ -523,8 +506,8 @@
 
             // Add to the tab control.
             var newTab = new TabItem { Header = sessionManager.Name, Content = frame };
-            tabControl.Items.Add(newTab);
-            tabControl.SelectedItem = newTab;
+            TabControl.Items.Add(newTab);
+            TabControl.SelectedItem = newTab;
         }
 
         private void CreateDefaultLog4NetListener(Log4NetOptions log4NetOptions, ISessionManager sessionManager)
@@ -583,7 +566,7 @@
 
             if (wp != null)
             {
-                Log.TraceFormat(
+                Log.DebugFormat(
                     "Window position being restored to ({0},{1})-({2},{3}) {4}",
                     wp.Top,
                     wp.Left,
@@ -625,7 +608,7 @@
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                tabControl.SelectedIndex = tabControl.Items.Count - 1;
+                TabControl.SelectedIndex = TabControl.Items.Count - 1;
             }
         }
 

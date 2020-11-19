@@ -6,7 +6,7 @@ namespace Sentinel.Support.Converters
     using System.Linq;
     using System.Windows.Data;
 
-    using Common.Logging;
+    using log4net;
 
     using NodaTime;
 
@@ -15,7 +15,7 @@ namespace Sentinel.Support.Converters
 
     public class DatePreferenceConverter : IValueConverter
     {
-        private static readonly ILog Log = LogManager.GetLogger<DatePreferenceConverter>();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DatePreferenceConverter));
 
         private IUserPreferences Preferences { get; set; }
 
