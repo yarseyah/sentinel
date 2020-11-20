@@ -289,36 +289,27 @@
                         foreach (var providerSetting in providerInstances)
                         {
                             var settings = providerSetting.ToString();
-
+                            IProviderSettings thisSetting = null;
                             var name = providerSetting["$type"].ToString();
                             if (name.Contains(typeof(NetworkSettings).Name))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord
-                                                               {
-                                                                   Info = thisSetting.Info,
-                                                                   Settings = thisSetting,
-                                                               });
+                                thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(settings);
                             }
                             else if (name.Contains(typeof(UdpAppenderSettings).Name))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord
-                                                               {
-                                                                   Info = thisSetting.Info,
-                                                                   Settings = thisSetting,
-                                                               });
+                                thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(settings);
                             }
                             else if (name.Contains(typeof(FileMonitoringProviderSettings).Name))
                             {
-                                var thisSetting =
-                                    JsonHelper.DeserializeFromString<FileMonitoringProviderSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord { Info = thisSetting.Info, Settings = thisSetting, });
+                                thisSetting = JsonHelper.DeserializeFromString<FileMonitoringProviderSettings>(settings);
                             }
                             else
                             {
                                 Trace.TraceError($"No PendingProviderRecord for type of {name}");
                             }
+
+                            if (thisSetting != null)
+                                pendingProviderRecords.Add(new PendingProviderRecord { Info = thisSetting.Info, Settings = thisSetting, });
                         }
                     }
                     else
