@@ -185,7 +185,7 @@
                 provider.Close();
             }
 
-            // Unregister changing viewmodelbases
+            // Unregister changing viewModelBases
             foreach (var viewmodel in ChangingViewModelBases)
             {
                 viewmodel.PropertyChanged -= ViewModelProperty_Changed;
@@ -226,17 +226,17 @@
                 if (!string.IsNullOrWhiteSpace(objString))
                 {
                     var deserializedObj = JObject.Parse(objString);
-                    var typeString = deserializedObj["$type"].ToString();
+                    var typeString = deserializedObj["$type"]?.ToString() ?? string.Empty;
 
                     if (typeString.Contains(typeof(UserPreferences).ToString()))
                     {
                         locator.Register<IUserPreferences>(JsonHelper.DeserializeFromString<UserPreferences>(objString));
                     }
-                    else if (typeString.Contains(typeof(SearchFilter).Name))
+                    else if (typeString.Contains(nameof(SearchFilter)))
                     {
                         locator.Register<ISearchFilter>(JsonHelper.DeserializeFromString<SearchFilter>(objString));
                     }
-                    else if (typeString.Contains(typeof(SearchExtractor).Name))
+                    else if (typeString.Contains(nameof(SearchExtractor)))
                     {
                         locator.Register<ISearchExtractor>(JsonHelper.DeserializeFromString<SearchExtractor>(objString));
                     }
@@ -255,7 +255,7 @@
                         locator.Register<IHighlightingService<IHighlighter>>(
                             JsonHelper.DeserializeFromString<HighlightingService<IHighlighter>>(objString));
                     }
-                    else if (typeString.Contains(typeof(SearchHighlighter).Name))
+                    else if (typeString.Contains(nameof(SearchHighlighter)))
                     {
                         locator.Register<ISearchHighlighter>(
                             JsonHelper.DeserializeFromString<SearchHighlighter>(objString));
@@ -265,19 +265,20 @@
                         locator.Register<IClassifyingService<IClassifier>>(
                             JsonHelper.DeserializeFromString<ClassifyingService<IClassifier>>(objString));
                     }
-                    else if (typeString.Contains(typeof(TypeToImageService).Name))
+                    else if (typeString.Contains(nameof(TypeToImageService)))
                     {
                         locator.Register<ITypeImageService>(
                             JsonHelper.DeserializeFromString<TypeToImageService>(objString));
                     }
-                    else if (typeString.Contains(typeof(SessionManager).Name))
+                    else if (typeString.Contains(nameof(SessionManager)))
                     {
-                        Name = deserializedObj["Name"].ToString();
+                        Name = deserializedObj["Name"]?.ToString();
 
                         LoadChangingViewModelBases();
 
-                        var providerSettingsObj = deserializedObj["ProviderSettings"].HasValues
-                                                      ? deserializedObj["ProviderSettings"].Values()
+                        var providerSettingsValue = deserializedObj["ProviderSettings"];
+                        var providerSettingsObj = providerSettingsValue != null && providerSettingsValue.HasValues
+                                                      ? providerSettingsValue.Values()
                                                       : null;
 
                         if (providerSettingsObj == null)
@@ -289,35 +290,34 @@
                         foreach (var providerSetting in providerInstances)
                         {
                             var settings = providerSetting.ToString();
+                            IProviderSettings thisSetting = null;
+                            var name = providerSetting["$type"]?.ToString() ?? string.Empty;
 
-                            var name = providerSetting["$type"].ToString();
-                            if (name.Contains(typeof(NetworkSettings).Name))
+                            if (name.Contains(nameof(NetworkSettings)))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord
-                                                               {
-                                                                   Info = thisSetting.Info,
-                                                                   Settings = thisSetting,
-                                                               });
+                                thisSetting = JsonHelper.DeserializeFromString<NetworkSettings>(settings);
                             }
-                            else if (name.Contains(typeof(UdpAppenderSettings).Name))
+                            else if (name.Contains(nameof(UdpAppenderSettings)))
                             {
-                                var thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord
-                                                               {
-                                                                   Info = thisSetting.Info,
-                                                                   Settings = thisSetting,
-                                                               });
+                                thisSetting = JsonHelper.DeserializeFromString<UdpAppenderSettings>(settings);
                             }
-                            else if (name.Contains(typeof(FileMonitoringProviderSettings).Name))
+                            else if (name.Contains(nameof(FileMonitoringProviderSettings)))
                             {
-                                var thisSetting =
-                                    JsonHelper.DeserializeFromString<FileMonitoringProviderSettings>(settings);
-                                pendingProviderRecords.Add(new PendingProviderRecord { Info = thisSetting.Info, Settings = thisSetting, });
+                                thisSetting = JsonHelper.DeserializeFromString<FileMonitoringProviderSettings>(settings);
                             }
                             else
                             {
                                 Trace.TraceError($"No PendingProviderRecord for type of {name}");
+                            }
+
+                            if (thisSetting != null)
+                            {
+                                pendingProviderRecords.Add(
+                                    new PendingProviderRecord
+                                        {
+                                            Info = thisSetting.Info,
+                                            Settings = thisSetting,
+                                        });
                             }
                         }
                     }
