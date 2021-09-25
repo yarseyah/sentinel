@@ -102,15 +102,17 @@ namespace Sentinel.MSBuild
 
                 using (var listener = new UdpClient(endPoint))
                 {
+                    var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                    listener.Client.ReceiveTimeout = 1000;
+
                     while (!cancellationTokenSource.IsCancellationRequested)
                     {
-                        var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                        listener.Client.ReceiveTimeout = 1000;
                         try
                         {
                             var bytes = listener.Receive(ref remoteEndPoint);
 
-                            Log.Debug($"Received {bytes.Length} bytes from {remoteEndPoint.Address}");
+                            if (Log.IsDebugEnabled)
+                                Log.DebugFormat("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address);
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
                             lock (pendingQueue)
@@ -122,7 +124,7 @@ namespace Sentinel.MSBuild
                         {
                             if (socketException.SocketErrorCode != SocketError.TimedOut)
                             {
-                                Log.Debug("SocketException", socketException);
+                                Log.Error("SocketException", socketException);
                                 Log.Debug($"SocketException.SocketErrorCode = {socketException.SocketErrorCode}");
 
                                 // Break out of the 'using socket' loop and try to establish a new socket.
@@ -131,7 +133,7 @@ namespace Sentinel.MSBuild
                         }
                         catch (Exception e)
                         {
-                            Log.DebugFormat("Exception: {0}", e.Message);
+                            Log.Error("UdpClient Exception", e);
                         }
                     }
                 }
@@ -144,6 +146,8 @@ namespace Sentinel.MSBuild
         {
             Log.Debug("MessagePump started");
 
+            var processedQueue = new Queue<ILogEntry>();
+
             while (!cancellationTokenSource.IsCancellationRequested)
             {
                 Thread.Sleep(PumpFrequency);
@@ -154,8 +158,6 @@ namespace Sentinel.MSBuild
                     {
                         lock (pendingQueue)
                         {
-                            var processedQueue = new Queue<ILogEntry>();
-
                             while (pendingQueue.Count > 0)
                             {
                                 var message = pendingQueue.Dequeue();
@@ -171,17 +173,21 @@ namespace Sentinel.MSBuild
                                     }
                                 }
                             }
+                        }
 
-                            if (processedQueue.Any())
-                            {
-                                Logger.AddBatch(processedQueue);
-                            }
+                        if (processedQueue.Any())
+                        {
+                            Logger.AddBatch(processedQueue);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Log.Error("MessagePump Exception", e);
+                }
+                finally
+                {
+                    processedQueue.Clear();
                 }
             }
 
