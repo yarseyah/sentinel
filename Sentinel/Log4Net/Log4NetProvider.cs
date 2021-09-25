@@ -116,15 +116,17 @@
 
                 using (var listener = new UdpClient(endPoint))
                 {
+                    var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                    listener.Client.ReceiveTimeout = 1000;
+
                     while (!cancellationTokenSource.IsCancellationRequested)
                     {
-                        var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                        listener.Client.ReceiveTimeout = 1000;
                         try
                         {
                             var bytes = listener.Receive(ref remoteEndPoint);
 
-                            Log.Debug($"Received {bytes.Length} bytes from {remoteEndPoint.Address}");
+                            if (Log.IsDebugEnabled)
+                                Log.DebugFormat("Received {0} bytes from {1}", bytes.Length, remoteEndPoint.Address);
 
                             var message = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
                             lock (pendingQueue)
@@ -136,7 +138,7 @@
                         {
                             if (socketException.SocketErrorCode != SocketError.TimedOut)
                             {
-                                Log.Debug("SocketException", socketException);
+                                Log.Error("SocketException", socketException);
                                 Log.DebugFormat(
                                     "SocketException.SocketErrorCode = {0}",
                                     socketException.SocketErrorCode);
@@ -147,7 +149,7 @@
                         }
                         catch (Exception e)
                         {
-                            Log.DebugFormat("Exception: {0}", e.Message);
+                            Log.Error("UdpClient Exception", e);
                         }
                     }
                 }
@@ -160,6 +162,8 @@
         {
             Log.Debug("MessagePump started");
 
+            var processedQueue = new Queue<ILogEntry>();
+
             while (!cancellationTokenSource.IsCancellationRequested)
             {
                 Thread.Sleep(PumpFrequency);
@@ -170,8 +174,6 @@
                     {
                         lock (pendingQueue)
                         {
-                            var processedQueue = new Queue<ILogEntry>();
-
                             while (pendingQueue.Count > 0)
                             {
                                 var message = pendingQueue.Dequeue();
@@ -187,17 +189,21 @@
                                     }
                                 }
                             }
+                        }
 
-                            if (processedQueue.Any())
-                            {
-                                Logger.AddBatch(processedQueue);
-                            }
+                        if (processedQueue.Any())
+                        {
+                            Logger.AddBatch(processedQueue);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Unspecific exception", e);
+                    Log.Error("MessagePump Exception", e);
+                }
+                finally
+                {
+                    processedQueue.Clear();
                 }
             }
 
