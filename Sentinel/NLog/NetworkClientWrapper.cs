@@ -12,9 +12,11 @@ namespace Sentinel.NLog
 
         private readonly UdpClient udpClient;
 
-        private readonly TcpClient tcpClient;
+        private readonly TcpListener tcpListener;
 
-        public NetworkClientWrapper(NetworkProtocol protocol, IPEndPoint endPoint)
+        private NetworkStream activeTcpStream;
+
+        public NetworkClientWrapper(NetworkProtocol protocol, IPEndPoint endPoint, System.Threading.CancellationToken cancellationToken)
         {
             isUdp = protocol == NetworkProtocol.Udp;
             if (isUdp)
@@ -25,25 +27,44 @@ namespace Sentinel.NLog
             }
             else
             {
-                tcpClient = new TcpClient(endPoint);
+                tcpListener = new TcpListener(endPoint);
+                tcpListener.Start();
+                cancellationToken.Register(() => tcpListener.Stop());
             }
         }
 
-        public byte[] Receive(ref IPEndPoint remoteEndPoint)
+        public byte[] Receive(ref IPEndPoint remoteEndPoint, int receiveTimeout)
         {
             if (isUdp)
             {
+                udpClient.Client.ReceiveTimeout = receiveTimeout;
                 return udpClient.Receive(ref remoteEndPoint);
             }
 
-            var returnBuffer = new List<byte>();
-            var stream = tcpClient.GetStream();
-            var buffer = new byte[10240];
+            var returnBuffer = new List<byte>(100);
 
-            int i;
-            while ((i = stream.Read(buffer, 0, buffer.Length)) != 0)
+            NetworkStream networkStream = null;
+
+            try
             {
-                returnBuffer.AddRange(buffer.Take(i));
+                networkStream = activeTcpStream ?? (activeTcpStream = tcpListener.AcceptTcpClient().SetReceiveTimeout(receiveTimeout).GetStream());
+
+                var buffer = new byte[1];
+                while (networkStream.Read(buffer, 0, buffer.Length) != 0)
+                {
+                    if (buffer[0] == (byte)'\n')
+                        break;
+                    if (buffer[0] == (byte)'\r')
+                        continue;
+
+                    returnBuffer.Add(buffer[0]);
+                }
+            }
+            catch
+            {
+                activeTcpStream = null;
+                networkStream?.Close();
+                throw;
             }
 
             return returnBuffer.ToArray();
@@ -54,19 +75,17 @@ namespace Sentinel.NLog
             GC.SuppressFinalize(this);
 
             udpClient?.Close();
-            tcpClient?.Close();
+            activeTcpStream?.Close();
+            tcpListener?.Stop();
         }
+    }
 
-        public void SetReceiveTimeout(int timeout)
+    internal static class TcpClientExtensions
+    {
+        public static TcpClient SetReceiveTimeout(this TcpClient tcpClient, int receiveTimeout)
         {
-            if (isUdp)
-            {
-                udpClient.Client.ReceiveTimeout = timeout;
-            }
-            else
-            {
-                tcpClient.Client.ReceiveTimeout = timeout;
-            }
+            tcpClient.Client.ReceiveTimeout = receiveTimeout;
+            return tcpClient;
         }
     }
 }

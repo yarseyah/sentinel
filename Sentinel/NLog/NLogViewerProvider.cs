@@ -120,17 +120,15 @@
 
                 var networkProtocolDescription = networkSettings.Protocol.ToString();
 
-                using (var listener = new NetworkClientWrapper(networkSettings.Protocol, endPoint))
+                using (var listener = new NetworkClientWrapper(networkSettings.Protocol, endPoint, cancellationTokenSource.Token))
                 {
-                    listener.SetReceiveTimeout(1000);
-
                     var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
                     while (!cancellationTokenSource.IsCancellationRequested)
                     {
                         try
                         {
-                            var bytes = listener.Receive(ref remoteEndPoint);
+                            var bytes = listener.Receive(ref remoteEndPoint, 1000);
 
                             if (Log.IsDebugEnabled)
                                 Log.DebugFormat(
